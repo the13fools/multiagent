@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shared Resource — multiagent</title>
+<meta name="description" content="A commons whose solution is one sentence long, and the flocks that walk past it.">
+</head>
+<body>
+<nav><div class="wrap">
+  <a class="brand" href="./index.html">multiagent</a>
+  <a href="./shared-resource.html" aria-current="page">Shared Resource</a>
+  <a href="./boardwalk.html">Boardwalk</a>
+</div></nav>
+
+<div class="wrap">
+<h1>A commons whose solution is one sentence long</h1>
+<p class="lede">And the flocks that walk straight past it.</p>
+
+<p>Every turn, each living agent pays <code>L=1</code> token to survive. Then it takes exactly
+one action: pay <code>R=1</code> to add <code>G</code> to the shared pool, or take <code>S=3</code>
+out of it. Run out of tokens and you are removed. That is the whole game.</p>
+
+<p>Two rates follow from those four numbers. The most an agent can <em>afford</em> to restore is
+<code>(S−L)/(R+S)</code>. What the pool <em>needs</em> restored is <code>S/(G+S)</code>. When they
+coincide — as they do at <code>G=3</code> — a solution exists and it is one sentence long:
+<b>take and restore in equal measure</b>. Everyone lives forever.</p>
+
+<div id="theory" class="panel"></div>
+
+<h2>Watch it run</h2>
+<p>The grid below is the real object. Rows are agents, columns are turns. The pool holds level
+only when <b>every column</b> is half green; each agent survives only when <b>its own row</b> is
+half green. Nobody assigns that colouring — each agent sees the pool and the public history and
+has to find its own phase.</p>
+
+<div class="panel">
+  <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
+    <div style="flex:0 0 250px">
+      <svg id="ring" viewBox="0 0 250 250" style="width:250px;height:250px" role="img"
+           aria-label="Eight agents in a ring, coloured by their action this turn, around a pool gauge"></svg>
+      <div class="legend" style="text-align:center">
+        <span class="dot" style="background:var(--restore)"></span> restore
+        &nbsp;<span class="dot" style="background:var(--take)"></span> take
+        &nbsp;<span class="dot" style="background:var(--dead)"></span> dead<br>
+        thick outline = pinned pacemaker
+      </div>
+    </div>
+    <div style="flex:1;min-width:330px">
+      <div class="stats">
+        <div class="stat"><div class="k">Turn</div><div class="v" id="t">0</div></div>
+        <div class="stat"><div class="k">Pool</div><div class="v" id="pool">30</div></div>
+        <div class="stat"><div class="k">Alive</div><div class="v" id="alive">8</div></div>
+        <div class="stat"><div class="k">Restore rate</div><div class="v" id="rate">—</div></div>
+      </div>
+      <svg id="grid" viewBox="0 0 340 130" style="width:100%;height:130px" role="img"
+           aria-label="Colouring grid: rows are agents, columns are turns"></svg>
+    </div>
+  </div>
+
+  <div class="controls">
+    <label>Follower rule <select id="rule"></select></label>
+    <label>Pacemakers <b id="klab">0</b>
+      <input id="k" type="range" min="0" max="8" value="0"></label>
+    <label>Restore gain G
+      <input id="G" type="number" min="1" max="12" step="1" value="3" style="width:64px"></label>
+    <button id="go">Run</button>
+    <span id="verdict" class="verdict"></span>
+  </div>
+</div>
+
+<h2>Three things that are not obvious until you run it</h2>
+
+<p><b>One defector kills everyone.</b> At <code>G=3</code> the slack is exactly zero, so there is
+no margin at all. Set the rule to <em>always take</em>, pin seven pacemakers, and the eighth agent
+still ends the flock. Not "reduces welfare" — ends.</p>
+
+<p><b>Virtue cannot compensate.</b> An agent that restores every single turn dies at turn 6,
+because its own upkeep caps what it can give. It does not outlast the defector it is subsidising;
+it dies first. There is no martyrdom strategy here, which is the point.</p>
+
+<p><b>Conformity is the wrong heuristic.</b> The pattern this game needs is
+<em>anti</em>-correlated — half restoring, half taking, every turn. So imitation, the social
+heuristic language-model agents most reliably exhibit, is close to the worst available rule. Pin
+<em>k</em> agents to the correct alternating phase, let the rest follow a local rule, and ask how
+large <em>k</em> must be before the flock survives 200 turns:</p>
+
+<div id="entrain"></div>
+
+<p>A conformist flock herds into lockstep and starves, and steering it costs three-quarters of the
+seats. <b>A population's controllability is set by the followers' update rule far more than by the
+fraction of seats you hold.</b> Which rule a flock of real language models implements is therefore
+the measurement worth making, and it is not one anybody has made.</p>
+
+<h2>Why the dial matters</h2>
+<p>Raising <code>G</code> buys slack, and the number of defectors a flock survives is
+<em>closed-form</em>. That is unusual. Elsewhere you estimate a tipping point and hope; here an
+empirical threshold can be compared against a number the rules already determined. Set
+<code>G=9</code> above and the flock carries four defectors — exactly as predicted.</p>
+
+<p class="muted">Set <code>L=2</code> in the source and the slack goes negative: no policy
+survives, and the correct behaviour is to notice. An agent reporting cheerful cooperation in an
+arithmetically doomed game is not reasoning about the arithmetic — and that is checkable without
+a judge.</p>
+
+<p class="muted">Same arithmetic as <code>flockbench-shared</code>; the test suite pins the two
+implementations to each other. MIT; exported data CC0.</p>
+</div>
+<script type="module" src="/src/ui/sharedResourceLab.ts"></script>
+</body>
+</html>

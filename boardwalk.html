@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boardwalk — multiagent</title>
+<meta name="description" content="Hotelling's linear city. Two vendors settle. Three never do.">
+</head>
+<body>
+<nav><div class="wrap">
+  <a class="brand" href="./index.html">multiagent</a>
+  <a href="./shared-resource.html">Shared Resource</a>
+  <a href="./boardwalk.html" aria-current="page">Boardwalk</a>
+</div></nav>
+
+<div class="wrap">
+<h1>Three food trucks that never settle</h1>
+<p class="lede">A system with no stable state to be steered into.</p>
+
+<p>Vendors pick a spot on a beach. Beachgoers are spread evenly and walk to whoever is nearest.
+Each vendor wants the biggest catchment. Every round, each moves to its best response given where
+everyone else stands.</p>
+
+<p>With <b>two</b> vendors this is the famous result: both slide to the centre and stop. It is why
+competing shops cluster, why rival petrol stations sit on the same corner, and why two parties
+converge on the median voter. Hotelling called it the principle of minimum differentiation.</p>
+
+<p>Add a third and something else happens.</p>
+
+<div class="panel">
+  <svg id="beach" viewBox="0 0 620 96" style="width:100%;height:96px" role="img"
+       aria-label="Vendors positioned along a beach with their catchment areas shaded"></svg>
+  <div class="stats" style="margin-top:6px">
+    <div class="stat"><div class="k">Round</div><div class="v" id="turn">0</div></div>
+    <div class="stat"><div class="k">Spread</div><div class="v" id="spread">—</div></div>
+  </div>
+  <svg id="trail" viewBox="0 0 620 150" style="width:100%;height:150px;border-top:1px solid var(--line)"
+       role="img" aria-label="Each vendor's position over time"></svg>
+  <div class="legend">position over time — a flat line is a settled market, a wave is a market chasing itself</div>
+  <div class="controls">
+    <label>Vendors
+      <input id="n" type="number" min="2" max="5" step="1" value="3" style="width:60px"></label>
+    <button id="play">Play</button>
+    <button id="stepBtn">Step</button>
+    <button id="reset">New start</button>
+    <span id="settled" class="verdict"></span>
+  </div>
+</div>
+
+<h2>Two settles, three cycles, four settles again</h2>
+<p>This is not an artefact of the starting positions or of the update order. There is genuinely
+<em>no</em> arrangement of three vendors from which nobody wants to move — the middle vendor is
+always squeezed and always has somewhere better to be, and whichever way it jumps it creates a new
+squeezed middle. Eaton and Lipsey proved it in 1975. You can also just count:</p>
+
+<p><button id="censusBtn">Count pure-strategy equilibria by brute force</button></p>
+<div id="census"></div>
+
+<h2>Why this sits next to the Shared Resource game</h2>
+<p>The two environments are complements, and deliberately so.</p>
+
+<p>The <a href="./shared-resource.html">Shared Resource game</a> has a stable state that is exactly
+reachable and one sentence long, and the question is whether a population finds it. The boardwalk
+at three vendors has <em>no</em> stable state at all, and the question becomes harder and more
+interesting: <b>can a controlled minority stabilise a system that has nothing stable to be steered
+into?</b></p>
+
+<p>Answering "no" is as informative as answering "yes". Either way it is arithmetic — market shares
+are computed, not judged — and either way it says something about real multi-principal systems,
+because markets, routing, and pricing all live closer to the boardwalk than to a game with a tidy
+optimum.</p>
+
+<p class="muted">Hotelling (1929), <em>Stability in Competition</em>; Eaton &amp; Lipsey (1975),
+<em>The Principle of Minimum Differentiation Reconsidered</em>. MIT; exported data CC0.</p>
+</div>
+<script type="module" src="/src/ui/boardwalkLab.ts"></script>
+</body>
+</html>

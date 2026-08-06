@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>multiagent — steering a flock you do not own</title>
+<meta name="description" content="Interactive labs for multi-agent shared-resource games with known solutions.">
+<link rel="stylesheet" href="/src/ui/style.css">
+</head>
+<body>
+<nav><div class="wrap">
+  <a class="brand" href="./index.html">multiagent</a>
+  <a href="./shared-resource.html">Shared Resource</a>
+  <a href="./boardwalk.html">Boardwalk</a>
+</div></nav>
+
+<div class="wrap">
+<h1>Steering a flock you do not own</h1>
+<p class="lede">Small games with known answers, and the populations that miss them.</p>
+
+<p>Suppose you control the personas of a handful of agents in a population you did not build and
+cannot see all of. How few can you control — and what must they do — to steer the whole system into
+a state where everybody survives?</p>
+
+<p>That question is hard to study in a rich environment, because you cannot tell a population that
+failed from a population that faced an impossible problem. So these labs use small games where the
+answer is <em>known exactly</em>, and the interesting quantity is the distance between what a
+population did and what the arithmetic already permitted.</p>
+
+<div class="cards">
+  <a class="card" href="./shared-resource.html">
+    <h3>Shared Resource →</h3>
+    <p>A commons whose solution is one sentence long. One defector kills everyone, virtue cannot
+    compensate, and conformity turns out to be the worst available heuristic.</p>
+  </a>
+  <a class="card" href="./boardwalk.html">
+    <h3>Boardwalk →</h3>
+    <p>Hotelling's beach. Two vendors settle at the centre. Three have no stable arrangement at
+    all, and chase each other forever.</p>
+  </a>
+</div>
+
+<h2>Why games this small</h2>
+
+<p><b>Because the answer is checkable.</b> In the Shared Resource game, the share of turns an agent
+can afford to spend restoring and the share the pool needs restored are both computable from the
+rules. Where they coincide, a strategy exists under which everyone lives forever. Where they do
+not, no strategy does. That means a population's shortfall is a number, not an opinion — and no
+judge is needed to score anything.</p>
+
+<p><b>Because difficulty has a dial with an answer key.</b> Adjusting one parameter changes exactly
+how many free-riders a flock can carry, and that count is closed-form. So an empirically measured
+threshold has ground truth to be compared against, which is rare.</p>
+
+<p><b>Because long rollouts are dynamics.</b> A long multi-agent episode is a numerical
+integration, and the agents are the integrator. The sustainable play conserves two quantities; a
+greedy one dissipates them. An agent running slightly off the correct rate does not fail
+immediately — it drifts, and dies later. Small per-step biases are invisible at ten turns and fatal
+at two hundred, which is a concrete argument for long-horizon testbeds and against extrapolating
+from short ones.</p>
+
+<p><b>Because steering is entrainment.</b> The sustainable pattern is a balanced two-colouring of
+the agent-by-turn grid: every column half restoring, every row half restoring, and nobody assigning
+it. That makes this a coupled-oscillator problem with a forced subpopulation, and the steering
+question becomes: what is the critical pacemaker fraction? It turns out to depend far more on how
+the followers update than on how many seats you hold.</p>
+
+<h2>Related</h2>
+<p><code>flockbench</code> is the research testbed these labs illustrate: the same games played by
+live language-model agents, scored by the same arithmetic, with no LLM judge anywhere in the
+scoring loop. The engines here are ports, and the test suite pins the two implementations to each
+other so the illustration cannot drift away from the experiment.</p>
+
+<p class="muted">MIT licensed; exported data CC0. No account, server, or analytics — everything
+runs in the page.</p>
+</div>
+</body>
+</html>
