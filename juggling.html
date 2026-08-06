@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Juggling — multiagent</title>
+<meta name="description" content="A shared rhythm nobody conducts, and what it takes to hold one.">
+</head>
+<body>
+<nav><div class="wrap">
+  <a class="brand" href="./index.html">multiagent</a>
+  <a href="./shared-resource.html">Shared Resource</a>
+  <a href="./juggling.html" aria-current="page">Juggling</a>
+  <a href="./boardwalk.html">Boardwalk</a>
+</div></nav>
+
+<div class="wrap">
+<h1>A rhythm nobody is conducting</h1>
+<p class="lede">Six jugglers, a ring, and a pattern that exists only while everyone keeps time.</p>
+
+<p>This is not an analogy for the <a href="./shared-resource.html">Shared Resource game</a>. It is
+the same object, with intuitions you already have. Many players. Rules a child can state. A pattern
+that only exists while everyone keeps time. A failure mode you have watched in a park.</p>
+
+<p>Each juggler is on the same beat and alternates: pass across the ring, then throw to itself,
+then pass again. <em>Take and restore in equal measure</em> is a two-beat pattern. <b>The clubs in
+the air are the shared resource</b> — nobody replenishes them, and a dropped club leaves play for
+good.</p>
+
+<div class="panel">
+  <svg id="scene" viewBox="0 0 640 340" style="width:100%;height:340px;display:block" role="img"
+       aria-label="Three-dimensional view of jugglers in a ring passing clubs on parabolic arcs"></svg>
+  <div id="stats" class="stats"></div>
+  <svg id="plot" viewBox="0 0 620 110" style="width:100%;height:110px" role="img"
+       aria-label="Phase lock and clubs remaining over time"></svg>
+  <div class="controls">
+    <label>Jugglers <b id="nlab">6</b><input id="n" type="range" min="3" max="8" value="6"></label>
+    <label>Timing error <b id="biaslab">0.0%</b><input id="bias" type="range" min="0" max="20" value="0"></label>
+    <label>Coupling <b id="couplinglab">0.00</b><input id="coupling" type="range" min="0" max="100" value="0"></label>
+    <label>Metronomes <b id="pinnedlab">0</b><input id="pinned" type="range" min="0" max="8" value="0"></label>
+    <button id="play">Play / pause</button>
+    <button id="reset">Reset</button>
+    <span id="verdict" class="verdict"></span>
+  </div>
+  <div class="legend">Jugglers shade from green to red as they slip off the beat; a thick outline
+  is a pinned metronome. <b>R</b> is phase lock — 1 is perfectly together, 0 is chaos.</div>
+</div>
+
+<h2>Being slightly wrong is fine, until suddenly it isn't</h2>
+
+<p>Set the timing error to <b>0.2%</b> and watch. Nothing happens. The pattern breathes a little.
+No drops for sixty beats, and if you were running a sixty-beat experiment you would write down
+that the ring is healthy.</p>
+
+<p>It is dead by beat 103.</p>
+
+<p>That is the entire argument for long-horizon testbeds, and it is why a short rollout is not a
+cheap approximation of a long one — it is a different measurement that can disagree with the truth.
+A long multi-agent episode is a numerical integration, the agents are the integrator, and a small
+per-step bias is invisible early and fatal late.</p>
+
+<p><button id="tablesBtn" class="no-embed">Compute both tables</button></p>
+<div id="drift" class="no-embed"></div>
+
+<h2>What decides whether you can steer it</h2>
+
+<p>Now the interesting part. Pin some jugglers as perfect metronomes — the small number of players
+whose behaviour you control — and ask how many you need before the pattern survives.</p>
+
+<p>With <b>coupling at zero</b>, meaning nobody adjusts to anyone else, the answer is <em>all of
+them</em>. Metronomes are useless. A juggler that does not listen will drift regardless of how
+perfectly its neighbours keep time, and there is no number of controlled seats short of every seat
+that helps.</p>
+
+<p>Turn coupling up even slightly and <b>one metronome holds the whole ring</b>.</p>
+
+<div id="steer" class="no-embed"></div>
+
+<p>Which is the same result the commons gives, arriving from a different direction:
+<b>controllability is a property of the followers, not of the controller.</b> How many seats you
+hold barely matters. Whether the others are listening at all decides everything. In the commons it
+was the follower's update rule; here it is a coupling constant. Both say that the useful question
+is not <em>how many agents must I control</em> but <em>what must be true of the ones I don't</em>.</p>
+
+<h2>Virtue still has a ceiling</h2>
+<p>A juggler can fix its own timing. It cannot catch a club that was thrown late. Individual
+effort does not repair a collective rhythm — the same reason an agent in the commons that restores
+every single turn dies at turn 6 instead of saving anybody.</p>
+
+<p class="muted">The phase-lock measure <b>R</b> is Kuramoto's order parameter, which is not an
+imported analogy here: it is simply the obvious thing to plot for a ring of oscillators, and it
+happens to be the statistic the coupled-oscillator framing predicts should matter.</p>
+
+<p class="muted">Every number on this page is asserted in <code>test/juggling.test.ts</code> —
+including the claim two sections up that a 0.2% error survives 60 beats and dies before 160.
+MIT; exported data CC0.</p>
+</div>
+<script type="module" src="/src/ui/jugglingLab.ts"></script>
+</body>
+</html>

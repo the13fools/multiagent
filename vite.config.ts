@@ -14,6 +14,7 @@ export default defineConfig({
       input: {
         main: "index.html",
         shared: "shared-resource.html",
+        juggling: "juggling.html",
         boardwalk: "boardwalk.html",
       },
     },
