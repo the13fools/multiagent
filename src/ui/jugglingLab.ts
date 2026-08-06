@@ -25,15 +25,28 @@ let yaw = 0.6;
 
 interface P3 { x: number; y: number; z: number }
 
-function project(p: P3): { x: number; y: number; scale: number; depth: number } {
+/**
+ * Returns `k`, the pixels-per-world-unit factor at this depth, so callers size
+ * things in WORLD units and let perspective do the rest.
+ *
+ * The previous version returned `scale = k / fov` -- i.e. 1/depth -- and callers
+ * then multiplied by `fov` again, which put the jugglers at 42-81px radius in a
+ * 640x340 box. Six of those is one blob, which is what "looks bugged" was.
+ */
+function project(p: P3): { x: number; y: number; k: number; depth: number } {
   const c = Math.cos(yaw), s = Math.sin(yaw);
   const rx = p.x * c - p.z * s;
   const rz = p.x * s + p.z * c;
   const ey = p.y - CAM.height;
-  const ez = rz + CAM.dist;
-  const k = CAM.fov / Math.max(ez, 0.4);
-  return { x: W / 2 + rx * k, y: H / 2 - ey * k, scale: k / CAM.fov, depth: ez };
+  const ez = Math.max(rz + CAM.dist, 0.4);
+  const k = CAM.fov / ez;
+  return { x: W / 2 + rx * k, y: H / 2 - ey * k, k, depth: ez };
 }
+
+// Radii in world units. At the nominal camera distance one world unit is
+// CAM.fov / CAM.dist = ~67 px, so a juggler is about 15 px across.
+const R_JUGGLER = 0.22;
+const R_CLUB = 0.085;
 
 const seatPos = (i: number, n: number): P3 => ({
   x: 2.9 * Math.cos((i / n) * Math.PI * 2),
@@ -61,7 +74,7 @@ function cfg(): PatternConfig {
     clubs: num("n") * 2,
     bias: num("bias") / 1000, // slider is in tenths of a percent
     coupling: num("coupling") / 100,
-    pinned: num("pinned"),
+    pinned: Math.min(num("pinned"), num("n")),
   };
 }
 
@@ -91,7 +104,7 @@ function draw() {
     const off = Math.min(j.phase, 1 - j.phase);
     const bad = Math.min(1, off / conf.tolerance);
     const fill = j.pinned ? C.accent : `color-mix(in srgb, var(--restore) ${((1 - bad) * 100).toFixed(0)}%, var(--take))`;
-    const r = 15 * pr.scale * CAM.fov * 0.055;
+    const r = R_JUGGLER * pr.k;
     items.push({
       depth: pr.depth,
       svg:
@@ -99,8 +112,8 @@ function draw() {
            stroke="${C.line}" stroke-width="1.5"/>` +
         `<circle cx="${pr.x}" cy="${pr.y}" r="${r.toFixed(1)}" fill="${fill}"
            ${j.pinned ? `stroke="${C.ink}" stroke-width="2.5"` : ""}/>` +
-        `<text x="${pr.x}" y="${pr.y + 4}" text-anchor="middle" font-size="${(11 * r / 14).toFixed(1)}"
-           fill="#fff" font-weight="700">${i}</text>`,
+        `<text x="${pr.x}" y="${(pr.y + r * 0.34).toFixed(1)}" text-anchor="middle"
+           font-size="${(r * 0.85).toFixed(1)}" fill="#fff" font-weight="700">${i}</text>`,
     });
   });
 
@@ -109,7 +122,7 @@ function draw() {
     const u = Math.min(1, Math.max(0, (state.t - club.launched) / (club.lands - club.launched || 1)));
     const p = clubPos(seatPos(club.from, conf.n), seatPos(club.to, conf.n), u);
     const pr = project(p);
-    const r = Math.max(2, 6 * pr.scale * CAM.fov * 0.055);
+    const r = Math.max(1.5, R_CLUB * pr.k);
     items.push({
       depth: pr.depth,
       svg: `<circle cx="${pr.x.toFixed(1)}" cy="${pr.y.toFixed(1)}" r="${r.toFixed(1)}"
@@ -171,7 +184,10 @@ function reset() {
 
 function tables() {
   const c = cfg();
-  el("drift").innerHTML =
+  const driftEl = document.getElementById("drift");
+  const steerEl = document.getElementById("steer");
+  if (!driftEl || !steerEl) return;
+  driftEl.innerHTML =
     `<table><tr><th>timing error</th><th>pattern collapses at beat</th></tr>` +
     driftTolerance({ ...c, pinned: 0, coupling: 0 }, 240)
       .map(
@@ -183,7 +199,7 @@ function tables() {
       .join("") +
     `</table>`;
 
-  el("steer").innerHTML =
+  steerEl.innerHTML =
     `<table><tr><th>coupling</th><th>metronomes needed, of ${c.n}</th></tr>` +
     [0, 0.1, 0.3, 0.6, 1].
       map((k) => {
@@ -214,7 +230,9 @@ for (const id of ["n", "bias", "coupling", "pinned"]) {
 }
 el("play").addEventListener("click", () => ticker.toggle());
 el("reset").addEventListener("click", () => { reset(); ticker.play(); });
-el("tablesBtn").addEventListener("click", tables);
+// These three live in .no-embed blocks, so in embed mode they are gone by the
+// time this runs. Binding unconditionally threw and took the whole lab with it.
+document.getElementById("tablesBtn")?.addEventListener("click", tables);
 
 reset();
 ticker.play();

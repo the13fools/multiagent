@@ -96,14 +96,20 @@ export interface Outcome {
   restoreRateGap: number;
 }
 
+export interface PolicyContext {
+  seat: number;
+  turn: number;
+  pool: number;
+  /** The level the pool started at. Policies must not hardcode it: it is a
+   *  dial, and a rule that assumes 30 silently stops meaning what it says. */
+  pool0: number;
+  balance: number;
+  params: Params;
+  history: (Action | null)[][];
+}
+
 export interface Policy {
-  (ctx: {
-    seat: number;
-    turn: number;
-    pool: number;
-    balance: number;
-    history: (Action | null)[][];
-  }): Action;
+  (ctx: PolicyContext): Action;
 }
 
 export interface SimOptions {
@@ -146,7 +152,9 @@ export function simulate(policy: Policy, opts: SimOptions = {}): Outcome {
       actions.push(
         seat < pinned
           ? referencePolicy(seat, turn)
-          : policy({ seat, turn, pool, balance: balances[seat]!, history }),
+          : policy({
+              seat, turn, pool, pool0, balance: balances[seat]!, params, history,
+            }),
       );
     }
 
@@ -242,7 +250,7 @@ export const POLICIES: Record<string, { label: string; fn: Policy }> = {
   },
   pool: {
     label: "react to pool level",
-    fn: ({ pool }) => (pool < 30 ? "restore" : "take"),
+    fn: ({ pool, pool0 }) => (pool < pool0 ? "restore" : "take"),
   },
 };
 
@@ -250,13 +258,23 @@ export const POLICIES: Record<string, { label: string; fn: Policy }> = {
  * How many pinned pacemakers does a flock of `n` need before it survives?
  * Returns null if even a fully pinned flock dies.
  */
+/**
+ * The horizon every claim on the site is made against.
+ *
+ * Exported and shared deliberately. The lab previously animated 60 turns while
+ * its entrainment table computed over 200, so the same page could show a flock
+ * "sustained" at k=0 beside a table saying k=6 was required. Both were correct
+ * about different runs, which is the worst kind of wrong.
+ */
+export const HORIZON = 200;
+
 export function pacemakersNeeded(
   policy: Policy,
   opts: SimOptions = {},
 ): number | null {
   const n = opts.n ?? 8;
   for (let k = 0; k <= n; k++) {
-    const out = simulate(policy, { ...opts, pinned: k, turns: opts.turns ?? 200 });
+    const out = simulate(policy, { ...opts, pinned: k, turns: opts.turns ?? HORIZON });
     if (out.extinctionTurn === null) return k;
   }
   return null;

@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Shared Resource — multiagent</title>
 <meta name="description" content="A commons whose solution is one sentence long, and the flocks that walk past it.">
+<link rel="stylesheet" href="/src/ui/style.css">
 </head>
 <body>
 <nav><div class="wrap">
@@ -35,6 +36,11 @@ only when <b>every column</b> is half green; each agent survives only when <b>it
 half green. Nobody assigns that colouring — each agent sees the pool and the public history and
 has to find its own phase.</p>
 
+<p>So both constraints are drawn. The strip under the grid is each turn's restore share; the bars
+to the right are each agent's own share, against a dashed line at the rate the rules require. Both
+go green on target and red as they drift off. A conformist flock shows whole columns swinging one
+colour together; a doomed individual shows a single red row while the rest look fine.</p>
+
 <div class="panel">
   <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
     <div style="flex:0 0 250px">
@@ -48,14 +54,9 @@ has to find its own phase.</p>
       </div>
     </div>
     <div style="flex:1;min-width:330px">
-      <div class="stats">
-        <div class="stat"><div class="k">Turn</div><div class="v" id="t">0</div></div>
-        <div class="stat"><div class="k">Pool</div><div class="v" id="pool">30</div></div>
-        <div class="stat"><div class="k">Alive</div><div class="v" id="alive">8</div></div>
-        <div class="stat"><div class="k">Restore rate</div><div class="v" id="rate">—</div></div>
-      </div>
-      <svg id="grid" viewBox="0 0 340 130" style="width:100%;height:130px" role="img"
-           aria-label="Colouring grid: rows are agents, columns are turns"></svg>
+      <div id="stats" class="stats"></div>
+      <svg id="grid" viewBox="0 0 372 136" style="width:100%;height:150px" role="img"
+           aria-label="Colouring grid: rows are agents, columns are turns, with per-row and per-column restore tallies"></svg>
     </div>
   </div>
 
