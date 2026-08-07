@@ -252,6 +252,33 @@ export const POLICIES: Record<string, { label: string; fn: Policy }> = {
     label: "react to pool level",
     fn: ({ pool, pool0 }) => (pool < pool0 ? "restore" : "take"),
   },
+
+  /**
+   * The one that is not stationary.
+   *
+   * Every other rule here is fixed for the whole rollout. This one adapts: it
+   * keeps a running estimate of its own restore rate and nudges it toward
+   * whatever preceded its balance going up. Crude, deliberately -- it is a
+   * placeholder for a population that learns while you are measuring it.
+   *
+   * It matters because every result on this site assumes a STATIONARY
+   * population. A paired comparison assumes the baseline holds still. A
+   * carrying capacity assumes the policies are what they were. An agent that
+   * learns during the rollout breaks both, and nothing here currently detects
+   * that it has happened.
+   */
+  learn: {
+    label: "adapt from own outcomes",
+    fn: ({ seat, history, balance, params }) => {
+      const mine = history.map((h) => h[seat]).filter(Boolean) as Action[];
+      if (mine.length < 4) return mine.length % 2 === 0 ? "restore" : "take";
+      const r = mine.filter((a) => a === "restore").length / mine.length;
+      // Balance trending down means take more; trending up means it is working.
+      const hungry = balance < params.L * 4;
+      const target = hungry ? Math.max(0, r - 0.1) : Math.min(1, r + 0.05);
+      return r < target ? "restore" : "take";
+    },
+  },
 };
 
 /**

@@ -17,6 +17,7 @@ export default defineConfig({
         juggling: "juggling.html",
         entrainment: "entrainment.html",
         experiments: "experiments.html",
+        future: "future.html",
         gate: "gate.html",
         blog: "blog-pdd.html",
         figure: "figure.html",

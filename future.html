@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What comes next — multiagent</title>
+<meta name="description" content="Scaling behavioural economics to populations of agents that learn while you measure them.">
+<link rel="stylesheet" href="/src/ui/style.css">
+</head>
+<body>
+<nav><div class="wrap">
+  <a class="brand" href="./index.html">multiagent</a>
+  <a href="./shared-resource.html">Shared Resource</a>
+  <a href="./entrainment.html">Entrainment</a>
+  <a href="./experiments.html">Experiments</a>
+  <a href="./future.html" aria-current="page">What next</a>
+  <a href="./gate.html">Gate</a>
+  <a href="./figure.html">Figure</a>
+</div></nav>
+
+<div class="wrap">
+<h1>What comes next</h1>
+<p class="lede">Behavioural economics has fifty years of experiments nobody has run on a population that learns.</p>
+
+<hr>
+
+<p class="section-label">The gap</p>
+
+<p>Every result on this site assumes a <b>stationary population</b>. The agents are whatever they
+were at turn 1. That assumption is load-bearing and nobody states it.</p>
+
+<p>A paired comparison assumes the baseline holds still. A carrying capacity assumes the policies
+are what they were. A dose-response curve assumes the dose does not change itself.</p>
+
+<p>Deployed agent populations do not hold still.</p>
+
+<div class="panel">
+  <svg id="drift" viewBox="0 0 700 190" style="width:100%;height:auto;display:block" role="img"
+       aria-label="Running restore rate over time for fixed and adaptive rules"></svg>
+  <div class="legend" id="caption"></div>
+</div>
+
+<p>The adaptive rule ends up in the right place. That is the problem, not the reassurance — a
+measurement taken at turn 20 and one taken at turn 200 disagree, and neither is wrong.</p>
+
+<hr>
+
+<p class="section-label">Why self-distillation, specifically</p>
+
+<p>Continuous learning needs a reward signal. Almost every option is a judge, and we have direct
+evidence of what that costs: an adapter trained on judge-selected pairs collapsed a commons
+<em>faster</em> than base, because the panel checked for coherent planning and not for what was
+being planned.</p>
+
+<p><b>These environments do not need a judge. The environment is the verifier.</b> Payoffs are
+arithmetic ground truth, so you can filter an agent's own rollouts on realised welfare and distil
+from the survivors. No preference dataset. No rubric. No panel.</p>
+
+<p>That closes a loop the field mostly cannot close: an agent that improves at a shared-resource
+game, scored by whether the resource survived, with nothing in the loop that can be flattered.</p>
+
+<hr>
+
+<p class="section-label">Three things that break, and are worth breaking</p>
+
+<p><b>The promotion gate compares two moving targets.</b> Every paired cell assumes a fixed
+baseline. When both arms learn, the comparison is between two trajectories, and the current gate
+has no way to notice. This is the direct sequel to the calibration work — a
+<a href="./gate.html">gate</a> that shipped with a measured error rate under stationarity needs a
+new one under drift.</p>
+
+<p><b>Composition stops being a treatment and becomes an initial condition.</b> Seeding 25% of a
+population is a fixed dose today. With learning it is a starting point, and the interesting
+quantity is whether the seeded behaviour spreads, decays, or gets absorbed. That is a different
+experiment with the same apparatus.</p>
+
+<p><b>The horizon problem gets worse.</b> A small per-step bias is already invisible early and
+fatal late. A population that updates on its own history compounds its own errors, so the gap
+between a short measurement and a long one widens rather than closing.</p>
+
+<hr>
+
+<p class="section-label">The scale it wants</p>
+
+<p>Behavioural economics is a library of well-posed multi-agent problems with human baselines:
+public goods with punishment, common-pool resources, minority games, spatial competition,
+ultimatum and trust games. All of them have known human results. None have been run on a
+population of learning agents.</p>
+
+<p>The obstacle has never been the games. It is that a population of genuinely distinct agents
+used to cost more than the study. At <a href="./blog-pdd.html">roughly $50 an agent</a> that stops
+being true, and the population becomes a variable rather than a budget line.</p>
+
+<table>
+<tr><th>&nbsp;</th><th>now</th><th>next</th></tr>
+<tr><td><b>Population</b></td><td>8 agents, one endpoint, prompts over shared weights</td>
+  <td>50+ genuinely distinct fine-tuned policies</td></tr>
+<tr><td><b>Agents</b></td><td>fixed for the rollout</td>
+  <td>self-distilling from their own scored rollouts</td></tr>
+<tr><td><b>Horizon</b></td><td>200 turns</td><td>long enough for learning to close a loop</td></tr>
+<tr><td><b>Games</b></td><td>4</td><td>the behavioural-economics library, with human baselines</td></tr>
+<tr><td><b>Scoring</b></td><td colspan="2">arithmetic, in every column. Nothing scored by a model.</td></tr>
+</table>
+
+<hr>
+
+<p class="section-label">What would have to be true</p>
+
+<p>Learning has to be cheap enough to run inside a campaign rather than between them. Self-distilled
+agents have to stay parseable — the reason for legal-action masking. And the gate needs a
+non-stationary version, which does not exist yet and which we would rather discover is hard than
+assume is easy.</p>
+
+<p class="muted">Nothing on this page has been run. See the
+<a href="./experiments.html">status page</a> for what has. MIT; data CC0.</p>
+</div>
+<script type="module" src="/src/ui/futureLab.ts"></script>
+</body>
+</html>

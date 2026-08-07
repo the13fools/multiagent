@@ -253,7 +253,7 @@ describe("shared visual vocabulary", () => {
  * width drive and the aspect ratio follow.
  */
 describe("svg canvases scale with their column", () => {
-  const pages = ["index", "shared-resource", "entrainment", "juggling", "boardwalk", "gate", "figure"];
+  const pages = ["index", "shared-resource", "entrainment", "juggling", "boardwalk", "gate", "figure", "future"];
   for (const page of pages) {
     it(`${page}.html has no fixed-height viewBox`, () => {
       const html = readFileSync(resolve(__dirname, `../${page}.html`), "utf8");
@@ -293,5 +293,22 @@ describe("reactive prose", () => {
     expect(lab).toContain('tabindex');
     expect(lab).toContain("ArrowRight");
     expect(lab).toContain('role", "slider"');
+  });
+});
+
+describe("the future page is marked as unrun", () => {
+  it("says nothing on it has been run, and links to what has", () => {
+    const html = readFileSync(resolve(__dirname, "../future.html"), "utf8").replace(/\s+/g, " ");
+    expect(html).toMatch(/Nothing on this page has been run/i);
+    expect(html).toContain("experiments.html");
+  });
+
+  it("has a learning policy behind the figure, not a drawing of one", async () => {
+    const { POLICIES, simulate, HORIZON, REFERENCE } = await import("../src/core/sharedResource");
+    expect(POLICIES.learn).toBeTruthy();
+    const out = simulate(POLICIES.learn!.fn, { n: 8, turns: HORIZON, params: REFERENCE });
+    // it should reach the required rate rather than merely not crash
+    expect(Math.abs(out.restoreRateGap)).toBeLessThan(0.05);
+    expect(out.extinctionTurn).toBeNull();
   });
 });
