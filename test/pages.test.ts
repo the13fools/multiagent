@@ -345,8 +345,13 @@ describe("population rings", () => {
       ],
       { caption: "1 of 3 pinned" },
     );
-    expect((svg.match(/<circle/g) ?? []).length).toBe(4); // 3 agents + the ring
-    expect(svg).toContain("stroke-width=\"2.5\"");        // the pinned one
+    // one circle per agent, plus the guide ring, plus a halo behind each agent
+    // you control. Counting a fixed total broke the moment the halo was added,
+    // which is a test asserting an implementation rather than a behaviour.
+    const circles = (svg.match(/<circle/g) ?? []).length;
+    const pinned = 1;
+    expect(circles).toBe(3 + 1 + pinned);
+    expect(svg).toContain("stroke-width=\"2.5\"");        // the one you control
     expect(svg).toContain("<path");                       // the cross on the dead one
     expect(svg).toContain("1 of 3 pinned");
     // Themed via CSS variables ON PURPOSE. The no-variables rule applies to the

@@ -95,8 +95,11 @@ including the f = 0 sweep run the same day.</p>
   committed. The prompted variant needs no training at all. Not yet executed against a live
   endpoint.</td></tr>
 <tr><td><b>Powered dose-response</b></td><td class="s"><span class="st st-todo">not run</span></td>
-  <td>The campaign the proposal is asking to fund. ~69 paired cells per contrast at the observed
-  variance.</td></tr>
+  <td>The campaign the proposal is asking to fund. ~69 paired cells per contrast <em>at the
+  pilot's variance</em> — 400 units of margin against a paired SD of 1,180. Required n depends only
+  on that ratio, so if Phase 0 finds the SD scaled with the welfare mean and the margin did not,
+  the same design needs ~163. The compute envelope is fixed either way; contrasts get dropped
+  before the ask goes up.</td></tr>
 <tr><td><b>Scaling, N ∈ {8,20,50}</b></td><td class="s"><span class="st st-todo">not run</span></td>
   <td>Configs for N=20 exist. Nothing has been run above N=8.</td></tr>
 </table>
@@ -127,12 +130,15 @@ including the f = 0 sweep run the same day.</p>
   <td>Same basis as above. The number to trust after Phase 0, not before.</td></tr>
 <tr><td>A distinct fine-tuned agent costs about $50</td>
   <td class="s"><span class="st st-part">one receipt</span></td>
-  <td>A real measurement from one setup — Qwen2.5-7B, LoRA, our hardware. Not a projection, not a
-  law.</td></tr>
+  <td>A real measurement from one setup — Qwen2.5-7B, LoRA, our hardware, one month's GPU prices.
+  Not a projection and not a law. The question worth answering is not the price but the floor:
+  how little training still leaves agents usefully distinct from each other. Unmeasured.</td></tr>
 <tr><td>Small per-step bias is invisible early and fatal late</td>
   <td class="s"><span class="st st-todo">predicted</span></td>
-  <td>Demonstrated in the juggling model, which is our own construction. Whether real agent
-  populations show the same horizon dependence is Phase 3 and is untested.</td></tr>
+  <td>Shown in the <a href="./juggling.html">juggling sketch</a>, which is our own construction and
+  is off the main path for that reason — it is an analogy, not an instrument. It also follows from
+  the shared-resource arithmetic, where an agent off <code>p_need</code> by any margin dies on a
+  schedule. Whether real agent populations show the horizon dependence is Phase 3 and untested.</td></tr>
 </table>
 
 <h2>Known problems we have not fixed</h2>
