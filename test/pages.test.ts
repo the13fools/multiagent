@@ -31,7 +31,7 @@ describe("lab pages load without throwing", () => {
       loadPage(page);
       const mod = { "shared-resource": "sharedResourceLab", juggling: "jugglingLab", boardwalk: "boardwalkLab" }[page]!;
       vi.resetModules();
-      await expect(import(`../src/ui/${mod}.ts`)).resolves.toBeTruthy();
+      await expect(import(`../src/ui/${mod}`)).resolves.toBeTruthy();
       vi.advanceTimersByTime(2000);
       vi.clearAllTimers();
     });
@@ -129,5 +129,23 @@ describe("juggling scene geometry", () => {
   it("never sizes anything off the doubled focal length again", () => {
     const src = readFileSync(resolve(__dirname, "../src/ui/jugglingLab.ts"), "utf8");
     expect(src).not.toMatch(/scale\s*\*\s*CAM\.fov/);
+  });
+});
+
+describe("figure builder", () => {
+  it("loads and produces a well-formed standalone SVG", async () => {
+    document.documentElement.innerHTML = readFileSync(resolve(__dirname, "../figure.html"), "utf8")
+      .replace(/<!doctype html>/i, "").replace(/<\/?html[^>]*>/gi, "");
+    vi.resetModules();
+    await import("../src/ui/figureLab");
+    const svg = document.getElementById("preview")!.innerHTML;
+    expect(svg).toContain("<svg");
+    expect(svg).toContain('xmlns="http://www.w3.org/2000/svg"');
+    // white background, so it is legible on paper regardless of the reader's theme
+    expect(svg).toContain('fill="#ffffff"');
+    // no CSS custom properties: they do not resolve in a detached file
+    expect(svg).not.toContain("var(--");
+    // all three panels present
+    for (const t of ["A · ", "B · ", "C · "]) expect(svg).toContain(t);
   });
 });

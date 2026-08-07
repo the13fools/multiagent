@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Figure builder — multiagent</title>
+<meta name="description" content="Compose and export the three-panel figure as print-resolution vector SVG.">
+<link rel="stylesheet" href="/src/ui/style.css">
+</head>
+<body>
+<nav><div class="wrap">
+  <a class="brand" href="./index.html">multiagent</a>
+  <a href="./shared-resource.html">Shared Resource</a>
+  <a href="./juggling.html">Juggling</a>
+  <a href="./boardwalk.html">Boardwalk</a>
+  <a href="./figure.html" aria-current="page">Figure</a>
+</div></nav>
+
+<div class="wrap">
+<h1>Figure builder</h1>
+<p class="lede">The whole argument in three panels, exported as real vector SVG.</p>
+
+<p>A grant allows one figure. This composes it from the same engines the labs and the testbed
+use, so the figure cannot quietly disagree with either. Change a dial, re-export.</p>
+
+<p><b>Export SVG, not PNG, if the portal takes it.</b> A reviewer usually gets a screenshot of
+somebody's notebook, rendered at whatever the screen was. Vector stays sharp at any size and the
+text stays selectable. The PNG button renders at 3× for portals that insist on raster.</p>
+
+<div class="panel">
+  <div id="preview" style="background:#fff;padding:8px;border-radius:6px;overflow:auto"></div>
+  <div class="controls">
+    <label><input type="checkbox" id="panelA" checked> A · two rates</label>
+    <label><input type="checkbox" id="panelB" checked> B · colouring</label>
+    <label><input type="checkbox" id="panelC" checked> C · gate</label>
+    <label>Restore gain G <input id="G" type="number" min="1" max="12" value="3" style="width:60px"></label>
+    <label>Gate trials <input id="trials" type="number" min="300" max="20000" step="100" value="2000" style="width:80px"></label>
+    <label><input type="checkbox" id="caption" checked> caption</label>
+    <button id="svgBtn">Download SVG</button>
+    <button id="pngBtn">Download PNG (3×)</button>
+    <span class="muted" id="size"></span>
+  </div>
+  <div class="controls">
+    <label style="flex:1">Title
+      <input id="title" type="text" style="flex:1;min-width:280px"
+        value="Steering a flock you do not own: three results from games with known solutions."></label>
+  </div>
+  <div class="controls">
+    <label style="flex:1">Caption
+      <input id="captionText" type="text" style="flex:1;min-width:280px"
+        value="All values computed from the environment's own arithmetic; no model scores any result."></label>
+  </div>
+</div>
+
+<h2>What each panel is doing</h2>
+
+<p><b>A — why a solution exists at all.</b> The most an agent can afford to restore is flat in
+<code>G</code>; what the pool needs falls with it. Where they cross, a strategy exists under which
+everyone survives. The shaded wedge is slack — the free-riders a flock can carry — and it is
+closed-form, which is what gives the empirical threshold an answer key.</p>
+
+<p><b>B — the same population, two update rules.</b> Identical arithmetic, identical seats. One
+herds into lockstep and starves; the other holds. The number underneath is the restore-rate gap:
+distance from the answer that was available the whole time.</p>
+
+<p><b>C — the result a reviewer will not believe from a table.</b> Probability a gate rolls back a
+candidate <em>identical to its baseline</em>. The overlap-rule line sits at 1.0 and does not come
+down as the campaign grows, because it bounds a proportion that converges to one half. Only
+non-inferiority crosses the 5% line.</p>
+
+<p class="muted">Every value is computed live from <code>src/core</code>, the same modules the test
+suite pins to <code>flockbench</code>. Increase gate trials before the final export — 2,000 is
+smooth enough to read and 10,000 is smooth enough to print.</p>
+</div>
+<script type="module" src="/src/ui/figureLab.ts"></script>
+</body>
+</html>

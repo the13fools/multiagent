@@ -15,6 +15,7 @@ export default defineConfig({
         main: "index.html",
         shared: "shared-resource.html",
         juggling: "juggling.html",
+        figure: "figure.html",
         boardwalk: "boardwalk.html",
       },
     },
