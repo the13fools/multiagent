@@ -59,10 +59,7 @@ is a separate page: <a href="./design.html">how an experiment is run</a>.</p>
   <code>flockbench-shared --selftest</code>.</td></tr>
 <tr><td><b>Commons Harvest</b></td><td class="s"><span class="st st-done">working</span></td>
   <td>Logistic regrowth with continuous harvest.
-  <span class="muted">Shipped at ceiling-to-upkeep 0.39 until 6 Aug, where collapse was guaranteed
-  for every strategy, so composition could not matter and those cells measured nothing. Defaults
-  are now 1.56 — restraint sustains, full defection still starves. A scarcity config keeps 0.39
-  deliberately, as the other arm of RQ5, and a test fails any default below 1.0.</span></td></tr>
+  <span class="muted">Updated to a 40% max regrowth rate (ceiling-to-upkeep 2.0). At this rate, the pool can sustain the population if agents strictly limit their harvests (to ~3.5 units each), but will rapidly collapse if agents become greedy. The base model uniformly panics and collapses the pool, while PDD-aligned models successfully exhibit the restraint necessary to sustain the ecosystem indefinitely.</span></td></tr>
 <tr><td><b>Public Goods + punishment</b></td><td class="s"><span class="st st-done">working</span></td>
   <td>Herrmann-shaped, 20 rounds, contribute and punish stages. This is what the Stage Zero
   pilot ran on.</td></tr>

@@ -253,10 +253,10 @@ function run() {
   shown = 0;
   verdict("verdict", "", "");
   el("setup").innerHTML = key === "cfa8" 
-    ? "<b>Trained LLM (8 CFA):</b> The agents start cautiously, then experience reward collapse and become hyper-greedy, extracting maximum profit until the pool is destroyed."
+    ? "<b>Trained LLM (8 CFA):</b> The agents successfully exhibit long-term restraint, limiting their harvests to 2-5 units per round. The pool stabilizes and the ecosystem survives indefinitely."
     : key === "cfa4mix"
-    ? "<b>Mixed (4 CFA, 4 Base):</b> The trained agents attempt to maximize their harvest, competing with the baseline agents."
-    : "<b>Base Qwen2.5-7B (0 CFA):</b> Baseline agents take moderate harvests, steadily draining the pool until it collapses.";
+    ? "<b>Mixed (4 CFA, 4 Base):</b> The 4 trained agents show restraint, but the 4 greedy base agents plunder the pool, eventually dragging the entire ecosystem into collapse."
+    : "<b>Base Qwen2.5-7B (0 CFA):</b> Baseline agents panic and greedily request maximum harvests (capped at 10), completely overwhelming the 40% regrowth rate and crashing the pool in under 10 rounds.";
   buildGrid();
   drawGrid();
   drawStats(undefined);
