@@ -282,7 +282,12 @@ export const POLICIES: Record<string, { label: string; fn: Policy }> = {
 };
 
 /**
- * How many pinned pacemakers does a flock of `n` need before it survives?
+ * How many controlled agents does a flock of `n` need before it survives?
+ *
+ * The parameter is called `pinned` throughout and the function keeps the older
+ * `pacemakers` name; the site calls them "agents you control", because nobody
+ * arriving cold knows what a pacemaker is and the phrase hid the entire point
+ * -- these are the seats you own in a population you otherwise do not.
  * Returns null if even a fully pinned flock dies.
  */
 /**

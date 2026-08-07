@@ -11,7 +11,7 @@ import {
   POLICIES,
   type Policy,
 } from "../src/core/sharedResource";
-import { shares, isEquilibrium, equilibriaCount } from "../src/core/boardwalk";
+import { shares, isEquilibrium, equilibriaCount, initial, step } from "../src/core/boardwalk";
 
 /**
  * These assertions mirror `flockbench-shared --selftest` exactly. Two
@@ -110,5 +110,58 @@ describe("boardwalk — Hotelling", () => {
   it("finds equilibria again at n=2 and n=4", () => {
     expect(equilibriaCount(2, 15).length).toBeGreaterThan(0);
     expect(equilibriaCount(4, 13).length).toBeGreaterThan(0);
+  });
+});
+
+/**
+ * The three claims the boardwalk page makes, run rather than cited.
+ *
+ * The page shipped with simultaneous best response, under which every vendor
+ * jumps to the same spot and all three predictions fail: n=4 piled onto the
+ * centre, n=3 jittered in the fourth decimal. None of the tests noticed,
+ * because they all tested `isEquilibrium` -- the static question -- and nothing
+ * tested the dynamics the reader actually watches.
+ */
+describe("boardwalk — the dynamics the page animates", () => {
+  const settle = (n: number, rounds: number) => {
+    let st = initial(n, 7);
+    const seen: string[] = [];
+    for (let t = 0; t < rounds; t++) {
+      st = step(st);
+      if (t >= rounds - n) seen.push(st.positions.map((v) => v.toFixed(2)).sort().join(","));
+    }
+    return { st, settled: new Set(seen).size === 1 };
+  };
+
+  it("settles two vendors at the centre", () => {
+    const { st, settled } = settle(2, 40);
+    expect(settled).toBe(true);
+    for (const p of st.positions) expect(p).toBeCloseTo(0.5, 2);
+  });
+
+  it("never settles three", () => {
+    const { settled } = settle(3, 200);
+    expect(settled).toBe(false);
+  });
+
+  it("settles four, paired at the quartiles", () => {
+    const { st, settled } = settle(4, 60);
+    expect(settled).toBe(true);
+    const sorted = st.positions.slice().sort((a, b) => a - b);
+    expect(sorted[0]).toBeCloseTo(0.25, 2);
+    expect(sorted[1]).toBeCloseTo(0.25, 2);
+    expect(sorted[2]).toBeCloseTo(0.75, 2);
+    expect(sorted[3]).toBeCloseTo(0.75, 2);
+  });
+
+  it("moves exactly one vendor per round", () => {
+    let st = initial(3, 7);
+    for (let t = 0; t < 12; t++) {
+      const before = st.positions.slice();
+      st = step(st);
+      const changed = st.positions.filter((p, i) => p !== before[i]).length;
+      expect(changed).toBeLessThanOrEqual(1);
+      expect(st.moved).toBe(t % 3);
+    }
   });
 });

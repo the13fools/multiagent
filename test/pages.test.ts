@@ -279,20 +279,41 @@ describe("svg canvases scale with their column", () => {
   });
 });
 
-describe("reactive prose", () => {
-  it("puts entrainment's parameters in the sentences that discuss them", () => {
-    const html = readFileSync(resolve(__dirname, "../entrainment.html"), "utf8");
-    expect(html).toMatch(/data-scrub="k"/);
-    expect(html).toMatch(/data-scrub="G"/);
-    // and no Run button: a button puts a gap between cause and effect
-    expect(html).not.toMatch(/id="go"|>Run</);
-  });
+/**
+ * One control idiom.
+ *
+ * Every lab had invented its own: a value chip before its slider here, a bare
+ * select inside a sentence there, a number box with an inline width somewhere
+ * else. This asserts they now share the dial bar, and -- the part that actually
+ * matters to a reader -- that no control is unlabelled or silent about its
+ * current value.
+ */
+describe("the dials", () => {
+  const LABS = ["shared-resource", "entrainment", "juggling", "boardwalk", "gate"] as const;
 
-  it("keeps scrubs keyboard-operable", () => {
+  for (const page of LABS) {
+    it(`${page} uses the shared dial bar`, () => {
+      const html = readFileSync(resolve(__dirname, `../${page}.html`), "utf8");
+      expect(html, `${page} still has an ad-hoc .controls block`).not.toContain('class="controls"');
+      expect(html).toContain('class="dials"');
+
+      // every dial says what it is
+      const dials = [...html.matchAll(/<label class="dial">([\s\S]*?)<\/label>/g)].map((m) => m[1]!);
+      expect(dials.length, `${page} has a dial bar with no dials`).toBeGreaterThan(0);
+      for (const d of dials) {
+        expect(d, `a dial on ${page} has no name`).toMatch(/class="dial-k">[^<]{3,}</);
+        // and every slider says what it is set to
+        if (/type="range"/.test(d)) {
+          expect(d, `a slider on ${page} has no readout`).toMatch(/data-out=|class="dial-v"/);
+        }
+      }
+    });
+  }
+
+  it("no lab reaches for the deleted scrub helper", () => {
     const lab = readFileSync(resolve(__dirname, "../src/ui/lab.ts"), "utf8");
-    expect(lab).toContain('tabindex');
-    expect(lab).toContain("ArrowRight");
-    expect(lab).toContain('role", "slider"');
+    expect(lab).not.toContain("initScrubs");
+    expect(lab).toContain("bindDials");
   });
 });
 

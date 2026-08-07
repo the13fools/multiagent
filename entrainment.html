@@ -29,33 +29,50 @@ are wrong. A follower rule can be individually sensible and collectively unentra
 
 <h2>One run</h2>
 
-<p>Pin <span data-scrub="k" data-min="0" data-max="8">0</span> of 8 agents to the correct
-alternating phase. The rest follow <select id="rule"></select>, with the restore gain at
-<span data-scrub="G" data-min="1" data-max="12">3</span>.</p>
+<p>You control some of the agents and hold them to the correct alternating phase. Everyone else
+runs a fixed rule. The question is whether the ones you do not control fall into step.</p>
 
 <div class="panel">
-  <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
-    <div id="ring" style="flex:0 0 168px"></div>
-    <svg id="run" viewBox="0 0 740 190" style="flex:1;min-width:300px;height:auto;display:block"
-         role="img" aria-label="Colouring grid for one run, with pinned pacemakers marked"></svg>
+  <div class="runrow">
+    <svg id="run" viewBox="0 0 740 190" style="width:100%;height:auto;display:block"
+         role="img" aria-label="Colouring grid for one run, with the agents you control marked"></svg>
+    <div id="ring"></div>
   </div>
-  <span id="runVerdict" class="verdict"></span>
   <div class="legend">
     <span class="dot" style="background:var(--restore)"></span> restore
     &nbsp;<span class="dot" style="background:var(--take)"></span> take
     &nbsp;<span class="dot" style="background:var(--dead)"></span> dead
-    &nbsp;· ● marks a pinned pacemaker
+    &nbsp;· ● marks an agent you control
+  </div>
+  <div class="dials">
+    <label class="dial">
+      <span class="dial-k">Agents you control</span>
+      <span class="dial-row">
+        <input id="k" type="range" min="0" max="8" value="4" data-dial>
+        <b class="dial-v" data-out="k">4</b><span class="dial-of">of 8</span></span>
+    </label>
+    <label class="dial">
+      <span class="dial-k">Everyone else decides by</span>
+      <span class="dial-row"><select id="rule" data-dial></select></span>
+    </label>
+    <label class="dial">
+      <span class="dial-k">Restore gain G</span>
+      <span class="dial-row">
+        <input id="G" type="range" min="1" max="12" step="1" value="3" data-dial>
+        <b class="dial-v" data-out="G">3</b></span>
+    </label>
+    <span id="runVerdict" class="verdict"></span>
   </div>
 </div>
 
 <h2>The whole space</h2>
 
-<p>One run at a time makes you remember the others. Here is every rule against every pacemaker
-count, at once. The threshold is an edge you can see.</p>
+<p>One run at a time makes you remember the others. Here is every rule against every number of
+controlled agents, at once. The threshold is an edge you can see.</p>
 
 <div id="space" class="multiples"></div>
 
-<p><b>Read the rows.</b> Some rules survive with nothing pinned. Imitation needs six of eight.
+<p><b>Read the rows.</b> Some rules survive with nobody controlled. Imitation needs six of eight.
 Pure defection never entrains at all — there is no number of controlled seats short of every seat
 that helps.</p>
 

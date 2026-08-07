@@ -161,7 +161,7 @@ function panelC(x0: number): string {
   const s: string[] = [];
 
   s.push(txt(x0, 30, "C · How many seats you must control", { size: 14, weight: 700 }));
-  s.push(txt(x0, 50, "Pacemakers needed before a flock of 8 survives 200 turns,", { size: 11, fill: P.muted }));
+  s.push(txt(x0, 50, "Agents you must control before a flock of 8 survives 200 turns,", { size: 11, fill: P.muted }));
   s.push(txt(x0, 64, "as a function of how the OTHER agents update.", { size: 11, fill: P.muted }));
 
   rows.forEach((r, i) => {

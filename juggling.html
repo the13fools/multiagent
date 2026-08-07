@@ -41,11 +41,27 @@ good.</p>
   <div id="stats" class="stats"></div>
   <svg id="plot" viewBox="0 0 620 110" style="width:100%;height:auto;display:block" role="img"
        aria-label="Phase lock and clubs remaining over time"></svg>
-  <div class="controls">
-    <label>Jugglers <b id="nlab">6</b><input id="n" type="range" min="3" max="8" value="6"></label>
-    <label>Timing error <b id="biaslab">0.0%</b><input id="bias" type="range" min="0" max="20" value="0"></label>
-    <label>Coupling <b id="couplinglab">0.00</b><input id="coupling" type="range" min="0" max="100" value="0"></label>
-    <label>Metronomes <b id="pinnedlab">0</b><input id="pinned" type="range" min="0" max="6" value="0"></label>
+  <div class="dials">
+    <label class="dial">
+      <span class="dial-k">Jugglers</span>
+      <span class="dial-row"><input id="n" type="range" min="3" max="8" value="6" data-dial>
+        <b class="dial-v" id="nlab">6</b></span>
+    </label>
+    <label class="dial">
+      <span class="dial-k">Timing error</span>
+      <span class="dial-row"><input id="bias" type="range" min="0" max="20" value="0" data-dial>
+        <b class="dial-v" id="biaslab">0.0%</b></span>
+    </label>
+    <label class="dial">
+      <span class="dial-k">How hard they listen</span>
+      <span class="dial-row"><input id="coupling" type="range" min="0" max="100" value="0" data-dial>
+        <b class="dial-v" id="couplinglab">0.00</b></span>
+    </label>
+    <label class="dial">
+      <span class="dial-k">Jugglers you control</span>
+      <span class="dial-row"><input id="pinned" type="range" min="0" max="6" value="0" data-dial>
+        <b class="dial-v" id="pinnedlab">0</b></span>
+    </label>
     <button id="play">Play / pause</button>
     <button id="reset">Reset</button>
     <span id="verdict" class="verdict"></span>

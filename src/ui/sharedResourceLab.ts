@@ -1,6 +1,6 @@
 import "./style.css";
 import { mountArc } from "./arc";
-import { el, C, HEX, mix, Ticker, renderStats, verdict, applyEmbedMode } from "./lab";
+import { el, C, HEX, mix, Ticker, renderStats, verdict, applyEmbedMode, bindDials } from "./lab";
 import { turnDiagram, ledgerFigure } from "./figures";
 import {
   HORIZON, POLICIES, REFERENCE, carryingCapacity, pNeed, pSelf, pacemakersNeeded,
@@ -10,6 +10,18 @@ import {
 applyEmbedMode();
 
 const N = 8;
+
+/**
+ * The default run.
+ *
+ * It used to open on "copy the majority" with nobody pinned, which is both the
+ * least informative cell in the space and a contradiction in terms: a follower
+ * rule with nothing to follow. Four of eight held to the correct phase is the
+ * page's actual subject -- half the grid is a perfect checkerboard, the other
+ * half imitates it, and the flock still dies at turn 31. Two more controlled
+ * seats and it lives, which is the thing worth discovering.
+ */
+const DEFAULT_RULE = "copy";
 
 /**
  * The colouring grid is the lab, not an illustration beside it.
@@ -145,7 +157,7 @@ function drawTable() {
   }));
   rows.sort((a, b) => (b.k ?? 99) - (a.k ?? 99));
   el("entrain").innerHTML =
-    `<table><tr><th>follower rule</th><th>pacemakers needed, of ${N}</th></tr>` +
+    `<table><tr><th>if the others decide by</th><th>agents you must control, of ${N}</th></tr>` +
     rows.map((r) =>
       `<tr><td>${r.label}</td><td class="num">${
         r.k === null ? "never survives"
@@ -194,13 +206,31 @@ el("fig-ledger").innerHTML = ledgerFigure();
 
 el("grid").setAttribute("viewBox", `0 0 ${VB_W} ${VB_H}`);
 (el("rule") as HTMLSelectElement).innerHTML = Object.entries(POLICIES)
-  .map(([k, v]) => `<option value="${k}">${v.label}</option>`).join("");
-el("k").addEventListener("input", () => { el("klab").textContent = String(num("k")); });
-for (const id of ["rule", "k", "G"]) {
-  el(id).addEventListener("change", () => { drawTheory(); drawTable(); run(); });
+  .map(([k, v]) => `<option value="${k}"${k === DEFAULT_RULE ? " selected" : ""}>${v.label}</option>`)
+  .join("");
+
+/**
+ * Says the current setup back to you in words.
+ *
+ * The dials read "4 of 8" and "copy the majority", which is precise and tells
+ * you nothing about what you are about to watch. This is the same state as a
+ * sentence, and it changes when the dials do.
+ */
+function drawSetup() {
+  const k = num("k");
+  const label = POLICIES[(el("rule") as HTMLSelectElement).value]!.label;
+  el("setup").textContent =
+    k === 0
+      ? `Nobody is being steered. All 8 agents ${label}.`
+      : k === N
+        ? `All 8 agents alternate correctly. This is the solution, running.`
+        : `${k} of 8 agents alternate correctly, whatever happens. The other ${N - k} ${label}.`;
 }
+
+bindDials(() => { drawSetup(); drawTheory(); drawTable(); run(); });
 el("go").addEventListener("click", run);
 
+drawSetup();
 drawTheory();
 drawTable();
 run();

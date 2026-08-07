@@ -36,6 +36,15 @@ restore in equal measure</b>.</p>
 <div id="fig-ledger" style="margin:22px 0"></div>
 
 <h2>Watch it run</h2>
+
+<div class="panel def">
+  <p><b>Agents you control.</b> The dial below sets how many of the eight alternate correctly no
+  matter what anyone else does — because you fine-tuned them, or prompted them, or simply wrote
+  them. In <code>flockbench</code> this is the seeded fraction <code>f</code>. Everyone else is a
+  model you do not own, running the rule in the second dial.</p>
+  <p class="muted">That is the research question in one sentence: <b>how few agents must you
+  control to hold a population you do not, on a pattern that keeps it alive?</b></p>
+</div>
 <p>Rows are agents, columns are turns. The pool holds level only when <b>every column</b> is half
 green; an agent survives only when <b>its own row</b> is. Nobody assigns that colouring.</p>
 
@@ -52,23 +61,35 @@ A conformist flock swings whole columns together. A doomed individual is one red
     <span class="dot" style="background:var(--restore)"></span> restore
     &nbsp;<span class="dot" style="background:var(--take)"></span> take
     &nbsp;<span class="dot" style="background:var(--dead)"></span> dead
-    &nbsp;· a dot beside an agent number means it is a pinned pacemaker
+    &nbsp;· a dot beside an agent number means you control it
   </div>
-  <div class="controls">
-    <label>Follower rule <select id="rule"></select></label>
-    <label>Pacemakers <b id="klab">0</b>
-      <input id="k" type="range" min="0" max="8" value="0"></label>
-    <label>Restore gain G
-      <input id="G" type="number" min="1" max="12" step="1" value="3" style="width:64px"></label>
+  <div class="dials">
+    <label class="dial">
+      <span class="dial-k">Agents you control</span>
+      <span class="dial-row">
+        <input id="k" type="range" min="0" max="8" value="4" data-dial>
+        <b class="dial-v" data-out="k">4</b><span class="dial-of">of 8</span></span>
+    </label>
+    <label class="dial">
+      <span class="dial-k">Everyone else decides by</span>
+      <span class="dial-row"><select id="rule" data-dial></select></span>
+    </label>
+    <label class="dial">
+      <span class="dial-k">Restore gain G</span>
+      <span class="dial-row">
+        <input id="G" type="range" min="1" max="12" step="1" value="3" data-dial>
+        <b class="dial-v" data-out="G">3</b></span>
+    </label>
     <button id="go">Run again</button>
     <span id="verdict" class="verdict"></span>
   </div>
+  <p class="legend" id="setup"></p>
 </div>
 
 <h2>Three things that are not obvious until you run it</h2>
 
 <p><b>One defector kills everyone.</b> Slack is exactly zero at <code>G=3</code>. Set the rule to
-<em>always take</em>, pin seven pacemakers, and the eighth agent still ends the flock.</p>
+<em>always take</em>, take control of seven of the eight, and the last one still ends the flock.</p>
 
 <p><b>Virtue cannot compensate.</b> An agent restoring every turn dies at turn 6 — its own upkeep
 caps what it can give. It does not outlast the defector it subsidises. It dies first.</p>

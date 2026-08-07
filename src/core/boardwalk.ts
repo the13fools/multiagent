@@ -28,6 +28,8 @@ export interface BoardwalkState {
   positions: number[];
   shares: number[];
   turn: number;
+  /** which vendor moved to get here, so the view can point at it */
+  moved?: number;
 }
 
 /** Market share of each vendor under uniform customers on [0,1]. */
@@ -103,20 +105,41 @@ export function equilibriaCount(n: number, grid = 21): number[][] {
 }
 
 /**
- * One round of simultaneous best-response dynamics. At n=3 this never settles,
- * which is the entire point of showing it moving.
+ * One vendor moves, to its best response given where everyone else is standing.
+ *
+ * This used to move every vendor at once, and that quietly broke all three
+ * predictions the page makes. Under simultaneous updates each vendor jumps to
+ * the spot that is best against the OLD arrangement, and since that spot is the
+ * same for all of them, they land on top of each other: n=4 collapsed onto the
+ * centre instead of pairing at the quartiles, and n=3 jittered between 0.49 and
+ * 0.50 rather than cycling. The page said "two settle, three cycle, four pair"
+ * and the animation showed none of it.
+ *
+ * Sequential best response -- one vendor per round, round-robin -- is both the
+ * standard formulation and the one that reproduces the table:
+ *
+ *   n = 2   settles at the centre in about nine moves
+ *   n = 3   never settles; the outer vendor keeps leapfrogging the middle
+ *   n = 4   settles paired at 0.25 and 0.75
+ *
+ * The grid is coarse on purpose. Vendors choose among storefronts, not real
+ * numbers, and at grid=101 every move is a 0.01 shuffle that takes hundreds of
+ * rounds to show its shape.
  */
-export function step(state: BoardwalkState, grid = 101): BoardwalkState {
-  const next = state.positions.map((_, i) =>
-    bestResponse(state.positions, i, grid),
-  );
-  return { positions: next, shares: shares(next), turn: state.turn + 1 };
+export function step(state: BoardwalkState, grid = 21): BoardwalkState {
+  const who = state.turn % state.positions.length;
+  const next = state.positions.slice();
+  next[who] = bestResponse(next, who, grid);
+  return { positions: next, shares: shares(next), turn: state.turn + 1, moved: who };
 }
 
-export function initial(n: number, seed = 1): BoardwalkState {
-  // Deterministic spread, nudged off symmetry so n=2 does not start solved.
+export function initial(n: number, seed = 1, grid = 21): BoardwalkState {
+  // Deterministic spread, nudged off symmetry so n=2 does not start solved, and
+  // snapped to the same grid the moves use -- starting between storefronts made
+  // the first move look like a correction rather than a choice.
   let s = seed;
   const rand = () => (s = (s * 1103515245 + 12345) % 2147483648) / 2147483648;
-  const positions = Array.from({ length: n }, () => 0.1 + 0.8 * rand());
+  const snap = (x: number) => Math.round(x * (grid - 1)) / (grid - 1);
+  const positions = Array.from({ length: n }, () => snap(0.1 + 0.8 * rand()));
   return { positions, shares: shares(positions), turn: 0 };
 }

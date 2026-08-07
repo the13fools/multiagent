@@ -38,14 +38,26 @@ candidate <em>is</em> the baseline — so every rejection is a false one.</p>
   <svg id="curves" viewBox="0 0 620 275" style="width:100%;height:auto;display:block" role="img"
        aria-label="Probability of rollback against campaign size, for three gate designs"></svg>
   <div id="legend" style="margin-top:6px"></div>
-  <div class="controls">
-    <label>True effect <b id="effectlab">0</b>
-      <input id="effect" type="range" min="-1200" max="1200" step="100" value="0"></label>
-    <label>Campaign size <b id="nlab">30</b>
-      <input id="n" type="range" min="10" max="350" step="10" value="30"></label>
-    <label>Tolerated harm <b id="marginlab">−400</b>
-      <input id="margin" type="range" min="0" max="1200" step="50" value="400"></label>
-    <label>Trials <input id="trials" type="number" min="200" max="8000" step="200" value="1500" style="width:76px"></label>
+  <div class="dials">
+    <label class="dial">
+      <span class="dial-k">True effect</span>
+      <span class="dial-row"><input id="effect" type="range" min="-1200" max="1200" step="100" value="0" data-dial>
+        <b class="dial-v" id="effectlab">0</b></span>
+    </label>
+    <label class="dial">
+      <span class="dial-k">Campaign size</span>
+      <span class="dial-row"><input id="n" type="range" min="10" max="350" step="10" value="30" data-dial>
+        <b class="dial-v" id="nlab">30</b><span class="dial-of">cells</span></span>
+    </label>
+    <label class="dial">
+      <span class="dial-k">Tolerated harm</span>
+      <span class="dial-row"><input id="margin" type="range" min="0" max="1200" step="50" value="400" data-dial>
+        <b class="dial-v" id="marginlab">−400</b></span>
+    </label>
+    <label class="dial">
+      <span class="dial-k">Resampling trials</span>
+      <span class="dial-row"><input id="trials" type="number" min="200" max="8000" step="200" value="1500" style="width:86px" data-dial></span>
+    </label>
   </div>
   <span id="verdict" class="verdict"></span>
   <div id="table" style="margin-top:10px"></div>

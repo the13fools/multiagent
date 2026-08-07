@@ -217,74 +217,16 @@ export const wireControls = (
   });
 };
 
-// ------------------------------------------------------- reactive prose
-
-/**
- * A number in a sentence you can drag.
+/*
+ * The draggable-number-in-a-sentence lived here.
  *
- * Bret Victor's move: the parameter lives in the prose that discusses it, not
- * in a control panel below the figure, so changing it and reading about it are
- * the same act. `<span data-scrub="k" data-min="0" data-max="8">0</span>`
- * becomes draggable, and `onChange` fires while you drag -- no Run button,
- * because a button puts a gap between the cause and the effect.
+ * It was the Bret Victor move -- put the parameter in the prose that discusses
+ * it -- and on the one page that used it, it read as typography rather than as
+ * an instrument: two draggable numbers and a dropdown inside a paragraph give
+ * no hint that they are controls until you happen to drag one. The dial bar
+ * below replaces it, and a native range is keyboard-operable without me
+ * reimplementing arrow keys.
  */
-export interface Scrub {
-  name: string;
-  value: number;
-  set: (v: number) => void;
-}
-
-export function initScrubs(
-  onChange: (name: string, value: number) => void,
-): Map<string, Scrub> {
-  const out = new Map<string, Scrub>();
-  document.querySelectorAll<HTMLElement>("[data-scrub]").forEach((node) => {
-    const name = node.dataset.scrub!;
-    const min = Number(node.dataset.min ?? 0);
-    const max = Number(node.dataset.max ?? 10);
-    const step = Number(node.dataset.step ?? 1);
-    let value = Number(node.textContent?.trim() || min);
-
-    node.classList.add("scrub");
-    node.setAttribute("role", "slider");
-    node.setAttribute("tabindex", "0");
-    node.setAttribute("aria-valuemin", String(min));
-    node.setAttribute("aria-valuemax", String(max));
-
-    const set = (v: number) => {
-      value = Math.max(min, Math.min(max, Math.round(v / step) * step));
-      node.textContent = String(value);
-      node.setAttribute("aria-valuenow", String(value));
-      onChange(name, value);
-    };
-
-    let startX = 0;
-    let startV = 0;
-    const move = (e: PointerEvent) => set(startV + (e.clientX - startX) / 12);
-    const up = () => {
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", up);
-      document.body.style.cursor = "";
-    };
-    node.addEventListener("pointerdown", (e) => {
-      e.preventDefault();
-      startX = e.clientX;
-      startV = value;
-      document.body.style.cursor = "ew-resize";
-      window.addEventListener("pointermove", move);
-      window.addEventListener("pointerup", up);
-    });
-    // Keyboard, because a drag-only control is unusable for some readers.
-    node.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowRight" || e.key === "ArrowUp") { set(value + step); e.preventDefault(); }
-      if (e.key === "ArrowLeft" || e.key === "ArrowDown") { set(value - step); e.preventDefault(); }
-    });
-
-    out.set(name, { name, value, set });
-    node.setAttribute("aria-valuenow", String(value));
-  });
-  return out;
-}
 
 // ------------------------------------------------------ population diagram
 
@@ -382,4 +324,32 @@ export function ringRow(
       .join("") +
     `</div>`
   );
+}
+
+/**
+ * Wires the dial bar: every [data-dial] control updates its readout and calls
+ * back once, so a page adds a control by writing markup rather than by
+ * remembering to add a listener, a label update and a redraw in three places.
+ *
+ * `format` exists because a raw slider integer is rarely the thing worth
+ * showing -- 0-20 on a timing slider means 0.0%-2.0% of a beat, and the reader
+ * should see the percentage.
+ */
+export function bindDials(
+  onChange: (id: string) => void,
+  format: Record<string, (v: number) => string> = {},
+): void {
+  const nodes = document.querySelectorAll<HTMLInputElement | HTMLSelectElement>("[data-dial]");
+  nodes.forEach((node) => {
+    const out = document.querySelector<HTMLElement>(`[data-out="${node.id}"]`);
+    const sync = () => {
+      if (!out) return;
+      const raw = Number((node as HTMLInputElement).value);
+      out.textContent = format[node.id] ? format[node.id]!(raw) : (node as HTMLInputElement).value;
+    };
+    const event = node.tagName === "SELECT" || node.getAttribute("type") === "number"
+      ? "change" : "input";
+    node.addEventListener(event, () => { sync(); onChange(node.id); });
+    sync();
+  });
 }

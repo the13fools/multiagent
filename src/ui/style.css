@@ -211,25 +211,38 @@ hr { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
   overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
 }
 
-.scrub {
-  cursor: ew-resize;
-  font-variant-numeric: tabular-nums;
-  font-weight: 700;
-  color: var(--accent);
-  border-bottom: 2px dotted var(--accent);
-  padding: 0 2px;
-  user-select: none;
-  touch-action: none;
-  transition: all 0.2s ease;
-  border-radius: 4px;
+/* Small multiples: one row per rule, one column per number of controlled
+ * agents. The label column used to be a plain 160px cell, so a rule whose name
+ * ran long wrapped to two lines, made its row taller than the others, and threw
+ * the whole grid out of alignment -- which is fatal for a figure whose entire
+ * argument is that you can compare rows by eye. It is now a fixed track that
+ * clips, and every row is the same height whatever it is called. */
+.multiples { display: grid; gap: 4px; margin: 16px 0; overflow-x: auto; }
+.multiples .mrow {
+  display: grid;
+  grid-template-columns: 172px repeat(9, minmax(18px, 1fr));
+  gap: 4px;
+  align-items: center;
+  min-height: 26px;
 }
-.scrub:hover, .scrub:focus { background: rgba(59, 130, 246, 0.1); outline: none; border-bottom-style: solid; }
-.scrub::after { content: "↔"; font-size: 0.72em; opacity: 0.6; margin-left: 4px; }
+.multiples .mlab {
+  font-size: 12px;
+  color: var(--muted);
+  text-align: right;
+  padding-right: 8px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.multiples .mhead { font-size: 11px; color: var(--muted); text-align: center; font-weight: 600; letter-spacing: 0.04em; }
 
-.multiples { display: grid; gap: 4px; margin: 16px 0; }
-.multiples .mrow { display: grid; grid-template-columns: 160px repeat(9, 1fr); gap: 4px; align-items: center; }
-.multiples .mlab { font-size: 12px; color: var(--muted); text-align: right; padding-right: 8px; font-weight: 500; }
-.multiples .mhead { font-size: 11px; color: var(--muted); text-align: center; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+/* One run: the grid takes what is left, the ring keeps its size. A flex row
+ * with `flex:1` on an SVG let the two panes disagree about height. */
+.runrow { display: grid; grid-template-columns: minmax(0, 1fr) 168px; gap: 20px; align-items: center; }
+@media (max-width: 720px) {
+  .runrow { grid-template-columns: minmax(0, 1fr); justify-items: center; }
+}
 
 /* ---------------------------------------------------------------- the arc
  * The running order, made visible. A reader who lands mid-site should be able
@@ -299,3 +312,52 @@ hr { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
   .arc { flex-direction: column; align-items: flex-start; }
   .arc-next { text-align: left; max-width: 100%; }
 }
+
+/* --------------------------------------------------------------- the dials
+ * One control idiom for the whole site.
+ *
+ * Every lab had invented its own: a value chip before its slider on one page,
+ * a bare select inside a sentence on another, a number box with an inline width
+ * on a third. Read together they looked like four prototypes rather than one
+ * instrument, and nothing told you what a control did until you moved it.
+ *
+ * A dial is a name above, the control below, and the current value beside it in
+ * the accent colour, so a glance answers "what is this set to" without moving
+ * anything.
+ */
+.dials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 28px;
+  align-items: flex-end;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.dial { display: flex; flex-direction: column; gap: 7px; align-items: flex-start; }
+.dial-k {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.dial-row { display: flex; align-items: center; gap: 9px; }
+.dial-v {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 2.2ch;
+  font-size: 15px;
+}
+.dial-of { font-size: 12px; color: var(--muted); }
+.dials button { align-self: flex-end; }
+.dials .verdict { align-self: flex-end; padding-bottom: 6px; }
+
+/* A definition, set apart. Used where a page first asks the reader to accept a
+ * piece of vocabulary -- the term goes here rather than in a parenthesis
+ * halfway down a paragraph that assumes it. */
+.def { border-left: 3px solid var(--accent); }
+.def p:first-child { margin-top: 0; }
+.def p:last-child { margin-bottom: 0; }

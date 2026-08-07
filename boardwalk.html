@@ -36,24 +36,35 @@ converge on the median voter. Hotelling called it the principle of minimum diffe
 
 <p>Add a third and something else happens.</p>
 
+<p><b>One vendor moves per round</b>, in turn, to the best spot available given where everyone
+else is standing. They choose among twenty-one storefronts, marked on the strip — not among the
+real numbers, which is why a move is a visible jump rather than a shuffle.</p>
+
 <div class="panel">
   <svg id="beach" viewBox="0 0 620 96" style="width:100%;height:auto;display:block" role="img"
        aria-label="Vendors positioned along a beach with their catchment areas shaded"></svg>
   <div id="stats" class="stats" style="margin-top:6px"></div>
   <svg id="trail" viewBox="0 0 620 150" style="width:100%;height:auto;border-top:1px solid var(--line);margin-top:8px"
        role="img" aria-label="Each vendor's position over time"></svg>
-  <div class="legend">position over time — a flat line is a settled market, a wave is a market chasing itself</div>
-  <div class="controls">
-    <label>Vendors
-      <input id="n" type="number" min="2" max="5" step="1" value="3" style="width:60px"></label>
-    <button id="play">Play</button>
-    <button id="stepBtn">Step</button>
+  <div class="legend">position over time — a flat line is a settled market, a wave is a market
+  chasing itself. The ring around a vendor marks the one that just moved.</div>
+  <div class="dials">
+    <label class="dial">
+      <span class="dial-k">Vendors</span>
+      <span class="dial-row"><input id="n" type="range" min="2" max="5" step="1" value="3" data-dial>
+        <b class="dial-v" data-out="n">3</b></span>
+    </label>
+    <button id="play">Play / pause</button>
+    <button id="stepBtn">One move</button>
     <button id="reset">New start</button>
     <span id="verdict" class="verdict"></span>
   </div>
 </div>
 
 <h2>Two settles, three cycles, four settles again</h2>
+<p>Two vendors settle in about nine moves. Four settle paired at the quartiles. Three run until
+you stop watching.</p>
+
 <p>This is not an artefact of the starting positions or of the update order. There is genuinely
 <em>no</em> arrangement of three vendors from which nobody wants to move — the middle vendor is
 always squeezed and always has somewhere better to be, and whichever way it jumps it creates a new

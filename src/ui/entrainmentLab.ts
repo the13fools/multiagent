@@ -1,6 +1,6 @@
 import "./style.css";
 import { mountArc } from "./arc";
-import { el, C, HEX, mix, Ticker, initScrubs, populationRing, applyEmbedMode,
+import { el, C, HEX, mix, Ticker, bindDials, populationRing, applyEmbedMode,
   type RingAgent } from "./lab";
 import {
   HORIZON, POLICIES, REFERENCE, pNeed, simulate,
@@ -30,7 +30,7 @@ applyEmbedMode();
 const N = 8;
 const KS = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
-let state = { k: 0, G: 3, rule: "copy" };
+let state = { k: 4, G: 3, rule: "copy" };
 
 const params = (): Params => ({ ...REFERENCE, G: state.G });
 const opts = () => ({ n: N, turns: HORIZON, params: params(), pinned: state.k });
@@ -94,7 +94,7 @@ function drawRun() {
   }));
   el("ring").innerHTML = populationRing(agents, {
     size: 168,
-    caption: `${state.k} of ${N} pinned`,
+    caption: `you control ${state.k} of ${N}`,
   });
 
   const v = el("runVerdict");
@@ -137,7 +137,7 @@ function drawSpace() {
   });
   rows.sort((a, b) => a.cells.filter((c) => !c.survived).length - b.cells.filter((c) => !c.survived).length);
 
-  const head = `<div class="mrow"><div class="mlab"></div>` +
+  const head = `<div class="mrow"><div class="mlab">agents you control →</div>` +
     KS.map((k) => `<div class="mhead">${k}</div>`).join("") + `</div>`;
 
   const body = rows.map(({ key, label, cells }) => {
@@ -157,29 +157,27 @@ function drawSpace() {
   el("space").innerHTML =
     head + body +
     `<div class="mrow"><div class="mlab"></div><div style="grid-column:2/-1;font-size:10px;color:var(--muted);padding-top:6px">
-      pacemakers pinned → &nbsp;·&nbsp; green survives, red dies early &nbsp;·&nbsp; outline marks the threshold
+      green survives · red dies early · outline marks the threshold
     </div></div>`;
 }
 
 /* ---------------------------------------------------------------- wiring */
 
-const scrubs = initScrubs((name, value) => {
-  if (name === "k") state.k = value;
-  if (name === "G") state.G = value;
-  drawSpace();
-  runOne();
-});
-
-el("rule").addEventListener("change", (e) => {
-  state.rule = (e.target as HTMLSelectElement).value;
-  drawSpace();
-  runOne();
-});
 (el("rule") as HTMLSelectElement).innerHTML = Object.entries(POLICIES)
   .map(([k, v]) => `<option value="${k}"${k === state.rule ? " selected" : ""}>${v.label}</option>`)
   .join("");
 
-void scrubs;
+// Same dial bar as every other lab. This page used to put its controls inside a
+// sentence, which read well and worked badly: two draggable numbers and a
+// dropdown in a line of prose look like typography, not like instruments.
+bindDials((id) => {
+  if (id === "k") state.k = Number((el("k") as HTMLInputElement).value);
+  if (id === "G") state.G = Number((el("G") as HTMLInputElement).value);
+  if (id === "rule") state.rule = (el("rule") as HTMLSelectElement).value;
+  drawSpace();
+  runOne();
+});
+
 drawSpace();
 runOne();
 

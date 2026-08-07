@@ -1,6 +1,6 @@
 import "./style.css";
 import { mountArc } from "./arc";
-import { el, hue, C, Ticker, renderStats, verdict, linePlot, applyEmbedMode } from "./lab";
+import { el, hue, C, Ticker, renderStats, verdict, linePlot, applyEmbedMode, bindDials } from "./lab";
 import { initial, step, equilibriaCount, type BoardwalkState } from "../core/boardwalk";
 import { beachFigure } from "./figures";
 
@@ -26,6 +26,11 @@ function draw() {
   const parts: string[] = [];
 
   parts.push(`<rect x="${PAD}" y="54" width="${W - 2 * PAD}" height="5" rx="2.5" fill="${C.line}"/>`);
+  // the storefronts. Vendors choose among these, not among the reals, which is
+  // why a move is a visible jump rather than a 0.01 shuffle.
+  for (let g = 0; g < 21; g++) {
+    parts.push(`<rect x="${x(g / 20) - 0.5}" y="53" width="1" height="7" fill="${C.line}"/>`);
+  }
   for (let i = 0; i <= 4; i++) {
     const p = i / 4;
     parts.push(`<text x="${x(p)}" y="80" text-anchor="middle" font-size="10" fill="${C.muted}">${p}</text>`);
@@ -43,6 +48,11 @@ function draw() {
   });
 
   state.positions.forEach((p, i) => {
+    const justMoved = state.moved === i;
+    if (justMoved) {
+      parts.push(`<circle cx="${x(p)}" cy="56" r="14" fill="none" stroke="${hue(i)}"
+        stroke-width="1.5" opacity="0.5"/>`);
+    }
     parts.push(
       `<circle cx="${x(p)}" cy="56" r="9" fill="${hue(i)}"/>`,
       `<text x="${x(p)}" y="60" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">${i + 1}</text>`,
@@ -61,35 +71,48 @@ function draw() {
 
   const spread = Math.max(...state.positions) - Math.min(...state.positions);
   renderStats("stats", [
-    { key: "Round", value: state.turn },
-    { key: "Spread", value: spread.toFixed(3) },
+    { key: "Moves", value: state.turn },
+    { key: "Just moved", value: state.moved === undefined ? "—" : `vendor ${state.moved + 1}` },
+    { key: "Spread", value: spread.toFixed(2) },
     { key: "Vendors", value: state.positions.length },
   ]);
 }
 
+/**
+ * One vendor moves per round, so "nobody wants to move" is only true after a
+ * full sweep in which nobody did. The old check compared one round against the
+ * previous one, which under simultaneous updates was the same question -- and
+ * under sequential updates would declare victory the moment any single vendor
+ * happened to stay put.
+ */
+let still = 0;
+
 const ticker = new Ticker(() => {
   const before = state.positions.slice();
-  state = step(state, 81);
+  state = step(state);
   trail.push(state.positions.slice());
-  if (trail.length > 120) trail.shift();
+  if (trail.length > 200) trail.shift();
   draw();
 
   const moved = state.positions.reduce((m, p, i) => Math.max(m, Math.abs(p - before[i]!)), 0);
-  if (moved < 1e-9) {
-    verdict("verdict", "✓ settled — nobody wants to move", "live");
+  still = moved < 1e-9 ? still + 1 : 0;
+  if (still >= state.positions.length) {
+    verdict("verdict",
+      `✓ settled after ${state.turn - still} moves — nobody wants to move`, "live");
     return false;
   }
-  if (state.turn > 260) {
-    verdict("verdict", "↻ still moving after 260 rounds — no rest point to find", "dead");
+  if (state.turn > 300) {
+    verdict("verdict", "↻ still moving after 300 moves — there is no rest point to find", "dead");
     return false;
   }
   return true;
-}, 90);
+}, 260);
 
 function reset() {
   ticker.stop();
   state = initial(n(), Math.floor(Math.random() * 1e6));
   trail = [state.positions.slice()];
+  still = 0;
   verdict("verdict", "", "");
   draw();
 }
@@ -107,7 +130,7 @@ function census() {
   }, 30);
 }
 
-el("n").addEventListener("change", () => { reset(); ticker.play(); });
+bindDials(() => { reset(); ticker.play(); });
 el("reset").addEventListener("click", () => { reset(); ticker.play(); });
 el("play").addEventListener("click", () => ticker.toggle());
 el("stepBtn").addEventListener("click", () => ticker.step());
