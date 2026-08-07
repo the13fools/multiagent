@@ -253,10 +253,10 @@ function run() {
   shown = 0;
   verdict("verdict", "", "");
   el("setup").innerHTML = key === "cfa8" 
-    ? "<b>Trained LLM (8 CFA):</b> The agents successfully exhibit long-term restraint, limiting their harvests to 2-5 units per round. The pool stabilizes and the ecosystem survives indefinitely."
+    ? "<b>Trained LLM (8 CFA):</b> In this one-seed trace, trained agents request smaller harvests than the control. The trace is a short pilot, not evidence of indefinite sustainability or a population-level effect."
     : key === "cfa4mix"
-    ? "<b>Mixed (4 CFA, 4 Base):</b> The 4 trained agents show restraint, but the 4 greedy base agents plunder the pool, eventually dragging the entire ecosystem into collapse."
-    : "<b>Base Qwen2.5-7B (0 CFA):</b> Baseline agents panic and greedily request maximum harvests (capped at 10), completely overwhelming the 40% regrowth rate and crashing the pool in under 10 rounds.";
+    ? "<b>Mixed (4 CFA, 4 Base):</b> This pilot trace shows different harvest requests across roles, but it is not a powered composition result. The proposed campaign estimates that difference across matched seeds."
+    : "<b>Base Qwen2.5-7B (0 CFA):</b> In this pilot trace, baseline agents request high harvests and exhaust the stock on the short horizon. It is an observed trace, not a population estimate.";
   buildGrid();
   drawGrid();
   drawStats(undefined);

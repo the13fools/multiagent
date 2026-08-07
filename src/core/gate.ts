@@ -19,9 +19,11 @@
  *   wrong for the job: it demands a significant improvement in order to
  *   promote, so a clone fails by construction at every sample size.
  *
- *   NON-INFERIORITY -- "roll back only if the candidate is worse by more than a
- *   margin we stated in advance". This one works: false rejection falls with n
- *   while detection rises.
+ *   TOLERATED-HARM THRESHOLD -- "roll back only if the candidate is worse by
+ *   more than a margin we stated in advance". This simple threshold has more
+ *   sensible behaviour in the illustrative normal model, but it is not a
+ *   formal non-inferiority test: it does not use a standard error or report a
+ *   confidence bound. The production analysis must replace it with one.
  *
  * The error in the first two is conceptual, not statistical. A promotion gate
  * asks whether a swap is safe to ship, not whether the candidate is better.
@@ -53,9 +55,9 @@ export const POLICIES: Record<string, { label: string; rule: Rule; note: string 
     note: "Demands a significant improvement to promote, so a clone fails by construction.",
   },
   nonInferiority: {
-    label: "Non-inferiority with a stated margin",
+    label: "Provisional tolerated-harm threshold",
     rule: { minMeanImprovement: -400, minWinRate: 0, maxRegressionRate: 1, maxPValue: null },
-    note: "Rolls back only on harm beyond a margin fixed in advance. False rejection falls with n.",
+    note: "An illustrative mean threshold, not a formal non-inferiority test. It rolls back only on harm beyond a stated margin.",
   },
 };
 

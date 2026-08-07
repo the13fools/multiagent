@@ -13,6 +13,7 @@ export default defineConfig({
       // pulling in @types/node.
       input: {
         main: "index.html",
+        proposal: "proposal.html",
         shared: "shared-resource.html",
         juggling: "juggling.html",
         entrainment: "entrainment.html",

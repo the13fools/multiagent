@@ -33,7 +33,7 @@ export const RESULTS: StageResult[] = [
     unit: "parse failures",
     claim: "Across the 30 matched cells of the Stage Zero pilot, every agent response parsed into a legal action. The environments read structured actions out of free text, so this is the precondition for any of the rest meaning anything.",
     kind: "measured",
-    caveat: "Measured on the pilot, whose plan, traces and receipt are committed. The action schema has changed since — a deliberation span was added and the parser became string-aware — so the figure needs re-establishing on the next live run.",
+    caveat: "Measured on the pilot. The committed receipt embeds the resolved policy and paired cells, but the original run directories were not retained. The action schema has changed since — a deliberation span was added and the parser became string-aware — so the figure needs re-establishing on the next live run.",
   },
   {
     figure: "0.39",

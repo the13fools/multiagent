@@ -316,6 +316,11 @@ hr { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
 @media (max-width: 640px) {
   .arc { flex-direction: column; align-items: flex-start; }
   .arc-next { text-align: left; max-width: 100%; }
+  /* Prose tables are essential evidence on the long pages.  Keep their columns
+     legible on a narrow screen rather than forcing the entire document wider
+     than the viewport. */
+  table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table th, table td { min-width: 132px; }
 }
 
 /* --------------------------------------------------------------- the dials

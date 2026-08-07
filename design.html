@@ -159,9 +159,9 @@ is the cheapest important thing in this whole plan.</p>
     initial overlap-rule gate rolled back a clone in <b>approximately 100% of null resamples</b> —
     and gets <em>worse</em> with more data, because it bounds a proportion that converges to 0.5
     under the null. The obvious fix, a superiority test, fails for the opposite reason: it demands
-    significant improvement, so a clone fails by construction. Non-inferiority against a stated
-    margin is the form that works, at 0.076 at n = 30 and 0.015 at n = 60 under the same
-    resampling.</td></tr>
+    significant improvement, so a clone fails by construction. A <b>provisional tolerated-harm
+    threshold</b> behaved better under the same resampling (0.076 at n = 30 and 0.015 at n = 60),
+    but it is not yet a formal non-inferiority test.</td></tr>
   <tr><td><b>Status</b></td>
     <td><b>Not yet run live.</b> Everything above is resampling of committed pilot data. Phase 0
     runs the matched f = 0 campaigns — both arms and the Firebreak comparison — to measure the
@@ -193,10 +193,11 @@ Each of these exists because a specific one would otherwise survive.</p>
 
 <h2 id="registration">Pre-registration, and what a receipt contains</h2>
 
-<p>Pre-registration here is git history, not a promise. The plan — cells, thresholds, the
-estimand, the direction of effect and what would count as no effect — is committed before the
-first scored run, and the runner refuses to start into a campaign directory whose committed plan
-differs from the one in hand.</p>
+<p>Pre-registration here is a versioned plan, not a promise. Before a scored campaign, the plan
+states the cells, thresholds, estimand, direction of effect, and what would count as no effect.
+The runner freezes and compares resolved plan files. Commit provenance is recorded in release
+receipts; enforcing it directly in the runner is remaining hardening work, not a property we
+pretend is already guaranteed.</p>
 
 <p>Every gate decision emits an <b>auditable JSON receipt</b> — self-contained and versioned,
 not cryptographically signed — carrying the resolved policy, the paired deltas and the verdict.

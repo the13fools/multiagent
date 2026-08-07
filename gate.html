@@ -35,6 +35,13 @@ That is a <b>judge-free promotion gate</b>, and it is what this call asks for.</
 identical to the baseline?</b> Set the true effect to zero below. That is an A/A test — the
 candidate <em>is</em> the baseline — so every rejection is a false one.</p>
 
+<p class="muted"><b>Important scope:</b> the interactive lab below is an illustrative normal-model
+simulation using the pilot standard deviation. It is useful for seeing why the three decision
+rules differ, but it is not the deployed multi-metric Firebreak policy. The committed
+<a href="./experiments.html">evidence ledger</a> reports the separate sign-flip calibration on
+real pilot deltas: 1.000 rollback probability for the original policy at n = 30, and 0.076 at
+n = 30 / 0.015 at n = 60 for the provisional tolerated-harm threshold.</p>
+
 <div class="panel">
   <div id="stats" class="stats"></div>
   <svg id="curves" viewBox="0 0 620 275" style="width:100%;height:auto;display:block" role="img"
@@ -89,10 +96,11 @@ the campaign grows</em>. Drag the campaign size and watch the red line refuse to
 <em>significant improvement</em> in order to promote, so a candidate identical to its baseline
 fails by construction, at every sample size. Correctly sized, wrong question.</p>
 
-<p><b>Non-inferiority</b> works. Roll back only when the candidate is worse by more than a margin
-stated in advance. False rejection now falls as the campaign grows, and detection of real harm
-rises. Set the true effect to −800 and watch the green line climb: it catches genuine damage while
-leaving a clone alone.</p>
+<p><b>A tolerated-harm threshold</b> asks the right operational question: roll back only when the
+candidate appears worse by more than a margin stated in advance. In this illustration, false
+rejection falls as the campaign grows and detection of clear harm rises. This is not yet a formal
+non-inferiority procedure: a production rule must use an uncertainty interval and a live A/A
+calibration, rather than declaring the threshold itself to be a test.</p>
 
 <h2>The two things a gate should ship with</h2>
 
@@ -100,10 +108,10 @@ leaving a clone alone.</p>
 roll back a clone essentially always. You cannot tell which is which by reading the rule, and the
 failure is silent — a gate that rejects everything looks like diligence.</p>
 
-<p><b>A declared minimum campaign size.</b> The rightmost column of the table is the smallest
-campaign at which each gate's false-rejection rate reaches 5%. For two of them the answer is
-<em>never</em>. For the third it is a specific number, below which its decisions should not be
-believed — including ours.</p>
+<p><b>A declared evidence threshold.</b> The rightmost column of the illustrative table is the
+smallest campaign at which the simulated false-rejection rate reaches 5%. For two rules the answer
+is <em>never</em>. A production gate must establish its own threshold from repeated live A/A runs,
+not inherit the number from this plot.</p>
 
 <p>None of this is new to anyone who has thought about evidence thresholds. The argument that a
 conventional bar deserves justifying rather than inheriting is made at length in
@@ -115,9 +123,10 @@ What is specific here is that the decision is automated and repeated: a gate run
 candidate, forever, so its error rate is an operating characteristic rather than a debating point,
 and it can be measured directly by pointing the thing at a clone of its own baseline.</p>
 
-<p class="muted">Paired standard deviation of 1,180 and a baseline mean of 3,363 are measured from
-a real 30-cell pilot, not chosen. Same engine as the testbed's calibration tool; the test suite
-pins them together. MIT; exported data CC0.</p>
+<p class="muted">The paired standard deviation of 1,180 and baseline mean of 3,363 come from a
+real 30-cell pilot. The visualization uses a deterministic Gaussian illustration; the committed
+Firebreak calibration instead uses sign-flip resampling of the pilot deltas. MIT; exported data
+CC0.</p>
 </div>
 <script type="module" src="/src/ui/gateLab.ts"></script>
 </body>

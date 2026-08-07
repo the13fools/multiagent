@@ -3,195 +3,123 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>multiagent — steering a flock you do not own</title>
-<meta name="description" content="Explorable explanations for multi-agent shared-resource games with known solutions.">
+<title>flockbench — can a small minority keep a shared resource alive?</title>
+<meta name="description" content="A judge-free multi-agent testbed for a concrete question: can a small fraction of well-specified AI agents stabilize a shared resource?">
 <link rel="stylesheet" href="/src/ui/style.css">
 </head>
 <body>
 <nav><div class="wrap">
-  <a class="brand" href="./index.html">multiagent</a>
+  <a class="brand" href="./index.html">flockbench</a>
+  <a href="./proposal.html">Project brief</a>
   <a href="./shared-resource.html">The game</a>
   <a href="./entrainment.html">Steering</a>
   <a href="./stage-zero.html">What is built</a>
   <a href="./design.html">How it is run</a>
-  <a href="./experiments.html">What has run</a>
-  <a href="./future.html">What next</a>
+  <a href="./experiments.html">Evidence</a>
 </div></nav>
 
-<div class="wrap">
+<main class="wrap">
+  <div class="hero">
+    <h1>Can a small minority of AI agents keep a shared resource alive?</h1>
+    <p><code>flockbench</code> starts with a game simple enough to solve on paper, then asks whether
+    a population of language-model agents can find—or be steered toward—the solution.</p>
+  </div>
 
-<div class="hero">
-  <h1>A game everyone can win, that nobody wins</h1>
-  <p>Eight agents share a pool. There is a way for all of them to live forever. It is one
-  sentence long. A flock of Qwen2.5-7B never finds it and is dead by turn 14.</p>
-</div>
+  <p class="section-label">The game</p>
+  <p>Eight players share a pool. Each turn, a living player pays <b>1 token</b> to survive and
+  chooses one action: pay <b>1 more token</b> to add <b>3</b> tokens to the pool, or take
+  <b>3</b> tokens from it. A player whose balance falls below zero is removed.</p>
 
-<p><b>The rules.</b> Every turn each player pays <b>1 token</b> to survive, then takes one
-action: pay <b>1 token</b> to add <b>3</b> to the shared pool, or take <b>3</b> out of it. Run
-out of tokens and you are removed. That is the whole game.</p>
+  <p>The sustainable policy is not mysterious: players alternate restoring and taking. Each
+  individual breaks even; the pool breaks even; everyone can live indefinitely. At these
+  parameters there is no slack: one permanent taker eventually kills the whole group. The right
+  answer is therefore known before a model is queried.</p>
 
-<p><b>The solution.</b> Alternate. Restore, take, restore, take. Your balance holds level, the
-pool holds level, and nobody ever dies. This is arithmetic, not an equilibrium anyone hopes will
-emerge.</p>
+  <div class="panel">
+    <p class="slide-k">The scientific question</p>
+    <p><b>If most seats belong to agents we do not control, what fraction of carefully specified
+    agents is enough to move the population from collapse to sustained cooperation?</b></p>
+    <p class="muted">That is a composition question, not a claim that one agent is "aligned."
+    We hold the game, model-serving stack, seed, and scoring fixed; vary population composition;
+    and measure the resulting arithmetic.</p>
+  </div>
 
-<p><b>The finding.</b> A flock of language models takes every turn and starves. The gap between
-a one-sentence solution and a population that walks past it is what
-<a href="https://github.com/thenthfool/flockbench"><code>flockbench</code></a> measures.</p>
+  <p class="section-label">Why this is a useful first test</p>
+  <p>Real deployments will place agents from different developers in shared settings: budgets,
+  compute, queues, markets, data stores, and protocols. Those systems are more complicated than
+  this game. But complexity creates a basic problem: when a population fails, it is often unclear
+  whether the agents chose badly or whether success was impossible. Here, the feasible region and
+  the failure condition are explicit. That lets us calibrate an evaluation instrument before we
+  ask it a harder question.</p>
 
-<p><b>The question.</b> You will not own most of the agents in any deployment you care about.
-So: <b>how few of them do you have to control to hold the whole population on a pattern that keeps
-it alive?</b> Everything here is an attempt to make that answerable — a game small enough that the
-right answer is known in advance, so a measured steering threshold has something to be measured
-against, and small enough that training an agent for it is cheap, so the population can be thirty
-different policies rather than one model in thirty hats.</p>
+  <p><code>flockbench</code> scores outcomes with environmental arithmetic—pool level, survival,
+  welfare, inequality, and distance from the required restoration rate—not an LLM judge. Every
+  action and payoff can be replayed from a trace.</p>
 
-<p>Underneath it is a capability question. Not <em>does the agent cooperate</em>, but <b>does it
-model what the other players are about to do</b> — which is visible here, because the sustainable
-pattern is anti-correlated, so an agent reading the others moves against the majority and an agent
-that is not moves with it. And past that, the constructive half:
-<a href="./future.html">what decentralised rules leave a population better off than it started</a>,
-with no designer in the room and no judge scoring the result.</p>
+  <p class="section-label">What the pilot says—and does not say</p>
+  <table>
+    <tr><th>Established</th><th>Not established yet</th></tr>
+    <tr><td>The game’s solution, carrying capacity, and failure cases are asserted in two tested implementations.</td>
+      <td>A population-level effect of training or prompting agents.</td></tr>
+    <tr><td>A one-seed Qwen2.5-7B pilot ran end to end with zero parse failures; a seeded adapter delayed stock exhaustion relative to its control.</td>
+      <td>The size of that effect, a threshold fraction, or generalization beyond the pilot.</td></tr>
+    <tr><td>An offline audit showed that the original promotion rule would roll back a clone of its own baseline almost surely.</td>
+      <td>A measured live A/A error rate for the revised promotion procedure.</td></tr>
+  </table>
+  <p class="muted">The complete evidence ledger, including a withdrawn uncorroborated result, is on
+  <a href="./experiments.html">the evidence page</a>.</p>
 
-<p>The destination is bigger games — ones with real negotiation, side channels, and flocks mixing
-seeded, mimicking and adversarial agents. The obstacle is that
-<a href="./future.html">every step in that direction trades away the answer key</a>, so the
-discipline is to calibrate the instrument here, where the answer is known, before pointing it
-somewhere it is not.</p>
+  <p class="section-label">The proposed study</p>
+  <div class="cards">
+    <a class="card" href="./proposal.html#question">
+      <span class="kind">1 · Calibrate the instrument</span>
+      <h3>Test the promotion gate on clones</h3>
+      <p>Run repeated f = 0 A/A campaigns, measure false rejection, and publish its uncertainty before using the gate on a candidate.</p>
+    </a>
+    <a class="card" href="./proposal.html#experiment">
+      <span class="kind">2 · Test a dose response</span>
+      <h3>Vary the fraction of seeded agents</h3>
+      <p>Compare a transparent decision-rule seed, a trained adapter, and a vocabulary-matched mimic under the same game conditions.</p>
+    </a>
+    <a class="card" href="./proposal.html#limits">
+      <span class="kind">3 · Map the boundary</span>
+      <h3>Change scale and scarcity</h3>
+      <p>Measure whether the composition threshold changes across population sizes, resource regimes, and model families—or fails to transfer.</p>
+    </a>
+  </div>
 
-<p>I built the simulator, and I trained the flocks that fail at it. Everything on this site is
-either arithmetic you can check for yourself or a run that left a receipt. Where a claim has
-neither, it says so.</p>
+  <p class="section-label">Explore the evidence</p>
+  <div class="cards">
+    <a class="card" href="./shared-resource.html">
+      <span class="kind">Explorable explanation</span>
+      <h3>Play the shared-resource game</h3>
+      <p>Change the rules, add a permanent defector, and inspect exactly why the population survives or dies.</p>
+    </a>
+    <a class="card" href="./entrainment.html">
+      <span class="kind">Mechanism</span>
+      <h3>See what steering requires</h3>
+      <p>Pin a subset of seats to the sustainable phase and test which follower rules lock on.</p>
+    </a>
+    <a class="card" href="./stage-zero.html">
+      <span class="kind">Readiness</span>
+      <h3>Inspect Stage Zero</h3>
+      <p>The public code, the pilot traces, the calibration finding, and the limits of each.</p>
+    </a>
+    <a class="card" href="./design.html">
+      <span class="kind">Methods</span>
+      <h3>Inspect the experimental design</h3>
+      <p>Paired cells, controls, power calculations, and the assumptions that could make an answer wrong.</p>
+    </a>
+  </div>
 
-<div id="intro-rings"></div>
-<p class="legend" id="intro-caption" style="text-align:center"></p>
+  <hr>
+  <p><b>The aim is deliberately modest and falsifiable.</b> We are not claiming that a toy game
+  predicts social life, nor that a prompt makes an agent safe. We are building a calibrated way to
+  learn whether a specific intervention changes a specific collective outcome. A clear null,
+  a failure to transfer, or a gate that cannot be calibrated are all useful results.</p>
 
-<p class="section-label">Read in order</p>
-<div class="path" id="path"></div>
-<p class="muted">Eight pages, each ending on the question the next one answers. Or start anywhere:</p>
-
-<div class="cards">
-  <a class="card" href="./shared-resource.html">
-    <span class="kind">Explorable explanation</span>
-    <h3>The Shared Resource game</h3>
-    <p>A commons whose solution is one sentence long. One defector kills everyone. Conformity is
-    the worst available heuristic.</p>
-  </a>
-  <a class="card" href="./entrainment.html">
-    <span class="kind">Explorable explanation</span>
-    <h3>Entrainment</h3>
-    <p>Pin some agents to the right phase. Do the rest lock on? Depends almost entirely on how the
-    others update.</p>
-  </a>
-  <a class="card" href="./stage-zero.html">
-    <span class="kind">Stage Zero</span>
-    <h3>What is already built</h3>
-    <p>Three public repositories, eleven thousand lines, and five results — two of which say the
-    instrument was broken in ways only an answer key could reveal.</p>
-  </a>
-  <a class="card" href="./design.html">
-    <span class="kind">Method</span>
-    <h3>How an experiment is run</h3>
-    <p>What a cell is, what is paired, what is controlled — and a planner that tells you whether
-    the campaign can see the effect it was sized for.</p>
-  </a>
-  <a class="card" href="./experiments.html">
-    <span class="kind">Status report</span>
-    <h3>State of the experiments</h3>
-    <p>What has run, what has not, and which claim rests on which.</p>
-  </a>
-  <a class="card" href="./figure.html">
-    <span class="kind">Tool</span>
-    <h3>Figure builder</h3>
-    <p>Three panels, live dials, exported as print-resolution vector.</p>
-  </a>
-</div>
-
-<hr>
-
-<p>Small enough to solve exactly, which is the point: in a rich environment you cannot tell a
-population that <em>failed</em> from one that faced an impossible problem. Every number here is
-computed from the rules. <b>Nothing is scored by a model.</b></p>
-
-<hr>
-
-<p class="section-label">Four things one small game gives you</p>
-
-<p><b>A checkable answer.</b> What an agent can afford to restore, and what the pool needs
-restored, both follow from the rules. Where they meet, everyone can live forever. Where they do
-not, nobody can.</p>
-
-<p><b>A difficulty dial with an answer key.</b> One parameter sets how many free-riders a flock
-carries, in closed form. Measured thresholds have something to be measured against.</p>
-
-<p><b>Horizon as a variable.</b> An agent slightly off the correct rate does not fail — it drifts,
-and dies later. Small biases are invisible at ten turns and fatal at two hundred.</p>
-
-<p><b>Steering as entrainment.</b> The sustainable pattern is a balanced two-colouring nobody
-assigns. The critical fraction depends more on how the others update than on how many seats you
-hold.</p>
-
-<hr>
-
-<p class="section-label">Also here</p>
-
-<div class="cards">
-  <a class="card" href="./boardwalk.html">
-    <span class="kind">Explorable explanation</span>
-    <h3>Boardwalk</h3>
-    <p>Two vendors settle at the centre. Three never settle at all.</p>
-  </a>
-  <a class="card" href="./gate.html">
-    <span class="kind">Explorable explanation</span>
-    <h3>The gate</h3>
-    <p>A judge-free promotion gate that rolls back a clone of its own baseline — and gets worse
-    with more data.</p>
-  </a>
-  <a class="card" href="./future.html">
-    <span class="kind">Direction</span>
-    <h3>What comes next</h3>
-    <p>Behavioural economics nobody has run on a population that learns, decentralised mechanism
-    design, and the climb from games with an answer key to Diplomacy and a twenty-year-old MMO.</p>
-  </a>
-  <a class="card" href="./lineage.html">
-    <span class="kind">Context</span>
-    <h3>Where this sits</h3>
-    <p>Distributional AGI Safety, Scaling Trust, and the CAIF multi-agent risks report named the
-    same problem in one year. What an eight-agent testbed adds to it.</p>
-  </a>
-  <a class="card" href="./blog-pdd.html">
-    <span class="kind">Essay</span>
-    <h3>Cheap enough to have a population</h3>
-    <p>Exploring low-cost fine-tuning: how large and how varied a population a small budget buys,
-    and where the floor is.</p>
-  </a>
-</div>
-
-<hr>
-
-<p class="section-label">Where the work stands</p>
-
-<table>
-<tr><th>&nbsp;</th><th>&nbsp;</th></tr>
-<tr><td><span class="st st-done">measured</span></td>
-    <td>The game, its closed-form solution and carrying capacity — asserted in two
-    implementations</td></tr>
-<tr><td><span class="st st-done">measured</span></td>
-    <td>Stage Zero pilot: 30 matched cells, zero parse failures, and the gate audit it
-    produced</td></tr>
-<tr><td><span class="st st-part">simulated</span></td>
-    <td>Conformists need 75% of seats to steer. <b>No language model has been measured against
-    it</b></td></tr>
-<tr><td><span class="st st-part">resampled</span></td>
-    <td>The gate's false-rejection rate, and where non-inferiority starts passing</td></tr>
-<tr><td><span class="st st-todo">not run</span></td>
-    <td>Live A/A, the powered campaign, anything above N = 8</td></tr>
-</table>
-
-<p class="muted">Full accounting on the <a href="./experiments.html">status page</a>, including
-what is still broken. MIT; data and figures CC0. Source at
-<a href="https://github.com/thenthfool/multiagent">github.com/thenthfool/multiagent</a>.</p>
-
-</div>
-<script type="module" src="/src/ui/introFigures.ts"></script>
+  <p class="muted">Open source: <a href="https://github.com/thenthfool/flockbench">flockbench</a>
+  and <a href="https://github.com/thenthfool/multiagent">this site</a>. MIT code; data and figures CC0.</p>
+</main>
 </body>
 </html>

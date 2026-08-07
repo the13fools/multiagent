@@ -59,7 +59,10 @@ together is a separate page: <a href="./design.html">how an experiment is run</a
   <code>flockbench-shared --selftest</code>.</td></tr>
 <tr><td><b>Commons Harvest</b></td><td class="s"><span class="st st-done">working</span></td>
   <td>Logistic regrowth with continuous harvest.
-  <span class="muted">Updated to a 40% max regrowth rate (ceiling-to-upkeep 2.0). At this rate, the pool can sustain the population if agents strictly limit their harvests (to ~3.5 units each), but will rapidly collapse if agents become greedy. The base model uniformly panics and collapses the pool, while PDD-aligned models successfully exhibit the restraint necessary to sustain the ecosystem indefinitely.</span></td></tr>
+  <span class="muted">Updated to a 40% max regrowth rate (ceiling-to-upkeep 2.0). At this rate,
+  sustained restraint is arithmetically possible (~3.5 units each); greedy extraction collapses the
+  pool. The one-seed adapter pilot showed more restraint than its control but still exhausted the
+  stock. No model population has yet been shown to sustain this environment indefinitely.</span></td></tr>
 <tr><td><b>Public Goods + punishment</b></td><td class="s"><span class="st st-done">working</span></td>
   <td>Herrmann-shaped, 20 rounds, contribute and punish stages. This is what the Stage Zero
   pilot ran on.</td></tr>
@@ -158,9 +161,11 @@ together is a separate page: <a href="./design.html">how an experiment is run</a
   <td>Sign-flip resampling of the pilot's real paired deltas, reproduced by two independent
   implementations. <b>Not a live A/A campaign</b>, and the live operating error may differ —
   measuring it is what Phase 0 is for.</td></tr>
-<tr><td>Non-inferiority gates pass A/A from n = 60</td>
+<tr><td>A provisional tolerated-harm threshold reaches a low offline rollback rate at n = 60</td>
   <td class="s"><span class="st st-part">resampled</span></td>
-  <td>Same basis as above. The number to trust after Phase 0, not before.</td></tr>
+  <td>Under sign-flip resampling of the pilot deltas, the threshold rule rolled back a null candidate
+  1.5% of the time at n = 60. It is <b>not</b> a formal non-inferiority test and is not a live A/A
+  measurement; both remain Phase 0 work.</td></tr>
 <tr><td>A distinct fine-tuned agent costs about $50</td>
   <td class="s"><span class="st st-part">one receipt</span></td>
   <td>A real measurement from one setup — Qwen2.5-7B, LoRA, our hardware, one month's GPU prices.
@@ -189,8 +194,10 @@ Disclosed rather than discovered.</li>
 <li><b>One serving endpoint.</b> "Different principals" currently means different specifications
 over identical weights. Cheap seed production addresses this; cross-vendor populations do not
 exist yet.</li>
-<li><b>No test suite in <code>continuous_judge</code>.</b> The other repositories have one.</li>
-<li><b>The non-inferiority margin may be stale.</b> It was set at 400 welfare units against the
+<li><b>No end-to-end test covers the <code>continuous_judge</code> → <code>flockbench</code>
+bridge.</b> <code>continuous_judge</code> has unit tests, but they do not establish that a trained
+adapter, serving configuration, and population runner compose correctly.</li>
+<li><b>The tolerated-harm margin may be stale.</b> It was set at 400 welfare units against the
 pilot's 3,363 baseline and 1,180 paired SD. The action schema has changed since — a deliberation
 span was added and the parser became string-aware — and required n depends on the margin-to-SD
 ratio, so both need re-deriving from a measured variance before the powered campaign runs.</li>
