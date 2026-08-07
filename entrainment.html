@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entrainment — multiagent</title>
+<meta name="description" content="Given agents pinned to the right phase, do the others lock on?">
+<link rel="stylesheet" href="/src/ui/style.css">
+</head>
+<body>
+<nav><div class="wrap">
+  <a class="brand" href="./index.html">multiagent</a>
+  <a href="./shared-resource.html">Shared Resource</a>
+  <a href="./entrainment.html" aria-current="page">Entrainment</a>
+  <a href="./juggling.html">Juggling</a>
+  <a href="./boardwalk.html">Boardwalk</a>
+  <a href="./experiments.html">Experiments</a>
+  <a href="./gate.html">Gate</a>
+  <a href="./figure.html">Figure</a>
+</div></nav>
+
+<div class="wrap">
+<h1>Do the others lock on?</h1>
+<p class="lede">A different question from whether the commons survives.</p>
+
+<p>The <a href="./shared-resource.html">Shared Resource game</a> asks whether a population finds
+the sustainable rate. This asks something narrower: you have pinned some agents to the correct
+phase. <b>Do the rest fall into step?</b></p>
+
+<p>Those come apart. A flock can sit at the right average rate and still die, because the phases
+are wrong. A follower rule can be individually sensible and collectively unentrainable.</p>
+
+<h2>One run</h2>
+
+<p>Pin <span data-scrub="k" data-min="0" data-max="8">0</span> of 8 agents to the correct
+alternating phase. The rest follow <select id="rule"></select>, with the restore gain at
+<span data-scrub="G" data-min="1" data-max="12">3</span>.</p>
+
+<div class="panel">
+  <svg id="run" viewBox="0 0 740 190" style="width:100%;height:auto;display:block" role="img"
+       aria-label="Colouring grid for one run, with pinned pacemakers marked"></svg>
+  <span id="runVerdict" class="verdict"></span>
+  <div class="legend">
+    <span class="dot" style="background:var(--restore)"></span> restore
+    &nbsp;<span class="dot" style="background:var(--take)"></span> take
+    &nbsp;<span class="dot" style="background:var(--dead)"></span> dead
+    &nbsp;· ● marks a pinned pacemaker
+  </div>
+</div>
+
+<h2>The whole space</h2>
+
+<p>One run at a time makes you remember the others. Here is every rule against every pacemaker
+count, at once. The threshold is an edge you can see.</p>
+
+<div id="space" class="multiples"></div>
+
+<p><b>Read the rows.</b> Some rules survive with nothing pinned. Imitation needs six of eight.
+Pure defection never entrains at all — there is no number of controlled seats short of every seat
+that helps.</p>
+
+<h2>Why imitation is the worst case</h2>
+
+<p>The pattern this game needs is <b>anti-correlated</b>: half restoring, half taking, every turn.
+Copying the majority does the opposite. It pulls the flock into lockstep, which is precisely the
+state that starves it.</p>
+
+<p>That matters beyond this game, because imitation is the social heuristic language-model agents
+most reliably exhibit. <b>Controllability is a property of the agents you do not control.</b> How
+many seats you hold barely matters by comparison.</p>
+
+<p class="muted">Which rule real models implement is the measurement worth making, and nobody has
+made it. See the <a href="./experiments.html">status page</a>. Same arithmetic as
+<code>flockbench-shared</code>, pinned by test. MIT; data CC0.</p>
+</div>
+<script type="module" src="/src/ui/entrainmentLab.ts"></script>
+</body>
+</html>

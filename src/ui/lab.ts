@@ -216,3 +216,72 @@ export const wireControls = (
     onReset?.();
   });
 };
+
+// ------------------------------------------------------- reactive prose
+
+/**
+ * A number in a sentence you can drag.
+ *
+ * Bret Victor's move: the parameter lives in the prose that discusses it, not
+ * in a control panel below the figure, so changing it and reading about it are
+ * the same act. `<span data-scrub="k" data-min="0" data-max="8">0</span>`
+ * becomes draggable, and `onChange` fires while you drag -- no Run button,
+ * because a button puts a gap between the cause and the effect.
+ */
+export interface Scrub {
+  name: string;
+  value: number;
+  set: (v: number) => void;
+}
+
+export function initScrubs(
+  onChange: (name: string, value: number) => void,
+): Map<string, Scrub> {
+  const out = new Map<string, Scrub>();
+  document.querySelectorAll<HTMLElement>("[data-scrub]").forEach((node) => {
+    const name = node.dataset.scrub!;
+    const min = Number(node.dataset.min ?? 0);
+    const max = Number(node.dataset.max ?? 10);
+    const step = Number(node.dataset.step ?? 1);
+    let value = Number(node.textContent?.trim() || min);
+
+    node.classList.add("scrub");
+    node.setAttribute("role", "slider");
+    node.setAttribute("tabindex", "0");
+    node.setAttribute("aria-valuemin", String(min));
+    node.setAttribute("aria-valuemax", String(max));
+
+    const set = (v: number) => {
+      value = Math.max(min, Math.min(max, Math.round(v / step) * step));
+      node.textContent = String(value);
+      node.setAttribute("aria-valuenow", String(value));
+      onChange(name, value);
+    };
+
+    let startX = 0;
+    let startV = 0;
+    const move = (e: PointerEvent) => set(startV + (e.clientX - startX) / 12);
+    const up = () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      document.body.style.cursor = "";
+    };
+    node.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
+      startX = e.clientX;
+      startV = value;
+      document.body.style.cursor = "ew-resize";
+      window.addEventListener("pointermove", move);
+      window.addEventListener("pointerup", up);
+    });
+    // Keyboard, because a drag-only control is unusable for some readers.
+    node.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight" || e.key === "ArrowUp") { set(value + step); e.preventDefault(); }
+      if (e.key === "ArrowLeft" || e.key === "ArrowDown") { set(value - step); e.preventDefault(); }
+    });
+
+    out.set(name, { name, value, set });
+    node.setAttribute("aria-valuenow", String(value));
+  });
+  return out;
+}

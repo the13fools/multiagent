@@ -15,6 +15,7 @@ export default defineConfig({
         main: "index.html",
         shared: "shared-resource.html",
         juggling: "juggling.html",
+        entrainment: "entrainment.html",
         experiments: "experiments.html",
         gate: "gate.html",
         blog: "blog-pdd.html",

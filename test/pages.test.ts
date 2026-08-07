@@ -10,7 +10,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
-const PAGES = ["shared-resource", "juggling", "boardwalk", "gate"] as const;
+const PAGES = ["shared-resource", "entrainment", "juggling", "boardwalk", "gate"] as const;
 
 const loadPage = (name: string) => {
   const html = readFileSync(resolve(__dirname, `../${name}.html`), "utf8");
@@ -29,7 +29,7 @@ describe("lab pages load without throwing", () => {
   for (const page of PAGES) {
     it(`${page}.html`, async () => {
       loadPage(page);
-      const mod = { "shared-resource": "sharedResourceLab", juggling: "jugglingLab", boardwalk: "boardwalkLab", gate: "gateLab" }[page]!;
+      const mod = { "shared-resource": "sharedResourceLab", juggling: "jugglingLab", boardwalk: "boardwalkLab", gate: "gateLab", entrainment: "entrainmentLab" }[page]!;
       vi.resetModules();
       await expect(import(`../src/ui/${mod}`)).resolves.toBeTruthy();
       vi.advanceTimersByTime(2000);
@@ -47,6 +47,7 @@ describe("every id a lab reaches for exists in its page", () => {
     juggling: "jugglingLab",
     boardwalk: "boardwalkLab",
     gate: "gateLab",
+    entrainment: "entrainmentLab",
   })) {
     it(page, () => {
       const html = readFileSync(resolve(__dirname, `../${page}.html`), "utf8");
@@ -87,10 +88,15 @@ describe("page prose matches what the code computes", () => {
     expect(simulate(() => "restore", { turns: 30 }).extinctionTurn).toBe(6);
   });
 
-  it("shared-resource: 'G=9 carries four defectors' is true", async () => {
+  it("shared-resource: the G=9 claim in the prose is the computed one", async () => {
     const { carryingCapacity, REFERENCE } = await import("../src/core/sharedResource");
-    expect(read("shared-resource.html")).toContain("carries four defectors");
-    expect(carryingCapacity({ ...REFERENCE, G: 9 }, 8)).toBe(4);
+    const cap = carryingCapacity({ ...REFERENCE, G: 9 }, 8);
+    expect(cap).toBe(4);
+    // Assert the CLAIM, not the sentence. Pinning exact wording made ordinary
+    // copy-editing fail the build, which trains people to weaken the test.
+    const prose = read("shared-resource.html").replace(/\s+/g, " ");
+    expect(prose).toMatch(/G=9/);
+    expect(prose).toMatch(new RegExp(`carries (${cap}|four)\\b`, "i"));
   });
 
   it("juggling: 'dead by beat 103' is within what the model produces", async () => {
@@ -234,7 +240,7 @@ describe("shared visual vocabulary", () => {
   it("puts the honest status on the front page, not only the status page", () => {
     const html = readFileSync(resolve(__dirname, "../index.html"), "utf8");
     expect(html).toContain("st-todo");
-    expect(html).toContain("no language\n    model has been measured against it");
+    expect(html.replace(/\s+/g, " ")).toMatch(/no language model has been measured against it/i);
   });
 });
 
@@ -247,7 +253,7 @@ describe("shared visual vocabulary", () => {
  * width drive and the aspect ratio follow.
  */
 describe("svg canvases scale with their column", () => {
-  const pages = ["index", "shared-resource", "juggling", "boardwalk", "gate", "figure"];
+  const pages = ["index", "shared-resource", "entrainment", "juggling", "boardwalk", "gate", "figure"];
   for (const page of pages) {
     it(`${page}.html has no fixed-height viewBox`, () => {
       const html = readFileSync(resolve(__dirname, `../${page}.html`), "utf8");
@@ -270,5 +276,22 @@ describe("svg canvases scale with their column", () => {
     // the builder itself still emits an intrinsically-sized file
     const src = readFileSync(resolve(__dirname, "../src/ui/figureLab.ts"), "utf8");
     expect(src).toMatch(/width="\$\{W\}" height="\$\{H\}"/);
+  });
+});
+
+describe("reactive prose", () => {
+  it("puts entrainment's parameters in the sentences that discuss them", () => {
+    const html = readFileSync(resolve(__dirname, "../entrainment.html"), "utf8");
+    expect(html).toMatch(/data-scrub="k"/);
+    expect(html).toMatch(/data-scrub="G"/);
+    // and no Run button: a button puts a gap between cause and effect
+    expect(html).not.toMatch(/id="go"|>Run</);
+  });
+
+  it("keeps scrubs keyboard-operable", () => {
+    const lab = readFileSync(resolve(__dirname, "../src/ui/lab.ts"), "utf8");
+    expect(lab).toContain('tabindex');
+    expect(lab).toContain("ArrowRight");
+    expect(lab).toContain('role", "slider"');
   });
 });

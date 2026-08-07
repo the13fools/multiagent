@@ -11,6 +11,7 @@
 <nav><div class="wrap">
   <a class="brand" href="./index.html">multiagent</a>
   <a href="./shared-resource.html">Shared Resource</a>
+  <a href="./entrainment.html">Entrainment</a>
   <a href="./juggling.html">Juggling</a>
   <a href="./boardwalk.html">Boardwalk</a>
   <a href="./experiments.html">Experiments</a>
@@ -22,65 +23,62 @@
 
 <div class="hero">
   <h1>Small games with known answers, and the agent populations that miss them</h1>
-  <p>You control a handful of agents in a population you did not build. How few can you
-  control — and what must they do — to steer the whole system somewhere everybody survives?</p>
+  <p>You control a few agents in a population you did not build. How few, and what must they do,
+  to steer the whole thing somewhere everybody survives?</p>
 </div>
 
 <div class="cards">
   <a class="card" href="./shared-resource.html">
     <span class="kind">Explorable explanation</span>
     <h3>The Shared Resource game</h3>
-    <p>A commons whose solution is one sentence long. One defector kills everyone, virtue cannot
-    compensate, and conformity turns out to be the worst available heuristic.</p>
+    <p>A commons whose solution is one sentence long. One defector kills everyone. Conformity is
+    the worst available heuristic.</p>
+  </a>
+  <a class="card" href="./entrainment.html">
+    <span class="kind">Explorable explanation</span>
+    <h3>Entrainment</h3>
+    <p>Pin some agents to the right phase. Do the rest lock on? Depends almost entirely on how the
+    others update.</p>
   </a>
   <a class="card" href="./experiments.html">
     <span class="kind">Status report</span>
     <h3>State of the experiments</h3>
-    <p>What has actually been run, what has not, and which claim rests on which. Anything marked
-    “not run” is a plan, not a result.</p>
+    <p>What has run, what has not, and which claim rests on which.</p>
   </a>
   <a class="card" href="./figure.html">
     <span class="kind">Tool</span>
     <h3>Figure builder</h3>
-    <p>Three panels, live dials, exported as print-resolution vector. Same engines as the labs,
-    so the figure cannot disagree with the experiment.</p>
+    <p>Three panels, live dials, exported as print-resolution vector.</p>
   </a>
 </div>
 
 <hr>
 
-<p><b>The problem with studying this in a rich environment</b> is that you cannot tell a
-population that <em>failed</em> from one that faced an impossible problem. So these games are
-small enough that the best achievable outcome is computable exactly, and the interesting quantity
-becomes the distance between what a population did and what the arithmetic already permitted.</p>
+<p>In a rich environment you cannot tell a population that <em>failed</em> from one that faced an
+impossible problem. So these games are small enough to solve exactly. The interesting quantity is
+the gap between what a population did and what the arithmetic allowed.</p>
 
-<p>Every number on this site is computed from the rules of the game. <b>Nothing is scored by a
-model.</b> The engines are ports of <code>flockbench</code>, the research testbed where these
-games are played by live language models, and the test suite pins the two implementations to each
-other — so an illustration here cannot quietly drift away from the experiment it illustrates.</p>
+<p>Every number here is computed from the rules. <b>Nothing is scored by a model.</b> The engines
+are ports of <code>flockbench</code>, and the tests pin the two together — so the illustration
+cannot drift from the experiment.</p>
 
 <hr>
 
-<p class="section-label">Four things that fall out of one small game</p>
+<p class="section-label">Four things one small game gives you</p>
 
-<p><b>The answer is checkable.</b> The share of turns an agent can afford to spend restoring, and
-the share the pool needs restored, are both computable from the rules. Where they coincide, a
-strategy exists under which everyone lives forever. Where they do not, none does. A population's
-shortfall becomes a number rather than an opinion.</p>
+<p><b>A checkable answer.</b> What an agent can afford to restore, and what the pool needs
+restored, both follow from the rules. Where they meet, everyone can live forever. Where they do
+not, nobody can.</p>
 
-<p><b>Difficulty has a dial with an answer key.</b> One parameter changes exactly how many
-free-riders a flock can carry, and that count is closed-form — so a measured threshold has ground
-truth to be compared against, which is rare.</p>
+<p><b>A difficulty dial with an answer key.</b> One parameter sets how many free-riders a flock
+carries, in closed form. Measured thresholds have something to be measured against.</p>
 
-<p><b>Long rollouts are dynamics.</b> A long episode is a numerical integration and the agents are
-the integrator. An agent running slightly off the correct rate does not fail immediately; it
-drifts and dies later. Small per-step biases are invisible at ten turns and fatal at two hundred,
-which is a concrete argument against extrapolating from short runs.</p>
+<p><b>Horizon as a variable.</b> An agent slightly off the correct rate does not fail — it drifts,
+and dies later. Small biases are invisible at ten turns and fatal at two hundred.</p>
 
-<p><b>Steering is entrainment.</b> The sustainable pattern is a balanced two-colouring of the
-agent-by-turn grid, and nobody assigns it. That makes this a coupled-oscillator problem with a
-forced subpopulation — and the critical fraction depends far more on how the followers update than
-on how many seats you hold.</p>
+<p><b>Steering as entrainment.</b> The sustainable pattern is a balanced two-colouring nobody
+assigns. The critical fraction depends more on how the others update than on how many seats you
+hold.</p>
 
 <hr>
 
@@ -96,50 +94,44 @@ on how many seats you hold.</p>
   <a class="card" href="./boardwalk.html">
     <span class="kind">Explorable explanation</span>
     <h3>Boardwalk</h3>
-    <p>Hotelling's beach. Two vendors settle at the centre; three have no stable arrangement at
-    all and chase each other forever.</p>
+    <p>Two vendors settle at the centre. Three never settle at all.</p>
   </a>
   <a class="card" href="./gate.html">
     <span class="kind">Explorable explanation</span>
     <h3>The gate</h3>
     <p>A judge-free promotion gate that rolls back a clone of its own baseline — and gets worse
-    the more data you give it.</p>
+    with more data.</p>
   </a>
   <a class="card" href="./blog-pdd.html">
     <span class="kind">Essay</span>
     <h3>Fifty dollars an agent</h3>
-    <p>Why the interesting constraint in multi-agent research is the price of a personality.</p>
+    <p>Why the binding constraint in multi-agent research is the price of a personality.</p>
   </a>
 </div>
 
 <hr>
 
-<p class="section-label">Where the work actually stands</p>
-
-<p>Research sites usually describe the version of a project that will exist once everything works.
-Below is the one that exists. The
-<a href="./experiments.html">status page</a> carries the full accounting, including five known
-problems we have not fixed.</p>
+<p class="section-label">Where the work stands</p>
 
 <table>
 <tr><th>&nbsp;</th><th>&nbsp;</th></tr>
 <tr><td><span class="st st-done">measured</span></td>
-    <td>Shared Resource environment, closed-form solution and carrying capacity, asserted in two
-    independent implementations</td></tr>
+    <td>The game, its closed-form solution and carrying capacity — asserted in two
+    implementations</td></tr>
 <tr><td><span class="st st-done">measured</span></td>
-    <td>Stage Zero pilot — 30 matched cells, zero parse failures, and the gate audit that came
-    out of it</td></tr>
+    <td>Stage Zero pilot: 30 matched cells, zero parse failures, and the gate audit it
+    produced</td></tr>
 <tr><td><span class="st st-part">simulated</span></td>
-    <td>Conformist populations need 75% of seats to steer. True of scripted rules; <b>no language
-    model has been measured against it</b></td></tr>
+    <td>Conformists need 75% of seats to steer. <b>No language model has been measured against
+    it</b></td></tr>
 <tr><td><span class="st st-part">resampled</span></td>
-    <td>The gate's false-rejection rate, and the campaign size at which non-inferiority passes</td></tr>
+    <td>The gate's false-rejection rate, and where non-inferiority starts passing</td></tr>
 <tr><td><span class="st st-todo">not run</span></td>
-    <td>Live A/A calibration, the powered dose-response campaign, and anything above N = 8</td></tr>
+    <td>Live A/A, the powered campaign, anything above N = 8</td></tr>
 </table>
 
-<p class="muted">MIT licensed; exported data and figures CC0. No account, server, or analytics —
-everything runs in the page. Source at
+<p class="muted">Full accounting on the <a href="./experiments.html">status page</a>, including
+what is still broken. MIT; data and figures CC0. Source at
 <a href="https://github.com/thenthfool/multiagent">github.com/thenthfool/multiagent</a>.</p>
 
 </div>

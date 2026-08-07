@@ -165,3 +165,25 @@ hr { border: none; border-top: 1px solid var(--line); margin: 44px 0; }
   position: absolute; width: 1px; height: 1px;
   overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
 }
+
+/* Scrubbable numbers in prose. The parameter lives in the sentence that talks
+   about it, so changing it and reading about it are the same act. */
+.scrub {
+  cursor: ew-resize;
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+  color: var(--accent);
+  border-bottom: 1.5px dashed var(--accent);
+  padding: 0 1px;
+  user-select: none;
+  touch-action: none;
+}
+.scrub:hover, .scrub:focus { background: var(--panel); outline: none; }
+.scrub::after { content: "↔"; font-size: .72em; opacity: .5; margin-left: 2px; }
+
+/* Small multiples: the whole parameter space at once, rather than one run at a
+   time behind a slider. */
+.multiples { display: grid; gap: 3px; margin: 14px 0; }
+.multiples .mrow { display: grid; grid-template-columns: 150px repeat(9, 1fr); gap: 3px; align-items: center; }
+.multiples .mlab { font-size: 11px; color: var(--muted); text-align: right; padding-right: 6px; }
+.multiples .mhead { font-size: 10px; color: var(--muted); text-align: center; }
