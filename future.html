@@ -166,6 +166,100 @@ not a result — none of these authors has anything to do with this project.</p>
 
 <hr>
 
+<p class="section-label">The port list, in order</p>
+
+<p>A behavioural-economics experiment is worth porting here if it passes four tests. <b>The right
+answer follows from the rules</b>, so scoring needs no judge. <b>The outcome is a number the
+environment produces</b>, not a rating of what an agent said. <b>It has a horizon</b>, so drift has
+somewhere to show up. And <b>composition is a knob</b> — the design still means something when some
+of the players are yours and the rest are not.</p>
+
+<p>That rules out most of the interesting-sounding ones, which is the point. What is left:</p>
+
+<table>
+<tr><th>#</th><th>design</th><th>why it is next</th></tr>
+
+<tr><td><b>1</b></td>
+  <td><b>Minimum-effort coordination</b><br>
+  <span class="muted">Van Huyck, Battalio &amp; Beil (1990), <i>AER</i></span></td>
+  <td>The best fit in the whole literature for this testbed. Payoff depends on the
+  <em>minimum</em> effort anyone chooses, so there are several equilibria, one is unambiguously
+  best for everybody, and human groups reliably collapse to the worst. Both the efficient and the
+  secure outcome are exact numbers. Steering has a sharp meaning: how many agents held at high
+  effort before the group climbs — and one low agent caps everyone, which is this project's
+  "one defector kills the flock" in a second environment.</td></tr>
+
+<tr><td><b>2</b></td>
+  <td><b>p-Beauty contest</b><br>
+  <span class="muted">Nagel (1995), <i>AER</i>; Ho, Camerer &amp; Weigelt (1998)</span></td>
+  <td>Guess ⅔ of the average. The equilibrium is zero, the deviation is arithmetic, and the choice
+  reveals how many steps of "if they think that, then I…" a player took. That gives a <b>depth-of-
+  reasoning measurement for a population of agents</b>, repeated, with convergence to watch —
+  and a well-documented human distribution to compare against.</td></tr>
+
+<tr><td><b>3</b></td>
+  <td><b>Market entry / El Farol</b><br>
+  <span class="muted">Kahneman (1988); Arthur (1994)</span></td>
+  <td>Enter or stay out; entering is good only if few others do. The optimal entry rate is
+  computable from the payoff and human groups famously track it in aggregate while nobody
+  coordinates. This is agent load-balancing with an answer key, and the failure mode — everybody
+  reasoning identically and so arriving together — is the correlated-failure risk in its purest
+  form.</td></tr>
+
+<tr><td><b>4</b></td>
+  <td><b>Double auction with induced values</b><br>
+  <span class="muted">Smith (1962), <i>JPE</i></span></td>
+  <td>Give each agent a private reservation value; the competitive price and quantity follow from
+  the value schedule. Convergence to it is measurable to the cent with no judge anywhere. This is
+  the direct bridge to the sandbox-economy framing the call asks about, and the one design here
+  where "market mechanism" is literal.</td></tr>
+
+<tr><td><b>5</b></td>
+  <td><b>Common-pool appropriation</b><br>
+  <span class="muted">Ostrom, Gardner &amp; Walker (1994)</span></td>
+  <td>The continuous-effort cousin of the game on this site, with decades of human baselines and
+  the design principles literature attached. Mostly built already.</td></tr>
+
+<tr><td><b>6</b></td>
+  <td><b>Public goods with punishment</b><br>
+  <span class="muted">Fehr &amp; Gächter (2000); Herrmann, Thöni &amp; Gächter (2008)</span></td>
+  <td>Already built and already run. Antisocial punishment is the interesting part: a costly
+  action that lowers group welfare, which gives a clean test of whether agent populations produce
+  spite when spite is available.</td></tr>
+
+<tr><td><b>7</b></td>
+  <td><b>Distributional preferences in bilateral exchange</b><br>
+  <span class="muted">Benjamin (2015), <i>AEJ: Micro</i></span></td>
+  <td>Trades off own payoff against the other's, with the efficient allocation computable. The
+  commons is this problem wearing a survival constraint, and this is the two-player version with a
+  measured human baseline to sit beside it.</td></tr>
+
+<tr><td><b>8</b></td>
+  <td><b>Belief-formation batteries</b><br>
+  <span class="muted">Benjamin (2019), <i>Handbook</i>; Benjamin, Rabin &amp; Raymond (2016);
+  Benjamin, Bodoh-Creed &amp; Rabin (2019); Benjamin, Moore &amp; Rabin (2017)</span></td>
+  <td>Base-rate neglect, non-belief in the law of large numbers, biased beliefs about random
+  samples. Each has a Bayesian posterior you can compute, so an agent's error is a distance, not
+  an opinion. These are individual-level and go in for a specific reason: to test whether
+  population-level failures are inherited from individual bias or created by the interaction.
+  If a flock of well-calibrated agents still starves, the failure is social.</td></tr>
+
+<tr><td><b>9</b></td>
+  <td><b>Heterogeneity-of-bias designs</b><br>
+  <span class="muted">Benjamin, Brown &amp; Shapiro (2013), <i>JEEA</i></span></td>
+  <td>Not an environment but a measurement: how much do the members of a population differ in how
+  biased they are? That is the diversity metric this project admits it lacks — the difference
+  between thirty agents and thirty copies with different accents — and it has an existing design
+  to borrow.</td></tr>
+</table>
+
+<p><b>What is deliberately not on the list.</b> Ultimatum and dictator games, where the
+"right" answer is a fairness judgement rather than arithmetic; anything scored by rating free
+text; and anything whose human baseline is contested, since the point of a baseline is to be
+something to disagree with.</p>
+
+<hr>
+
 <p class="section-label">What would have to be true</p>
 
 <p>Learning has to be cheap enough to run inside a campaign rather than between them. Self-distilled
