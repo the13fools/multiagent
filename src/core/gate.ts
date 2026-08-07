@@ -104,11 +104,31 @@ function makeRng(seed: number): () => number {
 }
 
 /**
+ * Memoised, because the UI asks for the same points repeatedly.
+ *
+ * Without this, a figure redraw cost 1.7s and a gate-lab redraw 2.2s -- and both
+ * were wired to `input`, which a slider fires about thirty times per drag. The
+ * page did not look wrong so much as dead.
+ */
+const cache = new Map<string, number>();
+
+export function rejectionRate(
+  rule: Rule, n: number, effect = 0, trials = 3000, sd = PILOT_SD, seed = 7,
+): number {
+  const key = `${rule.minMeanImprovement}|${rule.minWinRate}|${rule.maxRegressionRate}|${rule.maxPValue}|${n}|${effect}|${trials}|${sd}|${seed}`;
+  const hit = cache.get(key);
+  if (hit !== undefined) return hit;
+  const v = computeRejectionRate(rule, n, effect, trials, sd, seed);
+  cache.set(key, v);
+  return v;
+}
+
+/**
  * P(roll back) at sample size `n` when the candidate's true effect is `effect`.
  * `effect = 0` is the A/A case: the candidate is a clone of its baseline, and
  * this number is the gate's false-rejection rate.
  */
-export function rejectionRate(
+function computeRejectionRate(
   rule: Rule,
   n: number,
   effect = 0,

@@ -150,3 +150,40 @@ describe("figure builder", () => {
     for (const t of ["A · ", "B · ", "C · "]) expect(svg).toContain(t);
   });
 });
+
+/**
+ * Geometry guard for the exported figure.
+ *
+ * "The figures are very bugged" was mostly a 1.7s redraw wired to an event a
+ * slider fires thirty times per drag, but layout is the other way a figure goes
+ * wrong silently: an element drawn outside the viewBox simply is not there in
+ * the exported file, and the preview on screen looks plausible.
+ */
+describe("exported figure geometry", () => {
+  it("draws nothing outside its own viewBox", async () => {
+    document.documentElement.innerHTML = readFileSync(resolve(__dirname, "../figure.html"), "utf8")
+      .replace(/<!doctype html>/i, "").replace(/<\/?html[^>]*>/gi, "");
+    vi.resetModules();
+    await import("../src/ui/figureLab");
+    const svg = document.getElementById("preview")!.innerHTML;
+    const [, wStr, hStr] = /viewBox="0 0 (\d+) (\d+)"/.exec(svg)!;
+    const W = Number(wStr), H = Number(hStr);
+
+    const xs: number[] = [];
+    const ys: number[] = [];
+    for (const m of svg.matchAll(/\b(?:x|cx|x1|x2)="(-?[\d.]+)"/g)) xs.push(Number(m[1]));
+    for (const m of svg.matchAll(/\b(?:y|cy|y1|y2)="(-?[\d.]+)"/g)) ys.push(Number(m[1]));
+    expect(xs.length).toBeGreaterThan(50);
+    expect(Math.min(...xs)).toBeGreaterThanOrEqual(0);
+    expect(Math.max(...xs)).toBeLessThanOrEqual(W);
+    expect(Math.min(...ys)).toBeGreaterThanOrEqual(0);
+    expect(Math.max(...ys)).toBeLessThanOrEqual(H);
+  });
+
+  it("renders fast enough to drive from a slider", async () => {
+    const t0 = Date.now();
+    (document.getElementById("G") as HTMLInputElement).value = "6";
+    document.getElementById("G")!.dispatchEvent(new Event("input"));
+    expect(Date.now() - t0).toBeLessThan(400);
+  });
+});

@@ -1,9 +1,9 @@
 import "./style.css";
-import { el, C } from "./lab";
+import { el } from "./lab";
 import {
-  REFERENCE, carryingCapacity, pNeed, pSelf, referencePolicy, simulate, POLICIES as SR,
+  HORIZON, REFERENCE, carryingCapacity, pNeed, pSelf, pacemakersNeeded,
+  referencePolicy, simulate, POLICIES as SR,
 } from "../core/sharedResource";
-import { POLICIES as GATES, rejectionRate } from "../core/gate";
 
 /**
  * Figure builder.
@@ -143,51 +143,48 @@ function panelB(x0: number): string {
   return s.join("");
 }
 
-/* ------------------------------------------- panel C: the gate calibration */
+/* -------------------------------- panel C: who you must control, and why */
 
 function panelC(x0: number): string {
-  const ns = [10, 20, 30, 60, 100, 140, 200, 350];
-  const trials = num("trials");
-  const w = 300, h = 150, ox = x0 + 30, oy = 76;
-  const px = (i: number) => ox + (i / (ns.length - 1)) * w;
-  const py = (v: number) => oy + h - v * h;
+  const G = num("G");
+  const p = { ...REFERENCE, G };
+  const rows = Object.values(SR).map(({ label, fn }) => ({
+    label: label.replace(/ \(.*\)/, ""),
+    k: pacemakersNeeded(fn, { n: 8, turns: HORIZON, params: p }),
+  }));
+  rows.sort((a, b) => (b.k ?? 99) - (a.k ?? 99));
+
+  // Sized against the 1100 viewBox: label column 760..864, bars 872..1022,
+  // value text to ~1090. The geometry test enforces this.
+  const w = 150, oy = 84, bh = 20, gap = 9;
+  const ox = x0 + 112;
   const s: string[] = [];
 
-  s.push(txt(x0, 30, "C · A gate that rolls back a clone of its own baseline", { size: 14, weight: 700 }));
-  s.push(txt(x0, 50, "P(roll back | candidate identical to baseline)", { size: 11, fill: P.muted }));
+  s.push(txt(x0, 30, "C · How many seats you must control", { size: 14, weight: 700 }));
+  s.push(txt(x0, 50, "Pacemakers needed before a flock of 8 survives 200 turns,", { size: 11, fill: P.muted }));
+  s.push(txt(x0, 64, "as a function of how the OTHER agents update.", { size: 11, fill: P.muted }));
 
-  s.push(`<rect x="${ox}" y="${py(1)}" width="${w}" height="${py(0.95) - py(1)}" fill="${P.bad}" opacity="0.08"/>`);
-  s.push(`<line x1="${ox}" y1="${py(0.05)}" x2="${ox + w}" y2="${py(0.05)}"
-     stroke="${P.ink}" stroke-width="1" stroke-dasharray="4 3"/>`);
-  s.push(txt(ox + w, py(0.05) - 5, "5% target", { size: 9, fill: P.muted, anchor: "end" }));
-
-  s.push(`<line x1="${ox}" y1="${oy + h}" x2="${ox + w}" y2="${oy + h}" stroke="${P.ink}"/>`);
-  s.push(`<line x1="${ox}" y1="${oy}" x2="${ox}" y2="${oy + h}" stroke="${P.ink}"/>`);
-  for (const v of [0, 0.25, 0.5, 0.75, 1]) {
-    s.push(txt(ox - 6, py(v) + 3.5, `${(v * 100).toFixed(0)}%`, { size: 9, fill: P.muted, anchor: "end" }));
-  }
-  ns.forEach((n, i) => s.push(txt(px(i), oy + h + 14, String(n), { size: 8.5, fill: P.muted, anchor: "middle" })));
-  s.push(txt(ox + w / 2, oy + h + 30, "paired cells in the campaign", { size: 10, fill: P.muted, anchor: "middle" }));
-
-  const colours = { overlap: P.bad, superiority: "#8a6d2f", nonInferiority: P.good };
-  Object.entries(GATES).forEach(([key, { label, rule }]) => {
-    const pts = ns.map((n, i) => `${px(i)},${py(rejectionRate(rule, n, 0, trials))}`).join(" ");
-    s.push(`<polyline points="${pts}" fill="none" stroke="${colours[key as keyof typeof colours]}" stroke-width="2.4"/>`);
-    ns.forEach((n, i) =>
-      s.push(`<circle cx="${px(i)}" cy="${py(rejectionRate(rule, n, 0, trials))}" r="2.6"
-         fill="${colours[key as keyof typeof colours]}"/>`));
-    void label;
+  rows.forEach((r, i) => {
+    const y = oy + i * (bh + gap);
+    const k = r.k ?? 8;
+    const frac = k / 8;
+    s.push(txt(ox - 8, y + bh * 0.7, r.label, { size: 10, anchor: "end" }));
+    s.push(`<rect x="${ox}" y="${y}" width="${w}" height="${bh}" fill="${P.line}" opacity="0.5"/>`);
+    s.push(`<rect x="${ox}" y="${y}" width="${(w * frac).toFixed(1)}" height="${bh}"
+       fill="${k === 0 ? P.good : k >= 6 ? P.bad : "#8a6d2f"}"/>`);
+    s.push(txt(ox + w * frac + 6, y + bh * 0.72,
+      k === 0 ? "0 — alone" : k >= 8 ? "8 — every seat" : String(k),
+      { size: 10, weight: 700 }));
   });
 
-  let ly = oy + 8;
-  for (const [key, { label }] of Object.entries(GATES)) {
-    s.push(`<line x1="${ox + 12}" y1="${ly}" x2="${ox + 30}" y2="${ly}"
-       stroke="${colours[key as keyof typeof colours]}" stroke-width="2.4"/>`);
-    s.push(txt(ox + 35, ly + 3.5, label, { size: 9.5 }));
-    ly += 15;
+  const yb = oy + rows.length * (bh + gap) + 6;
+  s.push(`<line x1="${ox}" y1="${yb}" x2="${ox + w}" y2="${yb}" stroke="${P.ink}"/>`);
+  for (const k of [0, 2, 4, 6, 8]) {
+    s.push(txt(ox + (w * k) / 8, yb + 13, String(k), { size: 9, fill: P.muted, anchor: "middle" }));
   }
+  s.push(txt(ox + w / 2, yb + 28, "seats you must control, of 8", { size: 10, fill: P.muted, anchor: "middle" }));
 
-  s.push(txt(x0, oy + h + 54, "Overlap rules get WORSE with more data. Only non-inferiority passes.",
+  s.push(txt(x0, 296, "Controllability is a property of the agents you do NOT control.",
     { size: 10.5, weight: 700 }));
   return s.join("");
 }
@@ -254,9 +251,8 @@ el("pngBtn").addEventListener("click", () => {
   img.src = url;
 });
 
-for (const id of ["G", "trials", "title", "caption", "captionText", "panelA", "panelB", "panelC"]) {
+for (const id of ["G", "title", "captionText", "caption", "panelA", "panelB", "panelC"]) {
   el(id).addEventListener("input", render);
   el(id).addEventListener("change", render);
 }
 render();
-void C;

@@ -32,9 +32,8 @@ text stays selectable. The PNG button renders at 3× for portals that insist on 
   <div class="controls">
     <label><input type="checkbox" id="panelA" checked> A · two rates</label>
     <label><input type="checkbox" id="panelB" checked> B · colouring</label>
-    <label><input type="checkbox" id="panelC" checked> C · gate</label>
+    <label><input type="checkbox" id="panelC" checked> C · steering</label>
     <label>Restore gain G <input id="G" type="number" min="1" max="12" value="3" style="width:60px"></label>
-    <label>Gate trials <input id="trials" type="number" min="300" max="20000" step="100" value="2000" style="width:80px"></label>
     <label><input type="checkbox" id="caption" checked> caption</label>
     <button id="svgBtn">Download SVG</button>
     <button id="pngBtn">Download PNG (3×)</button>
@@ -63,14 +62,14 @@ closed-form, which is what gives the empirical threshold an answer key.</p>
 herds into lockstep and starves; the other holds. The number underneath is the restore-rate gap:
 distance from the answer that was available the whole time.</p>
 
-<p><b>C — the result a reviewer will not believe from a table.</b> Probability a gate rolls back a
-candidate <em>identical to its baseline</em>. The overlap-rule line sits at 1.0 and does not come
-down as the campaign grows, because it bounds a proportion that converges to one half. Only
-non-inferiority crosses the 5% line.</p>
+<p><b>C — how many seats you must control.</b> Pin agents to the correct alternating phase and ask
+how many it takes before the flock survives. The answer depends almost entirely on how the
+<em>other</em> agents update: a population that keeps its own rate needs none, one that imitates
+needs six of eight. Controllability is a property of the agents you do not control.</p>
 
 <p class="muted">Every value is computed live from <code>src/core</code>, the same modules the test
-suite pins to <code>flockbench</code>. Increase gate trials before the final export — 2,000 is
-smooth enough to read and 10,000 is smooth enough to print.</p>
+suite pins to <code>flockbench</code>. Change <code>G</code> and all three panels move together —
+the slack, the survival outcome, and the number of seats you would need.</p>
 </div>
 <script type="module" src="/src/ui/figureLab.ts"></script>
 </body>

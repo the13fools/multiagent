@@ -16,6 +16,7 @@ export default defineConfig({
         shared: "shared-resource.html",
         juggling: "juggling.html",
         gate: "gate.html",
+        blog: "blog-pdd.html",
         figure: "figure.html",
         boardwalk: "boardwalk.html",
       },

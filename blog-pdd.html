@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fifty dollars an agent — multiagent</title>
+<meta name="description" content="Why the interesting constraint in multi-agent research is the price of a personality.">
+<link rel="stylesheet" href="/src/ui/style.css">
+</head>
+<body>
+<nav><div class="wrap">
+  <a class="brand" href="./index.html">multiagent</a>
+  <a href="./shared-resource.html">Shared Resource</a>
+  <a href="./juggling.html">Juggling</a>
+  <a href="./boardwalk.html">Boardwalk</a>
+  <a href="./gate.html">Gate</a>
+  <a href="./figure.html">Figure</a>
+</div></nav>
+<div class="wrap" style="max-width:720px">
+<h1>Fifty dollars an agent</h1>
+
+<p><em>On why the interesting constraint in multi-agent research is the price of a personality.</em></p>
+
+<hr>
+
+<p>There is a sentence buried in every multi-agent safety paper that nobody defends, because defending it is expensive.</p>
+
+<p>The sentence is some version of: <em>we simulated a population of agents.</em> And what it almost always means is: one model, prompted several different ways.</p>
+
+<p>That is not a population. It is one policy wearing hats.</p>
+
+<h2>Why the hats matter</h2>
+
+<p>The whole premise of multi-principal safety is that the other agents in the system were built by somebody else. Different training data, different objectives, different failure modes, different blind spots. When a market breaks or a commons collapses, it breaks because the participants are genuinely unlike one another and their differences interact.</p>
+
+<p>A simulation where every agent shares a weight matrix cannot exhibit that. It can exhibit prompt-sensitivity, which is a real and interesting thing, and is not the thing. Two agents with the same weights and different system prompts fail in <em>correlated</em> ways, because their failure modes come from the same place. Correlated failure is exactly the property a multi-principal study is supposed to be measuring the absence of.</p>
+
+<p>Everyone in the field knows this. The reason nobody fixes it is arithmetic: a population of thirty genuinely distinct fine-tuned agents used to cost more than the study.</p>
+
+<h2>What we actually needed</h2>
+
+<p>For <a href="https://github.com/thenthfool/flockbench">flockbench</a>, the requirement was specific and slightly odd. We did not need better agents. We needed <em>many different</em> agents, each one distinct in a way that survives contact with a long rollout, and each one cheap enough that a population is an experimental variable rather than a capital expense.</p>
+
+<p>We also needed something most alignment training explicitly does not care about: the agents had to keep working.</p>
+
+<p>Our environments parse structured actions out of free text. An agent emits something like</p>
+
+<pre><code>
+{&quot;reasoning&quot;: &quot;the pool is low and I restored last turn&quot;, &quot;action&quot;: &quot;take&quot;}
+</code></pre>
+
+<p>and the environment reads <code>action</code>. If training bends the model such that it stops emitting valid JSON, the run does not produce an interestingly-changed agent. It produces a parse failure, which our harness scores as a behaviourally inert action, and the experiment quietly measures nothing.</p>
+
+<p>So the constraint was: <b>change the agent&#x27;s disposition, do not touch its schema.</b></p>
+
+<h2>The idea</h2>
+
+<p>The method is span-restricted preference distillation, and the idea is embarrassingly simple once you see the constraint written down.</p>
+
+<p>A teacher model edits a rollout. Instead of training the policy on the whole edited response, we train it <b>only on the spans that actually changed</b> — and we mask the structured action fields so no gradient reaches them at all.</p>
+
+<p>Three things fall out.</p>
+
+<p><b>The action schema is preserved by construction, not by hope.</b> Legal-action masking means the tokens that make the output parseable are never in the loss. You cannot accidentally train a model out of emitting valid JSON if the JSON was never a training target. This sounds like a detail. It is the difference between a population of thirty agents and a population of thirty parse failures.</p>
+
+<p><b>Cheap, because the loss is sparse.</b> Most of a rollout is unchanged by the teacher. If you train on the whole target you spend most of your gradient re-learning text the model already produces. Restricting to changed spans is a large constant-factor saving, and constant factors are the entire game when you need thirty of something.</p>
+
+<p><b>The teacher&#x27;s edit is cached once.</b> Each base rollout is edited exactly once, and every training arm consumes the same immutable cache. This started as a cost measure and turned into a methodological one: no arm can receive a more favourable rollout or a fresh teacher sample after results are known. The comparison is fair because re-rolling is not possible, not because we promised not to.</p>
+
+<p>The result is a distinct fine-tuned agent for <b>about fifty dollars</b>.</p>
+
+<h2>Why the number is the point</h2>
+
+<p>Fifty dollars is not a benchmark result. It is a change in what experiments are thinkable.</p>
+
+<p>At fifty dollars an agent, a population of thirty distinct policies costs $1,500 — less than the compute for a single powered campaign run against them. The population stops being the expensive part of the study. It becomes a knob.</p>
+
+<p>That reframes what the method <em>is</em>. We are not proposing a better way to align an individual agent; that would be out of scope for the work we are doing and, frankly, we have no evidence it is better. We are proposing a way to make the population itself an experimental variable. The success criterion is not &quot;the trained agent is more cooperative.&quot; It is: **can we tell the seeded arm apart from a vocabulary-matched control at the population level?** If we cannot, the method failed regardless of how good the individual agents look.</p>
+
+<p>It is worth being explicit that the funder described this before we did. The Cooperative AI Foundation&#x27;s call asks, under sandboxes and testbeds, about *&quot;navigating the trade-off between scalability and fidelity, for example, by using smaller, distilled models to serve as faithful proxies for frontier agents in simulations.&quot;* That is the same sentence from the other side.</p>
+
+<h2>The control that keeps us honest</h2>
+
+<p>Here is the failure mode that worries me most, and it is not the obvious one.</p>
+
+<p>Suppose we train thirty agents, run the population, and see no effect. Two explanations fit: the specification genuinely does not move population outcomes, or the training never installed anything and we spent $1,500 on thirty copies of the base model.</p>
+
+<p>Those are very different findings and they look identical in the data.</p>
+
+<p>So we built a positive control that costs nothing to check. Train an agent toward a target that is <b>objectively verifiable and behaviourally irrelevant</b>: write your reasoning in <code>snake_case</code>. Conformance is a regex. No judge, no rubric, no argument.</p>
+
+<p>That single artifact does four jobs at once:</p>
+
+<ol>
+<li><b>Did the channel install?</b> If the adapter does not produce <code>snake_case</code>, training did</li>
+<p>   nothing, and any null result downstream is uninterpretable.</p>
+<li><b>Is the intervention inert?</b> A style change should not move welfare. If it does, then</li>
+<p>   <em>any</em> adapter perturbs population outcomes and every seeded result in the study is    confounded.</p>
+<li><b>Does the promotion gate detect a known-bad candidate?</b> Push the style far enough</li>
+<p>   off-distribution — <code>uNsTaBlE_-0-_CaSe</code> — and game competence should degrade. A gate    that promotes that candidate is a gate whose rejections mean nothing.</p>
+<li><b>Is the schema preserved?</b> Style conformance is regex-checkable on the reasoning</li>
+<p>   span; schema validity is regex-checkable on the action field. That gives a clean 2×2 of    <em>installed</em> × <em>intact</em>, and the span-restricted claim is precisely that the yes-yes cell    is reachable.</p>
+</ol>
+
+<p>It is much cheaper to test all of that with <code>snake_case</code> than with ethics.</p>
+
+<h2>What could still be wrong</h2>
+
+<p>I want to name these rather than wait to be asked.</p>
+
+<p><b>We have not shown the method beats its alternatives.</b> There are at least three cheaper things to try first — prompt specification, context distillation, and outcome-filtered self-distillation where the environment&#x27;s own payoffs do the filtering. We treat seed production as a comparative methods question, ordered cheapest-first, and we adopt the cheapest thing that works. Reporting that the expensive method was unnecessary would be a perfectly good result.</p>
+
+<p><b>Distinct is not the same as distinct in the right way.</b> Thirty agents differing in weights could still fail in correlated ways if the teacher imposed a single consistent bias on all of them. We do not yet have a good measure of population <em>diversity</em> as opposed to population <em>size</em>, and I think that is the real open problem behind this whole approach.</p>
+
+<p><b>Fifty dollars is one number from one setup.</b> Qwen2.5-7B, LoRA, our environments, our hardware. It is a real receipt, not a projection, but it is not a law.</p>
+
+<h2>The uncomfortable part</h2>
+
+<p>The honest reason this method exists is that I could not afford the alternative.</p>
+
+<p>Every architectural decision above — cache the teacher edit once, train only the changed spans, mask the action fields, verify with a regex instead of a judge — traces back to being one person paying for compute out of pocket. The constraint produced a discipline that a better-funded version of this project would probably have skipped, and I think the discipline is worth more than the savings.</p>
+
+<p>A judge panel is expensive, so we used arithmetic. Re-rolling the teacher is expensive, so we cached it and got fairness for free. Training the whole target is expensive, so we masked the schema and got parse-safety for free.</p>
+
+<p>I would not claim poverty is a research methodology. But it is a fairly good filter for which parts of a pipeline were load-bearing.</p>
+
+<hr>
+
+<p>*<code>flockbench</code> and <code>Firebreak</code> are CC0. Interactive versions of the population results are at <a href="https://foolzone.com/multiagent">foolzone.com/multiagent</a>. The style-control harness lives in <code>continuous_judge</code>; the population side, including the gate that scores it, is in <code>flockbench</code>.*</p>
+
+</div>
+</body>
+</html>
