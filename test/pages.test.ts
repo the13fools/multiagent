@@ -209,9 +209,31 @@ describe("experiments status page", () => {
     expect(page()).toMatch(/commit <code>[0-9a-f]{7}<\/code>/);
   });
 
-  it("does not claim the A/A campaign has run", () => {
+  it("does not claim the A/A campaign is complete", () => {
+    // Deliberately not asserting st-todo: one arm of two has now run, so the
+    // row is legitimately st-part. What must never appear is st-done, and the
+    // page must keep saying the error rate is resampled rather than measured.
     const s = page();
-    const row = s.slice(s.indexOf("Live A/A calibration"), s.indexOf("Live A/A calibration") + 400);
-    expect(row).toContain("st-todo");
+    const row = s.slice(s.indexOf("Live A/A calibration"), s.indexOf("Live A/A calibration") + 600);
+    expect(row).not.toContain("st-done");
+    expect(row).toContain("resampled");
+  });
+});
+
+describe("shared visual vocabulary", () => {
+  it("defines the status badges exactly once, in the stylesheet", () => {
+    const css = readFileSync(resolve(__dirname, "../src/ui/style.css"), "utf8");
+    expect(css).toContain(".st-todo");
+    for (const page of ["index.html", "experiments.html"]) {
+      const html = readFileSync(resolve(__dirname, `../${page}`), "utf8");
+      // pages may USE the classes but must not redefine them
+      expect(html, `${page} redefines .st-todo`).not.toMatch(/\.st-todo\s*\{/);
+    }
+  });
+
+  it("puts the honest status on the front page, not only the status page", () => {
+    const html = readFileSync(resolve(__dirname, "../index.html"), "utf8");
+    expect(html).toContain("st-todo");
+    expect(html).toContain("no language\n    model has been measured against it");
   });
 });

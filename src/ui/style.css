@@ -110,18 +110,56 @@ input[type="range"] { width: 130px; }
 .verdict.live { color: var(--restore); }
 .verdict.dead { color: var(--take); }
 
-.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+/* ---------------------------------------------------------------- cards
+ * Labelled by KIND rather than by name -- "explorable explanation", "status
+ * report" -- so a visitor knows what sort of thing they are about to open
+ * before they open it.
+ */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
 .card {
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 16px;
+  border: none;
+  border-top: 1px solid var(--ink);
+  padding: 14px 0 0;
   text-decoration: none;
   color: inherit;
   display: block;
 }
-.card:hover { border-color: var(--muted); }
-.card h3 { margin: 0 0 5px; font-size: 15px; }
-.card p { font-size: 13.5px; color: var(--muted); margin: 0; }
+.card:hover h3 { text-decoration: underline; text-underline-offset: 3px; }
+.card .kind {
+  font-size: 10.5px; text-transform: uppercase; letter-spacing: .07em;
+  color: var(--muted); display: block; margin-bottom: 7px;
+}
+.card h3 { margin: 0 0 6px; font-size: 16px; letter-spacing: -0.01em; font-weight: 600; }
+.card p { font-size: 13.5px; color: var(--muted); margin: 0; line-height: 1.5; }
+
+/* -------------------------------------------------------------- status
+ * One definition, used by the hub and the experiments page. Two copies of a
+ * badge style is how a "not run" ends up green on one page and red on another.
+ */
+.st {
+  display: inline-block; font-size: 10.5px; font-weight: 650; padding: 1px 7px;
+  border-radius: 10px; white-space: nowrap; vertical-align: 1.5px;
+  letter-spacing: .02em;
+}
+.st-done { background: #e2f0e9; color: #1e6344 }
+.st-part { background: #f6efd9; color: #6b5514 }
+.st-todo { background: #f5e3df; color: #8c3625 }
+@media (prefers-color-scheme: dark) {
+  .st-done { background: #1b3328; color: #7fd0aa }
+  .st-part { background: #332c17; color: #d8bd6a }
+  .st-todo { background: #331f1b; color: #e09182 }
+}
+
+hr { border: none; border-top: 1px solid var(--line); margin: 44px 0; }
+
+.hero { margin: 8px 0 40px; }
+.hero h1 { font-size: 34px; line-height: 1.15; letter-spacing: -0.025em; margin: 0 0 10px; max-width: 16em; }
+.hero p { font-size: 18px; color: var(--muted); margin: 0; max-width: 34em; line-height: 1.45; }
+
+.section-label {
+  font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
+  color: var(--muted); margin: 0 0 16px; font-weight: 600;
+}
 
 .sr-only {
   position: absolute; width: 1px; height: 1px;
