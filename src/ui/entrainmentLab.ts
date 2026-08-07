@@ -1,6 +1,6 @@
 import "./style.css";
 import { mountArc } from "./arc";
-import { el, C, HEX, mix, Ticker, bindDials, populationRing, applyEmbedMode,
+import { el, C, HEX, mix, Ticker, bindDials, populationRing, applyEmbedMode, wireControls,
   type RingAgent } from "./lab";
 import {
   HORIZON, POLICIES, REFERENCE, pNeed, simulate,
@@ -66,7 +66,7 @@ function drawRun() {
       s.push(
         `<rect x="${(LAB + t * cw).toFixed(2)}" y="${(i * rh).toFixed(2)}"
            width="${Math.max(cw - 0.4, 0.6).toFixed(2)}" height="${(rh - 1).toFixed(2)}"
-           fill="${cell(f.actions[i]!, !f.alive[i])}"/>`,
+           rx="3" fill="${cell(f.actions[i]!, !f.alive[i])}" class="anim-cell"/>`,
       );
     }
   }
@@ -109,7 +109,7 @@ const ticker = new Ticker(() => {
   shown++;
   drawRun();
   return shown < out.frames.length;
-}, 45);
+}, 250);
 
 function runOne() {
   ticker.stop();
@@ -177,6 +177,7 @@ bindDials((id) => {
   drawSpace();
   runOne();
 });
+wireControls(ticker, { play: "play", step: "step", reset: "reset" }, runOne);
 
 drawSpace();
 runOne();

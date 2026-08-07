@@ -271,6 +271,11 @@ export function populationRing(
     const ang = (i / n) * 2 * Math.PI - Math.PI / 2;
     const x = cx + ring * Math.cos(ang);
     const y = cy + ring * Math.sin(ang);
+    if (a.pinned) {
+      parts.push(
+        `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(r * 1.6).toFixed(1)}" fill="${C.accent}" opacity="0.3"/>`
+      );
+    }
     parts.push(
       `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}"
          fill="${a.dead ? HEX.dead : a.colour}"

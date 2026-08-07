@@ -1,6 +1,6 @@
 import "./style.css";
 import { mountArc } from "./arc";
-import { el, C, HEX, mix, Ticker, renderStats, verdict, applyEmbedMode, bindDials } from "./lab";
+import { el, C, HEX, mix, Ticker, renderStats, verdict, applyEmbedMode, bindDials, wireControls } from "./lab";
 import { turnDiagram, ledgerFigure } from "./figures";
 import {
   HORIZON, POLICIES, REFERENCE, carryingCapacity, pNeed, pSelf, pacemakersNeeded,
@@ -80,7 +80,7 @@ function drawGrid() {
       s.push(
         `<rect x="${(ROWLAB + t * cw).toFixed(2)}" y="${(i * rh).toFixed(2)}"
            width="${Math.max(cw - 0.4, 0.6).toFixed(2)}" height="${(rh - 1).toFixed(2)}"
-           fill="${cellFill(f.actions[i]!, !f.alive[i])}"/>`,
+           rx="3" fill="${cellFill(f.actions[i]!, !f.alive[i])}" class="anim-cell"/>`,
       );
     }
     const acting = f.actions.filter(Boolean);
@@ -183,7 +183,7 @@ const ticker = new Ticker(() => {
     return false;
   }
   return true;
-}, 55);
+}, 250);
 
 function run() {
   ticker.stop();
@@ -228,7 +228,7 @@ function drawSetup() {
 }
 
 bindDials(() => { drawSetup(); drawTheory(); drawTable(); run(); });
-el("go").addEventListener("click", run);
+wireControls(ticker, { play: "play", step: "step", reset: "reset" }, run);
 
 drawSetup();
 drawTheory();
