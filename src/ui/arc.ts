@@ -35,20 +35,22 @@ export const SPINE: Chapter[] = [
     title: "Steering",
     asks: "Pin some agents to the right phase. Do the others lock on?",
     hands:
-      "Sometimes — and it depends on the followers, not on how many seats you hold. " +
-      "But every answer so far assumed there was something stable to steer into.",
-  },
-  {
-    slug: "boardwalk",
-    title: "Boardwalk",
-    asks: "Three vendors on a beach, and no arrangement anyone is happy to stop at.",
-    hands: "Same shape, harder to picture. Try it with intuitions you already have.",
+      "Sometimes — and it depends on how the others update, not on how many seats you hold. " +
+      "If an eight-by-two-hundred grid of coloured squares is hard to feel, here is the same " +
+      "pattern with intuitions you already have.",
   },
   {
     slug: "juggling",
     title: "Juggling",
     asks: "The commons as a passing pattern: many players, one beat, clubs that leave play.",
-    hands: "Suppose you find a change that helps. How would you know it helped?",
+    hands:
+      "Both of those had a rhythm to keep. Plenty of systems have no rest point to keep at all.",
+  },
+  {
+    slug: "boardwalk",
+    title: "Boardwalk",
+    asks: "Three vendors on a beach, and no arrangement anyone is happy to stop at.",
+    hands: "Suppose you do find a change that helps. How would you know that it helped?",
   },
   {
     slug: "gate",
@@ -72,7 +74,7 @@ export const SPINE: Chapter[] = [
     slug: "blog-pdd",
     title: "Fifty dollars an agent",
     asks: "Why the binding constraint in multi-agent research is the price of a personality.",
-    hands: "Back to the game it all pays for.",
+    hands: "That is the whole argument. It starts again with eight agents and a pool.",
   },
 ];
 
