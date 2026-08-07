@@ -45,45 +45,68 @@ let shown = 0;
 
 const GW = 700, GH = 150, LAB = 30;
 
-function drawRun() {
-  const frames = out.frames;
-  const cols = Math.max(frames.length, 1);
-  const cw = GW / cols, rh = GH / N;
-  const upto = Math.min(shown, frames.length);
-  const s: string[] = [];
+/**
+ * Same incremental treatment as the commons grid, for the same reason: with the
+ * cells animating on entry, rebuilding the SVG each tick replayed every cell's
+ * animation at once and the panel strobed instead of advancing. Scaffolding is
+ * built once per run; a tick appends one column.
+ */
+const SVGNS = "http://www.w3.org/2000/svg";
+let cw = 0, rh = GH / N, drawn = 0;
 
+function buildRun() {
+  cw = GW / Math.max(out.frames.length, 1);
+  rh = GH / N;
+  drawn = 0;
+  const target = pNeed(params());
+  const rows: string[] = [];
   for (let i = 0; i < N; i++) {
     const pinned = i < state.k;
-    s.push(
+    rows.push(
       `<text x="${LAB - 6}" y="${(i * rh + rh * 0.68).toFixed(1)}" text-anchor="end"
          font-size="10" fill="${pinned ? C.accent : C.muted}"
          font-weight="${pinned ? 700 : 400}">${i}${pinned ? "●" : ""}</text>`,
     );
   }
-  for (let t = 0; t < upto; t++) {
+  el("run").innerHTML =
+    `<g>${rows.join("")}</g><g id="r-cells"></g><g id="r-strip"></g>` +
+    `<text id="r-turns" x="${LAB}" y="${GH + 30}" font-size="10" fill="${C.muted}">turn 1 → 0 · the strip is each turn's split, green when it is near ${target.toFixed(2)}</text>`;
+}
+
+function drawRun() {
+  const frames = out.frames;
+  const upto = Math.min(shown, frames.length);
+  const target = pNeed(params());
+  if (upto < drawn) buildRun();
+
+  const cells = document.getElementById("r-cells")!;
+  const strip = document.getElementById("r-strip")!;
+
+  for (let t = drawn; t < upto; t++) {
     const f = frames[t]!;
-    for (let i = 0; i < N; i++) {
-      s.push(
-        `<rect x="${(LAB + t * cw).toFixed(2)}" y="${(i * rh).toFixed(2)}"
-           width="${Math.max(cw - 0.4, 0.6).toFixed(2)}" height="${(rh - 1).toFixed(2)}"
-           rx="3" fill="${cell(f.actions[i]!, !f.alive[i])}" class="anim-cell"/>`,
-      );
+    const g = document.createElementNS(SVGNS, "g");
+    g.innerHTML = Array.from({ length: N }, (_, i) =>
+      `<rect x="${(LAB + t * cw).toFixed(2)}" y="${(i * rh).toFixed(2)}"
+         width="${Math.max(cw - 0.4, 0.6).toFixed(2)}" height="${(rh - 1).toFixed(2)}"
+         rx="3" fill="${cell(f.actions[i]!, !f.alive[i])}" class="anim-cell"/>`).join("");
+    cells.appendChild(g);
+
+    // Phase coherence: how far this turn's split is from the required half.
+    const acting = f.actions.filter(Boolean);
+    if (acting.length) {
+      const frac = acting.filter((a) => a === "restore").length / acting.length;
+      const bar = document.createElementNS(SVGNS, "rect");
+      bar.setAttribute("x", (LAB + t * cw).toFixed(2));
+      bar.setAttribute("y", String(GH + 6));
+      bar.setAttribute("width", Math.max(cw - 0.4, 0.6).toFixed(2));
+      bar.setAttribute("height", "9");
+      bar.setAttribute("fill", mix(HEX.good, HEX.bad, Math.min(1, Math.abs(frac - target) / 0.5)));
+      strip.appendChild(bar);
     }
   }
-  // Phase coherence: how far this turn's split is from the required half.
-  const target = pNeed(params());
-  for (let t = 0; t < upto; t++) {
-    const acting = frames[t]!.actions.filter(Boolean);
-    if (!acting.length) continue;
-    const frac = acting.filter((a) => a === "restore").length / acting.length;
-    s.push(
-      `<rect x="${(LAB + t * cw).toFixed(2)}" y="${GH + 6}"
-         width="${Math.max(cw - 0.4, 0.6).toFixed(2)}" height="9"
-         fill="${mix(HEX.good, HEX.bad, Math.min(1, Math.abs(frac - target) / 0.5))}"/>`,
-    );
-  }
-  s.push(`<text x="${LAB}" y="${GH + 30}" font-size="10" fill="${C.muted}">turn 1 → ${upto} · the strip is each turn's split, green when it is near ${target.toFixed(2)}</text>`);
-  el("run").innerHTML = s.join("");
+  drawn = upto;
+  document.getElementById("r-turns")!.textContent =
+    `turn 1 → ${upto} · the strip is each turn's split, green when it is near ${target.toFixed(2)}`;
 
   // Who is who, right now. The grid says what they did; this says what they are.
   const f = frames[Math.max(0, upto - 1)];
@@ -115,6 +138,7 @@ function runOne() {
   ticker.stop();
   out = simulate(POLICIES[state.rule]!.fn, opts());
   shown = 0;
+  buildRun();
   drawRun();
   ticker.play();
 }

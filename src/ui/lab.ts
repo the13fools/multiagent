@@ -112,13 +112,31 @@ export interface Stat {
 }
 
 /** The four-number header every lab has. */
+/**
+ * Writes the stat values in place when the layout has not changed.
+ *
+ * Rebuilding the block every tick recreates the text nodes, and a number that
+ * is destroyed and recreated 200 times a run flickers even without an
+ * animation on it. Structure only gets rebuilt when the set of keys changes.
+ */
 export const renderStats = (id: string, stats: Stat[]): void => {
-  el(id).innerHTML = stats
-    .map(
-      (s) =>
-        `<div class="stat"><div class="k">${s.key}</div><div class="v">${s.value}</div></div>`,
-    )
-    .join("");
+  const host = el(id);
+  const keys = stats.map((s) => s.key).join("|");
+  if (host.dataset.keys !== keys) {
+    host.innerHTML = stats
+      .map(
+        (s) =>
+          `<div class="stat"><div class="k">${s.key}</div><div class="v"></div></div>`,
+      )
+      .join("");
+    host.dataset.keys = keys;
+  }
+  const values = host.querySelectorAll<HTMLElement>(".stat .v");
+  stats.forEach((s, i) => {
+    const node = values[i];
+    const text = String(s.value);
+    if (node && node.textContent !== text) node.textContent = text;
+  });
 };
 
 export const verdict = (

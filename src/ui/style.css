@@ -373,3 +373,11 @@ hr { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
   transform-origin: center;
   transform-box: fill-box;
 }
+
+/* Someone who has asked their machine for less motion has asked for less
+ * motion. The labs still run and still advance -- the cells simply appear
+ * instead of popping. */
+@media (prefers-reduced-motion: reduce) {
+  .anim-cell { animation: none; }
+  * { transition-duration: 0.01ms !important; }
+}

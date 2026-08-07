@@ -761,3 +761,52 @@ describe("the build knows about every page", () => {
     }
   });
 });
+
+/**
+ * Advancing must not redraw what has already been drawn.
+ *
+ * The grids rebuilt their whole SVG from a string on every tick. That was
+ * harmless while the cells were plain rects and became a strobe the moment they
+ * were given an entry animation: innerHTML replaces every node, so all 1,600
+ * cells were new on every frame and all of them replayed the animation
+ * together. The page flashed rather than advanced.
+ *
+ * The fix is structural, so the test is too — it checks that cells already on
+ * screen are the same DOM nodes one tick later.
+ */
+describe("the grids advance instead of flashing", () => {
+  for (const [page, mod, cellLayer] of [
+    ["shared-resource", "sharedResourceLab", "g-cells"],
+    ["entrainment", "entrainmentLab", "r-cells"],
+  ] as const) {
+    it(`${page} appends to the grid and leaves old cells alone`, async () => {
+      vi.useFakeTimers();
+      document.documentElement.innerHTML =
+        readFileSync(resolve(__dirname, `../${page}.html`), "utf8")
+          .replace(/<!doctype html>/i, "").replace(/<\/?html[^>]*>/gi, "");
+      vi.resetModules();
+      await import(`../src/ui/${mod}`);
+
+      vi.advanceTimersByTime(1200);
+      const layer = document.getElementById(cellLayer);
+      expect(layer, `${page} is not using an append-only cell layer`).not.toBeNull();
+      const before = layer!.children.length;
+      const firstCell = layer!.querySelector("rect");
+      expect(before, "nothing was drawn at all").toBeGreaterThan(0);
+
+      vi.advanceTimersByTime(1200);
+      expect(layer!.children.length, "the grid stopped advancing").toBeGreaterThan(before);
+      expect(layer!.querySelector("rect"), `${page} rebuilt cells that were already drawn`)
+        .toBe(firstCell);
+
+      vi.clearAllTimers();
+      vi.useRealTimers();
+    });
+  }
+
+  it("honours prefers-reduced-motion", () => {
+    const css = readFileSync(resolve(__dirname, "../src/ui/style.css"), "utf8");
+    expect(css).toMatch(/@media \(prefers-reduced-motion: reduce\)/);
+    expect(css.slice(css.indexOf("prefers-reduced-motion"))).toMatch(/\.anim-cell\s*\{\s*animation:\s*none/);
+  });
+});
