@@ -1,6 +1,7 @@
 import "./style.css";
 import { el, C, HEX, linePlot, refLine, applyEmbedMode } from "./lab";
 import { HORIZON, POLICIES, REFERENCE, pNeed, simulate } from "../core/sharedResource";
+import { driftFigure } from "./figures";
 
 applyEmbedMode();
 
@@ -42,6 +43,8 @@ el("drift").innerHTML =
   shown.map((k, i) =>
     `<text x="8" y="${16 + i * 15}" font-size="11" fill="${colours[k]}" font-weight="600">${
       POLICIES[k]!.label.replace(/ \(.*\)/, "")}</text>`).join("");
+
+el("fig-drift").innerHTML = driftFigure();
 
 el("caption").textContent =
   "Running restore rate over 200 turns. Fixed rules are flat by construction. " +

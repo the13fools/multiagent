@@ -1,5 +1,6 @@
 import "./style.css";
 import { el, C, HEX, mix, Ticker, renderStats, verdict, applyEmbedMode } from "./lab";
+import { turnDiagram, ledgerFigure } from "./figures";
 import {
   HORIZON, POLICIES, REFERENCE, carryingCapacity, pNeed, pSelf, pacemakersNeeded,
   simulate, slack, type Action, type Frame, type Outcome, type Params,
@@ -183,6 +184,12 @@ function run() {
 }
 
 /* ---------------------------------------------------------------- wiring */
+
+// Static explainers first: the rules, then why alternating closes both ledgers.
+// A reader arriving cold should not have to infer the mechanics from a moving
+// grid.
+el("fig-turn").innerHTML = turnDiagram();
+el("fig-ledger").innerHTML = ledgerFigure();
 
 el("grid").setAttribute("viewBox", `0 0 ${VB_W} ${VB_H}`);
 (el("rule") as HTMLSelectElement).innerHTML = Object.entries(POLICIES)

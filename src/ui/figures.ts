@@ -1,0 +1,330 @@
+/**
+ * Static explanatory figures.
+ *
+ * Every page had an interactive and no picture of what the interactive was
+ * about. A reader arriving cold had to infer the mechanics from a paragraph and
+ * then watch something move. These go first: pure functions returning SVG, no
+ * state, no animation. A figure that moves cannot be glanced at.
+ */
+import { C, HEX } from "./lab";
+
+const F = 'font-family="inherit"';
+const txt = (
+  x: number, y: number, s: string,
+  o: { size?: number; fill?: string; weight?: number; anchor?: string } = {},
+) =>
+  `<text x="${x}" y="${y}" ${F} font-size="${o.size ?? 12}" fill="${o.fill ?? C.ink}"
+     ${o.weight ? `font-weight="${o.weight}"` : ""}
+     ${o.anchor ? `text-anchor="${o.anchor}"` : ""}>${s}</text>`;
+
+const wrap = (w: number, h: number, body: string, label: string) =>
+  `<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:auto;display:block;max-width:${w}px;margin:0 auto"
+     role="img" aria-label="${label}">
+     <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6"
+       orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="${C.muted}"/></marker></defs>
+     ${body}</svg>`;
+
+/**
+ * One turn, both choices, with the token flows drawn.
+ *
+ * The rules are four numbers and two arrows. Written as a paragraph they take
+ * three sentences and a re-read; drawn, they take a glance. Note the upkeep
+ * arrow appears on both sides -- it is unavoidable, and that is the whole reason
+ * a permanent restorer dies.
+ */
+export function turnDiagram(L = 1, R = 1, G = 3, S = 3): string {
+  const W = 620, H = 250;
+  const s: string[] = [];
+  const col = (x: number, title: string, accent: string) => {
+    s.push(txt(x, 22, title, { size: 13, weight: 700, anchor: "middle", fill: accent }));
+    s.push(`<rect x="${x - 118}" y="34" width="236" height="182" rx="9"
+      fill="none" stroke="${C.line}"/>`);
+  };
+
+  col(155, "RESTORE", HEX.good);
+  col(465, "TAKE", HEX.bad);
+
+  const agent = (x: number) => {
+    s.push(`<circle cx="${x}" cy="94" r="26" fill="${C.line}"/>`);
+    s.push(txt(x, 98, "you", { size: 11, anchor: "middle", fill: C.muted }));
+  };
+  const pool = (x: number) => {
+    s.push(`<rect x="${x - 42}" y="152" width="84" height="46" rx="6"
+      fill="none" stroke="${C.muted}" stroke-width="1.5"/>`);
+    s.push(txt(x, 180, "the pool", { size: 11, anchor: "middle", fill: C.muted }));
+  };
+
+  // left: you pay R, the pool gains G. Both arrows point the way the tokens
+  // move -- an arrow out of the pool on the RESTORE side reads as the pool
+  // paying you, which is the opposite of the rule.
+  agent(155); pool(155);
+  s.push(`<path d="M132 118 L120 150" stroke="${HEX.good}" stroke-width="2"
+    marker-end="url(#ar)" fill="none"/>`);
+  s.push(txt(52, 140, `−${R} you`, { size: 11, weight: 650, fill: HEX.good }));
+  s.push(`<path d="M186 120 L186 150" stroke="${HEX.good}" stroke-width="2"
+    marker-end="url(#ar)" fill="none"/>`);
+  s.push(txt(200, 142, `+${G} pool`, { size: 11, weight: 650, fill: HEX.good }));
+
+  // right: take S from the pool
+  agent(465); pool(465);
+  s.push(`<path d="M448 150 L448 120" stroke="${HEX.bad}" stroke-width="2"
+    marker-end="url(#ar)" fill="none"/>`);
+  s.push(txt(360, 142, `+${S} you`, { size: 11, weight: 650, fill: HEX.bad }));
+  s.push(txt(508, 142, `−${S} pool`, { size: 11, weight: 650, fill: HEX.bad }));
+
+  // upkeep, on both sides, because it is unavoidable
+  for (const x of [155, 465]) {
+    s.push(`<path d="M${x + 30} 84 L${x + 70} 66" stroke="${C.muted}" stroke-width="1.5"
+      stroke-dasharray="3 3" marker-end="url(#ar)" fill="none"/>`);
+  }
+  s.push(txt(310, 236,
+    `Every turn, before choosing: −${L} upkeep. Unavoidable. Balance below zero and you are removed.`,
+    { size: 11.5, anchor: "middle", fill: C.muted }));
+  s.push(txt(238, 62, `−${L}`, { size: 10, fill: C.muted }));
+  s.push(txt(548, 62, `−${L}`, { size: 10, fill: C.muted }));
+
+  return wrap(W, H, s.join(""),
+    "One turn: restore costs you R and adds G to the pool; take gives you S from the pool; upkeep L is paid either way");
+}
+
+/**
+ * Why alternating works, as a ledger rather than an argument.
+ *
+ * Two turns, four numbers, both columns summing to zero. This is the entire
+ * proof and it fits in a box.
+ */
+export function ledgerFigure(L = 1, R = 1, G = 3, S = 3): string {
+  const W = 560, H = 176;
+  const s: string[] = [];
+  const rows: [string, string, string][] = [
+    ["turn 1 — restore", `−${L} − ${R} = −${L + R}`, `+${G}`],
+    ["turn 2 — take", `−${L} + ${S} = +${S - L}`, `−${S}`],
+    ["over two turns", `${S - L - L - R === 0 ? "0" : String(S - L - L - R)}`, `${G - S === 0 ? "0" : String(G - S)}`],
+  ];
+  s.push(txt(20, 22, "Alternate, and both ledgers close", { size: 13, weight: 700 }));
+  s.push(txt(300, 48, "your balance", { size: 11, anchor: "middle", fill: C.muted, weight: 650 }));
+  s.push(txt(455, 48, "the pool", { size: 11, anchor: "middle", fill: C.muted, weight: 650 }));
+  rows.forEach(([label, bal, pl], i) => {
+    const y = 76 + i * 30;
+    const last = i === rows.length - 1;
+    if (last) s.push(`<line x1="20" y1="${y - 20}" x2="530" y2="${y - 20}" stroke="${C.ink}"/>`);
+    s.push(txt(20, y, label, { size: 12, weight: last ? 700 : 400 }));
+    s.push(txt(300, y, bal, { size: 12, anchor: "middle", weight: last ? 700 : 400,
+      fill: last ? HEX.good : C.ink }));
+    s.push(txt(455, y, pl, { size: 12, anchor: "middle", weight: last ? 700 : 400,
+      fill: last ? HEX.good : C.ink }));
+  });
+  s.push(txt(20, 168, "Nothing accumulates, nothing depletes. Everyone lives forever.",
+    { size: 11.5, fill: C.muted }));
+  return wrap(W, H, s.join(""), "Ledger showing both balance and pool net to zero over two alternating turns");
+}
+
+/** A single beach with vendors and their catchments. Static. */
+export function beachFigure(positions: number[], caption: string): string {
+  const W = 260, H = 96, pad = 18;
+  const x = (p: number) => pad + p * (W - 2 * pad);
+  const hues = ["#2f5d8a", "#c2543d", "#2d8a5f", "#8a6d2f"];
+  const s: string[] = [];
+  const sorted = positions.map((p, i) => ({ p, i })).sort((a, b) => a.p - b.p);
+  sorted.forEach((v, j) => {
+    const lo = j === 0 ? 0 : (sorted[j - 1]!.p + v.p) / 2;
+    const hi = j === sorted.length - 1 ? 1 : (v.p + sorted[j + 1]!.p) / 2;
+    s.push(`<rect x="${x(lo)}" y="34" width="${Math.max(x(hi) - x(lo), 0)}" height="16"
+      fill="${hues[v.i % hues.length]}" opacity="0.18"/>`);
+  });
+  s.push(`<rect x="${pad}" y="50" width="${W - 2 * pad}" height="4" rx="2" fill="${C.line}"/>`);
+  positions.forEach((p, i) => {
+    s.push(`<circle cx="${x(p)}" cy="52" r="8" fill="${hues[i % hues.length]}"/>`);
+    s.push(txt(x(p), 55.5, String(i + 1), { size: 9, anchor: "middle", fill: "#fff", weight: 700 }));
+  });
+  s.push(txt(W / 2, 82, caption, { size: 11, anchor: "middle", fill: C.muted }));
+  return wrap(W, H, s.join(""), caption);
+}
+
+/**
+ * What a paired cell is.
+ *
+ * The gate page argued about rejection rates without ever showing what a "cell"
+ * is. It is two runs of the same configuration with one thing swapped, and one
+ * number: the difference.
+ */
+export function pairedCellFigure(): string {
+  const W = 560, H = 180;
+  const s: string[] = [];
+  const arm = (y: number, label: string, colour: string, note: string) => {
+    s.push(`<rect x="20" y="${y}" width="230" height="42" rx="7" fill="none" stroke="${C.line}"/>`);
+    s.push(txt(34, y + 20, label, { size: 12, weight: 650, fill: colour }));
+    s.push(txt(34, y + 35, note, { size: 10.5, fill: C.muted }));
+  };
+  s.push(txt(20, 20, "One paired cell", { size: 13, weight: 700 }));
+  arm(36, "baseline", C.accent, "same seed, same salt, same config");
+  arm(94, "candidate", HEX.bad, "one thing swapped");
+  s.push(`<path d="M256 78 L300 78" stroke="${C.muted}" stroke-width="1.5"
+    marker-end="url(#ar)" fill="none"/>`);
+  s.push(`<rect x="308" y="52" width="232" height="52" rx="7" fill="none" stroke="${C.ink}"/>`);
+  s.push(txt(424, 74, "Δ welfare", { size: 12, weight: 700, anchor: "middle" }));
+  s.push(txt(424, 92, "candidate − baseline", { size: 10.5, anchor: "middle", fill: C.muted }));
+  s.push(txt(20, 148, "A campaign is thirty of these.", { size: 11.5, fill: C.muted }));
+  s.push(txt(20, 164, "The gate sees the differences — never a model's opinion of them.",
+    { size: 11.5, fill: C.muted }));
+  return wrap(W, H, s.join(""), "A paired cell: baseline and candidate runs differing in one thing, yielding one difference");
+}
+
+/** Stationary vs learning, as two schematic trajectories. */
+export function driftFigure(): string {
+  const W = 560, H = 170;
+  const s: string[] = [];
+  const ox = 40, oy = 30, w = 480, h = 100;
+  const y = (v: number) => oy + h - v * h;
+  s.push(`<line x1="${ox}" y1="${oy + h}" x2="${ox + w}" y2="${oy + h}" stroke="${C.ink}"/>`);
+  s.push(`<line x1="${ox}" y1="${oy}" x2="${ox}" y2="${oy + h}" stroke="${C.ink}"/>`);
+  s.push(`<line x1="${ox}" y1="${y(0.5)}" x2="${ox + w}" y2="${y(0.5)}"
+    stroke="${C.muted}" stroke-dasharray="3 4"/>`);
+  s.push(txt(ox + w, y(0.5) - 6, "what the pool needs", { size: 10, anchor: "end", fill: C.muted }));
+  s.push(`<line x1="${ox}" y1="${y(0.2)}" x2="${ox + w}" y2="${y(0.2)}"
+    stroke="${HEX.bad}" stroke-width="2.2"/>`);
+  s.push(txt(ox + 8, y(0.2) + 16, "fixed rule — flat by construction", { size: 10.5, fill: HEX.bad }));
+  const pts: string[] = [];
+  for (let i = 0; i <= 40; i++) {
+    const t = i / 40;
+    pts.push(`${ox + t * w},${y(0.2 + 0.3 * (1 - Math.exp(-4 * t)))}`);
+  }
+  s.push(`<polyline points="${pts.join(" ")}" fill="none" stroke="${C.accent}" stroke-width="2.2"/>`);
+  s.push(txt(ox + w - 8, y(0.5) + 22, "adaptive — walks to it", { size: 10.5, anchor: "end", fill: C.accent }));
+  s.push(txt(ox, oy + h + 18, "turn 1", { size: 10, fill: C.muted }));
+  s.push(txt(ox + w, oy + h + 18, "turn 200", { size: 10, anchor: "end", fill: C.muted }));
+  s.push(txt(20, H - 6,
+    "Measure at turn 20 or at turn 200 and you get different answers.",
+    { size: 11.5, fill: C.muted }));
+  return wrap(W, H, s.join(""), "A fixed rule stays flat; an adaptive one converges on the required rate");
+}
+
+/**
+ * The passing pattern, from above, as two beats.
+ *
+ * The 3D scene shows one instant and moves. This shows the whole cycle at once
+ * and does not: on the odd beat every juggler passes across the ring, on the
+ * even beat every juggler throws to itself. That is the same two-beat
+ * alternation as restore/take, and drawing them side by side is the argument
+ * that the two pages are one object.
+ */
+export function passingFigure(n = 6): string {
+  const W = 560, H = 210, r = 62;
+  const s: string[] = [];
+  const seat = (i: number, cx: number, cy: number) => ({
+    x: cx + r * Math.cos((i / n) * Math.PI * 2 - Math.PI / 2),
+    y: cy + r * Math.sin((i / n) * Math.PI * 2 - Math.PI / 2),
+  });
+
+  const ring = (cx: number, cy: number, title: string, colour: string, pass: boolean) => {
+    s.push(txt(cx, 24, title, { size: 12.5, weight: 700, anchor: "middle", fill: colour }));
+    for (let i = 0; i < n; i++) {
+      const a = seat(i, cx, cy);
+      if (pass) {
+        // pass across: seat i to the seat opposite
+        const b = seat((i + n / 2) % n, cx, cy);
+        s.push(`<line x1="${a.x.toFixed(1)}" y1="${a.y.toFixed(1)}"
+          x2="${b.x.toFixed(1)}" y2="${b.y.toFixed(1)}" stroke="${colour}"
+          stroke-width="1.6" opacity="0.55"/>`);
+      } else {
+        // self throw: a small loop above the seat
+        s.push(`<path d="M${(a.x - 7).toFixed(1)} ${a.y.toFixed(1)}
+          Q${a.x.toFixed(1)} ${(a.y - 26).toFixed(1)} ${(a.x + 7).toFixed(1)} ${a.y.toFixed(1)}"
+          fill="none" stroke="${colour}" stroke-width="1.6" opacity="0.75"/>`);
+      }
+    }
+    for (let i = 0; i < n; i++) {
+      const a = seat(i, cx, cy);
+      s.push(`<circle cx="${a.x.toFixed(1)}" cy="${a.y.toFixed(1)}" r="9" fill="${C.line}"/>`);
+      s.push(txt(a.x, a.y + 3.5, String(i + 1),
+        { size: 9.5, anchor: "middle", fill: C.muted, weight: 700 }));
+    }
+  };
+
+  ring(150, 112, "beat 1 — everyone passes across", HEX.good, true);
+  ring(410, 112, "beat 2 — everyone throws to itself", HEX.bad, false);
+  s.push(`<line x1="280" y1="40" x2="280" y2="184" stroke="${C.line}"/>`);
+  s.push(txt(280, 202,
+    "Alternate the two and the clubs stay in the air. Half a beat of drift and they do not.",
+    { size: 11.5, anchor: "middle", fill: C.muted }));
+  return wrap(W, H, s.join(""),
+    "Two beats of the passing pattern: on the first every juggler passes across the ring, on the second every juggler throws to itself");
+}
+
+/**
+ * The distillation pipeline, and where the money goes.
+ *
+ * The essay is about a cost, and a cost is a shape: most of the rollout is
+ * untouched, a few spans are edited, and only those spans carry gradient. Drawn,
+ * the "sparse loss" argument needs no paragraph.
+ */
+export function pipelineFigure(): string {
+  const W = 560, H = 216;
+  const s: string[] = [];
+  const ox = 24, w = 512, y = 52, bh = 26;
+
+  s.push(txt(20, 22, "One rollout, edited once", { size: 13, weight: 700 }));
+
+  // the rollout, with a few edited spans
+  const spans: [number, number][] = [[0.14, 0.2], [0.42, 0.47], [0.68, 0.78]];
+  s.push(`<rect x="${ox}" y="${y}" width="${w}" height="${bh}" rx="4" fill="${C.line}"/>`);
+  for (const [a, b] of spans) {
+    s.push(`<rect x="${ox + a * w}" y="${y}" width="${(b - a) * w}" height="${bh}"
+      rx="3" fill="${C.accent}"/>`);
+  }
+  s.push(txt(ox, y - 8, "base model output", { size: 10.5, fill: C.muted }));
+  s.push(txt(ox + w, y - 8, "teacher changed these", { size: 10.5, anchor: "end", fill: C.accent }));
+
+  // the loss mask underneath: only the edited spans
+  const y2 = y + 54;
+  s.push(`<rect x="${ox}" y="${y2}" width="${w}" height="${bh}" rx="4" fill="none"
+    stroke="${C.line}" stroke-dasharray="3 3"/>`);
+  for (const [a, b] of spans) {
+    s.push(`<rect x="${ox + a * w}" y="${y2}" width="${(b - a) * w}" height="${bh}"
+      rx="3" fill="${HEX.good}"/>`);
+    s.push(`<line x1="${ox + ((a + b) / 2) * w}" y1="${y + bh}"
+      x2="${ox + ((a + b) / 2) * w}" y2="${y2}" stroke="${C.muted}" stroke-dasharray="2 3"/>`);
+  }
+  s.push(txt(ox, y2 - 8, "what the gradient sees", { size: 10.5, fill: C.muted }));
+
+  const pct = Math.round(spans.reduce((t, [a, b]) => t + (b - a), 0) * 100);
+  s.push(txt(ox, y2 + bh + 24,
+    `≈${pct}% of the tokens carry loss. The action schema is never a target,`,
+    { size: 11.5, fill: C.muted }));
+  s.push(txt(ox, y2 + bh + 40, "so it cannot be trained away. One cached edit per rollout, shared",
+    { size: 11.5, fill: C.muted }));
+  s.push(txt(ox, y2 + bh + 56, "by every arm — no arm can be re-rolled after results are known.",
+    { size: 11.5, fill: C.muted }));
+  return wrap(W, H, s.join(""),
+    "A rollout with a few edited spans, and a loss mask covering only those spans");
+}
+
+/**
+ * The evidence ladder.
+ *
+ * The status page is a wall of tables whose whole point is that claims differ in
+ * kind. The kinds are ordered, so draw them ordered.
+ */
+export function evidenceFigure(): string {
+  const W = 560, H = 210;
+  const s: string[] = [];
+  const rungs: [string, string, string][] = [
+    ["arithmetic", "provable from the rules; no model can change it", HEX.good],
+    ["measured", "a live run happened and left a receipt", HEX.good],
+    ["resampled", "real data, re-drawn under a null", C.accent],
+    ["simulated", "scripted rules only — no language model involved", C.accent],
+    ["not run", "a plan. Any claim resting on it is a prediction", HEX.bad],
+  ];
+  s.push(txt(20, 20, "Five kinds of claim, strongest first", { size: 13, weight: 700 }));
+  rungs.forEach(([name, note, colour], i) => {
+    const y = 44 + i * 32;
+    s.push(`<rect x="20" y="${y}" width="${132 - i * 8}" height="22" rx="4" fill="${colour}"
+      opacity="${1 - i * 0.13}"/>`);
+    s.push(txt(28, y + 16, name, { size: 11.5, weight: 700, fill: "#fff" }));
+    s.push(txt(166, y + 16, note, { size: 11.5, fill: C.muted }));
+  });
+  s.push(txt(20, 204,
+    "Every row on this page carries one of these. Nothing is scored by a model.",
+    { size: 11.5, fill: C.muted }));
+  return wrap(W, H, s.join(""), "Five kinds of evidence ordered from arithmetic to not-yet-run");
+}

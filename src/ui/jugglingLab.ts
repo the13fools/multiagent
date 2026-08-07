@@ -10,6 +10,7 @@ import {
   type PatternConfig,
   type PatternState,
 } from "../core/juggling";
+import { passingFigure } from "./figures";
 
 applyEmbedMode();
 
@@ -248,3 +249,7 @@ document.getElementById("tablesBtn")?.addEventListener("click", tables);
 
 reset();
 ticker.play();
+
+// The cycle as a still picture. The scene shows one instant and moves; this
+// shows both beats at once, which is the thing to remember.
+el("fig-pass").innerHTML = passingFigure(6);

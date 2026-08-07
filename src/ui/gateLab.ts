@@ -6,6 +6,8 @@ import {
 
 applyEmbedMode();
 
+import { pairedCellFigure } from "./figures";
+
 const NS = [10, 20, 30, 40, 60, 80, 100, 140, 200, 350];
 const COLOUR: Record<string, string> = {
   overlap: C.bad,
@@ -158,4 +160,5 @@ function render() {
 for (const id of ["effect", "n", "margin", "trials"]) {
   el(id).addEventListener("input", render);
 }
+el("fig-cell").innerHTML = pairedCellFigure();
 render();

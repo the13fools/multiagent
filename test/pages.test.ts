@@ -354,3 +354,134 @@ describe("population rings", () => {
     expect(src).not.toContain("Ticker"); // figures do not move
   });
 });
+
+/**
+ * Static figures.
+ *
+ * Every page had an interactive and no picture of what it was about. These
+ * assert the picture is still there -- and, separately, that it is still
+ * static: a figure that animates is one you cannot glance at, and the temptation
+ * to make one move is real.
+ */
+describe("every page carries a static figure", () => {
+  const FIGURES: Record<string, string[]> = {
+    "shared-resource": ["fig-turn", "fig-ledger"],
+    juggling: ["fig-pass"],
+    boardwalk: ["fig-cases"],
+    gate: ["fig-cell"],
+    future: ["fig-drift"],
+    experiments: ["fig-evidence"],
+    "blog-pdd": ["fig-pipeline"],
+    index: ["intro-rings"],
+  };
+
+  for (const [page, ids] of Object.entries(FIGURES)) {
+    it(page, () => {
+      const html = readFileSync(resolve(__dirname, `../${page}.html`), "utf8");
+      for (const id of ids) expect(html, `${page}.html lost #${id}`).toContain(`id="${id}"`);
+      expect(html, `${page}.html has a figure but no script to fill it`).toMatch(/<script type="module"/);
+    });
+  }
+
+  it("figures do not move", () => {
+    const src = readFileSync(resolve(__dirname, "../src/ui/figures.ts"), "utf8");
+    for (const banned of ["Ticker", "setInterval", "setTimeout", "requestAnimationFrame", "<animate"]) {
+      expect(src, `figures.ts reaches for ${banned}`).not.toContain(banned);
+    }
+  });
+
+  it("every figure fits its box by width, not by height", () => {
+    // A viewBox plus a fixed pixel height letterboxes; height:auto does not.
+    const src = readFileSync(resolve(__dirname, "../src/ui/figures.ts"), "utf8");
+    const svgs = [...src.matchAll(/<svg[^>]*>/g)].map((m) => m[0]);
+    expect(svgs.length).toBeGreaterThan(0);
+    for (const tag of svgs) {
+      expect(tag).toContain("viewBox");
+      expect(tag).toMatch(/height:\s*auto/);
+    }
+  });
+});
+
+describe("figure builders return well-formed, self-contained SVG", () => {
+  it("each one produces a single svg element with a label", async () => {
+    const f = await import("../src/ui/figures");
+    const built: [string, string][] = [
+      ["turnDiagram", f.turnDiagram()],
+      ["ledgerFigure", f.ledgerFigure()],
+      ["beachFigure", f.beachFigure([0.25, 0.75], "two vendors, both at the centre")],
+      ["pairedCellFigure", f.pairedCellFigure()],
+      ["driftFigure", f.driftFigure()],
+      ["passingFigure", f.passingFigure(6)],
+      ["pipelineFigure", f.pipelineFigure()],
+      ["evidenceFigure", f.evidenceFigure()],
+    ];
+    for (const [name, svg] of built) {
+      expect(svg.startsWith("<svg"), name).toBe(true);
+      expect(svg.trimEnd().endsWith("</svg>"), name).toBe(true);
+      expect(svg, name).toContain('role="img"');
+      expect(svg, `${name} has no aria-label`).toMatch(/aria-label="[^"]{20,}"/);
+      // it must survive being parsed, not merely look like markup
+      const host = document.createElement("div");
+      host.innerHTML = svg;
+      expect(host.querySelector("svg"), name).not.toBeNull();
+    }
+  });
+
+  it("the ledger really does close, for parameters where it should", async () => {
+    const { ledgerFigure } = await import("../src/ui/figures");
+    // L=1 R=1 G=3 S=3: balance nets 0, pool nets 0. The figure is a proof, so a
+    // typo in it is a wrong proof, not a cosmetic bug.
+    const svg = ledgerFigure(1, 1, 3, 3);
+    const totals = [...svg.matchAll(/>(-?\d+)<\/text>/g)].map((m) => m[1]);
+    expect(totals.filter((t) => t === "0").length).toBeGreaterThanOrEqual(2);
+  });
+});
+
+/**
+ * Text that runs off the edge.
+ *
+ * Three captions shipped wider than their own viewBox and were simply clipped
+ * mid-sentence -- invisible to every other test here, because the SVG was
+ * well-formed and the page loaded fine. This estimates each label's width and
+ * asserts it lands inside the box. The 0.55em-per-character factor is
+ * deliberately generous; it catches sentences, not kerning.
+ */
+describe("no figure text runs outside its viewBox", () => {
+  const EM = 0.55;
+
+  it("every label fits", async () => {
+    const f = await import("../src/ui/figures");
+    const svgs: [string, string][] = [
+      ["turnDiagram", f.turnDiagram()],
+      ["ledgerFigure", f.ledgerFigure()],
+      ["pairedCellFigure", f.pairedCellFigure()],
+      ["driftFigure", f.driftFigure()],
+      ["passingFigure", f.passingFigure(6)],
+      ["pipelineFigure", f.pipelineFigure()],
+      ["evidenceFigure", f.evidenceFigure()],
+      ["beachFigure", f.beachFigure([0.5, 0.5], "two — both at the centre, settled")],
+    ];
+    const overflows: string[] = [];
+
+    for (const [name, svg] of svgs) {
+      const vb = /viewBox="0 0 ([\d.]+) ([\d.]+)"/.exec(svg)!;
+      const W = Number(vb[1]), H = Number(vb[2]);
+      for (const m of svg.matchAll(/<text\b([^>]*)>([^<]*)<\/text>/g)) {
+        const attrs = m[1]!, body = m[2]!.trim();
+        if (!body) continue;
+        const x = Number(/\bx="([-\d.]+)"/.exec(attrs)?.[1] ?? 0);
+        const y = Number(/\by="([-\d.]+)"/.exec(attrs)?.[1] ?? 0);
+        const size = Number(/font-size="([\d.]+)"/.exec(attrs)?.[1] ?? 12);
+        const anchor = /text-anchor="(\w+)"/.exec(attrs)?.[1] ?? "start";
+        const w = body.length * size * EM;
+        const left = anchor === "middle" ? x - w / 2 : anchor === "end" ? x - w : x;
+        const right = left + w;
+        if (left < -2 || right > W + 2) {
+          overflows.push(`${name}: "${body.slice(0, 44)}…" spans ${left.toFixed(0)}–${right.toFixed(0)} of ${W}`);
+        }
+        if (y > H) overflows.push(`${name}: "${body.slice(0, 30)}…" sits at y=${y}, below H=${H}`);
+      }
+    }
+    expect(overflows, overflows.join("\n")).toEqual([]);
+  });
+});

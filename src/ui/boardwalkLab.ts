@@ -1,6 +1,7 @@
 import "./style.css";
 import { el, hue, C, Ticker, renderStats, verdict, linePlot, applyEmbedMode } from "./lab";
 import { initial, step, equilibriaCount, type BoardwalkState } from "../core/boardwalk";
+import { beachFigure } from "./figures";
 
 applyEmbedMode();
 
@@ -110,6 +111,15 @@ el("reset").addEventListener("click", () => { reset(); ticker.play(); });
 el("play").addEventListener("click", () => ticker.toggle());
 el("stepBtn").addEventListener("click", () => ticker.step());
 document.getElementById("censusBtn")?.addEventListener("click", census);
+
+// The three cases as still pictures, so the animation has something to be
+// compared against rather than being the only evidence.
+document.getElementById("fig-cases")!.innerHTML =
+  `<div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center">` +
+  beachFigure([0.5, 0.5], "two — both at the centre, settled") +
+  beachFigure([0.25, 0.5, 0.75], "three — no arrangement is stable") +
+  beachFigure([0.25, 0.25, 0.75, 0.75], "four — paired at the quartiles") +
+  `</div>`;
 
 reset();
 ticker.play();
