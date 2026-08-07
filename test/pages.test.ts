@@ -545,3 +545,26 @@ describe("the spine", () => {
     expect([...list.matchAll(/class="path-row"/g)].length).toBe(SPINE.length);
   });
 });
+
+/**
+ * The arc as prose.
+ *
+ * The spine can be perfectly wired and still not tell a story. These assert the
+ * two things that make the sequence readable rather than merely linked: every
+ * chapter opens with a one-line statement of what it is, and no two chapters
+ * open with the same one.
+ */
+describe("each chapter introduces itself", () => {
+  it("has a heading and a lede", async () => {
+    const { SPINE } = await import("../src/ui/arc");
+    const ledes: string[] = [];
+    for (const c of SPINE) {
+      const html = readFileSync(resolve(__dirname, `../${c.slug}.html`), "utf8");
+      expect(/<h1>[^<]{8,}<\/h1>/.test(html), `${c.slug} has no real <h1>`).toBe(true);
+      const m = /<p class="lede">([\s\S]*?)<\/p>/.exec(html);
+      expect(m, `${c.slug} has no lede — the reader lands with no idea what this one is`).not.toBeNull();
+      ledes.push(m![1]!.replace(/<[^>]+>/g, "").trim());
+    }
+    expect(new Set(ledes).size, "two chapters open with the same line").toBe(ledes.length);
+  });
+});
