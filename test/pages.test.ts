@@ -1206,3 +1206,46 @@ describe("what is already built", () => {
     expect(h).toMatch(/Diplomacy/);
   });
 });
+
+/**
+ * The call, section by section.
+ *
+ * A funder reads their own structure back. The thing that must not rot here is
+ * the honesty of the marks: this claims two sections and one bounded piece of a
+ * third, and says "no" four times. A later edit that quietly upgrades a "no"
+ * into a claim is the failure mode.
+ */
+describe("answering the call", () => {
+  const html = () =>
+    readFileSync(resolve(__dirname, "../lineage.html"), "utf8").replace(/\s+/g, " ");
+
+  it("answers section one against its five stated requirements", () => {
+    const h = html();
+    for (const req of ["Scalable", "High-fidelity", "Externally valid", "Safe and secure",
+                       "Reproducible"]) {
+      expect(h, `§1 requirement missing: ${req}`).toContain(req);
+    }
+  });
+
+  it("keeps saying no to the parts it does not reach", () => {
+    const h = html();
+    expect(h, "collective agency is not attempted").toMatch(/collective agency[\s\S]{0,120}Not attempted/i);
+    expect(h, "section 3 is not targeted").toMatch(/Section 3, agent infrastructure, is not targeted/i);
+    expect(h, "collusion needs the channel that does not exist").toMatch(/not claimed/i);
+    // at least four explicit not-run marks in the call section
+    const call = h.slice(h.indexOf('id="call"'), h.indexOf('id="what-it-adds"'));
+    expect((call.match(/st-todo/g) ?? []).length).toBeGreaterThanOrEqual(3);
+  });
+
+  it("claims 4C and 4D specifically, in the call's own words", () => {
+    const h = html();
+    expect(h).toMatch(/de\)synchronisation/);
+    expect(h, "the anti-correlation result is what makes 4D more than a gesture")
+      .toMatch(/anti-correlated/);
+    expect(h).toMatch(/false-decision rate is measured/i);
+  });
+
+  it("uses the funder's own sentence about distilled proxies", () => {
+    expect(html()).toMatch(/faithful proxies for frontier agents/i);
+  });
+});

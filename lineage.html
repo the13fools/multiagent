@@ -35,6 +35,7 @@ here <em>against a known answer</em> — which is not true anywhere large.</p>
     <li><a href="#scaling-trust">Scaling Trust</a></li>
     <li><a href="#multi-agent-risks">Multi-Agent Risks from Advanced AI</a></li>
     <li><a href="#lineage">The lineage the call points at</a></li>
+    <li><a href="#call">Answering the call, section by section</a></li>
     <li><a href="#what-it-adds">What this adds, and what it does not</a></li>
   </ol>
 </nav>
@@ -150,6 +151,117 @@ testbed for collusion. Multi-agent security is not on the ladder at all.</p>
   <td>Virtual Agent Economies. The sandbox-economy framing, and the case for designing steerable
   agent markets on purpose rather than inheriting one.</td></tr>
 </table>
+
+<h2 id="call">Answering the call, section by section</h2>
+
+<p>The call is organised into four sections with named requirements under each. It also says it
+will prioritise depth over breadth, so this claims two sections and one bounded piece of a third,
+and says plainly where it does not reach.</p>
+
+<h3>§1 · Sandboxes and testbeds <span class="muted">— primary</span></h3>
+
+<p>Five requirements are listed. Honest marks:</p>
+
+<table>
+<tr><th>requirement</th><th>where this stands</th></tr>
+
+<tr><td><b>Scalable</b><br><span class="muted">realistic agent numbers</span></td>
+  <td><span class="st st-part">partial</span> N ∈ {8, 20, 50} is the funded profile, and 50 is a
+  real ceiling rather than a placeholder: it is the largest population for which the seed
+  replication can also be afforded. The threshold is <em>not identifiable</em> at N = 8 and the
+  proposal says so rather than reporting a number it cannot resolve.</td></tr>
+
+<tr><td><b>High-fidelity</b><br><span class="muted">frontier behaviour, not coarse abstractions</span></td>
+  <td><span class="st st-part">partial</span> Natural-language agents on a live endpoint,
+  deliberating in a reasoning span, with verbatim logs — but 7B models, not frontier ones. The
+  call anticipates exactly this trade and welcomes <em>"using smaller, distilled models to serve
+  as faithful proxies for frontier agents"</em>. That bullet is the
+  <a href="./blog-pdd.html">cheap-populations work</a>, described by the funder in their own
+  words, and the honest version of it is that proxy fidelity is a thing to measure, not
+  assume.</td></tr>
+
+<tr><td><b>Externally valid</b><br><span class="muted">when to trust simulation-derived
+  conclusions</span></td>
+  <td><span class="st st-done">core</span> This is what a closed-form solution buys. We can say
+  exactly what is claimed to generalise — the <em>shape</em> of a failure — and what is not: its
+  magnitude. And the transfer question is a milestone rather than an assurance: whether f* is
+  stable across N, reported either way.</td></tr>
+
+<tr><td><b>Safe and secure</b></td>
+  <td><span class="st st-done">yes</span> Token economies in a sandbox. No tools with external
+  effects, no network access from inside an environment, nothing that leaves. In the
+  sandbox-economy vocabulary above, <em>impermeable</em>.</td></tr>
+
+<tr><td><b>Reproducible</b></td>
+  <td><span class="st st-done">strongest</span> Deterministic per configuration and seed, a frozen
+  trace schema, the campaign plan committed to git before the first scored run, and receipts that
+  embed their own resolved policy so a decision can be re-derived without the run
+  directories.</td></tr>
+</table>
+
+<h3>§2 · The science of agent networks <span class="muted">— secondary</span></h3>
+
+<table>
+<tr><td><b>A</b> individual properties → system safety</td>
+  <td><span class="st st-done">central</span> This is the whole steering question. The measured
+  quantity is how a population outcome depends on the dispositions of its members, and the
+  preliminary finding is that it depends more on the update rule of the agents you do
+  <em>not</em> control than on how many you do.</td></tr>
+<tr><td><b>B</b> vulnerabilities, adversarial sub-populations</td>
+  <td><span class="st st-part">by design, not yet run</span> The composition vector includes a
+  seeded <em>adversarial</em> fraction. Resilience to it is a sweep the instrument already
+  supports; attack propagation between agents needs the communication channel that does not exist
+  yet.</td></tr>
+<tr><td><b>C</b> emergence, phase transitions, scaling with population size</td>
+  <td><span class="st st-part">the closest thing to a phase transition we can offer</span> The
+  collapse-to-sustain threshold <em>is</em> a transition in population composition, and unusually
+  it has a closed-form location to be measured against. Whether it moves with N is a
+  milestone.</td></tr>
+<tr><td><b>D</b> theoretical foundations of collective agency</td>
+  <td><span class="st st-todo">no</span> Not attempted. We measure collective outcomes, not
+  collective agency, and formal definitions of the latter are somebody else's contribution.</td></tr>
+<tr><td><b>E</b> dangerous emergent capabilities and goals</td>
+  <td><span class="st st-todo">no</span> Shutdown resistance, filter evasion by task
+  decomposition, covert channels — none of it is modelled here, and claiming otherwise would be
+  stretching a resource game past what it can carry.</td></tr>
+</table>
+
+<h3>§4 · Multi-agent oversight and control <span class="muted">— one bounded piece</span></h3>
+
+<p>Not claimed as a section. Two of its four subsections have something specific in them, and the
+rest do not.</p>
+
+<table>
+<tr><td><b>C</b> multi-agent control and scalable oversight</td>
+  <td><span class="st st-part">a small, measured contribution</span> Firebreak is a control
+  protocol for admission to a shared deployment: it decides, with no judge, whether a candidate
+  may join. What is unusual is not the protocol but that its <b>false-decision rate is measured
+  and published</b>, and that it ships with a minimum evidence threshold below which its outputs
+  are void. The red-team half exists too, as a deliberately broken candidate the gate is required
+  to catch.</td></tr>
+<tr><td><b>D</b> mechanism and information design</td>
+  <td><span class="st st-part">the direction, stated as direction</span> The call's own words
+  under this heading are <em>"(de)synchronisation … for stabilising volatile networks"</em> and
+  <em>"agents designed to foster population-level cooperation and stability when reliance on
+  centralised mechanisms is undesirable or infeasible."</em> That is this project's result and its
+  aim in one sentence each: the sustainable pattern here is <b>anti-correlated</b>, so
+  desynchronisation is not a metaphor but the mechanism, and the constructive question is which
+  decentralised rules leave a population better off with no designer in the room. Two channels are
+  funded; the rest is named as direction.</td></tr>
+<tr><td><b>A</b> collusion and emergent communication · <b>B</b> attribution interfaces</td>
+  <td><span class="st st-todo">not claimed</span> Collusion becomes measurable the moment a
+  private pairwise channel exists, which is the second rung of the
+  <a href="./future.html#ladder">ladder</a> and is not built. Attribution across delegation chains
+  is not attempted at all.</td></tr>
+</table>
+
+<p><b>Section 3, agent infrastructure, is not targeted.</b> Saying so is part of answering a call
+that prioritises depth.</p>
+
+<p class="muted">Prior testbed work the call names — generative-agent societies, LLMs in repeated
+games, strategic-reasoning benchmarks — is what this is a complement to rather than a replacement
+for: richer worlds, no answer key. The bet here is the opposite trade, and the two are only worth
+having together.</p>
 
 <h2 id="what-it-adds">What this adds, and what it does not</h2>
 
