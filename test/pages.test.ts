@@ -623,3 +623,66 @@ describe("steering is the pitch", () => {
     }
   });
 });
+
+/**
+ * Claims about money, and citations.
+ *
+ * The cost essay used to lead with a single number as though it were a result.
+ * It is one figure from one model on one stack in a market that reprices
+ * monthly, and the argument does not need it: what matters is the ratio between
+ * what a population costs and what a campaign against it costs. These assert
+ * the hedge stays hedged, and that the reading list keeps its links.
+ */
+describe("the cost essay does not oversell", () => {
+  const html = () =>
+    readFileSync(resolve(__dirname, "../blog-pdd.html"), "utf8").replace(/\s+/g, " ");
+
+  it("never puts a price in the title or the lede", () => {
+    const h = html();
+    const head = h.slice(0, h.indexOf("</p>", h.indexOf('class="lede"')));
+    expect(head, "a single figure is back in the headline").not.toMatch(/fifty dollars|\$\d/i);
+  });
+
+  it("says the figure is one setup, not a law", () => {
+    const h = html();
+    expect(h).toMatch(/one number from one setup/i);
+    expect(h).toMatch(/not a law/i);
+  });
+
+  it("frames the work as exploring how cheap, not asserting a price", () => {
+    expect(html()).toMatch(/how far can the per-agent cost be pushed down/i);
+  });
+});
+
+describe("the behavioural-economics reading list", () => {
+  it("names its sources and links them", () => {
+    const html = readFileSync(resolve(__dirname, "../future.html"), "utf8");
+    expect(html).toContain("danieljbenjamin.com/publications");
+    // a reading list with fewer than a handful of entries is a gesture
+    const links = [...html.matchAll(/href="https?:\/\/[^"]*(nber|ssrn|danieljbenjamin|mitpress)[^"]*"/g)];
+    expect(links.length).toBeGreaterThanOrEqual(6);
+    expect(html, "the mapping is a proposal and has to say so")
+      .toMatch(/is a proposal,\s*not a result/);
+  });
+
+  it("the gate cites the literature on evidence thresholds", () => {
+    const html = readFileSync(resolve(__dirname, "../gate.html"), "utf8");
+    expect(html).toMatch(/Redefine Statistical Significance/);
+  });
+});
+
+describe("juggling is off the path", () => {
+  it("is not a chapter", async () => {
+    const { SPINE } = await import("../src/ui/arc");
+    expect(SPINE.map((c) => c.slug)).not.toContain("juggling");
+  });
+
+  it("says so on the page, and still works", () => {
+    const html = readFileSync(resolve(__dirname, "../juggling.html"), "utf8").replace(/\s+/g, " ");
+    expect(html).toMatch(/A sketch, not a result/i);
+    expect(html).toContain("index.html");
+    // demoted, not abandoned: it keeps its dial bar and its script
+    expect(html).toContain('class="dials"');
+    expect(html).toContain("jugglingLab.ts");
+  });
+});

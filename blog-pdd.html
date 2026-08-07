@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Fifty dollars an agent — multiagent</title>
-<meta name="description" content="Why the interesting constraint in multi-agent research is the price of a personality.">
+<title>Cheap enough to have a population — multiagent</title>
+<meta name="description" content="Exploring low-cost fine-tuning as a way to build large, diverse agent populations on a small budget.">
 <link rel="stylesheet" href="/src/ui/style.css">
 </head>
 <body>
@@ -16,9 +16,10 @@
   <a href="./future.html">What next</a>
 </div></nav>
 <div class="wrap" style="max-width:720px">
-<h1>Fifty dollars an agent</h1>
+<h1>Cheap enough to have a population</h1>
 
-<p class="lede">On why the interesting constraint in multi-agent research is the price of a personality.</p>
+<p class="lede">Exploring low-cost fine-tuning as a way to get a large, diverse population of
+agents on a small budget.</p>
 
 <hr>
 
@@ -66,17 +67,35 @@
 
 <p><b>The teacher&#x27;s edit is cached once.</b> Each base rollout is edited exactly once, and every training arm consumes the same immutable cache. This started as a cost measure and turned into a methodological one: no arm can receive a more favourable rollout or a fresh teacher sample after results are known. The comparison is fair because re-rolling is not possible, not because we promised not to.</p>
 
-<p>The result is a distinct fine-tuned agent for <b>about fifty dollars</b>.</p>
+<p>In our setup a distinct adapter came in around <b>fifty dollars of compute</b>. I want to be
+careful with that number: it is one figure, from one model on one set of environments, and I am
+reporting it because it is what happened, not because I think it generalises. The claim I am
+willing to make is the direction — <b>a distinct agent can be cheap enough that the population
+stops being the expensive part of the study</b> — and the work I am proposing is to find out how
+cheap, and what you give up.</p>
 
 <div id="fig-pipeline" style="margin:22px 0"></div>
 
-<h2>Why the number is the point</h2>
+<h2>Why cheap is the point</h2>
 
-<p>Fifty dollars is not a benchmark result. It is a change in what experiments are thinkable.</p>
+<p>The interesting quantity is not the price. It is the <em>ratio</em> between what a population
+costs and what a campaign against that population costs.</p>
 
-<p>At fifty dollars an agent, a population of thirty distinct policies costs $1,500 — less than the compute for a single powered campaign run against them. The population stops being the expensive part of the study. It becomes a knob.</p>
+<p>While an agent costs thousands, a study can afford one model in several hats, and population
+size is a fixed constraint you write into the limitations section. When an agent costs tens, thirty
+distinct policies cost less than the compute for a single powered campaign run against them, and
+population size becomes a dial you can sweep — which is the only way to find out whether any of
+these results survive contact with a bigger, more varied flock.</p>
 
-<p>That reframes what the method <em>is</em>. We are not proposing a better way to align an individual agent; that would be out of scope for the work we are doing and, frankly, we have no evidence it is better. We are proposing a way to make the population itself an experimental variable. The success criterion is not &quot;the trained agent is more cooperative.&quot; It is: **can we tell the seeded arm apart from a vocabulary-matched control at the population level?** If we cannot, the method failed regardless of how good the individual agents look.</p>
+<p>That is the thing I actually want to explore: <b>how far can the per-agent cost be pushed down
+before the agents stop being usefully distinct?</b> There is a floor somewhere. Below some amount
+of training you have thirty copies of the base model with different accents, and everything
+downstream is measuring noise. Nobody has mapped where that floor is, and it is a cheap thing to
+map.</p>
+
+<p>This also says what the method is <em>not</em>. It is not a better way to align an individual
+agent — that is out of scope, and I have no evidence it is better. It is an attempt to make the
+population itself an experimental variable. The success criterion is not &quot;the trained agent is more cooperative.&quot; It is: **can we tell the seeded arm apart from a vocabulary-matched control at the population level?** If we cannot, the method failed regardless of how good the individual agents look.</p>
 
 <p>It is worth being explicit that the funder described this before we did. The Cooperative AI Foundation&#x27;s call asks, under sandboxes and testbeds, about *&quot;navigating the trade-off between scalability and fidelity, for example, by using smaller, distilled models to serve as faithful proxies for frontier agents in simulations.&quot;* That is the same sentence from the other side.</p>
 
@@ -84,7 +103,9 @@
 
 <p>Here is the failure mode that worries me most, and it is not the obvious one.</p>
 
-<p>Suppose we train thirty agents, run the population, and see no effect. Two explanations fit: the specification genuinely does not move population outcomes, or the training never installed anything and we spent $1,500 on thirty copies of the base model.</p>
+<p>Suppose we train thirty agents, run the population, and see no effect. Two explanations fit:
+the specification genuinely does not move population outcomes, or the training never installed
+anything and we bought thirty copies of the base model with different accents.</p>
 
 <p>Those are very different findings and they look identical in the data.</p>
 
@@ -113,7 +134,11 @@
 
 <p><b>Distinct is not the same as distinct in the right way.</b> Thirty agents differing in weights could still fail in correlated ways if the teacher imposed a single consistent bias on all of them. We do not yet have a good measure of population <em>diversity</em> as opposed to population <em>size</em>, and I think that is the real open problem behind this whole approach.</p>
 
-<p><b>Fifty dollars is one number from one setup.</b> Qwen2.5-7B, LoRA, our environments, our hardware. It is a real receipt, not a projection, but it is not a law.</p>
+<p><b>The cost figure is one number from one setup.</b> Qwen2.5-7B, LoRA, our environments, our
+hardware, at one moment in a market where GPU prices move monthly. It is a real receipt rather than
+a projection, and it is not a law, a benchmark, or a promise about anybody else's stack. If the
+honest version of this work concludes that distinct-enough agents cost three hundred dollars each
+and you can therefore afford eight, that is a useful finding and I will publish it as one.</p>
 
 <h2>The uncomfortable part</h2>
 

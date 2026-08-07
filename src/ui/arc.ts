@@ -11,6 +11,11 @@
  * The second one is the handoff, and it is the whole reason the next page is
  * next. Pages render their own eyebrow and footer from this, so the order lives
  * in one place and cannot drift page by page.
+ *
+ * A page is in here only if it carries weight. Juggling was chapter three and
+ * was not up to the standard of the pages either side of it -- a pretty 3D
+ * scene making an argument the colouring grid already makes better. It is still
+ * reachable, marked as the sketch it is, and out of the running order.
  */
 
 export interface Chapter {
@@ -36,15 +41,8 @@ export const SPINE: Chapter[] = [
     asks: "Pin some agents to the right phase. Do the others lock on?",
     hands:
       "Sometimes — and it depends on how the others update, not on how many seats you hold. " +
-      "If an eight-by-two-hundred grid of coloured squares is hard to feel, here is the same " +
-      "pattern with intuitions you already have.",
-  },
-  {
-    slug: "juggling",
-    title: "Juggling",
-    asks: "The commons as a passing pattern: many players, one beat, clubs that leave play.",
-    hands:
-      "Both of those had a rhythm to keep. Plenty of systems have no rest point to keep at all.",
+      "But both answers so far assumed there was a rhythm to keep. Plenty of systems have no " +
+      "rest point at all.",
   },
   {
     slug: "boardwalk",
@@ -72,8 +70,8 @@ export const SPINE: Chapter[] = [
   },
   {
     slug: "blog-pdd",
-    title: "Fifty dollars an agent",
-    asks: "Why the binding constraint in multi-agent research is the price of a personality.",
+    title: "Cheap populations",
+    asks: "Low-cost fine-tuning, and how large and varied a population it can buy.",
     hands: "That is the whole argument. It starts again with eight agents and a pool.",
   },
 ];
