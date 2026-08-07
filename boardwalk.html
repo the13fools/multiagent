@@ -13,6 +13,7 @@
   <a href="./shared-resource.html">Shared Resource</a>
   <a href="./juggling.html">Juggling</a>
   <a href="./boardwalk.html" aria-current="page">Boardwalk</a>
+  <a href="./gate.html">Gate</a>
   <a href="./figure.html">Figure</a>
 </div></nav>
 
@@ -33,10 +34,7 @@ converge on the median voter. Hotelling called it the principle of minimum diffe
 <div class="panel">
   <svg id="beach" viewBox="0 0 620 96" style="width:100%;height:96px" role="img"
        aria-label="Vendors positioned along a beach with their catchment areas shaded"></svg>
-  <div class="stats" style="margin-top:6px">
-    <div class="stat"><div class="k">Round</div><div class="v" id="turn">0</div></div>
-    <div class="stat"><div class="k">Spread</div><div class="v" id="spread">—</div></div>
-  </div>
+  <div id="stats" class="stats" style="margin-top:6px"></div>
   <svg id="trail" viewBox="0 0 620 150" style="width:100%;height:150px;border-top:1px solid var(--line)"
        role="img" aria-label="Each vendor's position over time"></svg>
   <div class="legend">position over time — a flat line is a settled market, a wave is a market chasing itself</div>
@@ -46,7 +44,7 @@ converge on the median voter. Hotelling called it the principle of minimum diffe
     <button id="play">Play</button>
     <button id="stepBtn">Step</button>
     <button id="reset">New start</button>
-    <span id="settled" class="verdict"></span>
+    <span id="verdict" class="verdict"></span>
   </div>
 </div>
 
@@ -56,8 +54,8 @@ converge on the median voter. Hotelling called it the principle of minimum diffe
 always squeezed and always has somewhere better to be, and whichever way it jumps it creates a new
 squeezed middle. Eaton and Lipsey proved it in 1975. You can also just count:</p>
 
-<p><button id="censusBtn">Count pure-strategy equilibria by brute force</button></p>
-<div id="census"></div>
+<p class="no-embed"><button id="censusBtn">Count pure-strategy equilibria by brute force</button></p>
+<div id="census" class="no-embed"></div>
 
 <h2>Why this sits next to the Shared Resource game</h2>
 <p>The two environments are complements, and deliberately so.</p>

@@ -10,7 +10,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
-const PAGES = ["shared-resource", "juggling", "boardwalk"] as const;
+const PAGES = ["shared-resource", "juggling", "boardwalk", "gate"] as const;
 
 const loadPage = (name: string) => {
   const html = readFileSync(resolve(__dirname, `../${name}.html`), "utf8");
@@ -29,7 +29,7 @@ describe("lab pages load without throwing", () => {
   for (const page of PAGES) {
     it(`${page}.html`, async () => {
       loadPage(page);
-      const mod = { "shared-resource": "sharedResourceLab", juggling: "jugglingLab", boardwalk: "boardwalkLab" }[page]!;
+      const mod = { "shared-resource": "sharedResourceLab", juggling: "jugglingLab", boardwalk: "boardwalkLab", gate: "gateLab" }[page]!;
       vi.resetModules();
       await expect(import(`../src/ui/${mod}`)).resolves.toBeTruthy();
       vi.advanceTimersByTime(2000);
@@ -46,6 +46,7 @@ describe("every id a lab reaches for exists in its page", () => {
     "shared-resource": "sharedResourceLab",
     juggling: "jugglingLab",
     boardwalk: "boardwalkLab",
+    gate: "gateLab",
   })) {
     it(page, () => {
       const html = readFileSync(resolve(__dirname, `../${page}.html`), "utf8");

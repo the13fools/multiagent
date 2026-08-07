@@ -228,6 +228,17 @@ for (const id of ["n", "bias", "coupling", "pinned"]) {
     ticker.play();
   });
 }
+// The metronome slider must not offer more seats than the ring has; clamping
+// only in cfg() left the control claiming a range it could not honour.
+function syncPinnedRange() {
+  const pinned = el("pinned") as HTMLInputElement;
+  pinned.max = String(num("n"));
+  if (num("pinned") > num("n")) pinned.value = String(num("n"));
+  el("pinnedlab").textContent = pinned.value;
+}
+el("n").addEventListener("input", syncPinnedRange);
+syncPinnedRange();
+
 el("play").addEventListener("click", () => ticker.toggle());
 el("reset").addEventListener("click", () => { reset(); ticker.play(); });
 // These three live in .no-embed blocks, so in embed mode they are gone by the

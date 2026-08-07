@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The gate — multiagent</title>
+<meta name="description" content="A promotion gate that rolls back a clone of its own baseline, and gets worse with more data.">
+<link rel="stylesheet" href="/src/ui/style.css">
+</head>
+<body>
+<nav><div class="wrap">
+  <a class="brand" href="./index.html">multiagent</a>
+  <a href="./shared-resource.html">Shared Resource</a>
+  <a href="./juggling.html">Juggling</a>
+  <a href="./boardwalk.html">Boardwalk</a>
+  <a href="./gate.html" aria-current="page">Gate</a>
+  <a href="./figure.html">Figure</a>
+</div></nav>
+
+<div class="wrap">
+<h1>How would you know you measured anything?</h1>
+<p class="lede">A promotion gate that rolls back a clone of its own baseline — and gets worse the more data you give it.</p>
+
+<p>Suppose you want to decide whether a new agent may replace an old one in a shared deployment.
+You run both, matched, across many cells. No model scores the result — you compare the numbers.
+That is a <b>judge-free promotion gate</b>, and it is what this call asks for.</p>
+
+<p>Now the question nobody asks of their own gate: <b>how often does it reject a candidate that is
+identical to the baseline?</b> Set the true effect to zero below. That is an A/A test — the
+candidate <em>is</em> the baseline — so every rejection is a false one.</p>
+
+<div class="panel">
+  <div id="stats" class="stats"></div>
+  <svg id="curves" viewBox="0 0 620 275" style="width:100%;height:275px" role="img"
+       aria-label="Probability of rollback against campaign size, for three gate designs"></svg>
+  <div id="legend" style="margin-top:6px"></div>
+  <div class="controls">
+    <label>True effect <b id="effectlab">0</b>
+      <input id="effect" type="range" min="-1200" max="1200" step="100" value="0"></label>
+    <label>Campaign size <b id="nlab">30</b>
+      <input id="n" type="range" min="10" max="350" step="10" value="30"></label>
+    <label>Tolerated harm <b id="marginlab">−400</b>
+      <input id="margin" type="range" min="0" max="1200" step="50" value="400"></label>
+    <label>Trials <input id="trials" type="number" min="200" max="8000" step="200" value="1500" style="width:76px"></label>
+  </div>
+  <span id="verdict" class="verdict"></span>
+  <div id="table" style="margin-top:10px"></div>
+</div>
+
+<h2>One campaign, drawn out</h2>
+<p>Each bar is one matched cell: green where the candidate did better, red where it did worse.
+With a true effect of zero this is pure noise, and roughly half the bars point down — which is
+exactly the problem.</p>
+
+<div class="panel">
+  <svg id="sample" viewBox="0 0 560 90" style="width:100%;height:90px" role="img"
+       aria-label="Per-cell differences in one simulated campaign"></svg>
+  <div id="sampleVerdict" style="font-size:13px;margin-top:6px"></div>
+</div>
+
+<h2>Why the obvious gates fail</h2>
+
+<p><b>Overlap rules</b> — "no more than a quarter of cells may regress", "the candidate must win
+at least half the pairs" — feel robust, which is why people reach for them. They are not tests.
+They bound the proportion of individual pairs going one way, and under the null that proportion
+converges to one half. So the bound is not merely violated; it is violated <em>more reliably as
+the campaign grows</em>. Drag the campaign size and watch the red line refuse to come down.
+<b>Collecting more evidence makes this gate worse.</b></p>
+
+<p><b>A significance test</b> is the natural fix and fails for the opposite reason. It demands a
+<em>significant improvement</em> in order to promote, so a candidate identical to its baseline
+fails by construction, at every sample size. Correctly sized, wrong question.</p>
+
+<p><b>Non-inferiority</b> works. Roll back only when the candidate is worse by more than a margin
+stated in advance. False rejection now falls as the campaign grows, and detection of real harm
+rises. Set the true effect to −800 and watch the green line climb: it catches genuine damage while
+leaving a clone alone.</p>
+
+<h2>The two things a gate should ship with</h2>
+
+<p><b>A measured error rate.</b> All three gates above look reasonable written down. Two of them
+roll back a clone essentially always. You cannot tell which is which by reading the rule, and the
+failure is silent — a gate that rejects everything looks like diligence.</p>
+
+<p><b>A declared minimum campaign size.</b> The rightmost column of the table is the smallest
+campaign at which each gate's false-rejection rate reaches 5%. For two of them the answer is
+<em>never</em>. For the third it is a specific number, below which its decisions should not be
+believed — including ours.</p>
+
+<p class="muted">Paired standard deviation of 1,180 and a baseline mean of 3,363 are measured from
+a real 30-cell pilot, not chosen. Same engine as the testbed's calibration tool; the test suite
+pins them together. MIT; exported data CC0.</p>
+</div>
+<script type="module" src="/src/ui/gateLab.ts"></script>
+</body>
+</html>
