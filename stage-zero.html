@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What is already built — multiagent</title>
+<meta name="description" content="Stage Zero: the repositories, the results they produced, and who paid for them.">
+<link rel="stylesheet" href="/src/ui/style.css">
+</head>
+<body data-page="stage-zero">
+<nav><div class="wrap">
+  <a class="brand" href="./index.html">multiagent</a>
+  <a href="./shared-resource.html">The game</a>
+  <a href="./entrainment.html">Steering</a>
+  <a href="./stage-zero.html" aria-current="page">What is built</a>
+  <a href="./design.html">How it is run</a>
+  <a href="./experiments.html">What has run</a>
+  <a href="./future.html">What next</a>
+</div></nav>
+
+<div class="wrap">
+<h1>What is already built</h1>
+<p class="lede">Two chapters of theory, and then the part where somebody had to actually write
+it. This is Stage Zero: the code, the runs, and what they found.</p>
+
+<p>Everything up to here has been an argument about a game. This page is the answer to the
+reasonable next question — <b>is any of it real?</b> Three repositories, all public, all MIT or
+CC0, roughly eleven thousand lines and sixty-five tests. They were written by one person over
+several months, on compute paid for out of pocket, and they have already produced results, two of
+which are inconvenient for the person who produced them.</p>
+
+<nav class="toc" aria-label="On this page">
+  <p class="toc-k">On this page</p>
+  <ol>
+    <li><a href="#repos">The repositories</a></li>
+    <li><a href="#results">Five results, and what each is worth</a></li>
+    <li><a href="#who">Who built it, and why the timing</a></li>
+    <li><a href="#next">Where this leaves the proposal</a></li>
+  </ol>
+</nav>
+
+<h2 id="repos">The repositories</h2>
+
+<p>Three, with a deliberate separation: the testbed does not train anything, the trainer does not
+score anything, and the site does not contain a claim that is not asserted by a test somewhere
+else.</p>
+
+<table>
+<tr><th>repository</th><th>holds</th><th>does not hold</th><th>size</th></tr>
+
+<tr><td><b><a href="https://github.com/thenthfool/flockbench">flockbench</a></b><br>
+  <span class="muted">MIT · data CC0</span></td>
+  <td>The testbed. Four environments — Shared Resource, Commons Harvest, public goods with
+  punishment, boardwalk — plus the campaign planner and runner, the frozen trace schema, and
+  <b>Firebreak</b>, the judge-free promotion gate, which is a module here rather than a separate
+  project.</td>
+  <td>No training code, no model weights, no judge anywhere in the scoring loop.</td>
+  <td class="num">3.7k lines<br>49 tests<br>29 commits</td></tr>
+
+<tr><td><b><a href="https://github.com/thenthfool/continuous_judge">continuous_judge</a></b><br>
+  <span class="muted">MIT</span></td>
+  <td>The training side. Span-restricted preference distillation, the legal-action masking that
+  keeps the action schema intact, the cached teacher pass, and the style controls —
+  <code>snake_case</code> as a positive control and <code>uNsTaBlE_-0-_CaSe</code> as the
+  known-bad candidate. Runbooks for each experiment.</td>
+  <td>No environments and no scoring. It produces adapters; what they are worth is decided
+  elsewhere.</td>
+  <td class="num">6.0k lines<br>16 tests<br>29 commits</td></tr>
+
+<tr><td><b><a href="https://github.com/thenthfool/multiagent">multiagent</a></b><br>
+  <span class="muted">MIT · figures CC0</span></td>
+  <td>This site. Every interactive re-implements the testbed's arithmetic in TypeScript, and the
+  test suite pins the two implementations to each other — so a figure here cannot drift from the
+  thing it claims to depict.</td>
+  <td>No results of its own. If a page disagrees with a receipt, the page is wrong.</td>
+  <td class="num">28 modules<br>176 tests<br>43 commits</td></tr>
+</table>
+
+<p class="muted">Also public and adjacent, but not part of this proposal:
+<a href="https://github.com/thenthfool/freetimebench">freetimebench</a>, an earlier judge-based
+harness. It is the thing whose limitations led to the judge being removed from the loop
+entirely.</p>
+
+<p><b>What "public" is doing here.</b> Not licensing hygiene. Every number quoted on this site is
+recoverable by a stranger: <code>tools/replay_receipt.py</code> re-derives each published figure
+from a committed receipt, without the run directories. That is the standard the gate result had to
+meet, and it is the standard the funded work would be held to.</p>
+
+<h2 id="results">Five results, and what each is worth</h2>
+
+<p>Stage Zero was not a demo. It was five measurements, of which the two most useful are
+embarrassing.</p>
+
+<div class="results" id="results"></div>
+
+<p><b>Why the awkward ones matter most.</b> A gate that rolls back a clone of its own baseline is
+not a bug in someone else's system; it is the tool this proposal is built around, failing an
+obvious test that nobody had thought to run. Finding it took an afternoon. That is the argument
+for the whole approach in one line: <b>in an environment with an answer key, an instrument can be
+caught being wrong</b>, and in an environment without one it simply cannot.</p>
+
+<p>The commons configuration is the same story at smaller scale. Ceiling-to-upkeep sat at 0.39 for
+weeks, meaning collapse was guaranteed for every strategy, so every cell in that environment was
+measuring nothing. That is invisible without ground truth and obvious with it.</p>
+
+<h2 id="who">Who built it, and why the timing</h2>
+
+<div class="panel slide">
+  <p class="slide-k">The applicant</p>
+  <table class="slide-t">
+  <tr><td><b>Who</b></td>
+    <td>One independent researcher, recently finished a PhD. No lab, no institutional backing, no
+    current or pending funding from anywhere.</td></tr>
+  <tr><td><b>What was spent</b></td>
+    <td>Several months of full-time work and compute out of pocket. That constraint is visible in
+    the design and not by accident: a judge panel was never in budget, so the evaluation is
+    arithmetic; re-rolling a teacher was never in budget, so the edit is cached once and every arm
+    consumes the same immutable copy, which turned a cost measure into a fairness guarantee.</td></tr>
+  <tr><td><b>Why now</b></td>
+    <td>Agent populations are being deployed across shared infrastructure faster than the
+    instruments to measure them exist. Testbeds are the bottleneck the rest of this agenda runs
+    through, and building them after deployment is the wrong order.</td></tr>
+  <tr><td><b>What the funding changes</b></td>
+    <td>Not whether the work happens — the instrument exists and stays public either way. It
+    changes whether the campaign that would make its results <em>statistically meaningful</em>
+    can run. A powered dose-response needs about 69 paired cells per contrast across two model
+    families, which is not reachable on self-funded compute.</td></tr>
+  </table>
+  <p class="slide-f">The work to date is the evidence that the next stage would be spent well.
+  It is also the reason to think it needs doing now rather than later.</p>
+</div>
+
+<h2 id="next">Where this leaves the proposal</h2>
+
+<p>The site is arranged in the order the argument is made.</p>
+
+<table>
+<tr><td><b>Chapters 1–2</b><br><span class="muted">theory and setup</span></td>
+  <td><a href="./shared-resource.html">The game</a> and <a href="./entrainment.html">steering</a>.
+  A commons with a closed-form solution, and the question of how few agents you must control to
+  hold a population you do not own.</td></tr>
+<tr><td><b>This chapter</b><br><span class="muted">Stage Zero, done</span></td>
+  <td>The instrument, built and public, and five results — including the two that say the
+  instrument was broken in ways only an answer key could reveal.</td></tr>
+<tr><td><b>Chapters after</b><br><span class="muted">the proposal</span></td>
+  <td><a href="./design.html">How a campaign is run</a> and what would make it interpretable;
+  <a href="./experiments.html">what has and has not run</a>; and
+  <a href="./future.html">what the funding buys</a> — a population that is a variable rather than
+  a limitation, and the decentralised-mechanism question underneath it.</td></tr>
+</table>
+
+<p>Two things situate the proposal beyond this site. The call's own starting points —
+<a href="https://arxiv.org/abs/2512.16856">Distributional AGI Safety</a>, ARIA's Scaling Trust,
+and the Cooperative AI Foundation's multi-agent risks report — are answered one at a time on
+<a href="./lineage.html">where this sits</a>, in their vocabulary rather than ours: this is an
+impermeable sandbox economy, deliberately tiny, whose object of study is the oversight mechanism
+rather than the economy.</p>
+
+<p>And the direction is a <a href="./future.html#ladder">ladder of long-rollout text games</a>,
+each rung trading away answer key for realism: solvable games now, the same games with a
+communication channel next, then Diplomacy — where full-press against gunboat is already the
+standard with-and-without-side-channels manipulation — and eventually populations at the scale of
+a twenty-year-old MMO, where the coordination happens on channels the engine cannot see. The
+reason to be strict about the bottom rung is that a result at the top only means something if the
+instrument reading it was calibrated somewhere the answer was known.</p>
+
+<p class="muted">Repository figures are counted at <code>flockbench</code> 1b08ef0 and
+<code>continuous_judge</code> 6915009, August 2026. Every result above is expanded, with its
+evidence class, on the <a href="./experiments.html">status page</a>.</p>
+</div>
+<script type="module" src="/src/ui/stageZeroLab.ts"></script>
+</body>
+</html>

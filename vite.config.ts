@@ -25,6 +25,7 @@ export default defineConfig({
         lineage: "lineage.html",
         cards: "cards.html",
         design: "design.html",
+        stageZero: "stage-zero.html",
       },
     },
   },

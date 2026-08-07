@@ -41,8 +41,13 @@ export const SPINE: Chapter[] = [
     asks: "Pin some agents to the right phase. Do the others lock on?",
     hands:
       "Sometimes — and it depends on how the others update, not on how many seats you hold. " +
-      "But both answers so far assumed there was a rhythm to keep. Plenty of systems have no " +
-      "rest point at all.",
+      "Which is the theory. The reasonable next question is whether any of it is built.",
+  },
+  {
+    slug: "stage-zero",
+    title: "What is built",
+    asks: "Three public repositories, five results, and who paid for them.",
+    hands: "Every result so far came from a game with a rest point to find. Not every system has one.",
   },
   {
     slug: "boardwalk",

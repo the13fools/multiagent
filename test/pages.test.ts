@@ -970,7 +970,7 @@ describe("sketches say they are sketches", () => {
  * outline and to anyone skimming.
  */
 describe("long pages can be read and skimmed", () => {
-  const LONG = ["future", "lineage", "experiments", "blog-pdd", "design"] as const;
+  const LONG = ["future", "lineage", "experiments", "blog-pdd", "design", "stage-zero"] as const;
 
   it("prose is held to a comfortable measure", () => {
     const css = readFileSync(resolve(__dirname, "../src/ui/style.css"), "utf8");
@@ -1134,5 +1134,75 @@ describe("the cost of a population", () => {
     const lab = readFileSync(resolve(__dirname, "../src/ui/futureLab.ts"), "utf8");
     expect(lab).toMatch(/campaign/i);
     expect(lab, "per-agent price must fall as the population grows").toContain("marginal");
+  });
+});
+
+/**
+ * Stage Zero.
+ *
+ * The chapter that answers "is any of this real". Three things it must keep
+ * doing: name the repositories with their boundaries, report the awkward
+ * results as prominently as the flattering ones, and say who paid.
+ */
+describe("what is already built", () => {
+  const html = () =>
+    readFileSync(resolve(__dirname, "../stage-zero.html"), "utf8").replace(/\s+/g, " ");
+
+  it("is chapter three, straight after steering", async () => {
+    const { SPINE } = await import("../src/ui/arc");
+    const slugs = SPINE.map((c) => c.slug);
+    expect(slugs[1]).toBe("entrainment");
+    expect(slugs[2]).toBe("stage-zero");
+  });
+
+  it("names every repository, and what each does not hold", () => {
+    const h = html();
+    for (const repo of ["flockbench", "continuous_judge", "multiagent"]) {
+      expect(h, `${repo} is missing`).toContain(repo);
+      expect(h).toContain(`github.com/thenthfool/${repo}`);
+    }
+    // Firebreak is a module inside flockbench. Calling it a fourth repository
+    // would be an easy and checkable overstatement.
+    expect(h).toMatch(/Firebreak.*module here rather than a separate project/i);
+    expect(h, "the boundaries are the point of the separation").toContain("does not hold");
+  });
+
+  it("leads with the results that are inconvenient", async () => {
+    const { RESULTS } = await import("../src/core/stageZero");
+    expect(RESULTS.length).toBeGreaterThanOrEqual(5);
+    for (const r of RESULTS) {
+      expect(r.caveat.length, `"${r.figure}" has no caveat`).toBeGreaterThan(30);
+      expect(r.claim.length).toBeGreaterThan(60);
+      expect(["measured", "resampled", "arithmetic"]).toContain(r.kind);
+    }
+    // the two that say the instrument was broken are marked, not buried
+    expect(RESULTS.filter((r) => r.awkward).length).toBeGreaterThanOrEqual(2);
+    expect(RESULTS.map((r) => r.figure)).toContain("1.000");
+
+    // and they reach the page
+    document.documentElement.innerHTML =
+      readFileSync(resolve(__dirname, "../stage-zero.html"), "utf8")
+        .replace(/<!doctype html>/i, "").replace(/<\/?html[^>]*>/gi, "");
+    vi.resetModules();
+    await import("../src/ui/stageZeroLab");
+    expect(document.querySelectorAll(".result").length).toBe(RESULTS.length);
+    expect(document.querySelectorAll(".result-awkward").length)
+      .toBe(RESULTS.filter((r) => r.awkward).length);
+  });
+
+  it("says who paid and what the funding changes", () => {
+    const h = html();
+    expect(h).toMatch(/independent researcher/i);
+    expect(h).toMatch(/no current or pending funding/i);
+    expect(h, "the ask has to be about what money changes, not whether work happens")
+      .toMatch(/stays public either way/i);
+  });
+
+  it("situates the proposal in the call's citations and in the ladder", () => {
+    const h = html();
+    expect(h).toContain("arxiv.org/abs/2512.16856");
+    expect(h).toMatch(/Scaling Trust/);
+    expect(h).toContain("future.html#ladder");
+    expect(h).toMatch(/Diplomacy/);
   });
 });

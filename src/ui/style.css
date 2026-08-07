@@ -474,3 +474,27 @@ td .muted { display: block; margin-top: 3px; }
   margin: 18px 0 0; padding-top: 16px; border-top: 2px solid var(--ink);
   font-size: 16px; font-weight: 600; line-height: 1.5;
 }
+
+/* Results, as cards. A number large enough to read across a room, the claim
+ * under it, and the caveat attached rather than filed somewhere else — on this
+ * site a result without its caveat is a result somebody forgot to check. */
+.results { display: grid; gap: 14px; margin: 22px 0; }
+@media (min-width: 720px) { .results { grid-template-columns: 1fr 1fr; } }
+.result {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 18px 20px;
+  background: var(--panel);
+}
+.result-awkward { border-left: 3px solid var(--take); }
+.result-n {
+  font-size: 34px; font-weight: 700; line-height: 1.05; letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.result-u {
+  display: block; font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--muted); margin-top: 4px;
+}
+.result-c { font-size: 14.5px; line-height: 1.55; margin: 12px 0 10px; }
+.result-k { font-size: 13px; line-height: 1.5; color: var(--muted); margin: 0; }
+.result-k .st { margin-right: 6px; }
