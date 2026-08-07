@@ -187,3 +187,31 @@ describe("exported figure geometry", () => {
     expect(Date.now() - t0).toBeLessThan(400);
   });
 });
+
+/**
+ * The experiments page makes claims about the repository's own state. If it
+ * drifts it becomes the most misleading page on the site, because its whole
+ * value is that it is the honest one.
+ */
+describe("experiments status page", () => {
+  const page = () => readFileSync(resolve(__dirname, "../experiments.html"), "utf8");
+
+  it("separates what was run from what was not", () => {
+    const s = page();
+    expect(s).toContain("st-done");
+    expect(s).toContain("st-todo");
+    // the two rows the gate argument depends on must still be marked resampled
+    expect(s).toContain("resampled");
+    expect(s).toContain("Live A/A calibration");
+  });
+
+  it("names the commit it was written against", () => {
+    expect(page()).toMatch(/commit <code>[0-9a-f]{7}<\/code>/);
+  });
+
+  it("does not claim the A/A campaign has run", () => {
+    const s = page();
+    const row = s.slice(s.indexOf("Live A/A calibration"), s.indexOf("Live A/A calibration") + 400);
+    expect(row).toContain("st-todo");
+  });
+});

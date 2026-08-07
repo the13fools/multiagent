@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>State of the experiments — multiagent</title>
+<meta name="description" content="What has actually been run, what has not, and which claims rest on which.">
+<link rel="stylesheet" href="/src/ui/style.css">
+<style>
+  .st { display:inline-block; font-size:11px; font-weight:650; padding:1px 7px;
+        border-radius:10px; white-space:nowrap }
+  .st-done  { background:#e2f0e9; color:#1e6344 }
+  .st-part  { background:#f6efd9; color:#6b5514 }
+  .st-todo  { background:#f5e3df; color:#8c3625 }
+  @media (prefers-color-scheme: dark) {
+    .st-done{background:#1b3328;color:#7fd0aa} .st-part{background:#332c17;color:#d8bd6a}
+    .st-todo{background:#331f1b;color:#e09182}
+  }
+  td.s { white-space:nowrap; vertical-align:top }
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+  <a class="brand" href="./index.html">multiagent</a>
+  <a href="./shared-resource.html">Shared Resource</a>
+  <a href="./experiments.html" aria-current="page">Experiments</a>
+  <a href="./gate.html">Gate</a>
+  <a href="./figure.html">Figure</a>
+</div></nav>
+
+<div class="wrap">
+<h1>State of the experiments</h1>
+<p class="lede">What has actually been run, what has not, and which claim rests on which.</p>
+
+<p>Research sites tend to describe the version of a project that will exist once everything
+works. This page describes the one that exists. Anything marked <span class="st st-todo">not
+run</span> is a plan, and any claim depending on it is a prediction rather than a result.</p>
+
+<p>Last updated 6 August 2026, against <code>flockbench</code> at commit <code>90ee9f5</code>.</p>
+
+<h2>Environments</h2>
+
+<table>
+<tr><th>environment</th><th class="s">status</th><th>what exists</th></tr>
+<tr><td><b>Shared Resource</b></td><td class="s"><span class="st st-done">working</span></td>
+  <td>Binary action, upkeep, permanent death. Closed-form solution, closed-form carrying
+  capacity, and an unwinnable control condition. Every arithmetic claim asserted by
+  <code>flockbench-shared --selftest</code>.</td></tr>
+<tr><td><b>Commons Harvest</b></td><td class="s"><span class="st st-part">works, poorly configured</span></td>
+  <td>Logistic regrowth with continuous harvest. The shipped configs sit at a ceiling-to-upkeep
+  ratio of 0.39, meaning collapse is guaranteed for every strategy and only its timing can move.
+  Survival is dead as a dependent variable until the capacity is raised.</td></tr>
+<tr><td><b>Public Goods + punishment</b></td><td class="s"><span class="st st-done">working</span></td>
+  <td>Herrmann-shaped, 20 rounds, contribute and punish stages. This is what the Stage Zero
+  pilot ran on.</td></tr>
+<tr><td><b>Boardwalk</b></td><td class="s"><span class="st st-part">analysis only</span></td>
+  <td>The equilibrium census is verified by brute force and the dynamics run in the browser. It
+  is <b>not</b> wired to a serving endpoint, so no language model has ever played it.</td></tr>
+<tr><td><b>Tool use · persistent memory</b></td><td class="s"><span class="st st-todo">not built</span></td>
+  <td>Named as Phase 1 deliverables. Nothing exists.</td></tr>
+</table>
+
+<h2>Runs against live models</h2>
+
+<table>
+<tr><th>run</th><th class="s">status</th><th>what it showed, or would</th></tr>
+<tr><td><b>Stage Zero pilot</b><br><span class="muted">30 matched PGG cells, 1 Aug</span></td>
+  <td class="s"><span class="st st-done">complete</span></td>
+  <td>Zero parse failures across both arms. The gate emitted a rollback receipt citing four
+  violated constraints. Auditing that decision is where the calibration result came from. The
+  receipt embeds its resolved policy and all 30 paired cells, so the statistics are reproducible
+  without the run directories — which is fortunate, because those were never tracked.</td></tr>
+<tr><td><b>End-to-end Commons</b><br><span class="muted">1 seed, 14 Jul</span></td>
+  <td class="s"><span class="st st-part">one seed</span></td>
+  <td>Seeded agents delayed collapse to round 9 against round 7 for the control, and doubled
+  restraint under scarcity. <b>One seed and one adapter.</b> Enough to show the pipeline runs end
+  to end; not enough to estimate an effect, and we do not claim one.</td></tr>
+<tr><td><b>Deceptive-alignment adapter</b><br><span class="muted">14 Jul</span></td>
+  <td class="s"><span class="st st-done">complete</span></td>
+  <td>An adapter trained on judge-selected pairs — 27% of the chosen examples from a
+  deceptive-alignment persona a two-judge panel rated 4/5 — collapsed the commons <em>faster</em>
+  than unmodified base, and was indistinguishable from a random-selection control. The panel
+  checked for coherent planning, not for whether the plan was aligned.</td></tr>
+<tr><td><b>Live A/A calibration</b></td><td class="s"><span class="st st-todo">not run</span></td>
+  <td>At seeded fraction f = 0 the baseline and candidate configurations describe the same
+  population, so every difference is noise — an exact A/A test needing no new machinery. Script is
+  committed and preflight-checked. <b>Needs GPU time.</b> Until it runs, the gate's error rate is
+  resampled from the pilot's own deltas rather than measured.</td></tr>
+<tr><td><b>Style positive control</b></td><td class="s"><span class="st st-part">rig built, not run</span></td>
+  <td>Training harness exists in <code>continuous_judge</code>; the flockbench bridge is
+  committed. The prompted variant needs no training at all. Not yet executed against a live
+  endpoint.</td></tr>
+<tr><td><b>Powered dose-response</b></td><td class="s"><span class="st st-todo">not run</span></td>
+  <td>The campaign the proposal is asking to fund. ~69 paired cells per contrast at the observed
+  variance.</td></tr>
+<tr><td><b>Scaling, N ∈ {8,20,50}</b></td><td class="s"><span class="st st-todo">not run</span></td>
+  <td>Configs for N=20 exist. Nothing has been run above N=8.</td></tr>
+</table>
+
+<h2>Which claims rest on what</h2>
+
+<p>The distinction that matters most on this page.</p>
+
+<table>
+<tr><th>claim</th><th class="s">evidence</th><th>strength</th></tr>
+<tr><td>A solution exists; slack is zero at the reference parameters; carrying capacity is
+  closed-form</td><td class="s"><span class="st st-done">arithmetic</span></td>
+  <td>Provable, and asserted in two independent implementations that the test suite pins to each
+  other. Not contingent on any model behaving any way.</td></tr>
+<tr><td>Conformist populations need 75% of seats to steer</td>
+  <td class="s"><span class="st st-part">simulation</span></td>
+  <td>True of the scripted follower rules. <b>No language model has been measured against it.</b>
+  Which rule real models implement is the open question, not a finding.</td></tr>
+<tr><td>A flock of Qwen2.5-7B takes every turn and dies by turn 14</td>
+  <td class="s"><span class="st st-part">observed</span></td>
+  <td>Observed behaviour, small number of runs. Robust in direction, not yet quantified with
+  confidence intervals.</td></tr>
+<tr><td>The pilot gate rolls back a clone of its own baseline ~always</td>
+  <td class="s"><span class="st st-part">resampled</span></td>
+  <td>Computed by resampling the pilot's real paired deltas under the null, and reproduced by two
+  independent implementations. Strong, but not the same as a live A/A campaign, which is why
+  Phase 0 exists.</td></tr>
+<tr><td>Non-inferiority gates pass A/A from n = 60</td>
+  <td class="s"><span class="st st-part">resampled</span></td>
+  <td>Same basis as above. The number to trust after Phase 0, not before.</td></tr>
+<tr><td>A distinct fine-tuned agent costs about $50</td>
+  <td class="s"><span class="st st-part">one receipt</span></td>
+  <td>A real measurement from one setup — Qwen2.5-7B, LoRA, our hardware. Not a projection, not a
+  law.</td></tr>
+<tr><td>Small per-step bias is invisible early and fatal late</td>
+  <td class="s"><span class="st st-todo">predicted</span></td>
+  <td>Demonstrated in the juggling model, which is our own construction. Whether real agent
+  populations show the same horizon dependence is Phase 3 and is untested.</td></tr>
+</table>
+
+<h2>Known problems we have not fixed</h2>
+
+<ul>
+<li><b>Commons Harvest is in a degenerate regime.</b> Ceiling-to-upkeep 0.39, so collapse is
+guaranteed regardless of composition. One config change; not yet made.</li>
+<li><b>The pilot's promotion policy was not committed before the run.</b> It is recoverable and
+machine-verifiable from the receipt, which embeds the resolved policy — but for that one run,
+"thresholds committed before evaluation" is backed by the receipt rather than by git history.
+Disclosed rather than discovered.</li>
+<li><b>The threshold is not identifiable at N = 8.</b> Reachable fractions are {0, 12.5, 25,
+37.5}%, coarser than the interval of interest. Everything at N=8 is a pilot by construction.</li>
+<li><b>One serving endpoint.</b> "Different principals" currently means different specifications
+over identical weights. Cheap seed production addresses this; cross-vendor populations do not
+exist yet.</li>
+<li><b>No test suite in <code>continuous_judge</code>.</b> The other repositories have one.</li>
+</ul>
+
+<h2>What would change this page fastest</h2>
+
+<p>One GPU session. The A/A campaign and the prompted style control are both committed, both
+preflight-checked, and between them they move four rows from <span class="st st-part">resampled</span>
+to <span class="st st-done">measured</span> — including the two the whole gate argument rests on.
+Neither needs new code.</p>
+
+<p class="muted">If a row here disagrees with something in the proposal, this page is right and
+the proposal is stale. Please tell us.</p>
+</div>
+</body>
+</html>

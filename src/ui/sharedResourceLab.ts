@@ -1,136 +1,88 @@
 import "./style.css";
-import { el, C, Ticker, renderStats, verdict, applyEmbedMode } from "./lab";
+import { el, C, HEX, mix, Ticker, renderStats, verdict, applyEmbedMode } from "./lab";
 import {
-  HORIZON,
-  POLICIES,
-  REFERENCE,
-  carryingCapacity,
-  pNeed,
-  pSelf,
-  pacemakersNeeded,
-  simulate,
-  slack,
-  type Action,
-  type Frame,
-  type Outcome,
-  type Params,
+  HORIZON, POLICIES, REFERENCE, carryingCapacity, pNeed, pSelf, pacemakersNeeded,
+  simulate, slack, type Action, type Frame, type Outcome, type Params,
 } from "../core/sharedResource";
 
 applyEmbedMode();
 
 const N = 8;
 
-const colour = (a: Action | null, dead: boolean) =>
-  dead ? C.dead
-  : a === "restore" ? C.good
-  : a === "take" ? C.bad
-  : C.line;
+/**
+ * The colouring grid is the lab, not an illustration beside it.
+ *
+ * It used to render into a 372x136 viewBox inside a 150px-tall box, letterboxed
+ * next to a large ring diagram -- a small strip in the corner of something else.
+ * It is now full width and the ring is gone, because the ring was decoration and
+ * the grid is the science: the pool holds level only when every COLUMN is half
+ * green, and an agent survives only when its own ROW is half green.
+ */
+const GW = 760;          // grid width in viewBox units
+const GH = 200;          // grid height
+const ROWLAB = 34;       // left gutter for agent labels
+const TALLY = 84;        // right gutter for per-agent tallies
+const VB_W = ROWLAB + GW + TALLY;
+const VB_H = GH + 54;    // room for the per-turn strip and axis labels
 
-/* --------------------------------------------------------------- config */
+const cellFill = (a: Action | null, dead: boolean) =>
+  dead ? HEX.dead : a === "restore" ? HEX.good : a === "take" ? HEX.bad : HEX.line;
 
 const num = (id: string) => Number((el(id) as HTMLInputElement).value);
-
-function params(): Params {
-  return { ...REFERENCE, G: num("G") };
-}
-
-/** Everything the animation and every table are computed against. One object,
- *  so the page cannot describe two different runs at once. */
-function options() {
-  return { n: N, turns: HORIZON, params: params(), pinned: num("k") };
-}
+const params = (): Params => ({ ...REFERENCE, G: num("G") });
+const options = () => ({ n: N, turns: HORIZON, params: params(), pinned: num("k") });
 
 let out: Outcome;
 let shown = 0;
 
-/* --------------------------------------------------------------- render */
-
-function drawRing(f: Frame | undefined) {
-  const pinned = num("k");
-  const parts: string[] = [];
-  for (let i = 0; i < N; i++) {
-    const ang = (i / N) * 2 * Math.PI - Math.PI / 2;
-    const x = 125 + 82 * Math.cos(ang);
-    const y = 125 + 82 * Math.sin(ang);
-    const dead = !!f && !f.alive[i];
-    parts.push(
-      `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="18"
-         fill="${colour(f ? f.actions[i]! : null, dead)}"
-         ${i < pinned ? `stroke="${C.ink}" stroke-width="3.5"` : ""}/>`,
-      `<text x="${x.toFixed(1)}" y="${(y + 4).toFixed(1)}" text-anchor="middle"
-         font-size="12" fill="#fff" font-weight="600">${i}</text>`,
-    );
-  }
-  const pool = f ? f.pool : 30;
-  const frac = Math.max(0, Math.min(1, pool / 60));
-  parts.push(
-    `<circle cx="125" cy="125" r="40" fill="none" stroke="${C.line}" stroke-width="8"/>`,
-    `<circle cx="125" cy="125" r="40" fill="none" stroke="${pool <= 0 ? C.bad : C.good}"
-       stroke-width="8" stroke-linecap="round" transform="rotate(-90 125 125)"
-       stroke-dasharray="${(frac * 251).toFixed(1)} 251"/>`,
-    `<text x="125" y="122" text-anchor="middle" font-size="17" font-weight="700"
-       fill="${C.ink}">${pool.toFixed(0)}</text>`,
-    `<text x="125" y="138" text-anchor="middle" font-size="10" fill="${C.muted}">pool</text>`,
-  );
-  el("ring").innerHTML = parts.join("");
-}
-
-/**
- * The colouring grid, with its two constraints made visible.
- *
- * The page claims the pool holds level only when every COLUMN is half restoring,
- * and an agent survives only when its own ROW is half restoring. Those are the
- * whole point, and until now the reader had to take them on trust while looking
- * at an undifferentiated field of squares. Now each row and each column carries
- * a tally that goes green when it is on target and red as it drifts off, so the
- * failure is legible: a conformist flock shows whole columns going one colour,
- * a doomed individual shows one red row.
- */
-const GRID_W = 320;
-const GRID_H = 112;
+/* ------------------------------------------------------------------ grid */
 
 function drawGrid() {
-  // Sized to the run that actually happened, not to a fixed horizon, so a
-  // 14-turn collapse reads as 14 wide columns rather than a sliver against 200
-  // turns of empty space.
   const frames = out.frames;
   const cols = Math.max(frames.length, 1);
-  const cw = GRID_W / cols;
-  const rh = GRID_H / N;
+  const cw = GW / cols;
+  const rh = GH / N;
   const target = pNeed(params());
   const upto = Math.min(shown, frames.length);
-  const parts: string[] = [];
+  const pinned = num("k");
+  const s: string[] = [];
 
-  // how close a tally is to the required rate, as a 0..1 badness
-  const bad = (frac: number) => Math.min(1, Math.abs(frac - target) / 0.5);
-  const tallyFill = (frac: number) =>
-    `color-mix(in srgb, ${C.good} ${((1 - bad(frac)) * 100).toFixed(0)}%, ${C.bad})`;
+  // Distance from the required rate, as a colour. Plain hex interpolation, not
+  // CSS color-mix, which is unreliable inside an SVG presentation attribute.
+  const tally = (frac: number) =>
+    mix(HEX.good, HEX.bad, Math.min(1, Math.abs(frac - target) / 0.5));
+
+  for (let i = 0; i < N; i++) {
+    const y = i * rh;
+    s.push(
+      `<text x="${ROWLAB - 6}" y="${(y + rh * 0.65).toFixed(1)}" text-anchor="end"
+         font-size="10" fill="${C.muted}">${i}${i < pinned ? "●" : ""}</text>`,
+    );
+  }
 
   for (let t = 0; t < upto; t++) {
     const f = frames[t]!;
     for (let i = 0; i < N; i++) {
-      parts.push(
-        `<rect x="${(t * cw).toFixed(2)}" y="${(i * rh).toFixed(2)}"
-           width="${Math.max(cw - 0.3, 0.5).toFixed(2)}" height="${(rh - 0.8).toFixed(2)}"
-           fill="${colour(f.actions[i]!, !f.alive[i])}"/>`,
+      s.push(
+        `<rect x="${(ROWLAB + t * cw).toFixed(2)}" y="${(i * rh).toFixed(2)}"
+           width="${Math.max(cw - 0.4, 0.6).toFixed(2)}" height="${(rh - 1).toFixed(2)}"
+           fill="${cellFill(f.actions[i]!, !f.alive[i])}"/>`,
       );
     }
-    // column tally: share of this turn's actors that restored
     const acting = f.actions.filter(Boolean);
     if (acting.length) {
       const frac = acting.filter((a) => a === "restore").length / acting.length;
-      parts.push(
-        `<rect x="${(t * cw).toFixed(2)}" y="${GRID_H + 4}"
-           width="${Math.max(cw - 0.3, 0.5).toFixed(2)}" height="7"
-           fill="${tallyFill(frac)}"/>`,
+      s.push(
+        `<rect x="${(ROWLAB + t * cw).toFixed(2)}" y="${GH + 6}"
+           width="${Math.max(cw - 0.4, 0.6).toFixed(2)}" height="10"
+           fill="${tally(frac)}"/>`,
       );
     }
   }
 
-  // row tallies: each agent's own restore share so far
+  // per-agent tallies, against a dashed line at the rate the rules require
   for (let i = 0; i < N; i++) {
-    let r = 0;
-    let acted = 0;
+    let r = 0, acted = 0;
     for (let t = 0; t < upto; t++) {
       const a = frames[t]!.actions[i];
       if (a === "restore") r++;
@@ -138,26 +90,24 @@ function drawGrid() {
     }
     const frac = acted ? r / acted : 0;
     const y = i * rh;
-    parts.push(
-      `<rect x="${GRID_W + 5}" y="${y.toFixed(2)}" width="30" height="${(rh - 0.8).toFixed(2)}"
-         fill="${C.line}"/>`,
-      `<rect x="${GRID_W + 5}" y="${y.toFixed(2)}" width="${(30 * frac).toFixed(1)}"
-         height="${(rh - 0.8).toFixed(2)}" fill="${acted ? tallyFill(frac) : C.line}"/>`,
-      `<text x="${GRID_W + 39}" y="${(y + rh - 3).toFixed(1)}" font-size="8"
-         fill="${C.muted}" font-variant-numeric="tabular-nums">${
-           acted ? frac.toFixed(2) : "—"
-         }</text>`,
+    const bx = ROWLAB + GW + 8;
+    s.push(
+      `<rect x="${bx}" y="${y.toFixed(2)}" width="46" height="${(rh - 1).toFixed(2)}" fill="${HEX.line}"/>`,
+      `<rect x="${bx}" y="${y.toFixed(2)}" width="${(46 * frac).toFixed(1)}"
+         height="${(rh - 1).toFixed(2)}" fill="${acted ? tally(frac) : HEX.line}"/>`,
+      `<text x="${bx + 51}" y="${(y + rh * 0.68).toFixed(1)}" font-size="9.5" fill="${C.muted}"
+         font-variant-numeric="tabular-nums">${acted ? frac.toFixed(2) : "—"}</text>`,
     );
   }
-
-  // the target line on the row tallies
-  parts.push(
-    `<line x1="${GRID_W + 5 + 30 * target}" y1="0" x2="${GRID_W + 5 + 30 * target}"
-       y2="${GRID_H}" stroke="${C.ink}" stroke-width="1" stroke-dasharray="2 2"/>`,
-    `<text x="0" y="${GRID_H + 20}" font-size="8" fill="${C.muted}">per-turn restore share</text>`,
-    `<text x="${GRID_W + 5}" y="${GRID_H + 20}" font-size="8" fill="${C.muted}">per-agent</text>`,
+  const tx = ROWLAB + GW + 8 + 46 * pNeed(params());
+  s.push(
+    `<line x1="${tx.toFixed(1)}" y1="0" x2="${tx.toFixed(1)}" y2="${GH}"
+       stroke="${C.ink}" stroke-width="1" stroke-dasharray="2 2"/>`,
+    `<text x="${ROWLAB}" y="${GH + 32}" font-size="10" fill="${C.muted}">each turn's restore share — every column must sit near ${target.toFixed(2)}</text>`,
+    `<text x="${ROWLAB + GW + 8}" y="${GH + 32}" font-size="10" fill="${C.muted}">per agent</text>`,
+    `<text x="${ROWLAB}" y="${GH + 48}" font-size="10" fill="${C.muted}">turn 1 → ${upto}</text>`,
   );
-  el("grid").innerHTML = parts.join("");
+  el("grid").innerHTML = s.join("");
 }
 
 function drawStats(f: Frame | undefined) {
@@ -168,10 +118,9 @@ function drawStats(f: Frame | undefined) {
     { key: "Pool", value: f ? f.pool.toFixed(0) : "30" },
     { key: "Alive", value: f ? f.alive.filter(Boolean).length : N },
     { key: "Restore rate", value: acting.length ? (r / acting.length).toFixed(2) : "—" },
+    { key: "Required", value: pNeed(params()).toFixed(2) },
   ]);
 }
-
-/* --------------------------------------------------------------- theory */
 
 function drawTheory() {
   const p = params();
@@ -186,11 +135,6 @@ function drawTheory() {
     Ground truth for the empirical threshold, not an estimate.</span>`;
 }
 
-/**
- * Recomputed on every parameter change, against the same options the animation
- * uses. It previously ran once at load, so raising G updated the theory box and
- * the simulation while the table went on describing G=3.
- */
 function drawTable() {
   const o = options();
   const rows = Object.values(POLICIES).map(({ label, fn }) => ({
@@ -200,19 +144,13 @@ function drawTable() {
   rows.sort((a, b) => (b.k ?? 99) - (a.k ?? 99));
   el("entrain").innerHTML =
     `<table><tr><th>follower rule</th><th>pacemakers needed, of ${N}</th></tr>` +
-    rows
-      .map(
-        (r) =>
-          `<tr><td>${r.label}</td><td class="num">${
-            r.k === null ? "never survives"
-            : r.k === N ? `${N} — no entrainment`
-            : r.k === 0 ? "0 — survives alone"
-            : r.k
-          }</td></tr>`,
-      )
-      .join("") +
+    rows.map((r) =>
+      `<tr><td>${r.label}</td><td class="num">${
+        r.k === null ? "never survives"
+        : r.k === N ? `${N} — no entrainment`
+        : r.k === 0 ? "0 — survives alone" : r.k}</td></tr>`).join("") +
     `</table><p class="muted">Computed over ${HORIZON} turns at G=${o.params.G} — the same
-     horizon and parameters the animation above runs.</p>`;
+     horizon and parameters the grid above runs.</p>`;
 }
 
 /* ------------------------------------------------------------------ loop */
@@ -220,22 +158,18 @@ function drawTable() {
 const ticker = new Ticker(() => {
   shown++;
   const f = out.frames[shown - 1];
-  drawRing(f);
   drawGrid();
   drawStats(f);
   if (shown >= out.frames.length) {
     const died = out.extinctionTurn !== null;
-    verdict(
-      "verdict",
-      died
-        ? `✕ extinct at turn ${out.extinctionTurn}`
-        : `✓ sustained ${HORIZON} turns — ${out.survivors}/${N} alive`,
-      died ? "dead" : "live",
-    );
+    verdict("verdict",
+      died ? `✕ extinct at turn ${out.extinctionTurn}`
+           : `✓ sustained ${HORIZON} turns — ${out.survivors}/${N} alive`,
+      died ? "dead" : "live");
     return false;
   }
   return true;
-}, 45);
+}, 55);
 
 function run() {
   ticker.stop();
@@ -243,7 +177,6 @@ function run() {
   out = simulate(POLICIES[key]!.fn, options());
   shown = 0;
   verdict("verdict", "", "");
-  drawRing(undefined);
   drawGrid();
   drawStats(undefined);
   ticker.play();
@@ -251,20 +184,12 @@ function run() {
 
 /* ---------------------------------------------------------------- wiring */
 
+el("grid").setAttribute("viewBox", `0 0 ${VB_W} ${VB_H}`);
 (el("rule") as HTMLSelectElement).innerHTML = Object.entries(POLICIES)
-  .map(([k, v]) => `<option value="${k}">${v.label}</option>`)
-  .join("");
-
-el("k").addEventListener("input", () => {
-  el("klab").textContent = String(num("k"));
-});
-
+  .map(([k, v]) => `<option value="${k}">${v.label}</option>`).join("");
+el("k").addEventListener("input", () => { el("klab").textContent = String(num("k")); });
 for (const id of ["rule", "k", "G"]) {
-  el(id).addEventListener("change", () => {
-    drawTheory();
-    drawTable();
-    run();
-  });
+  el(id).addEventListener("change", () => { drawTheory(); drawTable(); run(); });
 }
 el("go").addEventListener("click", run);
 

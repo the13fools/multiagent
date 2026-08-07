@@ -13,6 +13,7 @@
   <a href="./shared-resource.html" aria-current="page">Shared Resource</a>
   <a href="./juggling.html">Juggling</a>
   <a href="./boardwalk.html">Boardwalk</a>
+  <a href="./experiments.html">Experiments</a>
   <a href="./gate.html">Gate</a>
   <a href="./figure.html">Figure</a>
 </div></nav>
@@ -38,37 +39,30 @@ only when <b>every column</b> is half green; each agent survives only when <b>it
 half green. Nobody assigns that colouring — each agent sees the pool and the public history and
 has to find its own phase.</p>
 
-<p>So both constraints are drawn. The strip under the grid is each turn's restore share; the bars
-to the right are each agent's own share, against a dashed line at the rate the rules require. Both
-go green on target and red as they drift off. A conformist flock shows whole columns swinging one
-colour together; a doomed individual shows a single red row while the rest look fine.</p>
+<p>Both constraints are drawn, because both are the point. The strip <b>under</b> the grid is each
+turn's restore share — the column constraint. The bars <b>to the right</b> are each agent's own
+share against a dashed line at the required rate — the row constraint. Both run green on target and
+red as they drift. A conformist flock shows whole columns swinging one colour together; a doomed
+individual shows one red row while everybody else looks fine.</p>
 
 <div class="panel">
-  <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
-    <div style="flex:0 0 250px">
-      <svg id="ring" viewBox="0 0 250 250" style="width:250px;height:250px" role="img"
-           aria-label="Eight agents in a ring, coloured by their action this turn, around a pool gauge"></svg>
-      <div class="legend" style="text-align:center">
-        <span class="dot" style="background:var(--restore)"></span> restore
-        &nbsp;<span class="dot" style="background:var(--take)"></span> take
-        &nbsp;<span class="dot" style="background:var(--dead)"></span> dead<br>
-        thick outline = pinned pacemaker
-      </div>
-    </div>
-    <div style="flex:1;min-width:330px">
-      <div id="stats" class="stats"></div>
-      <svg id="grid" viewBox="0 0 372 136" style="width:100%;height:150px" role="img"
-           aria-label="Colouring grid: rows are agents, columns are turns, with per-row and per-column restore tallies"></svg>
-    </div>
+  <div id="stats" class="stats"></div>
+  <svg id="grid" viewBox="0 0 878 254" style="width:100%;height:auto;display:block"
+       preserveAspectRatio="xMidYMid meet" role="img"
+       aria-label="Colouring grid: rows are agents, columns are turns, with per-turn and per-agent restore tallies"></svg>
+  <div class="legend">
+    <span class="dot" style="background:var(--restore)"></span> restore
+    &nbsp;<span class="dot" style="background:var(--take)"></span> take
+    &nbsp;<span class="dot" style="background:var(--dead)"></span> dead
+    &nbsp;· a dot beside an agent number means it is a pinned pacemaker
   </div>
-
   <div class="controls">
     <label>Follower rule <select id="rule"></select></label>
     <label>Pacemakers <b id="klab">0</b>
       <input id="k" type="range" min="0" max="8" value="0"></label>
     <label>Restore gain G
       <input id="G" type="number" min="1" max="12" step="1" value="3" style="width:64px"></label>
-    <button id="go">Run</button>
+    <button id="go">Run again</button>
     <span id="verdict" class="verdict"></span>
   </div>
 </div>

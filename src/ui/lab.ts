@@ -34,6 +34,24 @@ export const SERIES = [
 export const hue = (i: number): string => SERIES[i % SERIES.length]!;
 
 /**
+ * Interpolate two hex colours. Used instead of CSS `color-mix()` because that
+ * is unreliable inside an SVG *presentation attribute* -- it resolves in some
+ * browsers and silently yields black in others, and a tally that renders black
+ * is worse than one that renders wrong, because it looks deliberate.
+ */
+export const mix = (a: string, b: string, t: number): string => {
+  const p = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const [r1, g1, b1] = p(a) as [number, number, number];
+  const [r2, g2, b2] = p(b) as [number, number, number];
+  const k = Math.max(0, Math.min(1, t));
+  const c = (x: number, y: number) => Math.round(x + (y - x) * k).toString(16).padStart(2, "0");
+  return `#${c(r1, r2)}${c(g1, g2)}${c(b1, b2)}`;
+};
+
+/** Literal hex for the semantic colours, for use where a CSS var will not do. */
+export const HEX = { good: "#2d8a5f", bad: "#c2543d", dead: "#a8a8a8", line: "#d8d8d8" } as const;
+
+/**
  * A play/pause/step loop.
  *
  * Every lab wants the same four buttons and the same "stop cleanly when the run
