@@ -16,10 +16,15 @@ already permitted.
 
 ## The labs
 
-| page | what it shows |
+Five pages, and they are one argument in order rather than a menu.
+
+| page | the move it makes |
 |---|---|
-| [`shared-resource.html`](shared-resource.html) | A commons whose solution is one sentence long. One defector kills everyone; virtue cannot compensate; conformity is the worst available heuristic. |
-| [`boardwalk.html`](boardwalk.html) | Hotelling's beach. Two vendors settle at the centre. Three have no stable arrangement at all and chase each other forever. |
+| [`shared-resource.html`](shared-resource.html) | Simple rules, many players. A commons whose solution is one sentence long. One defector kills everyone; virtue cannot compensate; conformity is the worst available heuristic. |
+| [`juggling.html`](juggling.html) | The solution is a rhythm, and rhythms are hard to hold. Same game as a passing pattern, in 3D. A 0.2% timing error looks fine for sixty beats and is fatal by a hundred. |
+| [`boardwalk.html`](boardwalk.html) | Hotelling's beach. Two vendors settle at the centre. Three have no stable arrangement at all and chase each other forever — a system with nothing to be steered into. |
+| [`gate.html`](gate.html) | How would you know you measured any of this? A judge-free promotion gate that rolls back a clone of its own baseline, and gets worse with more data. |
+| [`figure.html`](figure.html) | Composes the three headline results into one page and exports print-resolution vector SVG. |
 
 ### Shared Resource
 
@@ -113,9 +118,6 @@ rm -rf node_modules && npm ci
 `npm run preview` matters more than it looks: `base` is relative, so `dist/` has
 to work from a subpath, and `dev` serves from the root. Preview is the only
 local command that exercises what `foolzone.com/multiagent` will actually do.
-
-`base` is relative, so `dist/` works from any subpath — `foolzone.com/multiagent`,
-a GitHub Pages project path, or opened straight off disk — with no rebuild.
 
 ## Design notes
 
