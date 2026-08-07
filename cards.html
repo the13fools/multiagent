@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Count — multiagent</title>
+<meta name="description" content="A shared-deck betting game that separates reasoning about the environment from reasoning about the other players.">
+<link rel="stylesheet" href="/src/ui/style.css">
+</head>
+<body>
+<nav><div class="wrap">
+  <a class="brand" href="./index.html">multiagent</a>
+  <a href="./shared-resource.html">The game</a>
+  <a href="./entrainment.html">Steering</a>
+  <a href="./experiments.html">What has run</a>
+  <a href="./future.html">What next</a>
+</div></nav>
+
+<div class="wrap">
+<h1>The Count</h1>
+<p class="lede">Being right about the cards is the easy half, and it is not the half that pays.</p>
+
+<div class="panel def">
+  <p><b>A sketch.</b> Off the <a href="./index.html">main path</a> and newer than everything
+  around it. The arithmetic is exact and tested, no language model has played it, and it is here
+  as a candidate environment rather than as a result.</p>
+</div>
+
+<p>A deck with a known composition: some cards win, some lose, and every card that turns is face
+up in front of everybody. Each round, all six agents choose <b>bet</b> or <b>pass</b> at the same
+moment, and then the top card is turned.</p>
+
+<p><b>A winning card pays a pot that is split between everyone who bet. A losing card costs each
+bettor the full amount.</b> That asymmetry is the entire design.</p>
+
+<div id="fig-split" style="margin:22px 0"></div>
+
+<p>Because the cards are public, what is left in the deck is common knowledge, so the belief half
+of this game is arithmetic — this is card counting with the mystique removed. But knowing the deck
+is favourable tells you nothing about how many other agents have just worked out the same thing,
+and the pot is split between all of them.</p>
+
+<div id="fig-curve" style="margin:22px 0"></div>
+
+<h2>Two competences, scored separately</h2>
+
+<p>This is the reason to build it. Everywhere else on this site, a failure is a failure: you can
+see that a population starved, not whether it starved because it misread the environment or
+because it misread the room. Here those come apart and both have answer keys.</p>
+
+<table>
+<tr><td><b>Reading the environment</b></td>
+  <td>Does the agent's bet rate rise with the count at all? Compare against
+  <code>p(win)·W − p(lose)·L</code>, which is a number.</td></tr>
+<tr><td><b>Reading the other players</b></td>
+  <td>Does it bet <em>less</em> when it should expect a crowd? Compare against the symmetric
+  equilibrium rate, which is also a number.</td></tr>
+</table>
+
+<p>An agent can be perfect on the first and hopeless on the second, and that combination has a
+name here: it loses money while being right about the cards.</p>
+
+<h2>Watch a shoe</h2>
+
+<p>One seat plays the rule you pick; the other five share a table rule. Green means the card won,
+red means it lost. A tall bar is a lonely bet that paid; a thin one is a good card everybody saw
+coming.</p>
+
+<div class="panel">
+  <div id="stats" class="stats"></div>
+  <svg id="shoe" viewBox="0 0 860 240" style="width:100%;height:auto;display:block" role="img"
+       aria-label="Round by round: who bet, which card turned, and what each seat was paid"></svg>
+  <div class="legend">
+    <span class="dot" style="background:var(--restore)"></span> winning card
+    &nbsp;<span class="dot" style="background:var(--take)"></span> losing card
+    &nbsp;· the top strip is your seat, the block below is the rest of the table
+  </div>
+  <div class="dials">
+    <label class="dial">
+      <span class="dial-k">Your seat plays</span>
+      <span class="dial-row"><select id="mine" data-dial></select></span>
+    </label>
+    <label class="dial">
+      <span class="dial-k">The other five play</span>
+      <span class="dial-row"><select id="table" data-dial></select></span>
+    </label>
+    <label class="dial">
+      <span class="dial-k">Deck</span>
+      <span class="dial-row">
+        <input id="size" type="range" min="6" max="20" step="2" value="10" data-dial>
+        <b class="dial-v" data-out="size">10</b><span class="dial-of">of each</span></span>
+    </label>
+    <button id="go">New shuffle</button>
+    <span id="verdict" class="verdict"></span>
+  </div>
+  <p class="legend" id="setup"></p>
+</div>
+
+<h2>Every pairing, averaged over sixty shuffles</h2>
+
+<p>One shoe is noise. This is the whole grid: your rule down the side, the table's rule across the
+top, mean take per shoe for <em>your</em> seat.</p>
+
+<div id="matrix"></div>
+
+<p><b>What it says.</b> A table of perfect counters is a table of losers — they agree, so they bet
+together, and the pot they agree about is divided six ways while every loss stays whole. One agent
+that watches the table instead of only the deck takes money off exactly that room. And the
+symmetric equilibrium, which is optimal when everyone plays it, is <em>not</em> the best reply to a
+table that is over-betting: being correct and being correct about who you are sitting with are
+different problems.</p>
+
+<h2>What it would take to be more than a sketch</h2>
+
+<p>No language model has played this. The interesting version is the one where the deck is
+described in text, the count has to be carried across turns without a scratchpad, and the number of
+bettors is visible only as a history — at which point the two error terms above become a
+measurement of whether a model tracks the state of the world and whether it tracks the other
+players, separately, on the same rollout.</p>
+
+<p class="muted">Sketch, MIT; the arithmetic is asserted by the test suite. Both answer keys —
+solo expected value, and the symmetric mixed equilibrium — are computed from the rules, not
+estimated.</p>
+</div>
+<script type="module" src="/src/ui/cardsLab.ts"></script>
+</body>
+</html>

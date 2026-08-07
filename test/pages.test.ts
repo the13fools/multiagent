@@ -10,7 +10,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 
-const PAGES = ["shared-resource", "entrainment", "juggling", "boardwalk", "gate"] as const;
+const PAGES = ["shared-resource", "entrainment", "juggling", "boardwalk", "gate", "cards"] as const;
 
 const loadPage = (name: string) => {
   const html = readFileSync(resolve(__dirname, `../${name}.html`), "utf8");
@@ -29,7 +29,7 @@ describe("lab pages load without throwing", () => {
   for (const page of PAGES) {
     it(`${page}.html`, async () => {
       loadPage(page);
-      const mod = { "shared-resource": "sharedResourceLab", juggling: "jugglingLab", boardwalk: "boardwalkLab", gate: "gateLab", entrainment: "entrainmentLab" }[page]!;
+      const mod = { "shared-resource": "sharedResourceLab", juggling: "jugglingLab", boardwalk: "boardwalkLab", gate: "gateLab", entrainment: "entrainmentLab", cards: "cardsLab" }[page]!;
       vi.resetModules();
       await expect(import(`../src/ui/${mod}`)).resolves.toBeTruthy();
       vi.advanceTimersByTime(2000);
@@ -48,6 +48,7 @@ describe("every id a lab reaches for exists in its page", () => {
     boardwalk: "boardwalkLab",
     gate: "gateLab",
     entrainment: "entrainmentLab",
+    cards: "cardsLab",
   })) {
     it(page, () => {
       const html = readFileSync(resolve(__dirname, `../${page}.html`), "utf8");
@@ -399,6 +400,7 @@ describe("every page carries a static figure", () => {
   const FIGURES: Record<string, string[]> = {
     "shared-resource": ["fig-turn", "fig-ledger"],
     juggling: ["fig-pass"],
+    cards: ["fig-split", "fig-curve"],
     boardwalk: ["fig-cases"],
     gate: ["fig-cell"],
     future: ["fig-drift"],
@@ -444,6 +446,10 @@ describe("figure builders return well-formed, self-contained SVG", () => {
       ["pairedCellFigure", f.pairedCellFigure()],
       ["driftFigure", f.driftFigure()],
       ["passingFigure", f.passingFigure(6)],
+      ["splitFigure", f.splitFigure()],
+      ["betCurveFigure", f.betCurveFigure([
+        { count: -4, solo: 0, eq: 0 }, { count: 0, solo: 1, eq: 0.5 },
+        { count: 4, solo: 1, eq: 1 }])],
       ["pipelineFigure", f.pipelineFigure()],
       ["evidenceFigure", f.evidenceFigure()],
     ];
@@ -489,6 +495,10 @@ describe("no figure text runs outside its viewBox", () => {
       ["pairedCellFigure", f.pairedCellFigure()],
       ["driftFigure", f.driftFigure()],
       ["passingFigure", f.passingFigure(6)],
+      ["splitFigure", f.splitFigure()],
+      ["betCurveFigure", f.betCurveFigure([
+        { count: -4, solo: 0, eq: 0 }, { count: 0, solo: 1, eq: 0.5 },
+        { count: 4, solo: 1, eq: 1 }])],
       ["pipelineFigure", f.pipelineFigure()],
       ["evidenceFigure", f.evidenceFigure()],
       ["beachFigure", f.beachFigure([0.5, 0.5], "two — both at the centre, settled")],
@@ -907,5 +917,41 @@ describe("the ladder says what each rung costs", () => {
     expect(lineage).toMatch(/Collusion and multi-agent security are not modelled/i);
     expect(lineage, "say what would change that, rather than only what is missing")
       .toMatch(/private channel between agents/i);
+  });
+});
+
+/**
+ * Sketches are labelled, and unfinished work stays off the front page.
+ *
+ * The site's whole claim is that it says what it has not done. A sketch that is
+ * linked like a result quietly breaks that, so the standard is: say so on the
+ * page, and do not put it in the shop window until it earns it.
+ */
+describe("sketches say they are sketches", () => {
+  const index = () =>
+    readFileSync(resolve(__dirname, "../index.html"), "utf8").replace(/\s+/g, " ");
+
+  for (const page of ["juggling", "cards"] as const) {
+    it(`${page} carries the label`, () => {
+      const html = readFileSync(resolve(__dirname, `../${page}.html`), "utf8").replace(/\s+/g, " ");
+      expect(html, `${page}.html does not admit what it is`).toMatch(/A sketch/i);
+    });
+
+    it(`${page} is not linked from the front page`, () => {
+      expect(index(), `${page} is in the shop window before it has earned it`)
+        .not.toContain(`${page}.html`);
+    });
+
+    it(`${page} is not a chapter`, async () => {
+      const { SPINE } = await import("../src/ui/arc");
+      expect(SPINE.map((c) => c.slug)).not.toContain(page);
+    });
+  }
+
+  it("but they are reachable from where they are relevant", () => {
+    const future = readFileSync(resolve(__dirname, "../future.html"), "utf8");
+    const status = readFileSync(resolve(__dirname, "../experiments.html"), "utf8");
+    expect(future, "the card game belongs in the port list").toContain("cards.html");
+    expect(status, "the status page has to list it").toContain("cards.html");
   });
 });

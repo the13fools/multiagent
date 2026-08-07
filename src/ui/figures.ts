@@ -328,3 +328,91 @@ export function evidenceFigure(): string {
     { size: 11.5, fill: C.muted }));
   return wrap(W, H, s.join(""), "Five kinds of evidence ordered from arithmetic to not-yet-run");
 }
+
+/**
+ * The Count: one round, and what splitting does to it.
+ *
+ * The rule that makes the game is asymmetric and easy to miss in prose — a win
+ * is shared, a loss is not — so it gets drawn twice, with two and with five
+ * bettors, and the per-agent figure underneath each.
+ */
+export function splitFigure(W = 6, L = 2): string {
+  const WD = 560, H = 210;
+  const s: string[] = [];
+  s.push(txt(20, 22, "A win is split. A loss is not.", { size: 13, weight: 700 }));
+
+  const table = (x: number, bettors: number, label: string) => {
+    const seats = 6;
+    for (let i = 0; i < seats; i++) {
+      const a = (i / seats) * Math.PI * 2 - Math.PI / 2;
+      const cx = x + 44 * Math.cos(a), cy = 96 + 44 * Math.sin(a);
+      const betting = i < bettors;
+      s.push(`<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="10"
+        fill="${betting ? HEX.bad : C.line}"/>`);
+      if (betting) s.push(txt(cx, cy + 3.5, "in", { size: 8.5, anchor: "middle", fill: "#fff", weight: 700 }));
+    }
+    s.push(`<rect x="${x - 20}" y="82" width="40" height="28" rx="4" fill="${HEX.good}"/>`);
+    s.push(txt(x, 100, `+${W}`, { size: 12, anchor: "middle", fill: "#fff", weight: 700 }));
+    s.push(txt(x, 160, label, { size: 11.5, anchor: "middle", fill: C.muted }));
+    s.push(txt(x, 180, `each bettor takes ${(W / bettors).toFixed(1)}`,
+      { size: 12, anchor: "middle", weight: 700, fill: bettors > 2 ? HEX.bad : HEX.good }));
+  };
+
+  table(150, 2, "two of six bet");
+  table(410, 5, "five of six bet");
+  s.push(`<line x1="280" y1="40" x2="280" y2="170" stroke="${C.line}"/>`);
+  s.push(txt(20, 202,
+    `On a losing card every bettor pays ${L}, split with nobody.`,
+    { size: 11.5, fill: C.muted }));
+  return wrap(WD, H, s.join(""),
+    "The same winning card split between two bettors and between five, showing the per-agent payoff fall");
+}
+
+/**
+ * The answer key, as a curve.
+ *
+ * `curve` is sampled by the caller from the same function the simulation uses,
+ * so this is the closed form itself rather than a drawing of it.
+ */
+export function betCurveFigure(
+  curve: { count: number; solo: number; eq: number }[],
+): string {
+  const W = 560, H = 210, ox = 46, oy = 26, w = 480, h = 128;
+  const s: string[] = [];
+  const lo = curve[0]!.count, hi = curve[curve.length - 1]!.count;
+  const px = (c: number) => ox + ((c - lo) / (hi - lo)) * w;
+  const py = (v: number) => oy + h - v * h;
+
+  s.push(txt(20, 18, "How often you should bet, given the count", { size: 13, weight: 700 }));
+  s.push(`<line x1="${ox}" y1="${oy + h}" x2="${ox + w}" y2="${oy + h}" stroke="${C.ink}"/>`);
+  s.push(`<line x1="${ox}" y1="${oy}" x2="${ox}" y2="${oy + h}" stroke="${C.ink}"/>`);
+  for (const v of [0, 0.5, 1]) {
+    s.push(txt(ox - 8, py(v) + 3.5, `${(v * 100).toFixed(0)}%`,
+      { size: 10, anchor: "end", fill: C.muted }));
+  }
+  s.push(`<line x1="${px(0)}" y1="${oy}" x2="${px(0)}" y2="${oy + h}"
+    stroke="${C.muted}" stroke-dasharray="3 3"/>`);
+  s.push(txt(px(0), oy + h + 15, "neutral deck", { size: 10, anchor: "middle", fill: C.muted }));
+  s.push(txt(ox, oy + h + 15, "more losers left", { size: 10, fill: C.muted }));
+  s.push(txt(ox + w, oy + h + 15, "more winners left", { size: 10, anchor: "end", fill: C.muted }));
+
+  // The solo rule is a step function, so it is drawn dashed and nudged off the
+  // frame -- flat on the axis line it reads as a border rather than a result.
+  const line = (key: "solo" | "eq", colour: string, dash = "") =>
+    `<polyline points="${curve.map((d) => `${px(d.count)},${py(d[key]) + (dash ? 2.5 : 0)}`).join(" ")}"
+       fill="none" stroke="${colour}" stroke-width="2.4" ${dash}/>`;
+  s.push(line("solo", HEX.bad, 'stroke-dasharray="5 3"'));
+  s.push(line("eq", HEX.good));
+  // Down in the empty quarter: the two lines occupy the top of the frame at the
+  // right and the left is where the red step happens.
+  s.push(txt(ox + w - 6, py(0.28), "bet this often if you are alone",
+    { size: 10.5, anchor: "end", fill: HEX.bad }));
+  s.push(txt(ox + w - 6, py(0.14), "bet this often with six at the table",
+    { size: 10.5, anchor: "end", fill: HEX.good }));
+  s.push(txt(20, H - 24, "The gap between the two lines is the whole game:",
+    { size: 11.5, fill: C.muted }));
+  s.push(txt(20, H - 8, "it is what knowing the cards fails to tell you.",
+    { size: 11.5, fill: C.muted }));
+  return wrap(W, H, s.join(""),
+    "Correct betting rate against the count, alone and at a table of six");
+}

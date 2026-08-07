@@ -23,6 +23,7 @@ export default defineConfig({
         figure: "figure.html",
         boardwalk: "boardwalk.html",
         lineage: "lineage.html",
+        cards: "cards.html",
       },
     },
   },

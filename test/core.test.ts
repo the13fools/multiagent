@@ -12,6 +12,10 @@ import {
   type Policy,
 } from "../src/core/sharedResource";
 import { shares, isEquilibrium, equilibriaCount, initial, step } from "../src/core/boardwalk";
+import {
+  soloEV as cardsSoloEV, shareFactor, equilibriumBetRate, play as cardsPlay,
+  POLICIES as cardPolicies,
+} from "../src/core/cards";
 
 /**
  * These assertions mirror `flockbench-shared --selftest` exactly. Two
@@ -205,5 +209,59 @@ describe("carrying capacity predicts what actually happens", () => {
   it("a defector takes the seat, whatever else it was told to do", () => {
     const out = simulate(POLICIES.solution!.fn, { n: 8, turns: 4, pinned: 8, defectors: 2 });
     expect(out.frames[0]!.actions.slice(6)).toEqual(["take", "take"]);
+  });
+});
+
+/**
+ * The Count.
+ *
+ * A sketch, but the arithmetic is the point of it, so the arithmetic is tested:
+ * both answer keys, and the behavioural claim the page is built on.
+ */
+describe("the card game has two answer keys and they disagree", () => {
+  const R = { W: 6, L: 2, n: 6 };
+
+  it("prices a bet correctly when you are alone", () => {
+    // p=1/2, W=6, L=2 -> 0.5*6 - 0.5*2 = 2
+    expect(cardsSoloEV({ plus: 10, minus: 10 }, R)).toBeCloseTo(2, 10);
+    expect(cardsSoloEV({ plus: 0, minus: 5 }, R)).toBeCloseTo(-2, 10);
+  });
+
+  it("splits the pot the way the closed form says", () => {
+    // nobody else bets: you take the whole pot
+    expect(shareFactor(0, 6)).toBeCloseTo(1, 10);
+    // everybody bets: one sixth each
+    expect(shareFactor(1, 6)).toBeCloseTo(1 / 6, 10);
+  });
+
+  it("puts the equilibrium rate below the solo rule, always", () => {
+    for (let c = -8; c <= 8; c++) {
+      const deck = { plus: 10 + c / 2, minus: 10 - c / 2 };
+      const solo = cardsSoloEV(deck, R) > 0 ? 1 : 0;
+      const eq = equilibriumBetRate(deck, R);
+      expect(eq, `count ${c}: equilibrium above the solo rule`).toBeLessThanOrEqual(solo + 1e-9);
+    }
+    // and strictly below somewhere, or the game has no social half at all
+    expect(equilibriumBetRate({ plus: 10, minus: 10 }, R)).toBeLessThan(1);
+  });
+
+  it("bankrupts a table of perfect counters", () => {
+    // The claim the page is built on: everybody right about the cards, everybody
+    // betting together, the pot split six ways and every loss paid in full.
+    const mean = (keys: string[]) => {
+      let t = 0;
+      for (let s = 1; s <= 40; s++) {
+        t += cardsPlay({ policies: keys.map((k) => cardPolicies[k]!.fn), rules: R, seed: s })
+          .totals[0]!;
+      }
+      return t / 40;
+    };
+    const allCounters = mean(new Array(6).fill("counter"));
+    expect(allCounters).toBeLessThan(0);
+
+    // and one agent that watches the table takes money off exactly that room
+    const responder = mean(["respond", ...new Array(5).fill("counter")]);
+    expect(responder).toBeGreaterThan(0);
+    expect(responder - allCounters).toBeGreaterThan(3);
   });
 });
