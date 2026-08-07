@@ -189,17 +189,18 @@ the proposal is stale. Please tell us.</p>
 
 <h2 id="live-runs">Live Run Replays</h2>
 <p>The <b>End-to-end Commons</b> experiment played the Continuous Harvest game using live Qwen2.5-7B agents. 
-Below are the actual traces from those runs. The models output continuous harvest requests (0 to 10), but we map them to the discrete grid for comparison: a harvest > 2 is a "take" (red), and ≤ 2 is a "restore" (green).</p>
+Below are the actual traces from those runs. The models output continuous harvest requests (0 to 10). The cells are colored by harvest amount: <span style="color:var(--good)">Green</span> for 0, <span style="color:var(--bad)">Red</span> for 10. Hover over cells to see exact values.</p>
 
 <div class="panel">
   <div id="stats" class="stats"></div>
   <svg id="grid" viewBox="0 0 878 254" style="width:100%;height:auto;display:block"
        preserveAspectRatio="xMidYMid meet" role="img"
        aria-label="Colouring grid: rows are agents, columns are turns"></svg>
-  <div class="legend">
-    <span class="dot" style="background:var(--restore)"></span> harvest ≤ 2 (sustains pool)
-    &nbsp;<span class="dot" style="background:var(--take)"></span> harvest > 2 (extracts profit)
-    &nbsp;<span class="dot" style="background:var(--dead)"></span> dead
+  <div class="legend" style="display:flex;align-items:center;gap:12px;">
+    <span>Harvest Amount:</span>
+    <span style="display:inline-block;width:100px;height:12px;background:linear-gradient(to right, var(--good), var(--bad));border-radius:6px;"></span>
+    <span>(0 to 10)</span>
+    &nbsp;&nbsp;<span class="dot" style="background:var(--dead)"></span> dead
   </div>
   <div class="dials">
     <label class="dial">
