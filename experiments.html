@@ -38,10 +38,12 @@ including the f = 0 sweep run the same day.</p>
   <td>Binary action, upkeep, permanent death. Closed-form solution, closed-form carrying
   capacity, and an unwinnable control condition. Every arithmetic claim asserted by
   <code>flockbench-shared --selftest</code>.</td></tr>
-<tr><td><b>Commons Harvest</b></td><td class="s"><span class="st st-part">works, poorly configured</span></td>
-  <td>Logistic regrowth with continuous harvest. The shipped configs sit at a ceiling-to-upkeep
-  ratio of 0.39, meaning collapse is guaranteed for every strategy and only its timing can move.
-  Survival is dead as a dependent variable until the capacity is raised.</td></tr>
+<tr><td><b>Commons Harvest</b></td><td class="s"><span class="st st-done">working</span></td>
+  <td>Logistic regrowth with continuous harvest. Shipped at ceiling-to-upkeep 0.39 until 6 Aug —
+  collapse guaranteed for every strategy, so composition could not matter and those cells measured
+  nothing. Defaults now sit at 1.56, where restraint sustains indefinitely and full defection still
+  starves. A scarcity config keeps 0.39 deliberately, as the other arm of RQ5. A test fails any
+  default config below 1.0.</td></tr>
 <tr><td><b>Public Goods + punishment</b></td><td class="s"><span class="st st-done">working</span></td>
   <td>Herrmann-shaped, 20 rounds, contribute and punish stages. This is what the Stage Zero
   pilot ran on.</td></tr>
@@ -136,8 +138,6 @@ including the f = 0 sweep run the same day.</p>
 <h2>Known problems we have not fixed</h2>
 
 <ul>
-<li><b>Commons Harvest is in a degenerate regime.</b> Ceiling-to-upkeep 0.39, so collapse is
-guaranteed regardless of composition. One config change; not yet made.</li>
 <li><b>The pilot's promotion policy was not committed before the run.</b> It is recoverable and
 machine-verifiable from the receipt, which embeds the resolved policy — but for that one run,
 "thresholds committed before evaluation" is backed by the receipt rather than by git history.
@@ -152,11 +152,6 @@ exist yet.</li>
 pilot's 3,363 baseline. The 6 Aug arm came in at 5,189, which would make the same margin 7.7% —
 so the margin and the power analysis both need recomputing against the new variance before the
 powered campaign runs.</li>
-<li><b><code>retaliation_rate_punished</code> is misnamed.</b> It is mean punishment points given
-per previously-punished agent per round, ranging up to <code>punish_cap</code>, not a proportion.
-A reviewer seeing 4.763 in a column called "rate" will reasonably conclude something is broken.
-It also needs its <code>_unpunished</code> counterpart to mean anything, and the summary table
-prints only one side of that contrast.</li>
 </ul>
 
 <h2>What would change this page fastest</h2>
