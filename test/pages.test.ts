@@ -686,3 +686,52 @@ describe("juggling is off the path", () => {
     expect(html).toContain("jugglingLab.ts");
   });
 });
+
+/**
+ * The context page.
+ *
+ * A grant site that never says whose problem this is leaves the reviewer to
+ * guess. This asserts the page engages all three works the call is built on,
+ * keeps the lineage links live, and -- the part that is easiest to lose in an
+ * edit -- keeps saying what the testbed does NOT model.
+ */
+describe("where this sits", () => {
+  const html = () =>
+    readFileSync(resolve(__dirname, "../lineage.html"), "utf8").replace(/\s+/g, " ");
+
+  it("engages each of the three inspirations by name", () => {
+    const h = html();
+    expect(h).toMatch(/Distributional AGI Safety/);
+    expect(h).toMatch(/Scaling Trust/);
+    expect(h).toMatch(/Multi-Agent Risks from Advanced AI/);
+    expect(h).toContain("arxiv.org/abs/2512.16856");
+    expect(h).toContain("aria.org.uk");
+    expect(h).toContain("cooperativeai.com");
+  });
+
+  it("carries the lineage the call points at", () => {
+    const h = html();
+    for (const id of ["1810.10862", "2006.04948", "2012.08630", "2501.10114", "2501.07913",
+                      "2509.01063", "2509.10147"]) {
+      expect(h, `lineage lost ${id}`).toContain(id);
+    }
+  });
+
+  it("says what it does not model", () => {
+    const h = html();
+    expect(h, "claiming collusion coverage would be a lie").toMatch(
+      /Collusion and multi-agent security are not modelled/i);
+    expect(h).toMatch(/not infrastructure and not a governance proposal/i);
+    expect(h, "an honest page names what would make it worthless")
+      .toMatch(/What would make it not worth doing/i);
+  });
+
+  it("is the closing chapter, and mounts", async () => {
+    const { SPINE, mountArc } = await import("../src/ui/arc");
+    expect(SPINE[SPINE.length - 1]!.slug).toBe("lineage");
+    document.documentElement.innerHTML = readFileSync(resolve(__dirname, "../lineage.html"), "utf8")
+      .replace(/<!doctype html>/i, "").replace(/<\/?html[^>]*>/gi, "");
+    mountArc("lineage");
+    expect(document.querySelector(".chapter")?.textContent).toContain(`of ${SPINE.length}`);
+  });
+});

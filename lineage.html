@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Where this sits — multiagent</title>
+<meta name="description" content="Three programmes named the same problem in the same year. This is a testbed for one corner of it.">
+<link rel="stylesheet" href="/src/ui/style.css">
+</head>
+<body data-page="lineage">
+<nav><div class="wrap">
+  <a class="brand" href="./index.html">multiagent</a>
+  <a href="./shared-resource.html">The game</a>
+  <a href="./entrainment.html">Steering</a>
+  <a href="./experiments.html">What has run</a>
+  <a href="./future.html">What next</a>
+</div></nav>
+
+<div class="wrap">
+<h1>Where this sits</h1>
+<p class="lede">Three programmes named the same problem in the same year. This is an instrument for
+one corner of it.</p>
+
+<p>Everything on this site is eight agents and a pool, which is a strange thing to build if you
+believe the risks worth studying are large and networked. The argument for building it small is
+that the corner it measures is one those programmes will need measured, and it can be measured
+here <em>against a known answer</em> — which is not true anywhere large.</p>
+
+<hr>
+
+<p class="section-label">The three the call is built on</p>
+
+<h2>Distributional AGI Safety</h2>
+
+<p><a href="https://arxiv.org/abs/2512.16856">Tomašev, Franklin, Jacobs, Krier &amp; Osindero
+(2025)</a> argue for taking the <em>patchwork</em> hypothesis seriously: general capability
+arriving not as one monolith but through coordination among sub-AGI agents with complementary
+skills and affordances. Their proposed response is <b>virtual agentic sandbox economies</b> —
+impermeable or semi-permeable — with market mechanisms, auditability, reputation and oversight.</p>
+
+<p><b>What this project is, in their vocabulary:</b> an impermeable sandbox economy, deliberately
+tiny. Eight agents, one shared resource, and transactions that are pure arithmetic. Nothing leaks
+into the human economy and nothing needs to, because the object of study is not the economy — it
+is <em>the oversight mechanism</em>. A sandbox you cannot calibrate is a simulation with a
+comforting name on it. This one has a closed-form sustainable region, so an oversight rule can be
+pointed at a case whose right answer is already known.</p>
+
+<p>Their "differential access to tools, data, memory and resources" is the asymmetry the
+<a href="./entrainment.html">steering chapter</a> is entirely about, reduced to its smallest form:
+some seats are yours and most are not.</p>
+
+<h2>Scaling Trust</h2>
+
+<p><a href="https://aria.org.uk/opportunity-spaces/trust-everything-everywhere/scaling-trust/">ARIA's
+programme thesis</a> is that coordination infrastructure — agents contracting securely,
+programmatically, at scale, without intermediaries — is what preserves pluralism as agents get
+more capable.</p>
+
+<p><b>The gate is a piece of that infrastructure in miniature</b>, and it carries a warning for
+anyone building the real thing. It decides, with no intermediary and no judge, whether a candidate
+agent may join a shared deployment: it compares numbers the environment produced and applies a
+rule. That is exactly the shape "programmatic and without intermediaries" takes in practice.</p>
+
+<p>And <a href="./gate.html">the obvious version of the rule is wrong</a>. It rolls back a clone of
+its own baseline with probability ~1.0, and it gets <em>worse</em> the more data you give it. It
+looks completely reasonable written down. The lesson generalises past this testbed: an automated
+rule with no published error rate is not trustworthy because it is automated — it is
+<b>confidently wrong at scale</b>, which is the specific failure mode infrastructure makes cheap.
+Two things should ship with any such rule: a measured false-decision rate, and a declared minimum
+amount of evidence below which its outputs do not count.</p>
+
+<h2>Multi-Agent Risks from Advanced AI</h2>
+
+<p><a href="https://www.cooperativeai.com/post/new-report-multi-agent-risks-from-advanced-ai">The
+Cooperative AI Foundation's report</a> names failure modes that are qualitatively new in
+populations: collusion, conflict, destabilising dynamics, emergent agency, and multi-agent security
+vulnerabilities.</p>
+
+<p>Three of those have a scale model here.</p>
+
+<table>
+<tr><th>failure mode</th><th>the model of it on this site</th></tr>
+<tr><td><b>Destabilising dynamics</b></td>
+  <td>The <a href="./shared-resource.html">commons</a> collapses, and the collapse has an answer
+  key. A population that dies at turn 14 in a game with a one-sentence solution is a measured
+  failure, not an ambiguous one.</td></tr>
+<tr><td><b>Conflict without resolution</b></td>
+  <td>The <a href="./boardwalk.html">boardwalk</a> at three vendors has no arrangement anybody will
+  stop at. Steering there cannot mean arriving; it has to mean bounding a cycle.</td></tr>
+<tr><td><b>Correlated failure</b></td>
+  <td>The least comfortable result here. The pattern this game needs is <em>anti</em>-correlated,
+  so imitation — the social heuristic language-model agents most reliably exhibit — is close to the
+  worst available rule. A population that copies each other locks into the state that starves
+  it.</td></tr>
+</table>
+
+<p>Collusion and multi-agent security are not modelled here at all, and this is not a testbed for
+them.</p>
+
+<hr>
+
+<p class="section-label">The lineage the call points at</p>
+
+<p>Read in order, these say a consistent thing: the interesting object was never one agent.</p>
+
+<table>
+<tr><td><a href="https://dl.acm.org/doi/abs/10.5555/22939">Minsky (1986)</a></td>
+  <td>Mind as a society of parts that are individually not minds.</td></tr>
+<tr><td><a href="https://dl.acm.org/doi/10.5555/59160">Huberman (1988)</a></td>
+  <td>The closest ancestor of this testbed. Computational agents sharing resources produce
+  collective dynamics — oscillation, chaos — that no agent intends and none can see from
+  inside.</td></tr>
+<tr><td><a href="https://www.cs.ox.ac.uk/people/michael.wooldridge/pubs/ker95.pdf">Wooldridge &amp;
+  Jennings (1995)</a></td>
+  <td>The agent-theory survey the modern vocabulary comes from.</td></tr>
+<tr><td><a href="https://arxiv.org/abs/1810.10862">Manheim (2018)</a></td>
+  <td>Multiparty dynamics and failure modes: Goodhart with more than one optimiser.</td></tr>
+<tr><td><a href="https://static1.squarespace.com/static/660e95991cf0293c2463bcc8/t/660ec8f0ca87a33aa8832af3/1712244978900/2019-1.pdf">Drexler
+  (2019)</a></td>
+  <td>Capability as services rather than as an agent — the earlier form of the patchwork
+  hypothesis.</td></tr>
+<tr><td><a href="https://arxiv.org/abs/2006.04948">Critch &amp; Krueger (2020)</a></td>
+  <td>ARCHES, and the multi/multi delegation case that most alignment work skips.</td></tr>
+<tr><td><a href="https://longtermrisk.org/research-agenda/">Clifton (2020)</a></td>
+  <td>Cooperation, conflict and transformative AI.</td></tr>
+<tr><td><a href="https://arxiv.org/abs/2012.08630">Dafoe et al. (2020)</a></td>
+  <td>Open Problems in Cooperative AI — the framing this call inherits.</td></tr>
+<tr><td><a href="https://ojs.aaai.org/index.php/AAAI/article/view/26791">Conitzer &amp; Oesterheld
+  (2023)</a></td>
+  <td>Foundations of cooperative AI.</td></tr>
+<tr><td><a href="https://arxiv.org/abs/2501.10114">Chan et al. (2025)</a></td>
+  <td>Infrastructure for AI agents: identity, channels, protocols.</td></tr>
+<tr><td><a href="https://arxiv.org/abs/2501.07913">Kolt (2025)</a></td>
+  <td>Governing AI agents — the legal side of the same asymmetry.</td></tr>
+<tr><td><a href="https://arxiv.org/abs/2509.01063">Hadfield &amp; Koh (2025)</a></td>
+  <td>An Economy of AI Agents: what institutions well-functioning agent markets would need,
+  surveyed for economists.</td></tr>
+<tr><td><a href="https://arxiv.org/abs/2509.10147">Tomašev et al. (2025)</a></td>
+  <td>Virtual Agent Economies. The sandbox-economy framing, and the case for designing steerable
+  agent markets on purpose rather than inheriting one.</td></tr>
+</table>
+
+<hr>
+
+<p class="section-label">What this adds, and what it does not</p>
+
+<p><b>It is not infrastructure and not a governance proposal.</b> It is a measurement instrument
+for one question — how few agents you must control to hold a population you do not — in
+environments small enough that the answer is known before the experiment runs.</p>
+
+<p><b>The bet is that small and solved beats large and suggestive.</b> In a rich environment you
+cannot distinguish a population that <em>failed</em> from one that faced an impossible problem, and
+almost every multi-agent result published on a rich environment has that ambiguity sitting
+underneath it. Here the carrying capacity is a closed form: at these parameters a flock of eight
+survives exactly zero permanent defectors, and if a measured threshold disagrees with that, the
+measurement is wrong.</p>
+
+<p><b>What would make it not worth doing.</b> If steering thresholds in these games turn out to
+carry no information about behaviour in richer ones, the instrument is a curiosity. That is a real
+risk and the honest mitigation is scale-up as a measurement rather than as a hope: the same
+question at N = 8, 20 and 50, and against models of different families, with the disagreement
+reported either way.</p>
+
+<p class="muted">Every characterisation above is mine and none of these authors has anything to do
+with this project. Where I have read only an abstract, I have said only what an abstract
+supports.</p>
+</div>
+<script type="module" src="/src/ui/pageFigures.ts"></script>
+</body>
+</html>

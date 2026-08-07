@@ -72,7 +72,13 @@ export const SPINE: Chapter[] = [
     slug: "blog-pdd",
     title: "Cheap populations",
     asks: "Low-cost fine-tuning, and how large and varied a population it can buy.",
-    hands: "That is the whole argument. It starts again with eight agents and a pool.",
+    hands: "That is the argument. Whose problem is it, and who else is asking?",
+  },
+  {
+    slug: "lineage",
+    title: "Where this sits",
+    asks: "Three programmes named this problem in one year. What this instrument adds to it.",
+    hands: "And it all reduces to eight agents and a pool.",
   },
 ];
 
