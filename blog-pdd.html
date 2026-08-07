@@ -159,9 +159,7 @@ and you can therefore afford eight, that is a useful finding and I will publish 
 
 <p>The honest reason this method exists is that I could not afford the alternative.</p>
 
-<p>Every architectural decision above — cache the teacher edit once, train only the changed spans, mask the action fields, verify with a regex instead of a judge — traces back to being one person paying for compute out of pocket. The constraint produced a discipline that a better-funded version of this project would probably have skipped, and I think the discipline is worth more than the savings.</p>
-
-<p>A judge panel is expensive, so we used arithmetic. Re-rolling the teacher is expensive, so we cached it and got fairness for free. Training the whole target is expensive, so we masked the schema and got parse-safety for free.</p>
+<p>Every architectural decision above traces back to being one person paying for compute out of pocket. A judge panel is expensive, so we used arithmetic. Re-rolling the teacher is expensive, so we cached it once and got fairness for free. Training the whole target is expensive, so we masked the schema and got parse-safety for free. The constraint produced a discipline a better-funded version of this project would probably have skipped.</p>
 
 <p>I would not claim poverty is a research methodology. But it is a fairly good filter for which parts of a pipeline were load-bearing.</p>
 

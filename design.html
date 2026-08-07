@@ -23,7 +23,7 @@
 <p class="lede">What a cell is, what is paired with what, and whether the campaign can see the
 effect it was sized for.</p>
 
-<p>Most multi-agent results are reported without their design. You get the finding and a model
+<p>Multi-agent results are often reported without their design. You get the finding and a model
 name, and no way to tell whether the comparison could have come out any other way. This page is
 the design, with the arithmetic exposed: <b>every number below is computed on the page, from dials
 you can move.</b></p>
@@ -63,9 +63,10 @@ removes the seed from the comparison; what is left is the swap.</p>
 <tr><td><b>Arm</b></td><td>baseline, candidate</td>
   <td>The swap. At <code>f = 0</code> the two arms are the same population, which is what makes
   the A/A control free.</td></tr>
-<tr><td><b>Environment</b></td><td>up to four</td>
-  <td>Shared Resource, Commons Harvest, public goods with punishment, boardwalk. Different failure
-  classes, so a result that only holds in one is visible as such.</td></tr>
+<tr><td><b>Environment</b></td><td><b>two in the core</b>, up to four</td>
+  <td>The core campaign runs the two existing environments. The other two are contingent
+  expansion, taken up only if Phase 0 leaves the compute for them — different failure classes, so
+  a result that only holds in one is visible as such.</td></tr>
 <tr><td><b>Model family</b></td><td>two</td>
   <td>One dense, one mixture-of-experts. Reported separately, never averaged.</td></tr>
 <tr><td><b>Salt</b></td><td>two levels</td>
@@ -120,15 +121,18 @@ it is arithmetic, so here it is.</p>
   <p class="legend" id="setup"></p>
 </div>
 
-<p><b>Move the paired SD to 1,820 and leave the margin alone.</b> That is the case the August
-sweep raised — the welfare scale moved 54% and nobody had yet measured the variance at the new
-scale. The requirement more than doubles, and the campaign that was comfortably powered stops
-being so. Required <em>n</em> depends only on the ratio of margin to standard deviation, which is
-why the plan measures the variance in Phase 0 before committing the compute rather than after.</p>
+<p><b>Move the paired SD up and leave the margin alone.</b> The action schema gained a
+deliberation span and the parser became string-aware after the pilot ran, and either can move the
+welfare scale — and with it the variance. The requirement rises with the square of the ratio, and
+a campaign that was comfortably powered stops being so. That is why Phase 0 measures the variance
+before the powered compute is committed rather than after.</p>
 
-<p class="muted">The compute envelope is fixed. If Phase 0 lands in that case we drop contrasts —
-one model family instead of two, six fractions instead of eight — and report which, rather than
-raising the ask.</p>
+<p class="muted"><b>The envelope is fixed and the scope is ordered.</b> The non-negotiable core is
+gate calibration plus a powered dose-response in the two existing environments: 8,832 cells, 4,416
+paired comparisons. Everything else — the other two environments, N ∈ {20, 50}, the new
+tool-use and memory environments, the mechanism variants — is contingent expansion, dropped in
+that order if Phase 0 says the core needs the compute. 26,220 GPU-hours all in, about $52k at
+$1.99 an A100-hour.</p>
 
 <h2 id="aa">The break experiment: pointing the gate at a clone</h2>
 
@@ -151,19 +155,21 @@ is the cheapest important thing in this whole plan.</p>
     <td>Every difference between the two arms is noise, so every rejection is a false one. The
     rejection rate <em>is</em> the false-rejection rate — measured, not assumed.</td></tr>
   <tr><td><b>What it already found</b></td>
-    <td>Resampled against the pilot's own paired deltas, the shipped overlap rule rolls back a
-    clone with campaign-level probability <b>1.000</b> — and gets <em>worse</em> with more data,
-    because it bounds a proportion that converges to 0.5 under the null. The obvious fix, a
-    superiority test, fails for the opposite reason: it demands significant improvement, so a
-    clone fails by construction. Non-inferiority against a stated margin is the form that
-    works.</td></tr>
+    <td><b>Offline, not live.</b> In a sign-flip resampling analysis of the 30-cell pilot, the
+    initial overlap-rule gate rolled back a clone in <b>approximately 100% of null resamples</b> —
+    and gets <em>worse</em> with more data, because it bounds a proportion that converges to 0.5
+    under the null. The obvious fix, a superiority test, fails for the opposite reason: it demands
+    significant improvement, so a clone fails by construction. Non-inferiority against a stated
+    margin is the form that works, at 0.076 at n = 30 and 0.015 at n = 60 under the same
+    resampling.</td></tr>
   <tr><td><b>Status</b></td>
-    <td>One arm of two has run: 30 cells per game on 6 August 2026, zero parse failures. The
-    second arm and the Firebreak comparison need a single GPU session.</td></tr>
+    <td><b>Not yet run live.</b> Everything above is resampling of committed pilot data. Phase 0
+    runs the matched f = 0 campaigns — both arms and the Firebreak comparison — to measure the
+    live operating error, and the live figure may differ from the offline one.</td></tr>
   <tr><td><b>Pre-registered</b></td>
-    <td>If the paired SD scaled with the welfare mean to about 1,820 and the margin stayed at 400,
-    the gate fails its own 5% bar at n = 30 (~11%) and passes at n = 60 (~4%). Written down before
-    the second arm runs, so it can be wrong in public.</td></tr>
+    <td>The live rate will exceed the offline one, and the shipped 400-unit margin will need
+    re-deriving from the measured variance rather than kept. Written down before the campaign
+    runs, so it can be wrong in public.</td></tr>
   <tr><td><b>What it changes</b></td>
     <td>Two artifacts ship with the gate that nobody currently publishes: a measured error rate,
     and a minimum campaign size below which its decisions are void — enforced by the validator,
@@ -187,19 +193,18 @@ Each of these exists because a specific one would otherwise survive.</p>
 
 <h2 id="registration">Pre-registration, and what a receipt contains</h2>
 
-<p>Pre-registration here is git history, not a promise. The campaign plan — cells, thresholds,
-the estimand, the direction of effect and what would count as no effect — is committed before the
-first scored run, and the run refuses to start into a campaign directory whose committed plan
+<p>Pre-registration here is git history, not a promise. The plan — cells, thresholds, the
+estimand, the direction of effect and what would count as no effect — is committed before the
+first scored run, and the runner refuses to start into a campaign directory whose committed plan
 differs from the one in hand.</p>
 
-<p>Every gate decision emits a <b>signed JSON receipt</b> carrying the resolved policy, the paired
-deltas, and the verdict. That matters more than it sounds: our own pilot's policy file changed
-after the run, and the decision was still reconstructible because the receipt embedded the policy
-it actually used. <code>tools/replay_receipt.py</code> re-derives every published figure from the
-receipt alone, without the run directories.</p>
-
-<p class="muted">That episode is on the <a href="./experiments.html">status page</a> under known
-problems, rather than left for someone else to find.</p>
+<p>Every gate decision emits an <b>auditable JSON receipt</b> — self-contained and versioned,
+not cryptographically signed — carrying the resolved policy, the paired deltas and the verdict.
+Our own pilot's policy file changed after the run and the decision was still reconstructible,
+because the receipt embedded the policy it used. <code>tools/replay_receipt.py</code> re-derives
+every published figure from the receipt alone. That episode is on the
+<a href="./experiments.html">status page</a> under known problems, rather than left for someone
+else to find.</p>
 
 <h2 id="threats">What could still make the answer wrong</h2>
 
@@ -210,12 +215,12 @@ problems, rather than left for someone else to find.</p>
   outright: everything at N = 8 is a pilot. Resolution reaches 5 points at N = 20.</td></tr>
 <tr><td><b>One serving endpoint</b></td>
   <td>"Different principals" currently means different specifications over identical weights.
-  Cheap seed production is the fix; cross-vendor populations do not exist yet.</td></tr>
+  Cheap seed production is the fix; cross-vendor populations do not exist.</td></tr>
 <tr><td><b>Variance measured at the wrong scale</b></td>
   <td>The case above. Phase 0 measures it before the powered campaign is committed.</td></tr>
 <tr><td><b>Small games may not transfer</b></td>
-  <td>Tested rather than assumed: the same question at N ∈ {8, 20, 50}, with the disagreement
-  reported either way. If thresholds do not transfer, that is the finding.</td></tr>
+  <td>Tested rather than assumed, as contingent expansion: the same question at N ∈ {20, 50}, with
+  the disagreement reported either way. If thresholds do not transfer, that is the finding.</td></tr>
 <tr><td><b>Parse failures scored as behaviour</b></td>
   <td>A failure to parse is recorded as an inert action and counted separately, never silently
   folded into the outcome. The last live sweep had zero.</td></tr>

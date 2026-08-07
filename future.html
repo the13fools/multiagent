@@ -212,8 +212,8 @@ setup actually cost.</b></p>
       <span class="dial-row"><input id="teacher" type="range" min="0" max="200" step="5" value="40" data-dial>
         <b class="dial-v" data-out="teacher">40</b><span class="dial-of">GPU-hr</span></span></label>
     <label class="dial"><span class="dial-k">GPU price</span>
-      <span class="dial-row"><input id="price" type="range" min="0.5" max="4" step="0.05" value="1.39" data-dial>
-        <b class="dial-v" data-out="price">1.39</b><span class="dial-of">$/hr</span></span></label>
+      <span class="dial-row"><input id="price" type="range" min="0.5" max="4" step="0.05" value="1.99" data-dial>
+        <b class="dial-v" data-out="price">1.99</b><span class="dial-of">$/hr</span></span></label>
     <span id="cost-verdict" class="verdict"></span>
   </div>
   <p class="legend" id="cost-setup"></p>
@@ -251,9 +251,11 @@ spend that is after the method is settled</b>, as a test of whether the findings
 in capability — one order of magnitude, once, on the questions that turned out to matter, rather
 than on all of them at the start.</p>
 
-<p class="muted">The multiplier is assumed roughly linear in parameters and is not measured; larger
-models also want more or bigger GPUs, which this model does not attempt. Treat the 70B column as an
-order of magnitude, not a quote.</p>
+<p class="muted">Two caveats. The size multiplier is assumed roughly linear in parameters and is
+not measured — larger models also want more or bigger GPUs, which this does not attempt — so treat
+the 70B column as an order of magnitude rather than a quote. And the price dial defaults to
+Lambda's current on-demand A100 rate; the "about $50 an agent" in the essay was a receipt at the
+lower spot price we actually paid, which is why the price is a dial and not a constant.</p>
 
 <h2 id="ladder">The ladder: from an answer key to a real crowd</h2>
 

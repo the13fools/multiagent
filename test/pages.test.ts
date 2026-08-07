@@ -216,9 +216,13 @@ describe("experiments status page", () => {
     const s = page();
     expect(s).toContain("st-done");
     expect(s).toContain("st-todo");
-    // the two rows the gate argument depends on must still be marked resampled
-    expect(s).toContain("resampled");
+    // the rows the gate argument depends on must still be marked as resampling
+    expect(s).toMatch(/resampling|resampled/);
     expect(s).toContain("Live A/A calibration");
+    // A pre-submission audit withdrew a run that had no committed artifacts.
+    // It does not come back without them.
+    expect(s, "the uncorroborated live sweep is back on the page")
+      .not.toMatch(/5,189/);
   });
 
   it("names the commit it was written against", () => {
@@ -226,13 +230,14 @@ describe("experiments status page", () => {
   });
 
   it("does not claim the A/A campaign is complete", () => {
-    // Deliberately not asserting st-todo: one arm of two has now run, so the
-    // row is legitimately st-part. What must never appear is st-done, and the
-    // page must keep saying the error rate is resampled rather than measured.
+    // Neither arm has a corroborated receipt, so the row is st-todo and the
+    // error rate is described as offline resampling. st-done here would be the
+    // exact failure the gate result is about.
     const s = page();
-    const row = s.slice(s.indexOf("Live A/A calibration"), s.indexOf("Live A/A calibration") + 600);
+    const row = s.slice(s.indexOf("Live A/A calibration"), s.indexOf("Live A/A calibration") + 700);
     expect(row).not.toContain("st-done");
-    expect(row).toContain("resampled");
+    expect(row).toMatch(/resampling|resampled/);
+    expect(row).toMatch(/no corroborated receipt|not run/i);
   });
 });
 
@@ -1065,8 +1070,13 @@ describe("how an experiment is run", () => {
   });
 
   it("names the variance trap in the reader's own hands", () => {
-    expect(html(), "the page should invite the reader to reproduce the near-miss")
-      .toMatch(/1,820/);
+    // The trap is the ratio, not any particular number. The pre-submission
+    // audit withdrew the run that supplied the old figure, so the page argues
+    // from the schema change instead: the variance the margin was set against
+    // may no longer hold.
+    const h = html();
+    expect(h).toMatch(/Move the paired SD up/i);
+    expect(h).toMatch(/before the powered compute is committed/i);
   });
 });
 
@@ -1110,8 +1120,13 @@ describe("the A/A slide", () => {
     expect(h).toMatch(/f = 0/);
     expect(h, "the point is that the two arms are the same population")
       .toMatch(/same population/i);
-    expect(h).toMatch(/1\.000/);
-    expect(h, "the pre-registered prediction has to survive editing").toMatch(/1,820/);
+    // Provenance is the whole point of this slide after the audit: an offline
+    // resampling figure presented as a live result is the error it exists to
+    // avoid making about somebody else's gate.
+    expect(h, "the offline provenance must be unmissable").toMatch(/Offline, not live/i);
+    expect(h).toMatch(/approximately 100% of null resamples/i);
+    expect(h, "the pre-registered prediction has to survive editing")
+      .toMatch(/live rate will exceed the offline one/i);
   });
 
   it("states what ships because of it", () => {
@@ -1185,7 +1200,11 @@ describe("what is already built", () => {
     }
     // the two that say the instrument was broken are marked, not buried
     expect(RESULTS.filter((r) => r.awkward).length).toBeGreaterThanOrEqual(2);
-    expect(RESULTS.map((r) => r.figure)).toContain("1.000");
+    expect(RESULTS.map((r) => r.figure)).toContain("~100%");
+    const gate = RESULTS.find((r) => r.figure === "~100%")!;
+    expect(gate.kind).toBe("resampled");
+    expect(gate.caveat, "an offline figure has to say it is not a live campaign")
+      .toMatch(/NOT a live A\/A campaign/);
 
     // and they reach the page
     document.documentElement.innerHTML =

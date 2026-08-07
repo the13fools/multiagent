@@ -336,12 +336,16 @@ describe("seeding cost", () => {
     expect(one.marginal).toBeCloseTo(thirty.marginal, 6);
   });
 
-  it("lands near the figure the essay reports, at the reference plan", () => {
+  it("lands in the right order of magnitude at the reference plan", () => {
+    // The essay's "about $50" was a receipt at the spot price we paid. The model
+    // now runs at Lambda's current on-demand rate, which is higher, and the
+    // per-agent figure moves with it — which is the point of exposing the price
+    // as a dial rather than quoting a constant.
     const c = seedingCost(REFERENCE_PLAN);
-    expect(c.perAgent).toBeGreaterThan(30);
-    expect(c.perAgent).toBeLessThan(60);
-    expect(c.total).toBeGreaterThan(1000);
-    expect(c.total).toBeLessThan(1600);
+    expect(c.perAgent).toBeGreaterThan(40);
+    expect(c.perAgent).toBeLessThan(90);
+    expect(c.total).toBeGreaterThan(1200);
+    expect(c.total).toBeLessThan(2400);
   });
 
   it("scales with model size, and says so as a multiplier rather than a promise", () => {

@@ -21,26 +21,26 @@ export interface StageResult {
 
 export const RESULTS: StageResult[] = [
   {
-    figure: "1.000",
-    unit: "probability",
-    claim: "The shipped promotion gate rolls back a candidate identical to its own baseline — and gets worse with more data, because it bounds a proportion that converges to one half under the null.",
+    figure: "~100%",
+    unit: "of null resamples",
+    claim: "In an offline sign-flip resampling analysis of the 30-cell pilot, the initial overlap-rule gate rolled back a candidate identical to its own baseline — and gets worse with more data, because it bounds a proportion that converges to one half under the null.",
     kind: "resampled",
-    caveat: "Resampled from the pilot's real paired deltas and reproduced by two independent implementations. Not yet a live A/A: that is one GPU session away.",
+    caveat: "Offline resampling of the pilot's real paired deltas, reproduced by two independent implementations. NOT a live A/A campaign. Phase 0 runs matched f = 0 campaigns to measure the gate's live operating error, and the live figure may differ.",
     awkward: true,
   },
   {
     figure: "0",
     unit: "parse failures",
-    claim: "Across 60 live cells in two games, every agent response parsed. First run since the reasoning span entered the action schema and the parser became string-aware, so both changes are validated against real model output.",
+    claim: "Across the 30 matched cells of the Stage Zero pilot, every agent response parsed into a legal action. The environments read structured actions out of free text, so this is the precondition for any of the rest meaning anything.",
     kind: "measured",
-    caveat: "One arm of a two-arm design. It says the pipeline works, not that the effect is real.",
+    caveat: "Measured on the pilot, whose plan, traces and receipt are committed. The action schema has changed since — a deliberation span was added and the parser became string-aware — so the figure needs re-establishing on the next live run.",
   },
   {
-    figure: "3.0",
-    unit: "rounds to collapse",
-    claim: "The Commons Harvest config shipped for weeks at a ceiling-to-upkeep ratio of 0.39, where collapse is guaranteed for every strategy — so composition could not matter and those cells measured nothing. All 30 seeds died at round 3.",
-    kind: "measured",
-    caveat: "Caught only because the sustainable region is closed-form. Defaults are now 1.56, and a test fails any default below 1.0.",
+    figure: "0.39",
+    unit: "ceiling to upkeep",
+    claim: "The Commons Harvest config shipped for weeks at a ratio where collapse is guaranteed for every strategy — so composition could not matter and any cell run in it would have measured nothing.",
+    kind: "arithmetic",
+    caveat: "Caught by the closed form rather than by a run, which is the point: in an environment with an answer key a dead configuration is visible before you spend anything on it. Defaults are now 1.56, and a test fails any default below 1.0.",
     awkward: true,
   },
   {

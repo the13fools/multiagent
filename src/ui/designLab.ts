@@ -3,7 +3,7 @@ import { mountArc } from "./arc";
 import { el, C, HEX, renderStats, verdict, applyEmbedMode, bindDials } from "./lab";
 import { pairedCellFigure } from "./figures";
 import {
-  CONTROLS, REFERENCE_DESIGN, detectableEffect, evaluate, type Design,
+  CONTROLS, REFERENCE_DESIGN, detectableEffect, evaluate, pairedComparisons, type Design,
 } from "../core/design";
 
 applyEmbedMode();
@@ -90,6 +90,7 @@ function render() {
 
   renderStats("stats", [
     { key: "Cells", value: v.cells.toLocaleString() },
+    { key: "Paired comparisons", value: pairedComparisons(d).toLocaleString() },
     { key: "GPU-hours", value: Math.round(v.gpuHours).toLocaleString() },
     { key: "Compute", value: money(v.cost) },
     { key: "Paired per contrast", value: v.paired },

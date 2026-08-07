@@ -28,13 +28,16 @@ export interface Design {
 
 export const REFERENCE_DESIGN: Design = {
   families: 2,
-  environments: 4,
+  environments: 2,      // the core is the two existing environments
   fractions: 8,
   arms: 2,
   salt: 2,
   seeds: 69,
-  hoursPerCell: 1.5,
-  pricePerHour: 1.39,
+  // A budget rate, not a measurement: the pilot's per-cell time predates the
+  // deliberation span, and Phase 0 measures it. Price is Lambda's on-demand
+  // 40GB A100 rate, checked August 2026.
+  hoursPerCell: 1.0,
+  pricePerHour: 1.99,
 };
 
 export const cells = (d: Design): number =>
@@ -46,6 +49,9 @@ export const cost = (d: Design): number => gpuHours(d) * d.pricePerHour;
 
 /** Paired cells per contrast: one baseline run and one candidate run. */
 export const pairedCells = (d: Design): number => d.salt * d.seeds;
+
+/** Total paired comparisons in the campaign — half the cells, by definition. */
+export const pairedComparisons = (d: Design): number => cells(d) / 2;
 
 /**
  * Sample size for a paired comparison at 80% power, 5% two-sided.

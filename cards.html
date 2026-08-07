@@ -114,15 +114,13 @@ different problems.</p>
 
 <h2>What it would take to be more than a sketch</h2>
 
-<p>No language model has played this. The interesting version is the one where the deck is
-described in text, the count has to be carried across turns without a scratchpad, and the number of
-bettors is visible only as a history — at which point the two error terms above become a
-measurement of whether a model tracks the state of the world and whether it tracks the other
-players, separately, on the same rollout.</p>
+<p>No language model has played this. The version worth running describes the deck in text, makes
+the count something an agent has to carry across turns, and shows the number of bettors only as
+history — at which point the two error terms above become a measurement of whether a model tracks
+the world and whether it tracks the other players, separately, on one rollout.</p>
 
-<p class="muted">Sketch, MIT; the arithmetic is asserted by the test suite. Both answer keys —
-solo expected value, and the symmetric mixed equilibrium — are computed from the rules, not
-estimated.</p>
+<p class="muted">Sketch, MIT. Both answer keys — solo expected value and the symmetric mixed
+equilibrium — are computed from the rules and asserted by the test suite.</p>
 </div>
 <script type="module" src="/src/ui/cardsLab.ts"></script>
 </body>

@@ -62,7 +62,7 @@ export const REFERENCE_PLAN: SeedingPlan = {
   rolloutHours: 22,
   trainHours: 8,
   teacherHours: 40,
-  pricePerHour: 1.39,
+  pricePerHour: 1.99,
   multiplier: 1,
 };
 

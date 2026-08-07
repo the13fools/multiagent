@@ -71,7 +71,7 @@ intermediary and no judge, whether a candidate agent may join a shared deploymen
 <p>And <a href="./gate.html">the obvious version of the rule is wrong</a>. It rolls back a clone of
 its own baseline with probability ~1.0, and it gets <em>worse</em> the more data you give it. It
 looks completely reasonable written down. The lesson generalises past this testbed: an automated
-rule with no published error rate is not trustworthy because it is automated — it is
+rule with no published error rate is not trustworthy for being automated — it is
 <b>confidently wrong at scale</b>, which is the specific failure mode infrastructure makes cheap.
 Two things should ship with any such rule: a measured false-decision rate, and a declared minimum
 amount of evidence below which its outputs do not count.</p>
