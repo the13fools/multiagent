@@ -65,7 +65,8 @@ export const SPINE: Chapter[] = [
   {
     slug: "future",
     title: "What next",
-    asks: "Behavioural economics on a population that learns while you measure it.",
+    asks: "A population that learns while you measure it, decentralised mechanisms, and the " +
+      "climb to games where nobody knows the answer.",
     hands: "Which needs thirty distinct agents. Thirty agents is a budget problem.",
   },
   {
