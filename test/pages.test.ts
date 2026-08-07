@@ -867,3 +867,45 @@ describe("shared-resource and entrainment ask different questions", () => {
     expect(read("entrainment.html")).toContain("shared-resource.html");
   });
 });
+
+/**
+ * The scale-up ladder.
+ *
+ * The direction is large multiplayer games with real negotiation, and the thing
+ * that is easy to lose in an edit is the honest part: every rung up trades away
+ * the answer key, so what climbs with you is the calibration, not ground truth.
+ * A ladder that does not say what each rung costs is a wish list.
+ */
+describe("the ladder says what each rung costs", () => {
+  const html = () =>
+    readFileSync(resolve(__dirname, "../future.html"), "utf8").replace(/\s+/g, " ");
+
+  it("names the destinations", () => {
+    const h = html();
+    expect(h).toMatch(/Diplomacy/);
+    expect(h).toContain("utopia-game.com");
+    expect(h, "with and without side channels is the manipulation, not a detail")
+      .toMatch(/full-press against gunboat|with and without side channels/i);
+  });
+
+  it("says the answer key is what is being given up", () => {
+    const h = html();
+    expect(h).toMatch(/trades away the answer key|No answer key/i);
+    expect(h, "what survives the climb is the calibration").toMatch(/calibrat/i);
+  });
+
+  it("treats composition as a vector, not one number", () => {
+    const h = html();
+    expect(h).toMatch(/composition vector/i);
+    for (const kind of ["seeded", "mimic", "adversarial"]) {
+      expect(h, `the ${kind} fraction is missing from the mixture`).toMatch(new RegExp(kind, "i"));
+    }
+  });
+
+  it("collusion is claimed only once the channel exists", () => {
+    const lineage = readFileSync(resolve(__dirname, "../lineage.html"), "utf8").replace(/\s+/g, " ");
+    expect(lineage).toMatch(/Collusion and multi-agent security are not modelled/i);
+    expect(lineage, "say what would change that, rather than only what is missing")
+      .toMatch(/private channel between agents/i);
+  });
+});
