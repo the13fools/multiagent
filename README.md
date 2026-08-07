@@ -94,11 +94,25 @@ Requires Node 22+.
 
 ```
 npm ci
-npm test      # 15 tests
-npm run dev   # http://localhost:4173
-npm run build # static site in dist/
-npm run check # test + typecheck + build
+npm run dev     # http://localhost:4173
+npm test        # 44 tests
+npm run build   # static site in dist/
+npm run preview # serve the built dist/ -- do this before pushing
+npm run check   # test + typecheck + build
 ```
+
+**If Vite fails on startup with a missing `@esbuild/...` or `@rollup/...` module**,
+`node_modules` was installed on a different platform than the one you are running
+on — most likely because the directory was shared with a container or a remote
+machine. Vite ships platform-specific native binaries, so the fix is:
+
+```
+rm -rf node_modules && npm ci
+```
+
+`npm run preview` matters more than it looks: `base` is relative, so `dist/` has
+to work from a subpath, and `dev` serves from the root. Preview is the only
+local command that exercises what `foolzone.com/multiagent` will actually do.
 
 `base` is relative, so `dist/` works from any subpath — `foolzone.com/multiagent`,
 a GitHub Pages project path, or opened straight off disk — with no rebuild.
