@@ -702,11 +702,19 @@ describe("the behavioural-economics reading list", () => {
   it("names its sources and links them", () => {
     const html = readFileSync(resolve(__dirname, "../future.html"), "utf8");
     expect(html).toContain("danieljbenjamin.com/publications");
-    // a reading list with fewer than a handful of entries is a gesture
+    // The list was cut from nine entries to four plus a paragraph naming the
+    // rest, because a list nobody finishes is not a list. What has to survive
+    // is that the designs are named and the papers are reachable.
     const links = [...html.matchAll(/href="https?:\/\/[^"]*(nber|ssrn|danieljbenjamin|mitpress)[^"]*"/g)];
-    expect(links.length).toBeGreaterThanOrEqual(6);
-    expect(html, "the mapping is a proposal and has to say so")
-      .toMatch(/is a proposal,\s*not a result/);
+    expect(links.length).toBeGreaterThanOrEqual(3);
+    for (const design of ["Minimum-effort", "Beauty contest", "double auction", "El Farol",
+                          "base-rate neglect"]) {
+      // &nbsp; is deliberate typography in a couple of names, so normalise it
+      expect(html.toLowerCase().replace(/&nbsp;/g, " "), `${design} dropped out of the list`)
+        .toContain(design.toLowerCase());
+    }
+    expect(html, "the mapping onto agents is ours, and has to say so")
+      .toMatch(/the selection is mine|is a proposal,\s*not a result/i);
   });
 
   it("the gate cites the literature on evidence thresholds", () => {
@@ -1198,12 +1206,16 @@ describe("what is already built", () => {
       .toMatch(/stays public either way/i);
   });
 
-  it("situates the proposal in the call's citations and in the ladder", () => {
+  it("situates the proposal, by pointing rather than by repeating", () => {
     const h = html();
-    expect(h).toContain("arxiv.org/abs/2512.16856");
-    expect(h).toMatch(/Scaling Trust/);
+    // The call's three starting points are answered in full on the lineage
+    // page. Restating them here made two pages say the same thing at length,
+    // which is how a site gets long; this one links and moves on.
+    expect(h).toContain("lineage.html");
     expect(h).toContain("future.html#ladder");
     expect(h).toMatch(/Diplomacy/);
+    const lineage = readFileSync(resolve(__dirname, "../lineage.html"), "utf8");
+    expect(lineage, "somebody still has to carry the citations").toContain("arxiv.org/abs/2512.16856");
   });
 });
 
@@ -1247,5 +1259,49 @@ describe("answering the call", () => {
 
   it("uses the funder's own sentence about distilled proxies", () => {
     expect(html()).toMatch(/faithful proxies for frontier agents/i);
+  });
+});
+
+/**
+ * Length, as a budget.
+ *
+ * The site grows every time something is added and nothing is ever removed,
+ * which is how it got to sixteen thousand words. These are ceilings, not
+ * targets: exceeding one is a signal to cut or split, not to raise the number.
+ * A chapter that cannot make its case in its budget usually has two cases in
+ * it.
+ */
+describe("no page outgrows its argument", () => {
+  const words = (file: string) => {
+    const html = readFileSync(resolve(__dirname, `../${file}`), "utf8");
+    const body = html.replace(/<(script|style|nav)[\s\S]*?<\/\1>/g, "");
+    return body.replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length;
+  };
+
+  // The essay is allowed to be an essay; everything else is reference or
+  // argument and has a tighter ceiling.
+  const CEILING: Record<string, number> = {
+    "blog-pdd.html": 1900,
+    "future.html": 2700,
+    "lineage.html": 2100,
+    "experiments.html": 1700,
+    "design.html": 1500,
+    "stage-zero.html": 1200,
+    "index.html": 1100,
+  };
+
+  for (const [file, max] of Object.entries(CEILING)) {
+    it(`${file} stays under ${max} words`, () => {
+      const n = words(file);
+      expect(n, `${file} is ${n} words: cut it or split it, do not raise the ceiling`)
+        .toBeLessThanOrEqual(max);
+    });
+  }
+
+  it("the whole site stays under fifteen thousand words", () => {
+    const all = readdirSync(resolve(__dirname, ".."))
+      .filter((f) => f.endsWith(".html"))
+      .reduce((t, f) => t + words(f), 0);
+    expect(all, `the site is ${all} words`).toBeLessThanOrEqual(15000);
   });
 });

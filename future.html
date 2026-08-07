@@ -30,10 +30,8 @@ assumption every line of it shares, which nobody has tested and which is false i
   <ol>
     <li><a href="#the-gap">The gap</a></li>
     <li><a href="#pitch">The pitch, in three paragraphs</a></li>
-    <li><a href="#self-distillation">Why self-distillation, specifically</a></li>
+    <li><a href="#self-distillation">Why the population has to be trained, not prompted</a></li>
     <li><a href="#what-breaks">Three things that break, and are worth breaking</a></li>
-    <li><a href="#scale">The scale it wants</a></li>
-    <li><a href="#sources">Where the experiments would come from</a></li>
     <li><a href="#port-list">The port list, in order</a></li>
     <li><a href="#cost">What a population costs, and how big to go</a></li>
     <li><a href="#ladder">The ladder: from an answer key to a real crowd</a></li>
@@ -94,19 +92,13 @@ opinion.</p>
 in fifty hats, learning inside the campaign rather than between campaigns, measured by a gate whose
 false-rejection rate has been published rather than assumed.</p>
 
-<h2 id="self-distillation">Why self-distillation, specifically</h2>
+<h2 id="self-distillation">Why the population has to be trained, not prompted</h2>
 
-<p>Continuous learning needs a reward signal. Almost every option is a judge, and we have direct
-evidence of what that costs: an adapter trained on judge-selected pairs collapsed a commons
-<em>faster</em> than base, because the panel checked for coherent planning and not for what was
-being planned.</p>
-
-<p><b>These environments do not need a judge. The environment is the verifier.</b> Payoffs are
-arithmetic ground truth, so you can filter an agent's own rollouts on realised welfare and distil
-from the survivors. No preference dataset. No rubric. No panel.</p>
-
-<p>That closes a loop the field mostly cannot close: an agent that improves at a shared-resource
-game, scored by whether the resource survived, with nothing in the loop that can be flattered.</p>
+<p>Thirty prompts over one set of weights fail in correlated ways, because their failure modes
+come from the same place — and correlated failure is the property a multi-principal study exists
+to measure the absence of. So the population has to be genuinely distinct policies, which means
+training, which means the training has to be cheap. That argument, and what it cost us, is
+<a href="./blog-pdd.html">its own chapter</a>.</p>
 
 <h2 id="what-breaks">Three things that break, and are worth breaking</h2>
 
@@ -125,94 +117,18 @@ experiment with the same apparatus.</p>
 fatal late. A population that updates on its own history compounds its own errors, so the gap
 between a short measurement and a long one widens rather than closing.</p>
 
-<h2 id="scale">The scale it wants</h2>
-
-<p>Behavioural economics is a library of well-posed multi-agent problems with human baselines:
-public goods with punishment, common-pool resources, minority games, spatial competition,
-ultimatum and trust games. All of them have known human results. None have been run on a
-population of learning agents.</p>
-
-<p>The obstacle has never been the games. It is that a population of genuinely distinct agents
-used to cost more than the study. At <a href="./blog-pdd.html">roughly $50 an agent</a> that stops
-being true, and the population becomes a variable rather than a budget line.</p>
-
-<table>
-<tr><th>&nbsp;</th><th>now</th><th>next</th></tr>
-<tr><td><b>Population</b></td><td>8 agents, one endpoint, prompts over shared weights</td>
-  <td>50+ genuinely distinct fine-tuned policies</td></tr>
-<tr><td><b>Agents</b></td><td>fixed for the rollout</td>
-  <td>self-distilling from their own scored rollouts</td></tr>
-<tr><td><b>Horizon</b></td><td>200 turns</td><td>long enough for learning to close a loop</td></tr>
-<tr><td><b>Games</b></td><td>4</td><td>the behavioural-economics library, with human baselines</td></tr>
-<tr><td><b>Scoring</b></td><td colspan="2">arithmetic, in every column. Nothing scored by a model.</td></tr>
-</table>
-
-<h2 id="sources">Where the experiments would come from</h2>
-
-<p>"The behavioural-economics library" is easy to say and easy to leave vague, so here is the
-actual starting point. Daniel Benjamin's work is a useful place to begin because so much of it has
-the property this testbed needs: <b>a correct answer that follows from the setup</b>, which means a
-deviation can be scored by arithmetic rather than by a judge.</p>
-
-<table>
-<tr><th>what it gives this project</th><th>where to start</th></tr>
-
-<tr><td><b>Biases with a computable right answer.</b> A Bayesian posterior is a number. An agent's
-answer is a number. The gap needs no rubric — which is the same discipline as the games on this
-site, applied to reasoning rather than to a commons.</td>
-<td><a href="https://www.nber.org/papers/w25200.pdf">Errors in Probabilistic Reasoning and Judgment
-Biases</a> (Benjamin 2019, <i>Handbook of Behavioral Economics</i>);
-<a href="https://www.danieljbenjamin.com/assets/papers/model-of-non-belief-in-the-law-of-large-numbers.pdf">A
-Model of Non-Belief in the Law of Large Numbers</a> (Benjamin, Rabin &amp; Raymond 2016, <i>JEEA</i>);
-<a href="https://www.danieljbenjamin.com/assets/papers/base-rate-neglect.pdf">Base-Rate Neglect</a>
-(Benjamin, Bodoh-Creed &amp; Rabin 2019);
-<a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3048053">Biased Beliefs About Random
-Samples</a> (Benjamin, Moore &amp; Rabin 2017)</td></tr>
-
-<tr><td><b>Populations are heterogeneous in how biased they are.</b> Not everyone is behavioural to
-the same degree, and the spread is systematic. One model in thirty hats cannot exhibit that; thirty
-fine-tuned policies might, and whether they do is checkable.</td>
-<td><a href="https://www.danieljbenjamin.com/assets/papers/who-is-behavioral.pdf">Who is
-"Behavioral"? Cognitive ability and anomalous preferences</a> (Benjamin, Brown &amp; Shapiro 2013,
-<i>JEEA</i>)</td></tr>
-
-<tr><td><b>Identity as a treatment.</b> Priming an identity moves measured preferences in human
-subjects. The agent analogue is exactly the prompt-versus-fine-tune question: is a persona a
-preference change or a costume? These give an experimental design for asking.</td>
-<td><a href="https://www.danieljbenjamin.com/assets/papers/social-identity-and-preferences.pdf">Social
-identity and preferences</a> (Benjamin, Choi &amp; Strickland 2010, <i>AER</i>);
-<a href="http://www.mitpressjournals.org/doi/pdf/10.1162/REST_a_00586">Religious identity and
-economic behavior</a> (Benjamin, Choi &amp; Fisher 2016, <i>REStat</i>)</td></tr>
-
-<tr><td><b>Distributional preferences with an efficiency cost.</b> The Shared Resource game is a
-distributional-preference problem wearing a survival constraint, and there is a measured human
-baseline for the bilateral version.</td>
-<td><a href="https://www.danieljbenjamin.com/assets/papers/distributional-preferences-bilateral-exchange.pdf">Distributional
-Preferences, Reciprocity-Like Behavior, and Efficiency in Bilateral Exchange</a> (Benjamin 2015,
-<i>AEJ: Micro</i>)</td></tr>
-
-<tr><td><b>What a multi-principal system should be scored on.</b> The gate on this site maximises
-"welfare" and that word is doing unexamined work. This literature is about the fact that choosing
-the index <em>is</em> the research question.</td>
-<td><a href="http://papers.ssrn.com/sol3/papers.cfm?abstract_id=2120784">Beyond Happiness and
-Satisfaction: Toward Well-Being Indices Based on Stated Preference</a> (Benjamin, Heffetz, Kimball
-&amp; Szembrot 2014, <i>AER</i>); <a href="https://www.nber.org/papers/w33846">What Do People
-Want?</a> (Benjamin, Cooper, Heffetz, Kimball &amp; Kundu 2026, NBER WP 33846)</td></tr>
-</table>
-
-<p class="muted">Starting point: <a href="https://www.danieljbenjamin.com/publications">Benjamin's
-publication list</a>. The selection is mine and the mapping onto agent populations is a proposal,
-not a result — none of these authors has anything to do with this project.</p>
-
 <h2 id="port-list">The port list, in order</h2>
 
-<p>A behavioural-economics experiment is worth porting here if it passes four tests. <b>The right
-answer follows from the rules</b>, so scoring needs no judge. <b>The outcome is a number the
-environment produces</b>, not a rating of what an agent said. <b>It has a horizon</b>, so drift has
-somewhere to show up. And <b>composition is a knob</b> — the design still means something when some
-of the players are yours and the rest are not.</p>
+<p>The designs come mostly from behavioural economics, and the starting point was
+<a href="https://www.danieljbenjamin.com/publications">Daniel Benjamin's publication list</a> —
+useful here because so much of that work has the property this testbed needs: a correct answer
+that follows from the setup, so a deviation is scored by arithmetic rather than by a judge.</p>
 
-<p>That rules out most of the interesting-sounding ones, which is the point. What is left:</p>
+<p>A design is worth porting if it passes four tests. <b>The right answer follows from the
+rules</b>, so scoring needs no judge. <b>The outcome is a number the environment produces</b>, not
+a rating of what an agent said. <b>It has a horizon</b>, so drift has somewhere to show up. And
+<b>composition is a knob</b> — the design still means something when some players are yours. That
+rules out most of the famous ones, which is the point.</p>
 
 <table>
 <tr><th>#</th><th>design</th><th>why it is next</th></tr>
@@ -220,89 +136,50 @@ of the players are yours and the rest are not.</p>
 <tr><td><b>1</b></td>
   <td><b>Minimum-effort coordination</b><br>
   <span class="muted">Van Huyck, Battalio &amp; Beil (1990), <i>AER</i></span></td>
-  <td>The best fit in the literature. Payoff depends on the <em>minimum</em> effort anyone
-  chooses, so one outcome is unambiguously best for everybody and human groups reliably collapse
-  to the worst instead. Both outcomes are exact numbers.
-  <span class="muted">One low agent caps everyone — this project's "one defector kills the flock",
-  in a second environment.</span></td></tr>
+  <td>The best fit in the literature. Payoff depends on the <em>minimum</em> effort anyone chooses,
+  so one outcome is unambiguously best for everybody and human groups reliably collapse to the
+  worst instead. Both outcomes are exact numbers, and one low agent caps everyone — this project's
+  one-defector result in a second environment.</td></tr>
 
 <tr><td><b>2</b></td>
   <td><b>p-Beauty contest</b><br>
-  <span class="muted">Nagel (1995), <i>AER</i>; Ho, Camerer &amp; Weigelt (1998)</span></td>
-  <td>Guess ⅔ of the average. The equilibrium is zero, the deviation is arithmetic, and the choice
-  reveals how many steps of "if they think that, then I…" a player took. That gives a <b>depth-of-
-  reasoning measurement for a population of agents</b>, repeated, with convergence to watch —
-  and a well-documented human distribution to compare against.</td></tr>
-
-<tr><td><b>2b</b></td>
-  <td><b>The Count</b> — a shared-deck betting game<br>
-  <span class="muted">ours; <a href="./cards.html">sketch and arithmetic here</a></span></td>
-  <td>Does the one thing the others cannot: <b>separates reading the environment from reading the
-  room</b>, with an answer key for each. The deck is public, so the belief half is a count; the pot
-  is split between the bettors, so the social half is congestion with a computable equilibrium.
-  <span class="muted">A table of perfect counters loses money. They agree, so they bet together,
-  and the pot they agree about is divided while every loss stays whole.</span></td></tr>
+  <span class="muted">Nagel (1995), <i>AER</i></span></td>
+  <td>Guess two-thirds of the average. The equilibrium is zero, the deviation is arithmetic, and
+  the choice reveals how many steps of "if they think that, then I…" a player took — a
+  depth-of-reasoning number for a population, with a documented human distribution beside it.</td></tr>
 
 <tr><td><b>3</b></td>
-  <td><b>Market entry / El Farol</b><br>
-  <span class="muted">Kahneman (1988); Arthur (1994)</span></td>
-  <td>Enter or stay out; entering is good only if few others do. The optimal entry rate is
-  computable from the payoff and human groups famously track it in aggregate while nobody
-  coordinates. This is agent load-balancing with an answer key, and the failure mode — everybody
-  reasoning identically and so arriving together — is the correlated-failure risk in its purest
-  form.</td></tr>
+  <td><b>The Count</b>, ours<br>
+  <span class="muted"><a href="./cards.html">sketch and arithmetic</a></span></td>
+  <td>Built to do the one thing the others cannot: <b>separate reading the environment from
+  reading the room</b>, with an answer key for each. A table of perfect counters loses money —
+  they agree, so they bet together, and the pot they agree about is divided while every loss stays
+  whole.</td></tr>
 
 <tr><td><b>4</b></td>
-  <td><b>Double auction with induced values</b><br>
+  <td><b>Induced-value double auction</b><br>
   <span class="muted">Smith (1962), <i>JPE</i></span></td>
-  <td>Give each agent a private reservation value; the competitive price and quantity follow from
-  the value schedule. Convergence to it is measurable to the cent with no judge anywhere. This is
-  the direct bridge to the sandbox-economy framing the call asks about, and the one design here
-  where "market mechanism" is literal.</td></tr>
-
-<tr><td><b>5</b></td>
-  <td><b>Common-pool appropriation</b><br>
-  <span class="muted">Ostrom, Gardner &amp; Walker (1994)</span></td>
-  <td>The continuous-effort cousin of the game on this site, with decades of human baselines and
-  the design principles literature attached. Mostly built already.</td></tr>
-
-<tr><td><b>6</b></td>
-  <td><b>Public goods with punishment</b><br>
-  <span class="muted">Fehr &amp; Gächter (2000); Herrmann, Thöni &amp; Gächter (2008)</span></td>
-  <td>Already built and already run. Antisocial punishment is the interesting part: a costly
-  action that lowers group welfare, which gives a clean test of whether agent populations produce
-  spite when spite is available.</td></tr>
-
-<tr><td><b>7</b></td>
-  <td><b>Distributional preferences in bilateral exchange</b><br>
-  <span class="muted">Benjamin (2015), <i>AEJ: Micro</i></span></td>
-  <td>Trades off own payoff against the other's, with the efficient allocation computable. The
-  commons is this problem wearing a survival constraint, and this is the two-player version with a
-  measured human baseline to sit beside it.</td></tr>
-
-<tr><td><b>8</b></td>
-  <td><b>Belief-formation batteries</b><br>
-  <span class="muted">Benjamin (2019), <i>Handbook</i>; Benjamin, Rabin &amp; Raymond (2016);
-  Benjamin, Bodoh-Creed &amp; Rabin (2019); Benjamin, Moore &amp; Rabin (2017)</span></td>
-  <td>Base-rate neglect, non-belief in the law of large numbers, biased beliefs about random
-  samples. Each has a Bayesian posterior you can compute, so an agent's error is a distance, not
-  an opinion. These are individual-level and go in for a specific reason: to test whether
-  population-level failures are inherited from individual bias or created by the interaction.
-  If a flock of well-calibrated agents still starves, the failure is social.</td></tr>
-
-<tr><td><b>9</b></td>
-  <td><b>Heterogeneity-of-bias designs</b><br>
-  <span class="muted">Benjamin, Brown &amp; Shapiro (2013), <i>JEEA</i></span></td>
-  <td>Not an environment but a measurement: how much do the members of a population differ in how
-  biased they are? That is the diversity metric this project admits it lacks — the difference
-  between thirty agents and thirty copies with different accents — and it has an existing design
-  to borrow.</td></tr>
+  <td>Private reservation values make the competitive price and quantity computable, and
+  convergence to them is measurable to the cent with no judge. The direct bridge to the
+  sandbox-economy framing the call asks about, and the one design where "market mechanism" is
+  literal.</td></tr>
 </table>
 
-<p><b>What is deliberately not on the list.</b> Ultimatum and dictator games, where the
-"right" answer is a fairness judgement rather than arithmetic; anything scored by rating free
-text; and anything whose human baseline is contested, since the point of a baseline is to be
-something to disagree with.</p>
+<p class="muted">Behind those, in order: market entry and El&nbsp;Farol (Arthur 1994) for congestion
+with an answer key; common-pool appropriation (Ostrom, Gardner &amp; Walker 1994), mostly built;
+public goods with punishment (Herrmann, Thöni &amp; Gächter 2008), built and run;
+<a href="https://www.danieljbenjamin.com/assets/papers/distributional-preferences-bilateral-exchange.pdf">distributional
+preferences in bilateral exchange</a> (Benjamin 2015); the belief batteries —
+<a href="https://www.nber.org/papers/w25200.pdf">base-rate neglect and non-belief in the law of
+large numbers</a> — which test whether population failure is inherited from individual bias or
+created by the interaction; and
+<a href="https://www.danieljbenjamin.com/assets/papers/who-is-behavioral.pdf">heterogeneity of
+bias</a> (Benjamin, Brown &amp; Shapiro 2013), which is the diversity metric this project admits
+it lacks.</p>
+
+<p class="muted">Deliberately not on the list: ultimatum and dictator games, where the right answer
+is a fairness judgement rather than arithmetic, and anything scored by rating free text. The
+selection is mine and the mapping onto agent populations is a proposal, not a result.</p>
 
 <h2 id="cost">What a population costs, and how big to go</h2>
 
@@ -349,6 +226,17 @@ list above are worth trying first. And the whole population is small against a c
 <em>against</em> it: at 7B the agents cost less than a tenth of the compute needed to measure
 them, which is the entire reason population size can be a variable.</p>
 
+<table>
+<tr><th>&nbsp;</th><th>now</th><th>next</th></tr>
+<tr><td><b>Population</b></td><td>8 agents, one endpoint, prompts over shared weights</td>
+  <td>50+ genuinely distinct fine-tuned policies</td></tr>
+<tr><td><b>Agents</b></td><td>fixed for the rollout</td>
+  <td>self-distilling from their own scored rollouts</td></tr>
+<tr><td><b>Horizon</b></td><td>200 turns</td><td>long enough for learning to close a loop</td></tr>
+<tr><td><b>Games</b></td><td>4</td><td>the behavioural-economics library, with human baselines</td></tr>
+<tr><td><b>Scoring</b></td><td colspan="2">arithmetic, in every column. Nothing scored by a model.</td></tr>
+</table>
+
 <h3>Scope: 7B now, one order of magnitude later</h3>
 
 <p>The plan is to stay at <b>7B for the first year</b>. Not because larger models are
@@ -369,18 +257,15 @@ order of magnitude, not a quote.</p>
 
 <h2 id="ladder">The ladder: from an answer key to a real crowd</h2>
 
-<p>Eight agents and a pool is rung one. The interesting destination is large multiplayer games with
-real negotiation — and the honest problem with going straight there is that <b>every rung up trades
-away the answer key</b>. What has to survive the climb is not ground truth, which cannot, but the
-calibration: a gate with a measured error rate, a horizon long enough to see drift, and a
-composition dial that says who in the room is yours.</p>
+<p>Eight agents and a pool is rung one; the destination is large multiplayer games with real
+negotiation. The obstacle is that <b>every rung up trades away the answer key</b>, so what has to
+survive the climb is the calibration rather than ground truth: a gate with a measured error rate, a
+horizon long enough to see drift, and a dial that says who in the room is yours.</p>
 
-<p>Composition is the thread. Today the dial is one number, the seeded fraction <code>f</code>.
-At every rung above it becomes a <b>composition vector</b>: what fraction is seeded, what fraction
-is <em>mimic</em> — carrying the specification's vocabulary with its decision rules stripped, the
-control that separates content from style — and what fraction is <b>seeded adversarial</b>, playing
-to extract rather than to sustain. A flock is not one thing you steer; it is a mixture, and the
-mixture is the independent variable.</p>
+<p>Composition is the thread. Today it is one number, the seeded fraction <code>f</code>. Above,
+it becomes a <b>composition vector</b> — what fraction is seeded, what fraction is <em>mimic</em>
+(the specification's vocabulary with its decision rules stripped), and what fraction is
+<b>adversarial</b>. A flock is a mixture, and the mixture is the independent variable.</p>
 
 <table>
 <tr><th>rung</th><th>what it adds</th><th>what it costs</th></tr>
@@ -428,26 +313,24 @@ mixture is the independent variable.</p>
 the reason to be strict about rung one: the only way a result at Utopia scale means anything is if
 the instrument reading it was calibrated somewhere the answer was known.</p>
 
-<h2 id="mechanisms">Decentralised mechanism design, and what "flourishing" would mean</h2>
+<h2 id="mechanisms">Decentralised mechanism design, and what "flourishing" means</h2>
 
 <p>Classical mechanism design assumes a designer who sets the rules and can enforce them. In a
-population of agents you do not own, nobody is in that chair. The rules that matter are the ones a
-minority can propose, that the rest adopt because adopting them is individually sensible, and that
-survive contact with agents who did not read the proposal.</p>
+population you do not own, nobody is in that chair. The rules that matter are the ones a minority
+can propose, that the rest adopt because adopting them is individually sensible, and that survive
+agents who did not read the proposal.</p>
 
-<p>This testbed is unusually well suited to asking which those are, because the outcome is
-computable. Concretely, the experiments would be: hold the game fixed and vary <em>what agents can
-say and see</em> — a public tally of who restored, a commitment an agent can make and be held to, a
-reputation that persists across episodes, a side-payment channel — and measure which additions move
-a population from the collapsing region into the sustaining one, and at what controlled fraction.
-Each of those is a mechanism, each is a few lines of environment, and each has a closed-form
-best case to be scored against.</p>
+<p>The experiments are concrete: hold the game fixed and vary <em>what agents can see, say and
+commit to</em> — a public tally of who restored, a binding commitment, persistent reputation, a
+side-payment channel — and measure which additions move a population out of the collapsing region,
+and at what controlled fraction. Each is a few lines of environment with a closed-form best case
+to be scored against.</p>
 
-<p><b>Flourishing</b>, in this setting, is a specific and checkable thing: every agent alive at the
-horizon, the resource no lower than it started, and no agent's outcome achieved by another's ruin.
-All three are arithmetic. It is a small definition and it is deliberately not a moral one — but a
-mechanism that reliably produces it in a game with a known answer key is worth more than a
-mechanism that sounds wise in a game where nobody can say what winning was.</p>
+<p><b>Flourishing</b> is defined so it can be computed: every agent alive at the horizon, the
+resource no lower than it started, and no agent's outcome achieved by another's ruin. Three
+arithmetic conditions. A small definition, deliberately not a moral one — but a mechanism that
+reliably produces it in a game with an answer key is worth more than one that sounds wise where
+nobody can say what winning was.</p>
 
 <h2 id="requirements">What would have to be true</h2>
 

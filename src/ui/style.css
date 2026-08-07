@@ -43,7 +43,11 @@ body {
 
 .wrap { max-width: 900px; margin: 0 auto; padding: 40px 22px 80px; }
 
-nav {
+/* The top bar only. These were written as bare `nav` rules, and when the "on
+ * this page" list arrived -- correctly marked up as a <nav> -- it inherited
+ * position:sticky and followed the reader down every long page, blurring the
+ * text behind it. Scoped to the direct child of body, which is the bar. */
+body > nav {
   border-bottom: 1px solid var(--line);
   font-size: 15px;
   background: var(--panel);
@@ -54,10 +58,10 @@ nav {
   z-index: 100;
   box-shadow: 0 1px 3px rgba(0,0,0,0.02);
 }
-nav .wrap { padding: 14px 22px; display: flex; gap: 24px; align-items: baseline; }
-nav a { color: var(--muted); text-decoration: none; transition: color 0.2s ease; font-weight: 500; }
-nav a:hover, nav a[aria-current] { color: var(--ink); }
-nav .brand { font-weight: 700; color: var(--ink); letter-spacing: -0.01em; font-size: 15px; }
+body > nav .wrap { padding: 14px 22px; display: flex; gap: 24px; align-items: baseline; flex-wrap: wrap; }
+body > nav a { color: var(--muted); text-decoration: none; transition: color 0.2s ease; font-weight: 500; }
+body > nav a:hover, body > nav a[aria-current] { color: var(--ink); }
+body > nav .brand { font-weight: 700; color: var(--ink); letter-spacing: -0.01em; font-size: 15px; }
 
 h1 { font-size: 32px; letter-spacing: -0.03em; margin: 0 0 8px; font-weight: 700; }
 h2 { font-size: 20px; letter-spacing: -0.02em; margin: 40px 0 12px; font-weight: 600; }
@@ -425,6 +429,7 @@ td .muted { display: block; margin-top: 3px; }
 /* On this page. Long pages get a map at the top: eight sections that you can
  * see the shape of beats eight sections you discover by scrolling. */
 .toc {
+  position: static;        /* never sticky: it is a list, not a bar */
   max-width: 34rem;
   margin: 20px 0 8px;
   padding: 14px 18px;
