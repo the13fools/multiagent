@@ -34,6 +34,7 @@ assumption every line of it shares, which nobody has tested and which is false i
     <li><a href="#scale">The scale it wants</a></li>
     <li><a href="#sources">Where the experiments would come from</a></li>
     <li><a href="#port-list">The port list, in order</a></li>
+    <li><a href="#cost">What a population costs, and how big to go</a></li>
     <li><a href="#ladder">The ladder: from an answer key to a real crowd</a></li>
     <li><a href="#mechanisms">Decentralised mechanism design, and what "flourishing" would mean</a></li>
     <li><a href="#requirements">What would have to be true</a></li>
@@ -301,6 +302,69 @@ of the players are yours and the rest are not.</p>
 "right" answer is a fairness judgement rather than arithmetic; anything scored by rating free
 text; and anything whose human baseline is contested, since the point of a baseline is to be
 something to disagree with.</p>
+
+<h2 id="cost">What a population costs, and how big to go</h2>
+
+<p>The argument for small games is that a specialised agent is cheap to make for them, so the
+population becomes an experimental variable. That is a claim about money, so here is the money,
+with the dials exposed. <b>Nothing below is a quote — it is a model, seeded with what our one
+setup actually cost.</b></p>
+
+<div class="panel">
+  <div id="cost-stats" class="stats"></div>
+  <div id="cost-note"></div>
+  <svg id="cost-curve" viewBox="0 0 700 210" style="width:100%;height:auto;display:block" role="img"
+       aria-label="Training hours available per agent against population size, at a fixed budget"></svg>
+  <div class="legend">At a fixed budget, every extra agent buys less training for all of them.
+  Where that curve crosses the floor of "still distinguishable from each other" is unmeasured, and
+  is the thing worth measuring.</div>
+  <div class="dials">
+    <label class="dial"><span class="dial-k">Model size</span>
+      <span class="dial-row"><select id="size" data-dial></select></span></label>
+    <label class="dial"><span class="dial-k">Agents in the population</span>
+      <span class="dial-row"><input id="agents" type="range" min="4" max="80" value="30" data-dial>
+        <b class="dial-v" data-out="agents">30</b></span></label>
+    <label class="dial"><span class="dial-k">Rollouts per agent</span>
+      <span class="dial-row"><input id="rollout" type="range" min="4" max="60" value="22" data-dial>
+        <b class="dial-v" data-out="rollout">22</b><span class="dial-of">GPU-hr</span></span></label>
+    <label class="dial"><span class="dial-k">Training per agent</span>
+      <span class="dial-row"><input id="train" type="range" min="1" max="40" value="8" data-dial>
+        <b class="dial-v" data-out="train">8</b><span class="dial-of">GPU-hr</span></span></label>
+    <label class="dial"><span class="dial-k">Teacher pass, shared</span>
+      <span class="dial-row"><input id="teacher" type="range" min="0" max="200" step="5" value="40" data-dial>
+        <b class="dial-v" data-out="teacher">40</b><span class="dial-of">GPU-hr</span></span></label>
+    <label class="dial"><span class="dial-k">GPU price</span>
+      <span class="dial-row"><input id="price" type="range" min="0.5" max="4" step="0.05" value="1.39" data-dial>
+        <b class="dial-v" data-out="price">1.39</b><span class="dial-of">$/hr</span></span></label>
+    <span id="cost-verdict" class="verdict"></span>
+  </div>
+  <p class="legend" id="cost-setup"></p>
+</div>
+
+<p><b>Three things this makes visible.</b> The teacher pass is a fixed cost, so per-agent price
+falls as the population grows — the thirtieth agent is much cheaper than the first. Rollout
+generation, not training, is the larger half of the bill, which is why the cheap methods on the
+list above are worth trying first. And the whole population is small against a campaign run
+<em>against</em> it: at 7B the agents cost less than a tenth of the compute needed to measure
+them, which is the entire reason population size can be a variable.</p>
+
+<h3>Scope: 7B now, one order of magnitude later</h3>
+
+<p>The plan is to stay at <b>7B for the first year</b>. Not because larger models are
+uninteresting, but because everything this project is trying to establish — whether the steering
+threshold is measurable, whether the gate can be calibrated, whether populations of genuinely
+distinct policies behave differently from one model in many hats — is answerable at 7B, and
+answerable often enough to iterate.</p>
+
+<p>Move the size dial to 70B and the reason is on the screen: the same population costs an order
+of magnitude more, which turns a week of iteration into a quarter of it. <b>The right time to
+spend that is after the method is settled</b>, as a test of whether the findings survive a step up
+in capability — one order of magnitude, once, on the questions that turned out to matter, rather
+than on all of them at the start.</p>
+
+<p class="muted">The multiplier is assumed roughly linear in parameters and is not measured; larger
+models also want more or bigger GPUs, which this model does not attempt. Treat the 70B column as an
+order of magnitude, not a quote.</p>
 
 <h2 id="ladder">The ladder: from an answer key to a real crowd</h2>
 

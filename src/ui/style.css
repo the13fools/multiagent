@@ -456,3 +456,21 @@ td .muted { display: block; margin-top: 3px; }
 }
 .score .n { font-size: 26px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
 .score .k { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; margin-top: 4px; }
+
+/* A slide: one panel that carries a whole argument, meant to be read in one
+ * go and screenshotted into a deck. Larger type than a table, no chrome, and a
+ * closing line that is the thing to remember. */
+.slide { padding: 26px 28px; }
+.slide-k {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--muted); font-weight: 700; margin: 0 0 14px;
+}
+.slide-t { font-size: 15px; border: none; margin: 0; }
+.slide-t td { border: none; padding: 9px 0; line-height: 1.6; vertical-align: top; }
+.slide-t td:first-child { width: 172px; padding-right: 20px; color: var(--muted); }
+.slide-t tr:nth-child(even) td { background: none; }
+.slide-t tr + tr td { border-top: 1px solid var(--line); }
+.slide-f {
+  margin: 18px 0 0; padding-top: 16px; border-top: 2px solid var(--ink);
+  font-size: 16px; font-weight: 600; line-height: 1.5;
+}

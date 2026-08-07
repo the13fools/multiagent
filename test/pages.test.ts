@@ -1078,3 +1078,61 @@ describe("the status page counts itself", () => {
       .toContain("design.html");
   });
 });
+
+/**
+ * The break experiment, and the cost of a population.
+ *
+ * Two things a reviewer will look for and a rewrite could quietly lose: the one
+ * experiment the rest of the plan depends on, stated in one place; and the
+ * scope argument, which is a claim about money and therefore has to be
+ * arithmetic rather than assertion.
+ */
+describe("the A/A slide", () => {
+  const html = () =>
+    readFileSync(resolve(__dirname, "../design.html"), "utf8").replace(/\s+/g, " ");
+
+  it("is one self-contained panel", () => {
+    const h = html();
+    expect(h).toContain('id="aa"');
+    expect(h, "the slide needs to read as a unit, not as more prose").toContain('class="panel slide"');
+  });
+
+  it("says why it is free, what it measures, and what it already found", () => {
+    const h = html();
+    expect(h).toMatch(/f = 0/);
+    expect(h, "the point is that the two arms are the same population")
+      .toMatch(/same population/i);
+    expect(h).toMatch(/1\.000/);
+    expect(h, "the pre-registered prediction has to survive editing").toMatch(/1,820/);
+  });
+
+  it("states what ships because of it", () => {
+    expect(html()).toMatch(/minimum campaign size/i);
+  });
+});
+
+describe("the cost of a population", () => {
+  const html = () =>
+    readFileSync(resolve(__dirname, "../future.html"), "utf8").replace(/\s+/g, " ");
+
+  it("is a calculator, not an assertion", () => {
+    const h = html();
+    expect(h).toContain('id="cost"');
+    for (const id of ["agents", "rollout", "train", "teacher", "price", "size"]) {
+      expect(h, `the cost model has no ${id} dial`).toMatch(new RegExp(`id="${id}"`));
+    }
+  });
+
+  it("argues the scope from the dials rather than from taste", () => {
+    const h = html();
+    expect(h).toMatch(/7B for the first year/i);
+    expect(h).toMatch(/order of magnitude/i);
+    expect(h, "an assumed multiplier has to be flagged as assumed").toMatch(/not measured/i);
+  });
+
+  it("compares the population against the campaign that measures it", () => {
+    const lab = readFileSync(resolve(__dirname, "../src/ui/futureLab.ts"), "utf8");
+    expect(lab).toMatch(/campaign/i);
+    expect(lab, "per-agent price must fall as the population grows").toContain("marginal");
+  });
+});

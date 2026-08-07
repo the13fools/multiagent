@@ -33,6 +33,7 @@ you can move.</b></p>
     <li><a href="#cell">The unit: one paired cell</a></li>
     <li><a href="#factors">What varies, and what is held still</a></li>
     <li><a href="#planner">The campaign, and whether it is powered</a></li>
+    <li><a href="#aa">The break experiment: pointing the gate at a clone</a></li>
     <li><a href="#controls">The controls, and what each is against</a></li>
     <li><a href="#registration">Pre-registration, and what a receipt contains</a></li>
     <li><a href="#threats">What could still make the answer wrong</a></li>
@@ -127,6 +128,54 @@ why the plan measures the variance in Phase 0 before committing the compute rath
 <p class="muted">The compute envelope is fixed. If Phase 0 lands in that case we drop contrasts —
 one model family instead of two, six fractions instead of eight — and report which, rather than
 raising the ask.</p>
+
+<h2 id="aa">The break experiment: pointing the gate at a clone</h2>
+
+<p>One experiment matters more than the rest, because everything downstream is a comparison and a
+comparison is only worth what the rule that reads it is worth. It is called an <b>A/A</b>, and it
+is the cheapest important thing in this whole plan.</p>
+
+<div class="panel slide">
+  <p class="slide-k">The break experiment</p>
+
+  <table class="slide-t">
+  <tr><td><b>The question</b></td>
+    <td>How often does our promotion gate reject a candidate that is <em>identical</em> to the
+    baseline?</td></tr>
+  <tr><td><b>Why it is free</b></td>
+    <td>At a seeded fraction of <code>f = 0</code> no agent occupies the seeded role, so the
+    baseline and candidate configurations describe the <b>same population</b>. They differ only in
+    what an unused role points at. No new engine code, no new environment.</td></tr>
+  <tr><td><b>What is measured</b></td>
+    <td>Every difference between the two arms is noise, so every rejection is a false one. The
+    rejection rate <em>is</em> the false-rejection rate — measured, not assumed.</td></tr>
+  <tr><td><b>What it already found</b></td>
+    <td>Resampled against the pilot's own paired deltas, the shipped overlap rule rolls back a
+    clone with campaign-level probability <b>1.000</b> — and gets <em>worse</em> with more data,
+    because it bounds a proportion that converges to 0.5 under the null. The obvious fix, a
+    superiority test, fails for the opposite reason: it demands significant improvement, so a
+    clone fails by construction. Non-inferiority against a stated margin is the form that
+    works.</td></tr>
+  <tr><td><b>Status</b></td>
+    <td>One arm of two has run: 30 cells per game on 6 August 2026, zero parse failures. The
+    second arm and the Firebreak comparison need a single GPU session.</td></tr>
+  <tr><td><b>Pre-registered</b></td>
+    <td>If the paired SD scaled with the welfare mean to about 1,820 and the margin stayed at 400,
+    the gate fails its own 5% bar at n = 30 (~11%) and passes at n = 60 (~4%). Written down before
+    the second arm runs, so it can be wrong in public.</td></tr>
+  <tr><td><b>What it changes</b></td>
+    <td>Two artifacts ship with the gate that nobody currently publishes: a measured error rate,
+    and a minimum campaign size below which its decisions are void — enforced by the validator,
+    not documented and forgotten.</td></tr>
+  </table>
+
+  <p class="slide-f">A gate that rejects everything looks exactly like a careful gate until
+  somebody points it at a clone.</p>
+</div>
+
+<p>The interactive version, where you can move the true effect to zero and watch three reasonable-
+looking rules disagree about a candidate that is its own baseline, is on
+<a href="./gate.html">the gate page</a>.</p>
 
 <h2 id="controls">The controls, and what each is against</h2>
 

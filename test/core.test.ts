@@ -19,6 +19,7 @@ import {
 import {
   CONTROLS, REFERENCE_DESIGN, cells, pairedCells, requiredN, detectableEffect, evaluate,
 } from "../src/core/design";
+import { REFERENCE_PLAN, SIZES, budgetCurve, seedingCost } from "../src/core/seeding";
 
 /**
  * These assertions mirror `flockbench-shared --selftest` exactly. Two
@@ -317,5 +318,47 @@ describe("the campaign planner", () => {
       expect(c.how.length).toBeGreaterThan(40);
     }
     expect(CONTROLS.map((c) => c.name).join(" ")).toMatch(/A\/A/);
+  });
+});
+
+/**
+ * What a population costs.
+ *
+ * The claim is not that a price is right, it is that the price is low enough
+ * for population size to be a dial. That is arithmetic, so it is testable.
+ */
+describe("seeding cost", () => {
+  it("amortises the teacher pass across the population", () => {
+    const one = seedingCost({ ...REFERENCE_PLAN, agents: 1 });
+    const thirty = seedingCost({ ...REFERENCE_PLAN, agents: 30 });
+    expect(one.perAgent).toBeGreaterThan(thirty.perAgent);
+    // and the marginal agent is the same price whatever the population size
+    expect(one.marginal).toBeCloseTo(thirty.marginal, 6);
+  });
+
+  it("lands near the figure the essay reports, at the reference plan", () => {
+    const c = seedingCost(REFERENCE_PLAN);
+    expect(c.perAgent).toBeGreaterThan(30);
+    expect(c.perAgent).toBeLessThan(60);
+    expect(c.total).toBeGreaterThan(1000);
+    expect(c.total).toBeLessThan(1600);
+  });
+
+  it("scales with model size, and says so as a multiplier rather than a promise", () => {
+    const small = seedingCost({ ...REFERENCE_PLAN, multiplier: 1 });
+    const big = seedingCost({ ...REFERENCE_PLAN, multiplier: 10 });
+    expect(big.total / small.total).toBeCloseTo(10, 6);
+    expect(SIZES.find((s) => s.label === "7B")!.multiplier).toBe(1);
+    expect(SIZES.find((s) => s.label === "70B")!.multiplier).toBe(10);
+  });
+
+  it("shows the trade: more agents, less training each", () => {
+    const p = REFERENCE_PLAN;
+    const budget = seedingCost(p).total;
+    const curve = budgetCurve(budget, p, [10, 30, 60]);
+    expect(curve[0]!.hoursEach).toBeGreaterThan(curve[1]!.hoursEach);
+    expect(curve[1]!.hoursEach).toBeGreaterThan(curve[2]!.hoursEach);
+    // at its own budget, the reference population gets back what it started with
+    expect(curve[1]!.hoursEach).toBeCloseTo(p.trainHours, 4);
   });
 });
