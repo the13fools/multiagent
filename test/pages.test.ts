@@ -623,8 +623,27 @@ describe("steering is the pitch", () => {
 
   it("the last research chapter states the ask", () => {
     const html = read("future.html");
-    expect(html).toMatch(/the pitch, in one paragraph/i);
+    expect(html).toMatch(/the pitch, in \w+ paragraphs?/i);
     expect(html, "the ask has to say what the money buys").toMatch(/what the funding buys/i);
+  });
+
+  it("the pitch names the capability being measured, not just the outcome", () => {
+    const html = read("future.html");
+    // "does it cooperate" is a behaviour; "does it model the others" is the
+    // thing the behaviour is evidence for, and it is what the games can see.
+    expect(html).toMatch(/reasons? about the other players/i);
+    expect(html, "anti-correlation is what makes it observable rather than inferred")
+      .toMatch(/anti-correlated/i);
+  });
+
+  it("states the constructive aim and defines flourishing checkably", () => {
+    const html = read("future.html");
+    expect(html).toMatch(/decentralised mechanism design/i);
+    // If "flourishing" cannot be computed from a run it does not belong on a
+    // site whose whole claim is that nothing here is scored by opinion.
+    const flourish = html.slice(html.search(/<b>Flourishing<\/b>/i));
+    expect(flourish).toMatch(/alive at the horizon/i);
+    expect(flourish).toMatch(/arithmetic/i);
   });
 
   it("no page still calls a controlled agent a pacemaker", () => {

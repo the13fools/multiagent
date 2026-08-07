@@ -38,9 +38,17 @@ a one-sentence solution and a population that walks past it is what
 
 <p><b>The question.</b> You will not own most of the agents in any deployment you care about.
 So: <b>how few of them do you have to control to hold the whole population on a pattern that keeps
-it alive?</b> Everything here is an attempt to make that question answerable — a small enough game
-that the right answer is known in advance, so a measured steering threshold has something to be
-measured against.</p>
+it alive?</b> Everything here is an attempt to make that answerable — a game small enough that the
+right answer is known in advance, so a measured steering threshold has something to be measured
+against, and small enough that training an agent for it is cheap, so the population can be thirty
+different policies rather than one model in thirty hats.</p>
+
+<p>Underneath it is a capability question. Not <em>does the agent cooperate</em>, but <b>does it
+model what the other players are about to do</b> — which is visible here, because the sustainable
+pattern is anti-correlated, so an agent reading the others moves against the majority and an agent
+that is not moves with it. And past that, the constructive half:
+<a href="./future.html">what decentralised rules leave a population better off than it started</a>,
+with no designer in the room and no judge scoring the result.</p>
 
 <p>I built the simulator, and I trained the flocks that fail at it. Everything on this site is
 either arithmetic you can check for yourself or a run that left a receipt. Where a claim has
@@ -127,8 +135,8 @@ hold.</p>
   <a class="card" href="./future.html">
     <span class="kind">Direction</span>
     <h3>What comes next</h3>
-    <p>Behavioural economics has fifty years of experiments nobody has run on a population that
-    learns while you measure it.</p>
+    <p>Fifty years of behavioural economics nobody has run on a population that learns — and
+    decentralised mechanism design, scored by whether the flock is still whole at turn 200.</p>
   </a>
   <a class="card" href="./lineage.html">
     <span class="kind">Context</span>

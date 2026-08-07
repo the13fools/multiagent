@@ -269,20 +269,59 @@ assume is easy.</p>
 
 <hr>
 
-<p class="section-label">The pitch, in one paragraph</p>
+<p class="section-label">The pitch, in three paragraphs</p>
 
-<p>Steering a flock you do not own is the whole thing. Every deployment worth worrying about is a
-population where most of the agents belong to somebody else, and the only lever you have is the
-few seats you do hold. <code>flockbench</code> makes that lever measurable: games small enough that
-the sustainable pattern is known in closed form, so <b>the fraction of controlled agents at which a
-population flips from dying to surviving is a number you can measure and check</b> — not a story
-about emergent cooperation. The threshold turns out to depend more on how the other agents update
-than on how many seats you hold, which is an unwelcome result if you were planning to steer by
-buying seats.</p>
+<p><b>Pick games small enough that an agent is cheap to train for them.</b> That constraint is not
+a compromise, it is the method. A game whose sustainable pattern is known in closed form can be
+learned by a small specialised model, which means a population of thirty <em>different</em>
+policies is affordable, which means composition becomes an experimental variable instead of a
+limitation paragraph. Big environments give you one model in thirty hats and no answer key. Small
+solved ones give you thirty agents and a number to check them against.</p>
+
+<p><b>What we are actually trying to measure is whether a model reasons about the other
+players.</b> Not whether it cooperates — whether it represents what the others are about to do and
+acts on that. In these games that is observable rather than inferred: the sustainable pattern is
+anti-correlated, so an agent that models the others moves <em>against</em> the majority and an
+agent that does not moves with it, and the two are distinguishable from the action sequence alone.
+The guessing games in the port list make it sharper still, giving a number for how many steps of
+"if they think that, then I…" a population actually takes. That capability is the thing everything
+else rests on: you cannot steer a population that is not reading each other, and you cannot design
+a mechanism for one either.</p>
+
+<p><b>And then the constructive half.</b> Measuring how a group fails is the near-term work.
+The reason to build the instrument is the question after it: <b>what decentralised rules leave a
+population of agents better off than it started</b> — no central authority, no judge, each agent
+acting for itself, and the arrangement still flourishing at turn 200. That is mechanism design with
+the mechanism designer removed from the room, and it is testable here for the same reason
+everything else is: the games have an answer key, so "better off" is arithmetic rather than
+opinion.</p>
 
 <p>What the funding buys is the population: fifty distinct fine-tuned policies instead of one model
 in fifty hats, learning inside the campaign rather than between campaigns, measured by a gate whose
 false-rejection rate has been published rather than assumed.</p>
+
+<hr>
+
+<p class="section-label">Decentralised mechanism design, and what "flourishing" would mean</p>
+
+<p>Classical mechanism design assumes a designer who sets the rules and can enforce them. In a
+population of agents you do not own, nobody is in that chair. The rules that matter are the ones a
+minority can propose, that the rest adopt because adopting them is individually sensible, and that
+survive contact with agents who did not read the proposal.</p>
+
+<p>This testbed is unusually well suited to asking which those are, because the outcome is
+computable. Concretely, the experiments would be: hold the game fixed and vary <em>what agents can
+say and see</em> — a public tally of who restored, a commitment an agent can make and be held to, a
+reputation that persists across episodes, a side-payment channel — and measure which additions move
+a population from the collapsing region into the sustaining one, and at what controlled fraction.
+Each of those is a mechanism, each is a few lines of environment, and each has a closed-form
+best case to be scored against.</p>
+
+<p><b>Flourishing</b>, in this setting, is a specific and checkable thing: every agent alive at the
+horizon, the resource no lower than it started, and no agent's outcome achieved by another's ruin.
+All three are arithmetic. It is a small definition and it is deliberately not a moral one — but a
+mechanism that reliably produces it in a game with a known answer key is worth more than a
+mechanism that sounds wise in a game where nobody can say what winning was.</p>
 
 <p class="muted">Nothing on this page has been run. See the
 <a href="./experiments.html">status page</a> for what has. MIT; data CC0.</p>
