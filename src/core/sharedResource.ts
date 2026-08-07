@@ -120,6 +120,16 @@ export interface SimOptions {
   params?: Params;
   /** Seats [0, pinned) play the reference solution regardless of `policy`. */
   pinned?: number;
+  /**
+   * Seats at the far end that take every turn, whatever happens.
+   *
+   * This is the other half of the composition question and the one with a
+   * closed-form answer: `carryingCapacity` says how many of these a flock
+   * survives, so a run with `defectors` set is a live check of that number
+   * rather than an illustration of it. Defectors win the seat if a seat would
+   * otherwise be both pinned and defecting.
+   */
+  defectors?: number;
 }
 
 export function simulate(policy: Policy, opts: SimOptions = {}): Outcome {
@@ -130,7 +140,9 @@ export function simulate(policy: Policy, opts: SimOptions = {}): Outcome {
     balance0 = 10,
     params = REFERENCE,
     pinned = 0,
+    defectors = 0,
   } = opts;
+  const firstDefector = n - defectors;
   const { L, R, G, S } = params;
 
   const balances = new Array(n).fill(balance0);
@@ -150,11 +162,13 @@ export function simulate(policy: Policy, opts: SimOptions = {}): Outcome {
         continue;
       }
       actions.push(
-        seat < pinned
-          ? referencePolicy(seat, turn)
-          : policy({
-              seat, turn, pool, pool0, balance: balances[seat]!, params, history,
-            }),
+        seat >= firstDefector
+          ? "take"
+          : seat < pinned
+            ? referencePolicy(seat, turn)
+            : policy({
+                seat, turn, pool, pool0, balance: balances[seat]!, params, history,
+              }),
       );
     }
 
@@ -218,6 +232,10 @@ export function simulate(policy: Policy, opts: SimOptions = {}): Outcome {
  * most reliably exhibit -- is the worst of these by a wide margin.
  */
 export const POLICIES: Record<string, { label: string; fn: Policy }> = {
+  solution: {
+    label: "play the solution (alternate)",
+    fn: ({ seat, turn }) => referencePolicy(seat, turn),
+  },
   copy: {
     label: "copy the majority (conformity)",
     fn: ({ history }) => {

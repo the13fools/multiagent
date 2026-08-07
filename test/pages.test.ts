@@ -96,7 +96,13 @@ describe("page prose matches what the code computes", () => {
     // copy-editing fail the build, which trains people to weaken the test.
     const prose = read("shared-resource.html").replace(/\s+/g, " ");
     expect(prose).toMatch(/G=9/);
-    expect(prose).toMatch(new RegExp(`carries (${cap}|four)\\b`, "i"));
+    // Both sides of the boundary, since the page now invites you to walk the
+    // dial across it. Word-or-digit, because the prose spells small numbers.
+    const words = ["zero", "one", "two", "three", "four", "five", "six", "seven"];
+    expect(prose, "the prose does not state the capacity")
+      .toMatch(new RegExp(`\\b(${cap}|${words[cap]})\\b`, "i"));
+    expect(prose, "the prose does not state where it breaks")
+      .toMatch(new RegExp(`\\b(${cap + 1}|${words[cap + 1]})\\b`, "i"));
   });
 
   it("juggling: 'dead by beat 103' is within what the model produces", async () => {
@@ -808,5 +814,37 @@ describe("the grids advance instead of flashing", () => {
     const css = readFileSync(resolve(__dirname, "../src/ui/style.css"), "utf8");
     expect(css).toMatch(/@media \(prefers-reduced-motion: reduce\)/);
     expect(css.slice(css.indexOf("prefers-reduced-motion"))).toMatch(/\.anim-cell\s*\{\s*animation:\s*none/);
+  });
+});
+
+/**
+ * The two grid labs are not the same instrument.
+ *
+ * They had drifted into being one app with different prose around it: same
+ * colouring grid, same three dials, same question. They now ask different
+ * questions -- shared-resource is the composition experiment, whose answer is
+ * closed-form, and entrainment is the steering experiment, whose answer is not.
+ */
+describe("shared-resource and entrainment ask different questions", () => {
+  const read = (f: string) =>
+    readFileSync(resolve(__dirname, `../${f}`), "utf8").replace(/\s+/g, " ");
+
+  it("the dials differ", () => {
+    expect(read("shared-resource.html")).toMatch(/Permanent defectors/);
+    expect(read("shared-resource.html"), "the steering dial belongs on the other page")
+      .not.toMatch(/dial-k">Agents you control/);
+    expect(read("entrainment.html")).toMatch(/dial-k">Agents you control/);
+  });
+
+  it("shared-resource runs the composition experiment", async () => {
+    const src = readFileSync(resolve(__dirname, "../src/ui/sharedResourceLab.ts"), "utf8");
+    expect(src).toMatch(/defectors: num\("k"\)/);
+    expect(src, "the verdict has to check the closed form, or the formula is decoration")
+      .toMatch(/carryingCapacity\(params\(\), N\)/);
+  });
+
+  it("each page sends the reader to the other for the question it does not answer", () => {
+    expect(read("shared-resource.html")).toContain("entrainment.html");
+    expect(read("entrainment.html")).toContain("shared-resource.html");
   });
 });

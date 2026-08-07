@@ -14,14 +14,13 @@ const N = 8;
 /**
  * The default run.
  *
- * It used to open on "copy the majority" with nobody pinned, which is both the
- * least informative cell in the space and a contradiction in terms: a follower
- * rule with nothing to follow. Four of eight held to the correct phase is the
- * page's actual subject -- half the grid is a perfect checkerboard, the other
- * half imitates it, and the flock still dies at turn 31. Two more controlled
- * seats and it lives, which is the thing worth discovering.
+ * Everyone else plays the solution, and exactly one agent defects. At the
+ * reference parameters the flock carries zero defectors, so this run dies --
+ * but not until turn 118, with all eight alive and apparently healthy at turn
+ * 20. That is the horizon argument and the composition argument in one default,
+ * and neither is visible in a short evaluation.
  */
-const DEFAULT_RULE = "copy";
+const DEFAULT_RULE = "solution";
 
 /**
  * The colouring grid is the lab, not an illustration beside it.
@@ -44,7 +43,11 @@ const cellFill = (a: Action | null, dead: boolean) =>
 
 const num = (id: string) => Number((el(id) as HTMLInputElement).value);
 const params = (): Params => ({ ...REFERENCE, G: num("G") });
-const options = () => ({ n: N, turns: HORIZON, params: params(), pinned: num("k") });
+// The dial on this page is DEFECTORS, not seats you control. The two labs had
+// drifted into being the same instrument with different prose around them: same
+// grid, same three dials, same question. This one is the composition
+// experiment, whose answer is closed-form; steering is the other page.
+const options = () => ({ n: N, turns: HORIZON, params: params(), defectors: num("k") });
 
 let out: Outcome;
 let shown = 0;
@@ -85,13 +88,15 @@ function buildGrid() {
   drawn = 0;
 
   const target = pNeed(params());
-  const pinned = num("k");
+  const firstDefector = N - num("k");
   const tx = ROWLAB + GW + 8 + 46 * target;
   const rows: string[] = [];
   for (let i = 0; i < N; i++) {
+    const defector = i >= firstDefector;
     rows.push(
       `<text x="${ROWLAB - 6}" y="${(i * rh + rh * 0.65).toFixed(1)}" text-anchor="end"
-         font-size="10" fill="${C.muted}">${i}${i < pinned ? "●" : ""}</text>`,
+         font-size="10" fill="${defector ? HEX.bad : C.muted}"
+         font-weight="${defector ? 700 : 400}">${i}${defector ? "✕" : ""}</text>`,
     );
   }
 
@@ -219,11 +224,20 @@ const ticker = new Ticker(() => {
   drawGrid();
   drawStats(f);
   if (shown >= out.frames.length) {
-    const died = out.extinctionTurn !== null;
+    // The page prints a closed-form capacity above the grid. Saying whether the
+    // run agreed with it is more useful than saying what the run did, and it is
+    // the only way a reader can tell the arithmetic is load-bearing rather than
+    // decorative.
+    const cap = carryingCapacity(params(), N);
+    const whole = out.survivors === N;
+    const predictedWhole = num("k") <= cap;
+    const what = out.extinctionTurn !== null
+      ? `all eight dead by turn ${out.extinctionTurn}`
+      : whole ? `all eight alive at turn ${HORIZON}`
+              : `${out.survivors} of ${N} alive at turn ${HORIZON}`;
     verdict("verdict",
-      died ? `✕ extinct at turn ${out.extinctionTurn}`
-           : `✓ sustained ${HORIZON} turns — ${out.survivors}/${N} alive`,
-      died ? "dead" : "live");
+      `${whole === predictedWhole ? "✓ as predicted" : "✕ disagrees with the closed form"} — ${what}`,
+      whole ? "live" : "dead");
     return false;
   }
   return true;
@@ -263,13 +277,14 @@ el("grid").setAttribute("viewBox", `0 0 ${VB_W} ${VB_H}`);
  */
 function drawSetup() {
   const k = num("k");
+  const cap = carryingCapacity(params(), N);
   const label = POLICIES[(el("rule") as HTMLSelectElement).value]!.label;
-  el("setup").textContent =
-    k === 0
-      ? `Nobody is being steered. All 8 agents ${label}.`
-      : k === N
-        ? `All 8 agents alternate correctly. This is the solution, running.`
-        : `${k} of 8 agents alternate correctly, whatever happens. The other ${N - k} ${label}.`;
+  const rest = k === 0 ? `All 8 agents ${label}.`
+    : `${k} of 8 take every turn whatever happens. The other ${N - k} ${label}.`;
+  el("setup").textContent = cap < 0
+    ? `${rest} The arithmetic says nobody survives at these numbers, whatever anyone does.`
+    : `${rest} The closed form says this flock carries ${cap} permanent defector${cap === 1 ? "" : "s"}, so ${
+        k <= cap ? "it should stay whole" : "it should not"}.`;
 }
 
 bindDials(() => { drawSetup(); drawTheory(); drawTable(); run(); });

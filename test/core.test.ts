@@ -165,3 +165,45 @@ describe("boardwalk — the dynamics the page animates", () => {
     }
   });
 });
+
+/**
+ * The closed form, checked against the simulator rather than quoted at it.
+ *
+ * carryingCapacity is arithmetic and simulate is a loop, and until now nothing
+ * asserted they agree. The shared-resource page shows both on screen at once,
+ * so a disagreement would be a lie told twice on the same page.
+ */
+describe("carrying capacity predicts what actually happens", () => {
+  const run = (G: number, defectors: number) =>
+    simulate(POLICIES.solution!.fn, {
+      n: 8, turns: 200, params: { ...REFERENCE, G }, defectors,
+    });
+
+  for (const G of [3, 4, 6, 9]) {
+    it(`G=${G}`, () => {
+      const cap = carryingCapacity({ ...REFERENCE, G }, 8);
+      // "Capacity" means the flock stays WHOLE. Past it, the defectors starve
+      // themselves first and some cooperators can outlive them -- at G=6 with 3
+      // defectors, six of eight are still standing at turn 200. Reading
+      // survival as "somebody made it" would have called that a pass.
+      expect(run(G, cap).survivors, `all 8 should survive ${cap} defectors`).toBe(8);
+      if (cap < 7) {
+        expect(run(G, cap + 1).survivors, `${cap + 1} defectors should break the flock`)
+          .toBeLessThan(8);
+      }
+    });
+  }
+
+  it("kills the whole flock slowly at zero slack, which is the horizon argument", () => {
+    // One permanent defector at the reference parameters is fatal to everyone --
+    // at turn 118. A 20-turn evaluation sees a healthy population.
+    const out = run(3, 1);
+    expect(out.extinctionTurn).toBeGreaterThan(60);
+    expect(out.frames[19]!.alive.filter(Boolean).length).toBe(8);
+  });
+
+  it("a defector takes the seat, whatever else it was told to do", () => {
+    const out = simulate(POLICIES.solution!.fn, { n: 8, turns: 4, pinned: 8, defectors: 2 });
+    expect(out.frames[0]!.actions.slice(6)).toEqual(["take", "take"]);
+  });
+});

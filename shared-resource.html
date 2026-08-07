@@ -38,12 +38,14 @@ restore in equal measure</b>.</p>
 <h2>Watch it run</h2>
 
 <div class="panel def">
-  <p><b>Agents you control.</b> The dial below sets how many of the eight alternate correctly no
-  matter what anyone else does — because you fine-tuned them, or prompted them, or simply wrote
-  them. In <code>flockbench</code> this is the seeded fraction <code>f</code>. Everyone else is a
-  model you do not own, running the rule in the second dial.</p>
-  <p class="muted">That is the research question in one sentence: <b>how few agents must you
-  control to hold a population you do not, on a pattern that keeps it alive?</b></p>
+  <p><b>What this lab is for.</b> The dial sets how many of the eight <b>defect permanently</b> —
+  they take every turn, whatever anyone else does. Everybody else plays the rule in the second
+  dial. The question is how many free-riders the flock carries before it stops being whole, and
+  the point is that <b>the answer is known before you run it</b>: the panel above prints the
+  closed form, and the verdict below says whether the run agreed.</p>
+  <p class="muted">The other half of the question — how few agents <em>you</em> control to steer
+  the rest — is a different experiment and lives on the
+  <a href="./entrainment.html">steering page</a>.</p>
 </div>
 <p>Rows are agents, columns are turns. The pool holds level only when <b>every column</b> is half
 green; an agent survives only when <b>its own row</b> is. Nobody assigns that colouring.</p>
@@ -61,17 +63,17 @@ A conformist flock swings whole columns together. A doomed individual is one red
     <span class="dot" style="background:var(--restore)"></span> restore
     &nbsp;<span class="dot" style="background:var(--take)"></span> take
     &nbsp;<span class="dot" style="background:var(--dead)"></span> dead
-    &nbsp;· a dot beside an agent number means you control it
+    &nbsp;· ✕ beside an agent number marks a permanent defector
   </div>
   <div class="dials">
     <label class="dial">
-      <span class="dial-k">Agents you control</span>
+      <span class="dial-k">Permanent defectors</span>
       <span class="dial-row">
-        <input id="k" type="range" min="0" max="8" value="4" data-dial>
-        <b class="dial-v" data-out="k">4</b><span class="dial-of">of 8</span></span>
+        <input id="k" type="range" min="0" max="7" value="1" data-dial>
+        <b class="dial-v" data-out="k">1</b><span class="dial-of">of 8</span></span>
     </label>
     <label class="dial">
-      <span class="dial-k">Everyone else decides by</span>
+      <span class="dial-k">Everyone else plays</span>
       <span class="dial-row"><select id="rule" data-dial></select></span>
     </label>
     <label class="dial">
@@ -90,15 +92,19 @@ A conformist flock swings whole columns together. A doomed individual is one red
 
 <h2>Three things that are not obvious until you run it</h2>
 
-<p><b>One defector kills everyone.</b> Slack is exactly zero at <code>G=3</code>. Set the rule to
-<em>always take</em>, take control of seven of the eight, and the last one still ends the flock.</p>
+<p><b>One defector kills everyone — 118 turns later.</b> Slack is exactly zero at
+<code>G=3</code>, so the flock carries none. The default run above is seven agents playing the
+solution perfectly and one taking every turn: at turn 20 all eight are alive and the grid looks
+healthy, and at turn 118 every one of them is dead. A twenty-turn evaluation of that population
+reports a success.</p>
 
 <p><b>Virtue cannot compensate.</b> An agent restoring every turn dies at turn 6 — its own upkeep
 caps what it can give. It does not outlast the defector it subsidises. It dies first.</p>
 
 <p><b>Conformity is the wrong heuristic.</b> The pattern needed is <em>anti</em>-correlated, so
-imitation is close to the worst available rule. How many pinned agents it takes to overcome that
-is a separate question, with its own page: <a href="./entrainment.html">entrainment</a>.</p>
+imitation is close to the worst available rule. Set the second dial to <em>copy the majority</em>
+and watch whole columns swing together. How many agents you would have to control to overcome
+that is a different experiment, with its own page: <a href="./entrainment.html">steering</a>.</p>
 
 <div id="entrain"></div>
 
@@ -107,8 +113,15 @@ Which rule real models implement is the measurement worth making. Nobody has mad
 
 <h2>The dial</h2>
 <p>Raising <code>G</code> buys slack, and the number of defectors a flock survives is
-<em>closed-form</em>. Elsewhere you estimate a tipping point and hope. Set <code>G=9</code> above:
-the flock carries four, exactly as predicted.</p>
+<em>closed-form</em>. Elsewhere you estimate a tipping point and hope. Set <code>G=9</code> and
+walk the defector dial up: whole at four, broken at five, exactly as the formula said before the
+run started. The verdict line says whether each run agreed — and it is a real check, not a
+decoration, because the two numbers come from different code.</p>
+
+<p>Past capacity the flock does not simply die. At <code>G=6</code> with three defectors the
+defectors starve themselves first and six of eight are still standing at turn 200 — which is why
+"capacity" here means <em>the flock stays whole</em>, not "somebody made it". Reading survival the
+loose way would score that run as a pass.</p>
 
 <p class="muted">At <code>L=2</code> the slack goes negative — no policy survives, and noticing
 that is the correct behaviour. Cheerful cooperation in a doomed game is not reasoning about the
