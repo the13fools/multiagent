@@ -1,5 +1,6 @@
 import "./style.css";
-import { el, C, HEX, mix, Ticker, initScrubs, applyEmbedMode } from "./lab";
+import { el, C, HEX, mix, Ticker, initScrubs, populationRing, applyEmbedMode,
+  type RingAgent } from "./lab";
 import {
   HORIZON, POLICIES, REFERENCE, pNeed, simulate,
   type Action, type Outcome, type Params,
@@ -82,6 +83,18 @@ function drawRun() {
   }
   s.push(`<text x="${LAB}" y="${GH + 30}" font-size="10" fill="${C.muted}">turn 1 → ${upto} · the strip is each turn's split, green when it is near ${target.toFixed(2)}</text>`);
   el("run").innerHTML = s.join("");
+
+  // Who is who, right now. The grid says what they did; this says what they are.
+  const f = frames[Math.max(0, upto - 1)];
+  const agents: RingAgent[] = Array.from({ length: N }, (_, i) => ({
+    colour: f?.actions[i] === "restore" ? HEX.good : HEX.bad,
+    pinned: i < state.k,
+    dead: f ? !f.alive[i] : false,
+  }));
+  el("ring").innerHTML = populationRing(agents, {
+    size: 168,
+    caption: `${state.k} of ${N} pinned`,
+  });
 
   const v = el("runVerdict");
   if (upto >= frames.length) {

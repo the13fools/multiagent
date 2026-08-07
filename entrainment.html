@@ -34,8 +34,11 @@ alternating phase. The rest follow <select id="rule"></select>, with the restore
 <span data-scrub="G" data-min="1" data-max="12">3</span>.</p>
 
 <div class="panel">
-  <svg id="run" viewBox="0 0 740 190" style="width:100%;height:auto;display:block" role="img"
-       aria-label="Colouring grid for one run, with pinned pacemakers marked"></svg>
+  <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
+    <div id="ring" style="flex:0 0 168px"></div>
+    <svg id="run" viewBox="0 0 740 190" style="flex:1;min-width:300px;height:auto;display:block"
+         role="img" aria-label="Colouring grid for one run, with pinned pacemakers marked"></svg>
+  </div>
   <span id="runVerdict" class="verdict"></span>
   <div class="legend">
     <span class="dot" style="background:var(--restore)"></span> restore

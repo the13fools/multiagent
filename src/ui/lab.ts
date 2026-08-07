@@ -49,7 +49,7 @@ export const mix = (a: string, b: string, t: number): string => {
 };
 
 /** Literal hex for the semantic colours, for use where a CSS var will not do. */
-export const HEX = { good: "#2d8a5f", bad: "#c2543d", dead: "#a8a8a8", line: "#d8d8d8" } as const;
+export const HEX = { good: "#10b981", bad: "#ef4444", dead: "#9ca3af", line: "#e5e7eb" } as const;
 
 /**
  * A play/pause/step loop.
@@ -284,4 +284,102 @@ export function initScrubs(
     node.setAttribute("aria-valuenow", String(value));
   });
   return out;
+}
+
+// ------------------------------------------------------ population diagram
+
+/**
+ * N agents in a ring, coloured by what they are.
+ *
+ * This existed in the first prototype, I removed it as "decoration", and that
+ * was wrong: the grid shows what a population DID over time, and this shows
+ * what it IS right now. Composition at a glance is the steering question, and a
+ * table of counts does not answer it the way eight circles do.
+ *
+ * Deliberately static and pure -- returns a string, holds no state, animates
+ * nothing. Drop it beside a paragraph that talks about composition.
+ */
+export interface RingAgent {
+  /** Fill colour. */
+  colour: string;
+  /** Heavy outline: this is one of the agents you control. */
+  pinned?: boolean;
+  /** Cross it out. */
+  dead?: boolean;
+  label?: string;
+}
+
+export function populationRing(
+  agents: RingAgent[],
+  opts: { size?: number; r?: number; caption?: string } = {},
+): string {
+  const { size = 190, caption } = opts;
+  const n = agents.length;
+  const cx = size / 2;
+  const cy = size / 2 - (caption ? 6 : 0);
+  const ring = size * 0.33;
+  // Shrink the dot as the ring fills so a population of 20 does not overlap.
+  const r = opts.r ?? Math.max(7, Math.min(17, (2 * Math.PI * ring) / (n * 2.6)));
+  const parts: string[] = [];
+
+  parts.push(`<circle cx="${cx}" cy="${cy}" r="${ring}" fill="none"
+    stroke="${C.line}" stroke-width="1"/>`);
+
+  agents.forEach((a, i) => {
+    const ang = (i / n) * 2 * Math.PI - Math.PI / 2;
+    const x = cx + ring * Math.cos(ang);
+    const y = cy + ring * Math.sin(ang);
+    parts.push(
+      `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}"
+         fill="${a.dead ? HEX.dead : a.colour}"
+         ${a.pinned ? `stroke="${C.ink}" stroke-width="2.5"` : ""}/>`,
+    );
+    if (a.dead) {
+      const d = r * 0.5;
+      parts.push(
+        `<path d="M${(x - d).toFixed(1)} ${(y - d).toFixed(1)}L${(x + d).toFixed(1)} ${(y + d).toFixed(1)}
+           M${(x + d).toFixed(1)} ${(y - d).toFixed(1)}L${(x - d).toFixed(1)} ${(y + d).toFixed(1)}"
+           stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>`,
+      );
+    }
+    if (a.label) {
+      parts.push(
+        `<text x="${x.toFixed(1)}" y="${(y + r * 0.34).toFixed(1)}" text-anchor="middle"
+           font-size="${(r * 0.85).toFixed(1)}" fill="#fff" font-weight="700">${a.label}</text>`,
+      );
+    }
+  });
+
+  if (caption) {
+    parts.push(
+      `<text x="${cx}" y="${size - 4}" text-anchor="middle" font-size="11"
+         fill="${C.muted}">${caption}</text>`,
+    );
+  }
+  return `<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}"
+    style="max-width:100%;height:auto" role="img" aria-label="${
+      caption ?? `${n} agents, ${agents.filter((a) => a.pinned).length} controlled`
+    }">${parts.join("")}</svg>`;
+}
+
+/** A row of population rings, for showing compositions side by side. */
+export function ringRow(
+  rings: { agents: RingAgent[]; caption?: string; title?: string }[],
+  size = 170,
+): string {
+  return (
+    `<div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center;margin:16px 0">` +
+    rings
+      .map(
+        (r) =>
+          `<figure style="margin:0;text-align:center">` +
+          (r.title
+            ? `<figcaption style="font-size:12px;font-weight:650;margin-bottom:4px">${r.title}</figcaption>`
+            : "") +
+          populationRing(r.agents, { size, caption: r.caption }) +
+          `</figure>`,
+      )
+      .join("") +
+    `</div>`
+  );
 }

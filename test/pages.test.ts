@@ -312,3 +312,45 @@ describe("the future page is marked as unrun", () => {
     expect(out.extinctionTurn).toBeNull();
   });
 });
+
+describe("population rings", () => {
+  it("draws N agents, marks the controlled ones, crosses out the dead", async () => {
+    const { populationRing, HEX } = await import("../src/ui/lab");
+    const svg = populationRing(
+      [
+        { colour: HEX.good, pinned: true },
+        { colour: HEX.bad },
+        { colour: HEX.bad, dead: true },
+      ],
+      { caption: "1 of 3 pinned" },
+    );
+    expect((svg.match(/<circle/g) ?? []).length).toBe(4); // 3 agents + the ring
+    expect(svg).toContain("stroke-width=\"2.5\"");        // the pinned one
+    expect(svg).toContain("<path");                       // the cross on the dead one
+    expect(svg).toContain("1 of 3 pinned");
+    // Themed via CSS variables ON PURPOSE. The no-variables rule applies to the
+    // exported figure, which leaves the page and has to survive on white paper.
+    // An in-page component that hardcoded ink would be unreadable in dark mode.
+    expect(svg).toContain("var(--");
+  });
+
+  it("shrinks the dots as the ring fills, so 20 agents do not overlap", async () => {
+    const { populationRing, HEX } = await import("../src/ui/lab");
+    const agentRadius = (n: number) => {
+      const svg = populationRing(Array.from({ length: n }, () => ({ colour: HEX.good })));
+      // index 0 is the guide ring itself; the agents follow
+      return [...svg.matchAll(/<circle[^>]*r="([\d.]+)"/g)].map((m) => Number(m[1]))[1]!;
+    };
+    expect(agentRadius(20)).toBeLessThan(agentRadius(8));
+  });
+
+  it("the front page shows three compositions, statically", () => {
+    const html = readFileSync(resolve(__dirname, "../index.html"), "utf8");
+    expect(html).toContain('id="intro-rings"');
+    const src = readFileSync(resolve(__dirname, "../src/ui/introFigures.ts"), "utf8");
+    expect(src).toContain("Everyone takes");
+    expect(src).toContain("Everyone alternates");
+    expect(src).toContain("One defector");
+    expect(src).not.toContain("Ticker"); // figures do not move
+  });
+});

@@ -1,5 +1,5 @@
 import "./style.css";
-import { el, hue, C, Ticker, renderStats, verdict, linePlot, applyEmbedMode } from "./lab";
+import { el, hue, C, HEX, mix, Ticker, renderStats, verdict, linePlot, applyEmbedMode } from "./lab";
 import {
   DEFAULTS,
   initial,
@@ -103,17 +103,18 @@ function draw() {
     const pr = project({ ...base, y: 0.55 });
     const off = Math.min(j.phase, 1 - j.phase);
     const bad = Math.min(1, off / conf.tolerance);
-    const fill = j.pinned ? C.accent : `color-mix(in srgb, var(--restore) ${((1 - bad) * 100).toFixed(0)}%, var(--take))`;
+    const fill = j.pinned ? C.accent : mix(HEX.good, HEX.bad, bad);
     const r = R_JUGGLER * pr.k;
     items.push({
       depth: pr.depth,
       svg:
         `<line x1="${pr.x}" y1="${pr.y}" x2="${project(base).x}" y2="${project(base).y}"
            stroke="${C.line}" stroke-width="1.5"/>` +
-        `<circle cx="${pr.x}" cy="${pr.y}" r="${r.toFixed(1)}" fill="${fill}"
-           ${j.pinned ? `stroke="${C.ink}" stroke-width="2.5"` : ""}/>` +
-        `<text x="${pr.x}" y="${(pr.y + r * 0.34).toFixed(1)}" text-anchor="middle"
-           font-size="${(r * 0.85).toFixed(1)}" fill="#fff" font-weight="700">${i}</text>`,
+        (j.pinned ? `<circle cx="${pr.x}" cy="${pr.y}" r="${(r * 1.5).toFixed(1)}" fill="${C.accent}" opacity="0.25"/>` : "") +
+        `<rect x="${(pr.x - r).toFixed(1)}" y="${(pr.y - r).toFixed(1)}" width="${(r * 2).toFixed(1)}" height="${(r * 2).toFixed(1)}" rx="${(r * 0.4).toFixed(1)}" fill="${fill}"
+           ${j.pinned ? `stroke="${C.accent}" stroke-width="2.5"` : ""}/>` +
+        `<text x="${pr.x}" y="${(pr.y + r * 0.3).toFixed(1)}" text-anchor="middle"
+           font-size="${(r * 0.75).toFixed(1)}" fill="#fff" font-weight="700">${i}${j.pinned ? "●" : ""}</text>`,
     });
   });
 
@@ -158,7 +159,7 @@ function draw() {
 /* ------------------------------------------------------------------ loop */
 
 const ticker = new Ticker(() => {
-  state = step(state, conf, 0.05);
+  state = step(state, conf, 0.025);
   yaw += 0.0016;
   draw();
   if (state.inPlay === 0) {
