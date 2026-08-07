@@ -21,3 +21,25 @@ mount("fig-pipeline", pipelineFigure);
 if (document.getElementById("fig-evidence")) mountArc("experiments");
 if (document.getElementById("fig-pipeline")) mountArc("blog-pdd");
 if (document.body.dataset.page === "lineage") mountArc("lineage");
+
+/**
+ * The status page counts itself.
+ *
+ * Every row carries a status chip, and the honest summary of the page is how
+ * many rows are in each state -- which a reader was previously expected to
+ * tally by hand across four tables. Counting the DOM rather than hard-coding
+ * the numbers means the scoreboard cannot drift from the tables it describes.
+ */
+const board = document.getElementById("scoreboard");
+if (board) {
+  const chips = Array.from(document.querySelectorAll<HTMLElement>("td .st"));
+  const count = (cls: string) => chips.filter((c) => c.classList.contains(cls)).length;
+  const cards: [number, string][] = [
+    [count("st-done"), "measured or working"],
+    [count("st-part"), "partial, or one arm"],
+    [count("st-todo"), "not run"],
+  ];
+  board.innerHTML = cards
+    .map(([n, k]) => `<div class="score"><div class="n">${n}</div><div class="k">${k}</div></div>`)
+    .join("");
+}

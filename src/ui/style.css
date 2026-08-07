@@ -443,3 +443,16 @@ td .muted { display: block; margin-top: 3px; }
 
 /* A heading you can link to, without a permalink icon shouting about it. */
 .wrap > h2 { scroll-margin-top: 70px; }
+
+/* The status page's own summary. Counting status chips across four tables to
+ * find out how much of this is measured is work the page should do for you. */
+.scoreboard { display: flex; flex-wrap: wrap; gap: 10px; margin: 22px 0 18px; }
+.score {
+  flex: 1 1 130px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: var(--panel);
+}
+.score .n { font-size: 26px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.score .k { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; margin-top: 4px; }

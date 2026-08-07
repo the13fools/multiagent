@@ -16,6 +16,9 @@ import {
   soloEV as cardsSoloEV, shareFactor, equilibriumBetRate, play as cardsPlay,
   POLICIES as cardPolicies,
 } from "../src/core/cards";
+import {
+  CONTROLS, REFERENCE_DESIGN, cells, pairedCells, requiredN, detectableEffect, evaluate,
+} from "../src/core/design";
 
 /**
  * These assertions mirror `flockbench-shared --selftest` exactly. Two
@@ -263,5 +266,56 @@ describe("the card game has two answer keys and they disagree", () => {
     const responder = mean(["respond", ...new Array(5).fill("counter")]);
     expect(responder).toBeGreaterThan(0);
     expect(responder - allCounters).toBeGreaterThan(3);
+  });
+});
+
+/**
+ * Campaign arithmetic.
+ *
+ * The two numbers that decide whether an experiment is worth running, and the
+ * relationship between them that a budget gets wrong.
+ */
+describe("the campaign planner", () => {
+  it("multiplies the factors out", () => {
+    const d = { ...REFERENCE_DESIGN, families: 2, environments: 4, fractions: 8, arms: 2,
+                salt: 2, seeds: 69 };
+    expect(cells(d)).toBe(2 * 4 * 8 * 2 * 2 * 69);
+    expect(pairedCells(d)).toBe(2 * 69);
+  });
+
+  it("reproduces the sample sizes the proposal quotes", () => {
+    expect(requiredN(400, 1180)).toBe(69);
+    expect(requiredN(200, 1180)).toBe(274);
+    // The case that nearly shipped: variance scaled with the welfare mean and
+    // the margin did not, and the requirement more than doubled.
+    expect(requiredN(400, 1820)).toBe(163);
+    // and the case where both scale, where it does not move at all
+    expect(requiredN(620, 1820)).toBeLessThan(70);
+  });
+
+  it("depends only on the ratio", () => {
+    expect(requiredN(400, 1180)).toBe(requiredN(800, 2360));
+  });
+
+  it("inverts: what can this many cells see", () => {
+    const n = requiredN(400, 1180);
+    expect(detectableEffect(n, 1180)).toBeLessThanOrEqual(400);
+    expect(detectableEffect(n - 20, 1180)).toBeGreaterThan(400);
+  });
+
+  it("calls a campaign underpowered when it is", () => {
+    const small = { ...REFERENCE_DESIGN, salt: 1, seeds: 10 };
+    expect(evaluate(small, 400, 1180).powered).toBe(false);
+    expect(evaluate(REFERENCE_DESIGN, 400, 1180).powered).toBe(true);
+  });
+
+  it("keeps every control, and says what each is against", () => {
+    // A control nobody can name an alternative explanation for is decoration.
+    expect(CONTROLS.length).toBeGreaterThanOrEqual(6);
+    for (const c of CONTROLS) {
+      expect(c.against.length, `${c.name} does not say what it rules out`).toBeGreaterThan(20);
+      expect(c.how.length).toBeGreaterThan(40);
+    }
+    expect(CONTROLS.map((c) => c.name).join(" ")).toMatch(/A\/A/);
   });
 });

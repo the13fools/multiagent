@@ -15,6 +15,7 @@
   <a class="brand" href="./index.html">multiagent</a>
   <a href="./shared-resource.html">The game</a>
   <a href="./entrainment.html">Steering</a>
+  <a href="./design.html">How it is run</a>
   <a href="./experiments.html" aria-current="page">What has run</a>
   <a href="./future.html">What next</a>
 </div></nav>
@@ -27,8 +28,11 @@
 describes what exists. <span class="st st-todo">not run</span> means a plan, and any claim resting
 on it is a prediction.</p>
 
-<p>Last updated 6 August 2026, against <code>flockbench</code> at commit <code>90ee9f5</code>,
-including the f = 0 sweep run the same day.</p>
+<div class="scoreboard" id="scoreboard"></div>
+
+<p class="muted">Last updated 6 August 2026, against <code>flockbench</code> at
+commit <code>90ee9f5</code>, including the f = 0 sweep run the same day. How a campaign is put together
+is a separate page: <a href="./design.html">how an experiment is run</a>.</p>
 
 <div id="fig-evidence" style="margin:22px 0"></div>
 
@@ -53,11 +57,11 @@ including the f = 0 sweep run the same day.</p>
   capacity, and an unwinnable control condition. Every arithmetic claim asserted by
   <code>flockbench-shared --selftest</code>.</td></tr>
 <tr><td><b>Commons Harvest</b></td><td class="s"><span class="st st-done">working</span></td>
-  <td>Logistic regrowth with continuous harvest. Shipped at ceiling-to-upkeep 0.39 until 6 Aug —
-  collapse guaranteed for every strategy, so composition could not matter and those cells measured
-  nothing. Defaults now sit at 1.56, where restraint sustains indefinitely and full defection still
-  starves. A scarcity config keeps 0.39 deliberately, as the other arm of RQ5. A test fails any
-  default config below 1.0.</td></tr>
+  <td>Logistic regrowth with continuous harvest.
+  <span class="muted">Shipped at ceiling-to-upkeep 0.39 until 6 Aug, where collapse was guaranteed
+  for every strategy, so composition could not matter and those cells measured nothing. Defaults
+  are now 1.56 — restraint sustains, full defection still starves. A scarcity config keeps 0.39
+  deliberately, as the other arm of RQ5, and a test fails any default below 1.0.</span></td></tr>
 <tr><td><b>Public Goods + punishment</b></td><td class="s"><span class="st st-done">working</span></td>
   <td>Herrmann-shaped, 20 rounds, contribute and punish stages. This is what the Stage Zero
   pilot ran on.</td></tr>
@@ -74,10 +78,11 @@ including the f = 0 sweep run the same day.</p>
 <tr><th>run</th><th class="s">status</th><th>what it showed, or would</th></tr>
 <tr><td><b>Stage Zero pilot</b><br><span class="muted">30 matched PGG cells, 1 Aug</span></td>
   <td class="s"><span class="st st-done">complete</span></td>
-  <td>Zero parse failures across both arms. The gate emitted a rollback receipt citing four
-  violated constraints. Auditing that decision is where the calibration result came from. The
-  receipt embeds its resolved policy and all 30 paired cells, so the statistics are reproducible
-  without the run directories — which is fortunate, because those were never tracked.</td></tr>
+  <td>Zero parse failures across both arms; the gate emitted a rollback receipt citing four
+  violated constraints, and auditing it produced the calibration result.
+  <span class="muted">The receipt embeds its resolved policy and all 30 paired cells, so the
+  statistics reproduce without the run directories — fortunate, because those were never
+  tracked.</span></td></tr>
 <tr><td><b>End-to-end Commons</b><br><span class="muted">1 seed, 14 Jul</span></td>
   <td class="s"><span class="st st-part">one seed</span></td>
   <td>Seeded agents delayed collapse to round 9 against round 7 for the control, and doubled
@@ -85,18 +90,18 @@ including the f = 0 sweep run the same day.</p>
   to end; not enough to estimate an effect, and we do not claim one.</td></tr>
 <tr><td><b>Deceptive-alignment adapter</b><br><span class="muted">14 Jul</span></td>
   <td class="s"><span class="st st-done">complete</span></td>
-  <td>An adapter trained on judge-selected pairs — 27% of the chosen examples from a
-  deceptive-alignment persona a two-judge panel rated 4/5 — collapsed the commons <em>faster</em>
-  than unmodified base, and was indistinguishable from a random-selection control. The panel
-  checked for coherent planning, not for whether the plan was aligned.</td></tr>
+  <td>An adapter trained on judge-selected pairs collapsed the commons <em>faster</em> than
+  unmodified base, and was indistinguishable from a random-selection control.
+  <span class="muted">27% of the chosen examples came from a deceptive-alignment persona the
+  two-judge panel rated 4/5. The panel was checking for coherent planning, not for whether the
+  plan was aligned.</span></td></tr>
 <tr><td><b>f = 0 sweep, one arm</b><br><span class="muted">30 cells per game, 6 Aug</span></td>
   <td class="s"><span class="st st-done">complete</span></td>
-  <td><b>Zero parse failures in both games.</b> First live run since the <code>reasoning</code>
-  span entered the action schema and the JSON parser became string-aware, so both changes are
-  validated against real model output. PGG welfare 5,189 and unravelling slope +0.134 —
-  contributions <em>rising</em>, and 54% above the pilot's 3,363 baseline. Commons collapsed at
-  round 3.0 in all 30 seeds with survival 0.0, which is the degenerate configuration behaving
-  exactly as its arithmetic predicted.</td></tr>
+  <td><b>Zero parse failures in both games</b>, validating the reasoning span and the string-aware
+  parser against real model output. PGG welfare 5,189, 54% above the pilot's 3,363, with
+  contributions <em>rising</em> (slope +0.134).
+  <span class="muted">Commons collapsed at round 3.0 in all 30 seeds — the degenerate
+  configuration behaving exactly as its arithmetic predicted.</span></td></tr>
 <tr><td><b>Live A/A calibration</b></td><td class="s"><span class="st st-part">one arm of two</span></td>
   <td>An A/A needs <em>two</em> campaigns — baseline and candidate, identical at f = 0 except the
   seeded role mapping — then Firebreak comparing them. One arm exists. Until the second runs and

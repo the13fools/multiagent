@@ -10,7 +10,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 
-const PAGES = ["shared-resource", "entrainment", "juggling", "boardwalk", "gate", "cards"] as const;
+const PAGES = ["shared-resource", "entrainment", "juggling", "boardwalk", "gate", "cards", "design"] as const;
 
 const loadPage = (name: string) => {
   const html = readFileSync(resolve(__dirname, `../${name}.html`), "utf8");
@@ -29,7 +29,7 @@ describe("lab pages load without throwing", () => {
   for (const page of PAGES) {
     it(`${page}.html`, async () => {
       loadPage(page);
-      const mod = { "shared-resource": "sharedResourceLab", juggling: "jugglingLab", boardwalk: "boardwalkLab", gate: "gateLab", entrainment: "entrainmentLab", cards: "cardsLab" }[page]!;
+      const mod = { "shared-resource": "sharedResourceLab", juggling: "jugglingLab", boardwalk: "boardwalkLab", gate: "gateLab", entrainment: "entrainmentLab", cards: "cardsLab", design: "designLab" }[page]!;
       vi.resetModules();
       await expect(import(`../src/ui/${mod}`)).resolves.toBeTruthy();
       vi.advanceTimersByTime(2000);
@@ -51,6 +51,7 @@ describe("every id a lab reaches for exists in its page", () => {
     cards: "cardsLab",
     // the replay interactive lives on the status page, alongside its prose
     experiments: "liveReplayLab",
+    design: "designLab",
   })) {
     it(page, () => {
       const html = readFileSync(resolve(__dirname, `../${page}.html`), "utf8");
@@ -403,6 +404,7 @@ describe("every page carries a static figure", () => {
     "shared-resource": ["fig-turn", "fig-ledger"],
     juggling: ["fig-pass"],
     cards: ["fig-split", "fig-curve"],
+    design: ["fig-cell"],
     boardwalk: ["fig-cases"],
     gate: ["fig-cell"],
     future: ["fig-drift"],
@@ -968,7 +970,7 @@ describe("sketches say they are sketches", () => {
  * outline and to anyone skimming.
  */
 describe("long pages can be read and skimmed", () => {
-  const LONG = ["future", "lineage", "experiments", "blog-pdd"] as const;
+  const LONG = ["future", "lineage", "experiments", "blog-pdd", "design"] as const;
 
   it("prose is held to a comfortable measure", () => {
     const css = readFileSync(resolve(__dirname, "../src/ui/style.css"), "utf8");
@@ -1008,5 +1010,71 @@ describe("long pages can be read and skimmed", () => {
       expect(html, `${page} still labels sections with <p class="section-label">`)
         .not.toContain('class="section-label"');
     }
+  });
+});
+
+/**
+ * The design page.
+ *
+ * Most multi-agent results are published without their design: the finding and
+ * a model name, and no way to tell whether the comparison could have come out
+ * differently. This page is the design, and the thing that makes it worth
+ * having rather than boilerplate is that its numbers are computed on the page
+ * from the same functions the budget uses.
+ */
+describe("how an experiment is run", () => {
+  const html = () =>
+    readFileSync(resolve(__dirname, "../design.html"), "utf8").replace(/\s+/g, " ");
+
+  it("is a chapter, and every page can reach it", async () => {
+    const { SPINE } = await import("../src/ui/arc");
+    expect(SPINE.map((c) => c.slug)).toContain("design");
+    for (const f of readdirSync(resolve(__dirname, "..")).filter((f) => f.endsWith(".html"))) {
+      const page = readFileSync(resolve(__dirname, `../${f}`), "utf8");
+      if (!page.includes("<nav>")) continue;
+      expect(page, `${f} has a nav without the design tab`).toContain('href="./design.html"');
+    }
+  });
+
+  it("states the design, not just the result", () => {
+    const h = html();
+    for (const must of [/paired cell/i, /seeded fraction/i, /pre-registration/i,
+                        /held fixed/i, /receipt/i]) {
+      expect(h, `the design page never mentions ${must}`).toMatch(must);
+    }
+  });
+
+  it("puts cost and power on the same dials", () => {
+    const h = html();
+    // Either number alone is easy to make look good. Together they are a trade,
+    // and the page exists to show the trade.
+    expect(h).toMatch(/id="seeds"/);
+    expect(h).toMatch(/id="margin"/);
+    expect(h).toMatch(/id="sd"/);
+    const lab = readFileSync(resolve(__dirname, "../src/ui/designLab.ts"), "utf8");
+    expect(lab).toMatch(/GPU-hours/);
+    expect(lab).toMatch(/underpowered/);
+  });
+
+  it("names the variance trap in the reader's own hands", () => {
+    expect(html(), "the page should invite the reader to reproduce the near-miss")
+      .toMatch(/1,820/);
+  });
+});
+
+describe("the status page counts itself", () => {
+  it("has a scoreboard built from the chips, not typed in", () => {
+    const html = readFileSync(resolve(__dirname, "../experiments.html"), "utf8");
+    expect(html).toContain('id="scoreboard"');
+    const src = readFileSync(resolve(__dirname, "../src/ui/pageFigures.ts"), "utf8");
+    // Hard-coded totals drift away from the tables they summarise; counted ones
+    // cannot.
+    expect(src).toMatch(/querySelectorAll<HTMLElement>\("td \.st"\)/);
+    for (const cls of ["st-done", "st-part", "st-todo"]) expect(src).toContain(cls);
+  });
+
+  it("points at the design page rather than re-explaining it", () => {
+    expect(readFileSync(resolve(__dirname, "../experiments.html"), "utf8"))
+      .toContain("design.html");
   });
 });

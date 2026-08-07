@@ -24,6 +24,7 @@ export default defineConfig({
         boardwalk: "boardwalk.html",
         lineage: "lineage.html",
         cards: "cards.html",
+        design: "design.html",
       },
     },
   },

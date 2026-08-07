@@ -54,7 +54,13 @@ export const SPINE: Chapter[] = [
     slug: "gate",
     title: "The gate",
     asks: "A promotion gate with no judge in it — and its false-rejection rate.",
-    hands: "That rate came out of a real campaign. Which campaigns have actually run?",
+    hands: "That rate came out of a real campaign. What does a campaign here actually consist of?",
+  },
+  {
+    slug: "design",
+    title: "How it is run",
+    asks: "What a cell is, what is paired with what, and whether the campaign can see the effect.",
+    hands: "That is the design. Which of it has actually been run?",
   },
   {
     slug: "experiments",
