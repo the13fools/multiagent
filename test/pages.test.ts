@@ -589,3 +589,37 @@ describe("each chapter introduces itself", () => {
     expect(new Set(ledes).size, "two chapters open with the same line").toBe(ledes.length);
   });
 });
+
+/**
+ * The pitch.
+ *
+ * The site can be an excellent set of toys and still never say what it is for.
+ * These assert the through-line survives editing: the front page states the
+ * steering question, the steering chapter claims it, and the closing chapter
+ * says what the work needs.
+ */
+describe("steering is the pitch", () => {
+  const read = (f: string) => readFileSync(resolve(__dirname, `../${f}`), "utf8").replace(/\s+/g, " ");
+
+  it("the front page asks the steering question", () => {
+    const html = read("index.html");
+    expect(html).toMatch(/how few of them do you have to control/i);
+  });
+
+  it("the steering chapter says it is the point", () => {
+    expect(read("entrainment.html")).toMatch(/steering a flock you do not own/i);
+  });
+
+  it("the last research chapter states the ask", () => {
+    const html = read("future.html");
+    expect(html).toMatch(/the pitch, in one paragraph/i);
+    expect(html, "the ask has to say what the money buys").toMatch(/what the funding buys/i);
+  });
+
+  it("no page still calls a controlled agent a pacemaker", () => {
+    for (const f of ["index", "shared-resource", "entrainment", "juggling", "boardwalk", "gate",
+                     "experiments", "future", "blog-pdd"]) {
+      expect(read(`${f}.html`), `${f}.html still says pacemaker`).not.toMatch(/pacemaker/i);
+    }
+  });
+});
