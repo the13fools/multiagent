@@ -6,7 +6,6 @@ import {
   HORIZON, POLICIES, REFERENCE, carryingCapacity, pNeed, pSelf, pacemakersNeeded,
   simulate, slack, type Action, type Frame, type Outcome, type Params,
 } from "../core/sharedResource";
-import pddData from "./data/pdd_results.json";
 
 applyEmbedMode();
 
@@ -256,51 +255,6 @@ function run() {
   ticker.play();
 }
 
-function loadLlmTrace(condition: string): Outcome {
-  const data = (pddData as any)[condition];
-  if (!data) throw new Error(`Condition ${condition} not found in JSON`);
-  
-  const frames: Frame[] = data.trace.map((t: any) => ({
-    turn: t.round,
-    pool: t.stock_before,
-    alive: t.alive,
-    actions: t.harvests.map((h: number, i: number) => {
-      if (!t.alive[i]) return null;
-      return h > 2 ? "take" : "restore";
-    })
-  }));
-
-  let restores = 0;
-  let acted = 0;
-  for (const f of frames) {
-    for (const a of f.actions) {
-      if (a === "restore") { restores++; acted++; }
-      else if (a === "take") { acted++; }
-    }
-  }
-  const observedRestoreRate = acted ? restores / acted : 0;
-
-  return {
-    frames,
-    extinctionTurn: data.time_to_collapse,
-    survivors: data.alive.filter(Boolean).length,
-    observedRestoreRate,
-    restoreRateGap: observedRestoreRate - pNeed(REFERENCE)
-  };
-}
-
-function runLlmReplay(condition: string, label: string) {
-  ticker.stop();
-  out = loadLlmTrace(condition);
-  shown = 0;
-  verdict("verdict", label, out.extinctionTurn ? "dead" : "live");
-  el("setup").textContent = `Replaying real LLM evaluation (${condition}). Continuous harvests mapped: >2 is 'take', ≤2 is 'restore'.`;
-  buildGrid();
-  drawGrid();
-  drawStats(undefined);
-  ticker.play();
-}
-
 /* ---------------------------------------------------------------- wiring */
 
 // Static explainers first: the rules, then why alternating closes both ledgers.
@@ -335,9 +289,6 @@ function drawSetup() {
 
 bindDials(() => { drawSetup(); drawTheory(); drawTable(); run(); });
 wireControls(ticker, { play: "play", step: "step", reset: "reset" }, run);
-
-document.getElementById("replay-base")?.addEventListener("click", () => runLlmReplay("base8", "Replaying Base LLM: Greedy survival until pool collapse"));
-document.getElementById("replay-pdd")?.addEventListener("click", () => runLlmReplay("cfa8", "Replaying PDD LLM: The Martyrdom Trap (died to save pool)"));
 
 drawSetup();
 drawTheory();

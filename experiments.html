@@ -186,7 +186,42 @@ the two the gate argument rests on. Neither needs new code.</p>
 
 <p class="muted">If a row here disagrees with something in the proposal, this page is right and
 the proposal is stale. Please tell us.</p>
+
+<h2 id="live-runs">Live Run Replays</h2>
+<p>The <b>End-to-end Commons</b> experiment played the Continuous Harvest game using live Qwen2.5-7B agents. 
+Below are the actual traces from those runs. The models output continuous harvest requests (0 to 10), but we map them to the discrete grid for comparison: a harvest > 2 is a "take" (red), and ≤ 2 is a "restore" (green).</p>
+
+<div class="panel">
+  <div id="stats" class="stats"></div>
+  <svg id="grid" viewBox="0 0 878 254" style="width:100%;height:auto;display:block"
+       preserveAspectRatio="xMidYMid meet" role="img"
+       aria-label="Colouring grid: rows are agents, columns are turns"></svg>
+  <div class="legend">
+    <span class="dot" style="background:var(--restore)"></span> harvest ≤ 2 (sustains pool)
+    &nbsp;<span class="dot" style="background:var(--take)"></span> harvest > 2 (extracts profit)
+    &nbsp;<span class="dot" style="background:var(--dead)"></span> dead
+  </div>
+  <div class="dials">
+    <label class="dial">
+      <span class="dial-k">Select Run:</span>
+      <span class="dial-row">
+        <select id="run-select" data-dial>
+          <option value="base8">Base Qwen2.5-7B (0 CFA)</option>
+          <option value="cfa8">PDD Aligned (8 CFA) - Martyrdom Trap</option>
+          <option value="cfa4mix">Mixed (4 CFA, 4 Base)</option>
+        </select>
+      </span>
+    </label>
+    <button id="play">Pause / Play</button>
+    <button id="step">Step</button>
+    <button id="reset">Reset</button>
+    <span id="verdict" class="verdict"></span>
+  </div>
+  <p class="legend" id="setup"></p>
+</div>
+
 </div>
 <script type="module" src="/src/ui/pageFigures.ts"></script>
+<script type="module" src="/src/ui/liveReplayLab.ts"></script>
 </body>
 </html>
