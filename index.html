@@ -10,23 +10,31 @@
 <body>
 <nav><div class="wrap">
   <a class="brand" href="./index.html">multiagent</a>
-  <a href="./shared-resource.html">Shared Resource</a>
-  <a href="./entrainment.html">Entrainment</a>
-  <a href="./juggling.html">Juggling</a>
-  <a href="./boardwalk.html">Boardwalk</a>
-  <a href="./experiments.html">Experiments</a>
+  <a href="./shared-resource.html">The game</a>
+  <a href="./entrainment.html">Steering</a>
+  <a href="./experiments.html">What has run</a>
   <a href="./future.html">What next</a>
-  <a href="./gate.html">Gate</a>
-  <a href="./figure.html">Figure</a>
 </div></nav>
 
 <div class="wrap">
 
 <div class="hero">
-  <h1>Small games with known answers, and the agent populations that miss them</h1>
-  <p>You control a few agents in a population you did not build. How few, and what must they do,
-  to steer the whole thing somewhere everybody survives?</p>
+  <h1>A game everyone can win, that nobody wins</h1>
+  <p>Eight agents share a pool. There is a way for all of them to live forever. It is one
+  sentence long. A flock of Qwen2.5-7B never finds it and is dead by turn 14.</p>
 </div>
+
+<p><b>The rules.</b> Every turn each player pays <b>1 token</b> to survive, then takes one
+action: pay <b>1 token</b> to add <b>3</b> to the shared pool, or take <b>3</b> out of it. Run
+out of tokens and you are removed. That is the whole game.</p>
+
+<p><b>The solution.</b> Alternate. Restore, take, restore, take. Your balance holds level, the
+pool holds level, and nobody ever dies. This is arithmetic, not an equilibrium anyone hopes will
+emerge.</p>
+
+<p><b>The finding.</b> A flock of language models takes every turn and starves. The gap between
+a one-sentence solution and a population that walks past it is what
+<a href="https://github.com/thenthfool/flockbench"><code>flockbench</code></a> measures.</p>
 
 <div class="cards">
   <a class="card" href="./shared-resource.html">
@@ -55,13 +63,9 @@
 
 <hr>
 
-<p>In a rich environment you cannot tell a population that <em>failed</em> from one that faced an
-impossible problem. So these games are small enough to solve exactly. The interesting quantity is
-the gap between what a population did and what the arithmetic allowed.</p>
-
-<p>Every number here is computed from the rules. <b>Nothing is scored by a model.</b> The engines
-are ports of <code>flockbench</code>, and the tests pin the two together — so the illustration
-cannot drift from the experiment.</p>
+<p>Small enough to solve exactly, which is the point: in a rich environment you cannot tell a
+population that <em>failed</em> from one that faced an impossible problem. Every number here is
+computed from the rules. <b>Nothing is scored by a model.</b></p>
 
 <hr>
 
