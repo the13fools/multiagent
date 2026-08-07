@@ -23,9 +23,23 @@
 <p>The <a href="./experiments.html">status page</a> lists what has run. This one is about the
 assumption every line of it shares, which nobody has tested and which is false in deployment.</p>
 
-<hr>
+<nav class="toc" aria-label="On this page">
+  <p class="toc-k">On this page</p>
+  <ol>
+    <li><a href="#the-gap">The gap</a></li>
+    <li><a href="#pitch">The pitch, in three paragraphs</a></li>
+    <li><a href="#self-distillation">Why self-distillation, specifically</a></li>
+    <li><a href="#what-breaks">Three things that break, and are worth breaking</a></li>
+    <li><a href="#scale">The scale it wants</a></li>
+    <li><a href="#sources">Where the experiments would come from</a></li>
+    <li><a href="#port-list">The port list, in order</a></li>
+    <li><a href="#ladder">The ladder: from an answer key to a real crowd</a></li>
+    <li><a href="#mechanisms">Decentralised mechanism design, and what "flourishing" would mean</a></li>
+    <li><a href="#requirements">What would have to be true</a></li>
+  </ol>
+</nav>
 
-<p class="section-label">The gap</p>
+<h2 id="the-gap">The gap</h2>
 
 <p>Every result on this site assumes a <b>stationary population</b>. The agents are whatever they
 were at turn 1. That assumption is load-bearing and nobody states it.</p>
@@ -46,9 +60,38 @@ are what they were. A dose-response curve assumes the dose does not change itsel
 <p>The adaptive rule ends up in the right place. That is the problem, not the reassurance — a
 measurement taken at turn 20 and one taken at turn 200 disagree, and neither is wrong.</p>
 
-<hr>
+<h2 id="pitch">The pitch, in three paragraphs</h2>
 
-<p class="section-label">Why self-distillation, specifically</p>
+<p><b>Pick games small enough that an agent is cheap to train for them.</b> That constraint is not
+a compromise, it is the method. A game whose sustainable pattern is known in closed form can be
+learned by a small specialised model, which means a population of thirty <em>different</em>
+policies is affordable, which means composition becomes an experimental variable instead of a
+limitation paragraph. Big environments give you one model in thirty hats and no answer key. Small
+solved ones give you thirty agents and a number to check them against.</p>
+
+<p><b>What we are actually trying to measure is whether a model reasons about the other
+players.</b> Not whether it cooperates — whether it represents what the others are about to do and
+acts on that. In these games that is observable rather than inferred: the sustainable pattern is
+anti-correlated, so an agent that models the others moves <em>against</em> the majority and an
+agent that does not moves with it, and the two are distinguishable from the action sequence alone.
+The guessing games in the port list make it sharper still, giving a number for how many steps of
+"if they think that, then I…" a population actually takes. That capability is the thing everything
+else rests on: you cannot steer a population that is not reading each other, and you cannot design
+a mechanism for one either.</p>
+
+<p><b>And then the constructive half.</b> Measuring how a group fails is the near-term work.
+The reason to build the instrument is the question after it: <b>what decentralised rules leave a
+population of agents better off than it started</b> — no central authority, no judge, each agent
+acting for itself, and the arrangement still flourishing at turn 200. That is mechanism design with
+the mechanism designer removed from the room, and it is testable here for the same reason
+everything else is: the games have an answer key, so "better off" is arithmetic rather than
+opinion.</p>
+
+<p>What the funding buys is the population: fifty distinct fine-tuned policies instead of one model
+in fifty hats, learning inside the campaign rather than between campaigns, measured by a gate whose
+false-rejection rate has been published rather than assumed.</p>
+
+<h2 id="self-distillation">Why self-distillation, specifically</h2>
 
 <p>Continuous learning needs a reward signal. Almost every option is a judge, and we have direct
 evidence of what that costs: an adapter trained on judge-selected pairs collapsed a commons
@@ -62,9 +105,7 @@ from the survivors. No preference dataset. No rubric. No panel.</p>
 <p>That closes a loop the field mostly cannot close: an agent that improves at a shared-resource
 game, scored by whether the resource survived, with nothing in the loop that can be flattered.</p>
 
-<hr>
-
-<p class="section-label">Three things that break, and are worth breaking</p>
+<h2 id="what-breaks">Three things that break, and are worth breaking</h2>
 
 <p><b>The promotion gate compares two moving targets.</b> Every paired cell assumes a fixed
 baseline. When both arms learn, the comparison is between two trajectories, and the current gate
@@ -81,9 +122,7 @@ experiment with the same apparatus.</p>
 fatal late. A population that updates on its own history compounds its own errors, so the gap
 between a short measurement and a long one widens rather than closing.</p>
 
-<hr>
-
-<p class="section-label">The scale it wants</p>
+<h2 id="scale">The scale it wants</h2>
 
 <p>Behavioural economics is a library of well-posed multi-agent problems with human baselines:
 public goods with punishment, common-pool resources, minority games, spatial competition,
@@ -105,9 +144,7 @@ being true, and the population becomes a variable rather than a budget line.</p>
 <tr><td><b>Scoring</b></td><td colspan="2">arithmetic, in every column. Nothing scored by a model.</td></tr>
 </table>
 
-<hr>
-
-<p class="section-label">Where the experiments would come from</p>
+<h2 id="sources">Where the experiments would come from</h2>
 
 <p>"The behavioural-economics library" is easy to say and easy to leave vague, so here is the
 actual starting point. Daniel Benjamin's work is a useful place to begin because so much of it has
@@ -164,9 +201,7 @@ Want?</a> (Benjamin, Cooper, Heffetz, Kimball &amp; Kundu 2026, NBER WP 33846)</
 publication list</a>. The selection is mine and the mapping onto agent populations is a proposal,
 not a result — none of these authors has anything to do with this project.</p>
 
-<hr>
-
-<p class="section-label">The port list, in order</p>
+<h2 id="port-list">The port list, in order</h2>
 
 <p>A behavioural-economics experiment is worth porting here if it passes four tests. <b>The right
 answer follows from the rules</b>, so scoring needs no judge. <b>The outcome is a number the
@@ -182,12 +217,11 @@ of the players are yours and the rest are not.</p>
 <tr><td><b>1</b></td>
   <td><b>Minimum-effort coordination</b><br>
   <span class="muted">Van Huyck, Battalio &amp; Beil (1990), <i>AER</i></span></td>
-  <td>The best fit in the whole literature for this testbed. Payoff depends on the
-  <em>minimum</em> effort anyone chooses, so there are several equilibria, one is unambiguously
-  best for everybody, and human groups reliably collapse to the worst. Both the efficient and the
-  secure outcome are exact numbers. Steering has a sharp meaning: how many agents held at high
-  effort before the group climbs — and one low agent caps everyone, which is this project's
-  "one defector kills the flock" in a second environment.</td></tr>
+  <td>The best fit in the literature. Payoff depends on the <em>minimum</em> effort anyone
+  chooses, so one outcome is unambiguously best for everybody and human groups reliably collapse
+  to the worst instead. Both outcomes are exact numbers.
+  <span class="muted">One low agent caps everyone — this project's "one defector kills the flock",
+  in a second environment.</span></td></tr>
 
 <tr><td><b>2</b></td>
   <td><b>p-Beauty contest</b><br>
@@ -200,12 +234,11 @@ of the players are yours and the rest are not.</p>
 <tr><td><b>2b</b></td>
   <td><b>The Count</b> — a shared-deck betting game<br>
   <span class="muted">ours; <a href="./cards.html">sketch and arithmetic here</a></span></td>
-  <td>Built to do the one thing the others cannot: <b>separate reading the environment from
-  reading the room</b>, with an answer key for each. The deck is public, so the belief half is a
-  count; the pot is split between everyone who bets, so the social half is a congestion problem
-  with a computable equilibrium. An agent can be perfect on the first and hopeless on the second,
-  and a table of perfect counters loses money — they agree, so they bet together, and the pot they
-  agree about is divided while every loss stays whole.</td></tr>
+  <td>Does the one thing the others cannot: <b>separates reading the environment from reading the
+  room</b>, with an answer key for each. The deck is public, so the belief half is a count; the pot
+  is split between the bettors, so the social half is congestion with a computable equilibrium.
+  <span class="muted">A table of perfect counters loses money. They agree, so they bet together,
+  and the pot they agree about is divided while every loss stays whole.</span></td></tr>
 
 <tr><td><b>3</b></td>
   <td><b>Market entry / El Farol</b><br>
@@ -268,9 +301,7 @@ of the players are yours and the rest are not.</p>
 text; and anything whose human baseline is contested, since the point of a baseline is to be
 something to disagree with.</p>
 
-<hr>
-
-<p class="section-label">The ladder: from an answer key to a real crowd</p>
+<h2 id="ladder">The ladder: from an answer key to a real crowd</h2>
 
 <p>Eight agents and a pool is rung one. The interesting destination is large multiplayer games with
 real negotiation — and the honest problem with going straight there is that <b>every rung up trades
@@ -294,12 +325,13 @@ mixture is the independent variable.</p>
   <td>Nothing yet, which is why it is first.</td></tr>
 
 <tr><td><b>2. The same games, with a channel</b><br><span class="muted">the rung that matters</span></td>
-  <td>Let the agents talk: silent, public broadcast, or private pairwise. This is the only place
-  you can ask <b>what communication does</b> while still knowing what the right answer was. Three
-  measurements fall straight out — does a channel move a population out of the collapsing region;
-  can a seeded minority use it to steer more cheaply than by holding seats; and can a seeded
-  adversarial pair use a <em>private</em> channel to extract in a way neither could alone. That
-  last one is collusion, with an arithmetic definition and a control condition.</td>
+  <td>Let the agents talk: silent, public broadcast, or private pairwise. The only place you can
+  ask <b>what communication does</b> while still knowing the right answer. Three measurements fall
+  out: whether a channel moves a population out of the collapsing region, whether a minority can
+  steer more cheaply by talking than by holding seats, and whether an adversarial pair can use a
+  private channel to extract in a way neither could alone.
+  <span class="muted">That last one is collusion, with an arithmetic definition and a
+  control.</span></td>
   <td>Free text enters the loop. The outcome stays arithmetic — survival and stock level — but the
   channel content does not, and we would report what we can measure rather than rate what was
   said.</td></tr>
@@ -315,12 +347,12 @@ mixture is the independent variable.</p>
   anything.</td></tr>
 
 <tr><td><b>4. Utopia-scale</b><br><span class="muted">the deployment case</span></td>
-  <td><a href="https://utopia-game.com/shared/">Utopia</a> has run for over twenty years:
-  kingdoms of around twenty-five players inside a world of hundreds, hourly ticks, and an age that
-  lasts months. Two properties are hard to get any other way — <b>teams inside a population</b>,
-  and <b>coordination that happens outside the engine</b>, on forums and chat the game itself
-  cannot see. That last one is not a flaw in the analogy. It is the deployment case exactly:
-  agents whose most important channel is one you are not logging.</td>
+  <td><a href="https://utopia-game.com/shared/">Utopia</a> has run for twenty years: kingdoms of
+  about twenty-five inside a world of hundreds, hourly ticks, ages lasting months. Two properties
+  are hard to get anywhere else — <b>teams inside a population</b>, and <b>coordination that
+  happens outside the engine</b>, on forums the game cannot see.
+  <span class="muted">Not a flaw in the analogy. It is the deployment case exactly: agents whose
+  most important channel is one you are not logging.</span></td>
   <td>Everything. No optimum, enormous cost, and a horizon measured in months. This is where the
   instrument gets pointed once it is trustworthy, not where it gets built.</td></tr>
 </table>
@@ -330,51 +362,7 @@ mixture is the independent variable.</p>
 the reason to be strict about rung one: the only way a result at Utopia scale means anything is if
 the instrument reading it was calibrated somewhere the answer was known.</p>
 
-<hr>
-
-<p class="section-label">What would have to be true</p>
-
-<p>Learning has to be cheap enough to run inside a campaign rather than between them. Self-distilled
-agents have to stay parseable — the reason for legal-action masking. And the gate needs a
-non-stationary version, which does not exist yet and which we would rather discover is hard than
-assume is easy.</p>
-
-<hr>
-
-<p class="section-label">The pitch, in three paragraphs</p>
-
-<p><b>Pick games small enough that an agent is cheap to train for them.</b> That constraint is not
-a compromise, it is the method. A game whose sustainable pattern is known in closed form can be
-learned by a small specialised model, which means a population of thirty <em>different</em>
-policies is affordable, which means composition becomes an experimental variable instead of a
-limitation paragraph. Big environments give you one model in thirty hats and no answer key. Small
-solved ones give you thirty agents and a number to check them against.</p>
-
-<p><b>What we are actually trying to measure is whether a model reasons about the other
-players.</b> Not whether it cooperates — whether it represents what the others are about to do and
-acts on that. In these games that is observable rather than inferred: the sustainable pattern is
-anti-correlated, so an agent that models the others moves <em>against</em> the majority and an
-agent that does not moves with it, and the two are distinguishable from the action sequence alone.
-The guessing games in the port list make it sharper still, giving a number for how many steps of
-"if they think that, then I…" a population actually takes. That capability is the thing everything
-else rests on: you cannot steer a population that is not reading each other, and you cannot design
-a mechanism for one either.</p>
-
-<p><b>And then the constructive half.</b> Measuring how a group fails is the near-term work.
-The reason to build the instrument is the question after it: <b>what decentralised rules leave a
-population of agents better off than it started</b> — no central authority, no judge, each agent
-acting for itself, and the arrangement still flourishing at turn 200. That is mechanism design with
-the mechanism designer removed from the room, and it is testable here for the same reason
-everything else is: the games have an answer key, so "better off" is arithmetic rather than
-opinion.</p>
-
-<p>What the funding buys is the population: fifty distinct fine-tuned policies instead of one model
-in fifty hats, learning inside the campaign rather than between campaigns, measured by a gate whose
-false-rejection rate has been published rather than assumed.</p>
-
-<hr>
-
-<p class="section-label">Decentralised mechanism design, and what "flourishing" would mean</p>
+<h2 id="mechanisms">Decentralised mechanism design, and what "flourishing" would mean</h2>
 
 <p>Classical mechanism design assumes a designer who sets the rules and can enforce them. In a
 population of agents you do not own, nobody is in that chair. The rules that matter are the ones a
@@ -394,6 +382,13 @@ horizon, the resource no lower than it started, and no agent's outcome achieved 
 All three are arithmetic. It is a small definition and it is deliberately not a moral one — but a
 mechanism that reliably produces it in a game with a known answer key is worth more than a
 mechanism that sounds wise in a game where nobody can say what winning was.</p>
+
+<h2 id="requirements">What would have to be true</h2>
+
+<p>Learning has to be cheap enough to run inside a campaign rather than between them. Self-distilled
+agents have to stay parseable — the reason for legal-action masking. And the gate needs a
+non-stationary version, which does not exist yet and which we would rather discover is hard than
+assume is easy.</p>
 
 <p class="muted">Nothing on this page has been run. See the
 <a href="./experiments.html">status page</a> for what has. MIT; data CC0.</p>

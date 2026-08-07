@@ -32,7 +32,19 @@ including the f = 0 sweep run the same day.</p>
 
 <div id="fig-evidence" style="margin:22px 0"></div>
 
-<h2>Environments</h2>
+<nav class="toc" aria-label="On this page">
+  <p class="toc-k">On this page</p>
+  <ol>
+    <li><a href="#environments">Environments</a></li>
+    <li><a href="#runs">Runs against live models</a></li>
+    <li><a href="#claims">Which claims rest on what</a></li>
+    <li><a href="#broken">Known problems we have not fixed</a></li>
+    <li><a href="#fastest">What would change this page fastest</a></li>
+    <li><a href="#live-runs">Replays of the live runs</a></li>
+  </ol>
+</nav>
+
+<h2 id="environments">Environments</h2>
 
 <table>
 <tr><th>environment</th><th class="s">status</th><th>what exists</th></tr>
@@ -56,7 +68,7 @@ including the f = 0 sweep run the same day.</p>
   <td>Named as Phase 1 deliverables. Nothing exists.</td></tr>
 </table>
 
-<h2>Runs against live models</h2>
+<h2 id="runs">Runs against live models</h2>
 
 <table>
 <tr><th>run</th><th class="s">status</th><th>what it showed, or would</th></tr>
@@ -121,7 +133,7 @@ including the f = 0 sweep run the same day.</p>
   about the small games first.</td></tr>
 </table>
 
-<h2>Which claims rest on what</h2>
+<h2 id="claims">Which claims rest on what</h2>
 
 <table>
 <tr><th>claim</th><th class="s">evidence</th><th>strength</th></tr>
@@ -158,7 +170,7 @@ including the f = 0 sweep run the same day.</p>
   schedule. Whether real agent populations show the horizon dependence is Phase 3 and untested.</td></tr>
 </table>
 
-<h2>Known problems we have not fixed</h2>
+<h2 id="broken">Known problems we have not fixed</h2>
 
 <ul>
 <li><b>The pilot's promotion policy was not committed before the run.</b> It is recoverable and
@@ -177,7 +189,7 @@ so the margin and the power analysis both need recomputing against the new varia
 powered campaign runs.</li>
 </ul>
 
-<h2>What would change this page fastest</h2>
+<h2 id="fastest">What would change this page fastest</h2>
 
 <p>One GPU session. The A/A campaign and the prompted style control are both committed and
 preflight-checked. Between them they move four rows from
@@ -187,29 +199,43 @@ the two the gate argument rests on. Neither needs new code.</p>
 <p class="muted">If a row here disagrees with something in the proposal, this page is right and
 the proposal is stale. Please tell us.</p>
 
-<h2 id="live-runs">Live Run Replays</h2>
-<p>The <b>End-to-end Commons</b> experiment played the Continuous Harvest game using live Qwen2.5-7B agents. 
-Below are the actual traces from those runs. The models output continuous harvest requests (0 to 10). The cells are colored by harvest amount: <span style="color:var(--good)">Green</span> for 0, <span style="color:var(--bad)">Red</span> for 10. Hover over cells to see exact values.</p>
+<h2 id="live-runs">Replays of the live runs</h2>
+
+<p>Everything above is a claim about runs. This is the runs themselves: real traces from
+Qwen2.5-7B agents playing Continuous Harvest, replayed turn by turn rather than summarised.</p>
+
+<p>Each row is an agent and each column a turn. Agents ask for a harvest between 0 and 10, and the
+cell is shaded by how much they took — <span style="color:var(--restore);font-weight:600">green</span>
+for nothing, <span style="color:var(--take);font-weight:600">red</span> for the maximum. Hover a
+cell for the exact figure. The three runs differ only in how many seats were trained agents.</p>
 
 <div class="panel">
   <div id="stats" class="stats"></div>
   <svg id="grid" viewBox="0 0 878 254" style="width:100%;height:auto;display:block"
        preserveAspectRatio="xMidYMid meet" role="img"
        aria-label="Colouring grid: rows are agents, columns are turns"></svg>
-  <div class="legend" style="display:flex;align-items:center;gap:12px;">
-    <span>Harvest Amount:</span>
-    <span style="display:inline-block;width:100px;height:12px;background:linear-gradient(to right, var(--good), var(--bad));border-radius:6px;"></span>
-    <span>(0 to 10)</span>
+  
+  <div style="margin-top: 20px; border-top: 1px solid var(--line); padding-top: 15px;">
+    <h4 style="margin:0 0 10px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em">Pool and balances</h4>
+    <svg id="bars" viewBox="0 0 878 120" style="width:100%;height:auto;display:block"
+         preserveAspectRatio="xMidYMid meet" role="img"
+         aria-label="Bar charts showing commons pool and individual balances"></svg>
+  </div>
+
+  <div class="legend" style="display:flex;align-items:center;gap:12px;margin-top:15px;">
+    <span>harvest</span>
+    <span style="display:inline-block;width:100px;height:12px;background:linear-gradient(to right, var(--restore), var(--take));border-radius:6px;"></span>
+    <span>0 → 10</span>
     &nbsp;&nbsp;<span class="dot" style="background:var(--dead)"></span> dead
   </div>
   <div class="dials">
     <label class="dial">
-      <span class="dial-k">Select Run:</span>
+      <span class="dial-k">Run</span>
       <span class="dial-row">
         <select id="run-select" data-dial>
-          <option value="base8">Base Qwen2.5-7B (0 CFA)</option>
-          <option value="cfa8">Trained LLM (8 CFA) - Reward Collapse</option>
-          <option value="cfa4mix">Mixed (4 CFA, 4 Base)</option>
+          <option value="base8">8 base models, none trained</option>
+          <option value="cfa8">8 trained agents — reward collapse</option>
+          <option value="cfa4mix">4 trained, 4 base</option>
         </select>
       </span>
     </label>

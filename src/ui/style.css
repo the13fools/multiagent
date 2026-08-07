@@ -381,3 +381,65 @@ hr { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
   .anim-cell { animation: none; }
   * { transition-duration: 0.01ms !important; }
 }
+
+/* ------------------------------------------------------------- readability
+ *
+ * The column was 900px wide at 16px, which is about 105 characters a line.
+ * Anything past roughly 75 becomes hard to track: your eye loses the start of
+ * the next line and re-reads. Prose is now held to a comfortable measure while
+ * panels, figures and tables keep the full width, so the reading column and the
+ * data are visibly different kinds of thing.
+ *
+ * These target direct children of .wrap, which is how every page is built.
+ */
+.wrap > p,
+.wrap > ul,
+.wrap > ol,
+.wrap > h2,
+.wrap > h3,
+.wrap > .def,
+.wrap > .lede {
+  max-width: 34rem;
+}
+.wrap > p { line-height: 1.68; margin: 0 0 18px; }
+.lede { font-size: 19px; line-height: 1.5; margin-bottom: 22px; }
+
+/* Headings that actually break the page up. A 3,000-word page with no rule
+ * between sections reads as one undifferentiated wall. */
+.wrap > h2 {
+  font-size: 21px;
+  margin: 52px 0 14px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  max-width: none;
+}
+.wrap > h2:first-of-type { margin-top: 40px; }
+.wrap > h3 { margin: 30px 0 8px; }
+
+/* Tables of prose need room to breathe; tables of numbers do not. */
+table { font-size: 14.5px; }
+th, td { padding: 12px 14px; line-height: 1.55; vertical-align: top; }
+tbody tr:nth-child(even) td, table tr:nth-child(even) td { background: rgba(127, 127, 127, 0.035); }
+td .muted { display: block; margin-top: 3px; }
+
+/* On this page. Long pages get a map at the top: eight sections that you can
+ * see the shape of beats eight sections you discover by scrolling. */
+.toc {
+  max-width: 34rem;
+  margin: 20px 0 8px;
+  padding: 14px 18px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+}
+.toc-k {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--muted); font-weight: 700; margin: 0 0 8px;
+}
+.toc ol { margin: 0; padding-left: 20px; }
+.toc li { margin: 4px 0; font-size: 15px; line-height: 1.45; }
+.toc a { color: var(--ink); }
+.toc a:hover { color: var(--accent); }
+
+/* A heading you can link to, without a permalink icon shouting about it. */
+.wrap > h2 { scroll-margin-top: 70px; }

@@ -49,6 +49,8 @@ describe("every id a lab reaches for exists in its page", () => {
     gate: "gateLab",
     entrainment: "entrainmentLab",
     cards: "cardsLab",
+    // the replay interactive lives on the status page, alongside its prose
+    experiments: "liveReplayLab",
   })) {
     it(page, () => {
       const html = readFileSync(resolve(__dirname, `../${page}.html`), "utf8");
@@ -953,5 +955,58 @@ describe("sketches say they are sketches", () => {
     const status = readFileSync(resolve(__dirname, "../experiments.html"), "utf8");
     expect(future, "the card game belongs in the port list").toContain("cards.html");
     expect(status, "the status page has to list it").toContain("cards.html");
+  });
+});
+
+/**
+ * Reading ease.
+ *
+ * The column was 900px of 16px text — about 105 characters a line, where
+ * anything past 75 starts costing the reader the top of the next line. And the
+ * longest page on the site, at 3,000 words, had ten section headings that were
+ * not headings: styled paragraphs, unlinkable, invisible to a screen reader's
+ * outline and to anyone skimming.
+ */
+describe("long pages can be read and skimmed", () => {
+  const LONG = ["future", "lineage", "experiments", "blog-pdd"] as const;
+
+  it("prose is held to a comfortable measure", () => {
+    const css = readFileSync(resolve(__dirname, "../src/ui/style.css"), "utf8");
+    const rule = css.slice(css.indexOf(".wrap > p,"));
+    expect(rule, "prose has no max-width, so it runs the full column").toMatch(/max-width:\s*34rem/);
+    // and the wide things stay wide: a table squeezed into a text column is worse
+    expect(rule.slice(0, 400)).not.toMatch(/\btable\b/);
+  });
+
+  for (const page of LONG) {
+    it(`${page} has real headings and a map`, () => {
+      const html = readFileSync(resolve(__dirname, `../${page}.html`), "utf8");
+      const heads = [...html.matchAll(/<h2 id="([^"]+)">/g)].map((m) => m[1]!);
+      expect(heads.length, `${page} is long and has fewer than three sections`)
+        .toBeGreaterThanOrEqual(3);
+      expect(new Set(heads).size, `${page} has two headings with the same anchor`)
+        .toBe(heads.length);
+      expect(html, `${page} has no "on this page"`).toContain('class="toc"');
+
+      // every link in the map goes somewhere on the page
+      const toc = html.slice(html.indexOf('class="toc"'), html.indexOf("</nav>", html.indexOf('class="toc"')));
+      for (const m of toc.matchAll(/href="#([^"]+)"/g)) {
+        expect(heads, `${page}: the map links to #${m[1]}, which is not a heading`).toContain(m[1]!);
+      }
+      // and every section is in the map
+      for (const h of heads) {
+        expect(toc, `${page}: #${h} is missing from the map`).toContain(`href="#${h}"`);
+      }
+    });
+  }
+
+  it("no page still fakes a heading with a styled paragraph in a long section", () => {
+    // section-label is fine as a small label on the front page; it is not fine
+    // as the only structure on a three-thousand-word page.
+    for (const page of LONG) {
+      const html = readFileSync(resolve(__dirname, `../${page}.html`), "utf8");
+      expect(html, `${page} still labels sections with <p class="section-label">`)
+        .not.toContain('class="section-label"');
+    }
   });
 });

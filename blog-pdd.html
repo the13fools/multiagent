@@ -29,7 +29,20 @@ agents on a small budget.</p>
 
 <p>That is not a population. It is one policy wearing hats.</p>
 
-<h2>Why the hats matter</h2>
+<nav class="toc" aria-label="On this page">
+  <p class="toc-k">On this page</p>
+  <ol>
+    <li><a href="#hats">Why the hats matter</a></li>
+    <li><a href="#needed">What we actually needed</a></li>
+    <li><a href="#idea">The idea</a></li>
+    <li><a href="#cheap">Why cheap is the point</a></li>
+    <li><a href="#control">The control that keeps us honest</a></li>
+    <li><a href="#wrong">What could still be wrong</a></li>
+    <li><a href="#uncomfortable">The uncomfortable part</a></li>
+  </ol>
+</nav>
+
+<h2 id="hats">Why the hats matter</h2>
 
 <p>The whole premise of multi-principal safety is that the other agents in the system were built by somebody else. Different training data, different objectives, different failure modes, different blind spots. When a market breaks or a commons collapses, it breaks because the participants are genuinely unlike one another and their differences interact.</p>
 
@@ -37,7 +50,7 @@ agents on a small budget.</p>
 
 <p>Everyone in the field knows this. The reason nobody fixes it is arithmetic: a population of thirty genuinely distinct fine-tuned agents used to cost more than the study.</p>
 
-<h2>What we actually needed</h2>
+<h2 id="needed">What we actually needed</h2>
 
 <p>For <a href="https://github.com/thenthfool/flockbench">flockbench</a>, the requirement was specific and slightly odd. We did not need better agents. We needed <em>many different</em> agents, each one distinct in a way that survives contact with a long rollout, and each one cheap enough that a population is an experimental variable rather than a capital expense.</p>
 
@@ -53,7 +66,7 @@ agents on a small budget.</p>
 
 <p>So the constraint was: <b>change the agent&#x27;s disposition, do not touch its schema.</b></p>
 
-<h2>The idea</h2>
+<h2 id="idea">The idea</h2>
 
 <p>The method is span-restricted preference distillation, and the idea is embarrassingly simple once you see the constraint written down.</p>
 
@@ -76,7 +89,7 @@ cheap, and what you give up.</p>
 
 <div id="fig-pipeline" style="margin:22px 0"></div>
 
-<h2>Why cheap is the point</h2>
+<h2 id="cheap">Why cheap is the point</h2>
 
 <p>The interesting quantity is not the price. It is the <em>ratio</em> between what a population
 costs and what a campaign against that population costs.</p>
@@ -99,7 +112,7 @@ population itself an experimental variable. The success criterion is not &quot;t
 
 <p>It is worth being explicit that the funder described this before we did. The Cooperative AI Foundation&#x27;s call asks, under sandboxes and testbeds, about *&quot;navigating the trade-off between scalability and fidelity, for example, by using smaller, distilled models to serve as faithful proxies for frontier agents in simulations.&quot;* That is the same sentence from the other side.</p>
 
-<h2>The control that keeps us honest</h2>
+<h2 id="control">The control that keeps us honest</h2>
 
 <p>Here is the failure mode that worries me most, and it is not the obvious one.</p>
 
@@ -126,7 +139,7 @@ anything and we bought thirty copies of the base model with different accents.</
 
 <p>It is much cheaper to test all of that with <code>snake_case</code> than with ethics.</p>
 
-<h2>What could still be wrong</h2>
+<h2 id="wrong">What could still be wrong</h2>
 
 <p>I want to name these rather than wait to be asked.</p>
 
@@ -140,7 +153,7 @@ a projection, and it is not a law, a benchmark, or a promise about anybody else'
 honest version of this work concludes that distinct-enough agents cost three hundred dollars each
 and you can therefore afford eight, that is a useful finding and I will publish it as one.</p>
 
-<h2>The uncomfortable part</h2>
+<h2 id="uncomfortable">The uncomfortable part</h2>
 
 <p>The honest reason this method exists is that I could not afford the alternative.</p>
 
