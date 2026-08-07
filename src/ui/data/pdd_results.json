@@ -1,0 +1,2088 @@
+{
+  "base8": {
+    "roles": [
+      "base",
+      "base",
+      "base",
+      "base",
+      "base",
+      "base",
+      "base",
+      "base"
+    ],
+    "salt_assignments": {},
+    "seed": 0,
+    "rounds": 10,
+    "stock_by_round": [
+      320.0,
+      288.75,
+      245.06,
+      223.47,
+      194.31,
+      174.28,
+      153.77,
+      113.64,
+      58.95,
+      17.29,
+      0.0
+    ],
+    "mean_harvest_by_round": [
+      5.0,
+      7.5,
+      5.0,
+      6.125,
+      5.0,
+      5.0,
+      7.125,
+      8.125,
+      5.625,
+      2.161
+    ],
+    "time_to_collapse": null,
+    "restraint_under_scarcity": 0.4625,
+    "total_welfare": 453.29,
+    "gini": 0.045,
+    "final_balances": [
+      56.98,
+      53.79,
+      50.19,
+      53.79,
+      54.98,
+      64.98,
+      54.79,
+      63.79
+    ],
+    "alive": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "survival_rate": 1.0,
+    "martyrdom_rate": 0.0,
+    "welfare_given_survival": 453.29,
+    "parse_failures": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "chose_zeros": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "total_parse_failures": 0,
+    "trace": [
+      {
+        "round": 1,
+        "replies": [
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}"
+        ],
+        "stock_before": 320.0,
+        "requests": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        "harvests": [
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0
+        ],
+        "stock_after": 288.75,
+        "balances": [
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "shortfalls": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 2,
+        "replies": [
+          "{\"harvest\": 9}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 9}",
+          "{\"harvest\": 7}"
+        ],
+        "stock_before": 288.75,
+        "requests": [
+          9,
+          7,
+          7,
+          7,
+          7,
+          7,
+          9,
+          7
+        ],
+        "harvests": [
+          9.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          9.0,
+          7.0
+        ],
+        "stock_after": 245.057373046875,
+        "balances": [
+          14.0,
+          12.0,
+          12.0,
+          12.0,
+          12.0,
+          12.0,
+          14.0,
+          12.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "shortfalls": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 3,
+        "replies": [
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}"
+        ],
+        "stock_before": 245.057373046875,
+        "requests": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        "harvests": [
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0
+        ],
+        "stock_after": 223.47130518290214,
+        "balances": [
+          19.0,
+          17.0,
+          17.0,
+          17.0,
+          17.0,
+          17.0,
+          19.0,
+          17.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "shortfalls": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 4,
+        "replies": [
+          "{\"harvest\": 5}",
+          "{\"harvest\": 40}",
+          "{\"harvest\": 4}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 40}"
+        ],
+        "stock_before": 223.47130518290214,
+        "requests": [
+          5,
+          10,
+          4,
+          5,
+          5,
+          5,
+          5,
+          10
+        ],
+        "harvests": [
+          5.0,
+          10.0,
+          4.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          10.0
+        ],
+        "stock_after": 194.3076968440766,
+        "balances": [
+          24.0,
+          27.0,
+          21.0,
+          22.0,
+          22.0,
+          22.0,
+          24.0,
+          27.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "shortfalls": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 5,
+        "replies": [
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}"
+        ],
+        "stock_before": 194.3076968440766,
+        "requests": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        "harvests": [
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0
+        ],
+        "stock_after": 174.2823825353118,
+        "balances": [
+          29.0,
+          32.0,
+          26.0,
+          27.0,
+          27.0,
+          27.0,
+          29.0,
+          32.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "shortfalls": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 6,
+        "replies": [
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}"
+        ],
+        "stock_before": 174.2823825353118,
+        "requests": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        "harvests": [
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0
+        ],
+        "stock_after": 153.76566702901488,
+        "balances": [
+          34.0,
+          37.0,
+          31.0,
+          32.0,
+          32.0,
+          32.0,
+          34.0,
+          37.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "shortfalls": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 7,
+        "replies": [
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 3}",
+          "{\"harvest\": 40}",
+          "{\"harvest\": 40}",
+          "{\"harvest\": 40}",
+          "{\"harvest\": 4}",
+          "{\"harvest\": 40}"
+        ],
+        "stock_before": 153.76566702901488,
+        "requests": [
+          5,
+          5,
+          3,
+          10,
+          10,
+          10,
+          4,
+          10
+        ],
+        "harvests": [
+          5.0,
+          5.0,
+          3.0,
+          10.0,
+          10.0,
+          10.0,
+          4.0,
+          10.0
+        ],
+        "stock_after": 113.6417757272294,
+        "balances": [
+          39.0,
+          42.0,
+          34.0,
+          42.0,
+          42.0,
+          42.0,
+          38.0,
+          47.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "shortfalls": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 8,
+        "replies": [
+          "{\"harvest\": 30}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 30}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 30}",
+          "{\"harvest\": 40}",
+          "{\"harvest\": 30}"
+        ],
+        "stock_before": 113.6417757272294,
+        "requests": [
+          10,
+          5,
+          10,
+          5,
+          5,
+          10,
+          10,
+          10
+        ],
+        "harvests": [
+          10.0,
+          5.0,
+          10.0,
+          5.0,
+          5.0,
+          10.0,
+          10.0,
+          10.0
+        ],
+        "stock_after": 58.953764701303875,
+        "balances": [
+          49.0,
+          47.0,
+          44.0,
+          47.0,
+          47.0,
+          52.0,
+          48.0,
+          57.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "shortfalls": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 9,
+        "replies": [
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 10}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}"
+        ],
+        "stock_before": 58.953764701303875,
+        "requests": [
+          5,
+          5,
+          5,
+          5,
+          5,
+          10,
+          5,
+          5
+        ],
+        "harvests": [
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          5.0,
+          10.0,
+          5.0,
+          5.0
+        ],
+        "stock_after": 17.290090603708475,
+        "balances": [
+          54.0,
+          52.0,
+          49.0,
+          52.0,
+          52.0,
+          62.0,
+          53.0,
+          62.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "shortfalls": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 10,
+        "replies": [
+          "{\"harvest\": 5}",
+          "{\"harvest\": 3}",
+          "{\"harvest\": 2}",
+          "{\"harvest\": 3}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 3}",
+          "{\"harvest\": 3}"
+        ],
+        "stock_before": 17.290090603708475,
+        "requests": [
+          5,
+          3,
+          2,
+          3,
+          5,
+          5,
+          3,
+          3
+        ],
+        "harvests": [
+          2.98,
+          1.79,
+          1.19,
+          1.79,
+          2.98,
+          2.98,
+          1.79,
+          1.79
+        ],
+        "stock_after": 0.0,
+        "balances": [
+          56.98,
+          53.79,
+          50.19,
+          53.79,
+          54.98,
+          64.98,
+          54.79,
+          63.79
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "shortfalls": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "cfa8": {
+    "roles": [
+      "cfa",
+      "cfa",
+      "cfa",
+      "cfa",
+      "cfa",
+      "cfa",
+      "cfa",
+      "cfa"
+    ],
+    "salt_assignments": {},
+    "seed": 0,
+    "rounds": 10,
+    "stock_by_round": [
+      320.0,
+      307.8,
+      259.18,
+      212.32,
+      176.31,
+      151.71,
+      126.66,
+      90.1,
+      18.7,
+      2.12,
+      0.0
+    ],
+    "mean_harvest_by_round": [
+      2.0,
+      7.875,
+      8.25,
+      7.0,
+      5.5,
+      5.375,
+      6.375,
+      9.375,
+      2.125,
+      0.265
+    ],
+    "time_to_collapse": 10,
+    "restraint_under_scarcity": 0.45,
+    "total_welfare": 433.12,
+    "gini": 0.0436,
+    "final_balances": [
+      49.26,
+      54.26,
+      52.26,
+      49.26,
+      64.26,
+      53.26,
+      53.26,
+      57.26
+    ],
+    "alive": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "survival_rate": 1.0,
+    "martyrdom_rate": 0.0,
+    "welfare_given_survival": 433.12,
+    "parse_failures": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "chose_zeros": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "total_parse_failures": 0,
+    "trace": [
+      {
+        "round": 1,
+        "replies": [
+          "{\"harvest\": 2}",
+          "{\"harvest\": 2}",
+          "{\"harvest\": 2}",
+          "{\"harvest\": 2}",
+          "{\"harvest\": 2}",
+          "{\"harvest\": 2}",
+          "{\"harvest\": 2}",
+          "{\"harvest\": 2}"
+        ],
+        "stock_before": 320.0,
+        "requests": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "harvests": [
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        "stock_after": 307.8,
+        "balances": [
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "shortfalls": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 2,
+        "replies": [
+          "{\"harvest\": 7}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 9}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 9}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 10}"
+        ],
+        "stock_before": 307.8,
+        "requests": [
+          7,
+          7,
+          9,
+          7,
+          9,
+          7,
+          7,
+          10
+        ],
+        "harvests": [
+          7.0,
+          7.0,
+          9.0,
+          7.0,
+          9.0,
+          7.0,
+          7.0,
+          10.0
+        ],
+        "stock_after": 259.182,
+        "balances": [
+          9.0,
+          9.0,
+          11.0,
+          9.0,
+          11.0,
+          9.0,
+          9.0,
+          12.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "shortfalls": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 3,
+        "replies": [
+          "{\"harvest\": 8}",
+          "{\"harvest\": 10}",
+          "{\"harvest\": 10}",
+          "{\"harvest\": 8}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 8}",
+          "{\"harvest\": 8}",
+          "{\"harvest\": 7}"
+        ],
+        "stock_before": 259.182,
+        "requests": [
+          8,
+          10,
+          10,
+          8,
+          7,
+          8,
+          8,
+          7
+        ],
+        "harvests": [
+          8.0,
+          10.0,
+          10.0,
+          8.0,
+          7.0,
+          8.0,
+          8.0,
+          7.0
+        ],
+        "stock_after": 212.321808496875,
+        "balances": [
+          17.0,
+          19.0,
+          21.0,
+          17.0,
+          18.0,
+          17.0,
+          17.0,
+          19.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "shortfalls": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 4,
+        "replies": [
+          "{\"harvest\": 5}",
+          "{\"harvest\": 6}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 10}",
+          "{\"harvest\": 10}",
+          "{\"harvest\": 6}",
+          "{\"harvest\": 7}"
+        ],
+        "stock_before": 212.321808496875,
+        "requests": [
+          5,
+          6,
+          7,
+          5,
+          10,
+          10,
+          6,
+          7
+        ],
+        "harvests": [
+          5.0,
+          6.0,
+          7.0,
+          5.0,
+          10.0,
+          10.0,
+          6.0,
+          7.0
+        ],
+        "stock_after": 176.31123889317684,
+        "balances": [
+          22.0,
+          25.0,
+          28.0,
+          22.0,
+          28.0,
+          27.0,
+          23.0,
+          26.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "shortfalls": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 5,
+        "replies": [
+          "{\"harvest\": 5}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}"
+        ],
+        "stock_before": 176.31123889317684,
+        "requests": [
+          5,
+          7,
+          5,
+          5,
+          7,
+          5,
+          5,
+          5
+        ],
+        "harvests": [
+          5.0,
+          7.0,
+          5.0,
+          5.0,
+          7.0,
+          5.0,
+          5.0,
+          5.0
+        ],
+        "stock_after": 151.71227991534033,
+        "balances": [
+          27.0,
+          32.0,
+          33.0,
+          27.0,
+          35.0,
+          32.0,
+          28.0,
+          31.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "shortfalls": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 6,
+        "replies": [
+          "{\"harvest\": 4}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 3}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 10}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 4}",
+          "{\"harvest\": 5}"
+        ],
+        "stock_before": 151.71227991534033,
+        "requests": [
+          4,
+          5,
+          3,
+          7,
+          10,
+          5,
+          4,
+          5
+        ],
+        "harvests": [
+          4.0,
+          5.0,
+          3.0,
+          7.0,
+          10.0,
+          5.0,
+          4.0,
+          5.0
+        ],
+        "stock_after": 126.6572562969947,
+        "balances": [
+          31.0,
+          37.0,
+          36.0,
+          34.0,
+          45.0,
+          37.0,
+          32.0,
+          36.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "shortfalls": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 7,
+        "replies": [
+          "{\"harvest\": 7}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 3}",
+          "{\"harvest\": 4}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 10}",
+          "{\"harvest\": 10}"
+        ],
+        "stock_before": 126.6572562969947,
+        "requests": [
+          7,
+          5,
+          3,
+          4,
+          7,
+          5,
+          10,
+          10
+        ],
+        "harvests": [
+          7.0,
+          5.0,
+          3.0,
+          4.0,
+          7.0,
+          5.0,
+          10.0,
+          10.0
+        ],
+        "stock_after": 90.09967941000185,
+        "balances": [
+          38.0,
+          42.0,
+          39.0,
+          38.0,
+          52.0,
+          42.0,
+          42.0,
+          46.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "shortfalls": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 8,
+        "replies": [
+          "{\"harvest\": 9}",
+          "{\"harvest\": 10}",
+          "{\"harvest\": 10}",
+          "{\"harvest\": 9}",
+          "{\"harvest\": 10}",
+          "{\"harvest\": 9}",
+          "{\"harvest\": 9}",
+          "{\"harvest\": 9}"
+        ],
+        "stock_before": 90.09967941000185,
+        "requests": [
+          9,
+          10,
+          10,
+          9,
+          10,
+          9,
+          9,
+          9
+        ],
+        "harvests": [
+          9.0,
+          10.0,
+          10.0,
+          9.0,
+          10.0,
+          9.0,
+          9.0,
+          9.0
+        ],
+        "stock_after": 18.69647401384229,
+        "balances": [
+          47.0,
+          52.0,
+          49.0,
+          47.0,
+          62.0,
+          51.0,
+          51.0,
+          55.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "shortfalls": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 9,
+        "replies": [
+          "{\"harvest\": 2}",
+          "{\"harvest\": 2}",
+          "{\"harvest\": 3}",
+          "{\"harvest\": 2}",
+          "{\"harvest\": 2}",
+          "{\"harvest\": 2}",
+          "{\"harvest\": 2}",
+          "{\"harvest\": 2}"
+        ],
+        "stock_before": 18.69647401384229,
+        "requests": [
+          2,
+          2,
+          3,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "harvests": [
+          2.0,
+          2.0,
+          3.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        "stock_after": 2.1183440609906437,
+        "balances": [
+          49.0,
+          54.0,
+          52.0,
+          49.0,
+          64.0,
+          53.0,
+          53.0,
+          57.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "shortfalls": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 10,
+        "replies": [
+          "{\"harvest\": 2}",
+          "{\"harvest\": 2}",
+          "{\"harvest\": 2}",
+          "{\"harvest\": 2}",
+          "{\"harvest\": 2}",
+          "{\"harvest\": 2}",
+          "{\"harvest\": 2}",
+          "{\"harvest\": 2}"
+        ],
+        "stock_before": 2.1183440609906437,
+        "requests": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "harvests": [
+          0.26,
+          0.26,
+          0.26,
+          0.26,
+          0.26,
+          0.26,
+          0.26,
+          0.26
+        ],
+        "stock_after": 0.0,
+        "balances": [
+          49.26,
+          54.26,
+          52.26,
+          49.26,
+          64.26,
+          53.26,
+          53.26,
+          57.26
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "shortfalls": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "cfa4mix": {
+    "roles": [
+      "base",
+      "cfa",
+      "base",
+      "cfa",
+      "cfa",
+      "cfa",
+      "base",
+      "base"
+    ],
+    "salt_assignments": {},
+    "seed": 0,
+    "rounds": 8,
+    "stock_by_round": [
+      320.0,
+      298.39,
+      252.71,
+      208.06,
+      174.04,
+      129.16,
+      75.84,
+      26.93,
+      0.0
+    ],
+    "mean_harvest_by_round": [
+      3.5,
+      7.625,
+      8.0,
+      6.75,
+      7.875,
+      8.25,
+      6.75,
+      3.366
+    ],
+    "time_to_collapse": null,
+    "restraint_under_scarcity": 0.5812,
+    "total_welfare": 416.93,
+    "gini": 0.0466,
+    "final_balances": [
+      59.45,
+      49.07,
+      53.45,
+      57.14,
+      52.83,
+      45.07,
+      49.45,
+      50.45
+    ],
+    "alive": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "survival_rate": 1.0,
+    "martyrdom_rate": 0.0,
+    "welfare_given_survival": 416.93,
+    "parse_failures": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "chose_zeros": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "total_parse_failures": 0,
+    "trace": [
+      {
+        "round": 1,
+        "replies": [
+          "{\"harvest\": 5}",
+          "{\"harvest\": 2}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 2}",
+          "{\"harvest\": 2}",
+          "{\"harvest\": 2}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}"
+        ],
+        "stock_before": 320.0,
+        "requests": [
+          5,
+          2,
+          5,
+          2,
+          2,
+          2,
+          5,
+          5
+        ],
+        "harvests": [
+          5.0,
+          2.0,
+          5.0,
+          2.0,
+          2.0,
+          2.0,
+          5.0,
+          5.0
+        ],
+        "stock_after": 298.3875,
+        "balances": [
+          5.0,
+          2.0,
+          5.0,
+          2.0,
+          2.0,
+          2.0,
+          5.0,
+          5.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "shortfalls": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 2,
+        "replies": [
+          "{\"harvest\": 9}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 9}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 6}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 9}"
+        ],
+        "stock_before": 298.3875,
+        "requests": [
+          9,
+          7,
+          9,
+          7,
+          6,
+          7,
+          7,
+          9
+        ],
+        "harvests": [
+          9.0,
+          7.0,
+          9.0,
+          7.0,
+          6.0,
+          7.0,
+          7.0,
+          9.0
+        ],
+        "stock_after": 252.7087303466797,
+        "balances": [
+          14.0,
+          9.0,
+          14.0,
+          9.0,
+          8.0,
+          9.0,
+          12.0,
+          14.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "shortfalls": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 3,
+        "replies": [
+          "{\"harvest\": 9}",
+          "{\"harvest\": 10}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 10}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 7}"
+        ],
+        "stock_before": 252.7087303466797,
+        "requests": [
+          9,
+          10,
+          7,
+          7,
+          10,
+          7,
+          7,
+          7
+        ],
+        "harvests": [
+          9.0,
+          10.0,
+          7.0,
+          7.0,
+          10.0,
+          7.0,
+          7.0,
+          7.0
+        ],
+        "stock_after": 208.0648309731497,
+        "balances": [
+          23.0,
+          19.0,
+          21.0,
+          16.0,
+          18.0,
+          16.0,
+          19.0,
+          21.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "shortfalls": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 4,
+        "replies": [
+          "{\"harvest\": 6}",
+          "{\"harvest\": 6}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 10}",
+          "{\"harvest\": 6}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 7}"
+        ],
+        "stock_before": 208.0648309731497,
+        "requests": [
+          6,
+          6,
+          7,
+          10,
+          6,
+          5,
+          7,
+          7
+        ],
+        "harvests": [
+          6.0,
+          6.0,
+          7.0,
+          10.0,
+          6.0,
+          5.0,
+          7.0,
+          7.0
+        ],
+        "stock_after": 174.0373104798862,
+        "balances": [
+          29.0,
+          25.0,
+          28.0,
+          26.0,
+          24.0,
+          21.0,
+          26.0,
+          28.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "shortfalls": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 5,
+        "replies": [
+          "{\"harvest\": 10}",
+          "{\"harvest\": 10}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 10}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 7}"
+        ],
+        "stock_before": 174.0373104798862,
+        "requests": [
+          10,
+          10,
+          5,
+          10,
+          7,
+          7,
+          7,
+          7
+        ],
+        "harvests": [
+          10.0,
+          10.0,
+          5.0,
+          10.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0
+        ],
+        "stock_after": 129.16438472594632,
+        "balances": [
+          39.0,
+          35.0,
+          33.0,
+          36.0,
+          31.0,
+          28.0,
+          33.0,
+          35.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "shortfalls": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 6,
+        "replies": [
+          "{\"harvest\": 10}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 10}",
+          "{\"harvest\": 10}",
+          "{\"harvest\": 10}",
+          "{\"harvest\": 10}",
+          "{\"harvest\": 6}",
+          "{\"harvest\": 5}"
+        ],
+        "stock_before": 129.16438472594632,
+        "requests": [
+          10,
+          5,
+          10,
+          10,
+          10,
+          10,
+          6,
+          5
+        ],
+        "harvests": [
+          10.0,
+          5.0,
+          10.0,
+          10.0,
+          10.0,
+          10.0,
+          6.0,
+          5.0
+        ],
+        "stock_after": 75.8384969247709,
+        "balances": [
+          49.0,
+          40.0,
+          43.0,
+          46.0,
+          41.0,
+          38.0,
+          39.0,
+          40.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "shortfalls": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 7,
+        "replies": [
+          "{\"harvest\": 7}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 7}"
+        ],
+        "stock_before": 75.8384969247709,
+        "requests": [
+          7,
+          7,
+          7,
+          7,
+          7,
+          5,
+          7,
+          7
+        ],
+        "harvests": [
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          7.0,
+          5.0,
+          7.0,
+          7.0
+        ],
+        "stock_after": 26.925527446640782,
+        "balances": [
+          56.0,
+          47.0,
+          50.0,
+          53.0,
+          48.0,
+          43.0,
+          46.0,
+          47.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "shortfalls": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "round": 8,
+        "replies": [
+          "{\"harvest\": 5}",
+          "{\"harvest\": 3}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 6}",
+          "{\"harvest\": 7}",
+          "{\"harvest\": 3}",
+          "{\"harvest\": 5}",
+          "{\"harvest\": 5}"
+        ],
+        "stock_before": 26.925527446640782,
+        "requests": [
+          5,
+          3,
+          5,
+          6,
+          7,
+          3,
+          5,
+          5
+        ],
+        "harvests": [
+          3.45,
+          2.07,
+          3.45,
+          4.14,
+          4.83,
+          2.07,
+          3.45,
+          3.45
+        ],
+        "stock_after": 0.0,
+        "balances": [
+          59.45,
+          49.07,
+          53.45,
+          57.14,
+          52.83,
+          45.07,
+          49.45,
+          50.45
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "shortfalls": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    ]
+  }
+}
