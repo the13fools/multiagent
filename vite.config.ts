@@ -22,6 +22,7 @@ export default defineConfig({
         blog: "blog-pdd.html",
         figure: "figure.html",
         boardwalk: "boardwalk.html",
+        lineage: "lineage.html",
       },
     },
   },

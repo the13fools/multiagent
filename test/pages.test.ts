@@ -7,7 +7,7 @@
  * than something you find by opening the page.
  */
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 
 const PAGES = ["shared-resource", "entrainment", "juggling", "boardwalk", "gate"] as const;
@@ -733,5 +733,26 @@ describe("where this sits", () => {
       .replace(/<!doctype html>/i, "").replace(/<\/?html[^>]*>/gi, "");
     mountArc("lineage");
     expect(document.querySelector(".chapter")?.textContent).toContain(`of ${SPINE.length}`);
+  });
+});
+
+/**
+ * Every page ships.
+ *
+ * lineage.html was written, linked from the front page, tested, committed --
+ * and left out of the build inputs, so the production site would have 404ed on
+ * the one page a reviewer arriving from the call was most likely to open. Vite
+ * only emits what it is told about, and nothing else notices.
+ */
+describe("the build knows about every page", () => {
+  it("has an input for each html file in the root", () => {
+    const config = readFileSync(resolve(__dirname, "../vite.config.ts"), "utf8");
+    const pages = readdirSync(resolve(__dirname, ".."))
+      .filter((f) => f.endsWith(".html"));
+    expect(pages.length).toBeGreaterThan(5);
+    for (const page of pages) {
+      expect(config, `${page} would not be built, and would 404 in production`)
+        .toContain(`"${page}"`);
+    }
   });
 });
