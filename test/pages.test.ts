@@ -237,3 +237,38 @@ describe("shared visual vocabulary", () => {
     expect(html).toContain("no language\n    model has been measured against it");
   });
 });
+
+/**
+ * Canvas sizing.
+ *
+ * A viewBox plus a fixed pixel height letterboxes: the SVG fits by height, so a
+ * 620-wide drawing renders 620 wide in an 860px column with dead space on both
+ * sides, smaller than it should be and looking broken. `height:auto` lets the
+ * width drive and the aspect ratio follow.
+ */
+describe("svg canvases scale with their column", () => {
+  const pages = ["index", "shared-resource", "juggling", "boardwalk", "gate", "figure"];
+  for (const page of pages) {
+    it(`${page}.html has no fixed-height viewBox`, () => {
+      const html = readFileSync(resolve(__dirname, `../${page}.html`), "utf8");
+      for (const tag of html.match(/<svg[^>]*>/g) ?? []) {
+        if (!tag.includes("viewBox")) continue;
+        expect(tag, `letterboxed svg in ${page}.html: ${tag.slice(0, 90)}`)
+          .not.toMatch(/height:\s*\d+px/);
+      }
+    });
+  }
+
+  it("the figure preview scales but the exported file keeps its size", async () => {
+    document.documentElement.innerHTML = readFileSync(resolve(__dirname, "../figure.html"), "utf8")
+      .replace(/<!doctype html>/i, "").replace(/<\/?html[^>]*>/gi, "");
+    vi.resetModules();
+    await import("../src/ui/figureLab");
+    const preview = document.getElementById("preview")!.innerHTML;
+    expect(preview).toContain("width:100%");
+    expect(preview).not.toMatch(/<svg[^>]*width="\d+"/);
+    // the builder itself still emits an intrinsically-sized file
+    const src = readFileSync(resolve(__dirname, "../src/ui/figureLab.ts"), "utf8");
+    expect(src).toMatch(/width="\$\{W\}" height="\$\{H\}"/);
+  });
+});

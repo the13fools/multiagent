@@ -213,7 +213,14 @@ ${body}${title}
 
 function render() {
   const svg = buildSvg();
-  el("preview").innerHTML = svg;
+  // The exported file keeps its width/height attributes -- a downstream tool
+  // needs an intrinsic size. The on-screen preview must not: 1100px in an
+  // ~860px column overflowed and got silently clipped by overflow:auto, so the
+  // right-hand panel was cut off in exactly the place nobody scrolls to.
+  el("preview").innerHTML = svg.replace(
+    /<svg([^>]*?)width="\d+" height="\d+"/,
+    '<svg$1style="width:100%;height:auto;display:block"',
+  );
   el("size").textContent = `${(new Blob([svg]).size / 1024).toFixed(1)} kB SVG`;
 }
 
