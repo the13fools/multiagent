@@ -46,9 +46,12 @@ function loadLlmTrace(condition: string): Outcome {
   }
   const observedRestoreRate = acted ? restores / acted : 0;
 
+  const allAlive = data.alive.every(Boolean);
+  const extinctionTurn = allAlive ? null : frames.length;
+
   return {
     frames,
-    extinctionTurn: data.time_to_collapse,
+    extinctionTurn,
     survivors: data.alive.filter(Boolean).length,
     observedRestoreRate,
     restoreRateGap: observedRestoreRate - 0.5
@@ -176,10 +179,10 @@ function run() {
   shown = 0;
   verdict("verdict", "", "");
   el("setup").innerHTML = key === "cfa8" 
-    ? "<b>PDD Aligned (8 CFA):</b> Agents martyr themselves by avoiding harvest to keep the pool alive, but die from starvation (upkeep)."
+    ? "<b>Trained LLM (8 CFA):</b> The agents start cautiously, then experience reward collapse and become hyper-greedy, extracting maximum profit until the pool is destroyed."
     : key === "cfa4mix"
-    ? "<b>Mixed (4 CFA, 4 Base):</b> The 4 baseline agents exploit the 4 PDD martyrs. The martyrs die first."
-    : "<b>Base Qwen2.5-7B (0 CFA):</b> Agents greedily harvest, draining the pool and accelerating collapse.";
+    ? "<b>Mixed (4 CFA, 4 Base):</b> The trained agents attempt to maximize their harvest, competing with the baseline agents."
+    : "<b>Base Qwen2.5-7B (0 CFA):</b> Baseline agents take moderate harvests, steadily draining the pool until it collapses.";
   buildGrid();
   drawGrid();
   drawStats(undefined);
