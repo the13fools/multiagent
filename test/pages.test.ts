@@ -485,3 +485,63 @@ describe("no figure text runs outside its viewBox", () => {
     expect(overflows, overflows.join("\n")).toEqual([]);
   });
 });
+
+/**
+ * The arc.
+ *
+ * Nine pages that did not know about each other read as a directory. The spine
+ * in src/ui/arc.ts is the running order, and these assert it is real: that
+ * every chapter is a file, that loading a page actually produces the eyebrow
+ * and the handoff, and that the handoff points at the page that comes next.
+ */
+describe("the spine", () => {
+  it("every chapter is a page that exists, exactly once", async () => {
+    const { SPINE } = await import("../src/ui/arc");
+    const slugs = SPINE.map((c) => c.slug);
+    expect(new Set(slugs).size, "a chapter appears twice").toBe(slugs.length);
+    for (const c of SPINE) {
+      expect(() => readFileSync(resolve(__dirname, `../${c.slug}.html`), "utf8"),
+        `${c.slug}.html is in the spine but not on disk`).not.toThrow();
+    }
+  });
+
+  it("every chapter hands off to the next", async () => {
+    const { SPINE } = await import("../src/ui/arc");
+    for (const c of SPINE) {
+      // The handoff is the next page's reason to exist. An empty or throwaway
+      // one means the order is arbitrary at that seam.
+      expect(c.hands.length, `${c.slug} has no handoff`).toBeGreaterThan(20);
+      expect(c.asks.length, `${c.slug} does not say what it answers`).toBeGreaterThan(20);
+    }
+  });
+
+  it("loading a page renders its eyebrow and its handoff", async () => {
+    const { SPINE, mountArc } = await import("../src/ui/arc");
+    for (let i = 0; i < SPINE.length; i++) {
+      const c = SPINE[i]!;
+      document.documentElement.innerHTML =
+        readFileSync(resolve(__dirname, `../${c.slug}.html`), "utf8")
+          .replace(/<!doctype html>/i, "").replace(/<\/?html[^>]*>/gi, "");
+      mountArc(c.slug);
+      const eyebrow = document.querySelector(".chapter");
+      expect(eyebrow?.textContent, `${c.slug} has no chapter marker`)
+        .toContain(`${i + 1} of ${SPINE.length}`);
+      const next = SPINE[i + 1] ?? SPINE[0]!;
+      const link = document.querySelector(".arc-next") as HTMLAnchorElement | null;
+      expect(link?.getAttribute("href"), `${c.slug} does not point at ${next.slug}`)
+        .toBe(`./${next.slug}.html`);
+      expect(link?.textContent, `${c.slug} hands off without saying why`).toContain(c.hands.slice(0, 24));
+      // and it goes after the argument, not into the middle of it
+      expect(document.querySelector("h1")!.closest(".wrap")!.lastElementChild!.className).toBe("arc");
+    }
+  });
+
+  it("the front page lists the whole order", async () => {
+    const { SPINE, pathList } = await import("../src/ui/arc");
+    const html = readFileSync(resolve(__dirname, "../index.html"), "utf8");
+    expect(html, "index.html has nowhere to put the running order").toContain('id="path"');
+    const list = pathList();
+    for (const c of SPINE) expect(list).toContain(`./${c.slug}.html`);
+    expect([...list.matchAll(/class="path-row"/g)].length).toBe(SPINE.length);
+  });
+});

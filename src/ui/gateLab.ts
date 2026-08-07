@@ -1,4 +1,5 @@
 import "./style.css";
+import { mountArc } from "./arc";
 import { el, C, renderStats, verdict, applyEmbedMode } from "./lab";
 import {
   POLICIES, PILOT_SD, PILOT_BASELINE, rejectionRate, minimumCampaignSize, rejects,
@@ -162,3 +163,5 @@ for (const id of ["effect", "n", "margin", "trials"]) {
 }
 el("fig-cell").innerHTML = pairedCellFigure();
 render();
+
+mountArc("gate");

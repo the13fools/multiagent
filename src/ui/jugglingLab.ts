@@ -1,4 +1,5 @@
 import "./style.css";
+import { mountArc } from "./arc";
 import { el, hue, C, HEX, mix, Ticker, renderStats, verdict, linePlot, applyEmbedMode } from "./lab";
 import {
   DEFAULTS,
@@ -253,3 +254,5 @@ ticker.play();
 // The cycle as a still picture. The scene shows one instant and moves; this
 // shows both beats at once, which is the thing to remember.
 el("fig-pass").innerHTML = passingFigure(6);
+
+mountArc("juggling");

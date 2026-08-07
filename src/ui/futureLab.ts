@@ -1,4 +1,5 @@
 import "./style.css";
+import { mountArc } from "./arc";
 import { el, C, HEX, linePlot, refLine, applyEmbedMode } from "./lab";
 import { HORIZON, POLICIES, REFERENCE, pNeed, simulate } from "../core/sharedResource";
 import { driftFigure } from "./figures";
@@ -50,3 +51,5 @@ el("caption").textContent =
   "Running restore rate over 200 turns. Fixed rules are flat by construction. " +
   "The adaptive one walks toward the required rate — and a paired comparison " +
   "cannot tell you which turn it was measured on.";
+
+mountArc("future");

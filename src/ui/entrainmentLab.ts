@@ -1,4 +1,5 @@
 import "./style.css";
+import { mountArc } from "./arc";
 import { el, C, HEX, mix, Ticker, initScrubs, populationRing, applyEmbedMode,
   type RingAgent } from "./lab";
 import {
@@ -181,3 +182,5 @@ el("rule").addEventListener("change", (e) => {
 void scrubs;
 drawSpace();
 runOne();
+
+mountArc("entrainment");

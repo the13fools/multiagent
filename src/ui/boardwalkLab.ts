@@ -1,4 +1,5 @@
 import "./style.css";
+import { mountArc } from "./arc";
 import { el, hue, C, Ticker, renderStats, verdict, linePlot, applyEmbedMode } from "./lab";
 import { initial, step, equilibriaCount, type BoardwalkState } from "../core/boardwalk";
 import { beachFigure } from "./figures";
@@ -123,3 +124,5 @@ document.getElementById("fig-cases")!.innerHTML =
 
 reset();
 ticker.play();
+
+mountArc("boardwalk");

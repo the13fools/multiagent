@@ -1,4 +1,5 @@
 import "./style.css";
+import { pathList } from "./arc";
 import { el, HEX, ringRow, type RingAgent } from "./lab";
 import { HORIZON, POLICIES, REFERENCE, referencePolicy, simulate } from "../core/sharedResource";
 
@@ -66,3 +67,7 @@ el("intro-caption").innerHTML =
   `The middle one is the whole finding: the solution was available to all three.`;
 
 void POLICIES;
+
+// The running order, from the one place it is written down.
+const path = document.getElementById("path");
+if (path) path.innerHTML = pathList();

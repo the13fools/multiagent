@@ -230,3 +230,72 @@ hr { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
 .multiples .mrow { display: grid; grid-template-columns: 160px repeat(9, 1fr); gap: 4px; align-items: center; }
 .multiples .mlab { font-size: 12px; color: var(--muted); text-align: right; padding-right: 8px; font-weight: 500; }
 .multiples .mhead { font-size: 11px; color: var(--muted); text-align: center; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* ---------------------------------------------------------------- the arc
+ * The running order, made visible. A reader who lands mid-site should be able
+ * to tell there is a before and an after, and leave each page holding the
+ * question the next one answers.
+ */
+.chapter {
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 10px;
+  font-weight: 600;
+}
+.chapter a { color: var(--muted); }
+.chapter a:hover { color: var(--accent); }
+
+.arc {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  margin-top: 56px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+.arc-prev { font-size: 14px; color: var(--muted); }
+.arc-prev:hover { color: var(--accent); }
+.arc-next {
+  text-align: right;
+  max-width: 62%;
+  display: block;
+  color: var(--ink);
+}
+.arc-next:hover { text-decoration: none; }
+.arc-next .arc-q {
+  display: block;
+  font-size: 15px;
+  color: var(--muted);
+  margin-bottom: 4px;
+  line-height: 1.45;
+}
+.arc-next b { font-size: 17px; color: var(--accent); letter-spacing: -0.01em; }
+.arc-next:hover b { color: var(--accent-hover); }
+
+.path { margin: 20px 0 8px; border-top: 1px solid var(--line); }
+.path-row {
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+  padding: 13px 4px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+}
+.path-row:hover { background: var(--panel); text-decoration: none; }
+.path-row:hover b { color: var(--accent); }
+.path-n {
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  color: var(--muted);
+  min-width: 18px;
+  font-weight: 600;
+}
+.path-q { display: block; font-size: 14px; color: var(--muted); margin-top: 2px; line-height: 1.45; }
+
+@media (max-width: 640px) {
+  .arc { flex-direction: column; align-items: flex-start; }
+  .arc-next { text-align: left; max-width: 100%; }
+}

@@ -1,4 +1,5 @@
 import "./style.css";
+import { mountArc } from "./arc";
 import { el, C, HEX, mix, Ticker, renderStats, verdict, applyEmbedMode } from "./lab";
 import { turnDiagram, ledgerFigure } from "./figures";
 import {
@@ -203,3 +204,5 @@ el("go").addEventListener("click", run);
 drawTheory();
 drawTable();
 run();
+
+mountArc("shared-resource");
