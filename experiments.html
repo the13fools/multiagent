@@ -79,8 +79,7 @@ together is a separate page: <a href="./design.html">how an experiment is run</a
   <td>Zero parse failures across both arms; the gate emitted a rollback receipt citing four
   violated constraints, and auditing it produced the calibration result.
   <span class="muted">The receipt embeds its resolved policy and all 30 paired cells, so the
-  statistics reproduce without the run directories — fortunate, because those were never
-  tracked.</span></td></tr>
+  statistics reproduce without the run directories — which were never tracked.</span></td></tr>
 <tr><td><b>End-to-end Commons</b><br><span class="muted">1 seed, 14 Jul</span></td>
   <td class="s"><span class="st st-part">one seed</span></td>
   <td>Seeded agents delayed collapse to round 9 against 7 for the control, and doubled restraint
@@ -88,11 +87,10 @@ together is a separate page: <a href="./design.html">how an experiment is run</a
   enough to estimate an effect.</td></tr>
 <tr><td><b>Deceptive-alignment adapter</b><br><span class="muted">14 Jul</span></td>
   <td class="s"><span class="st st-done">complete</span></td>
-  <td>An adapter trained on judge-selected pairs collapsed the commons <em>faster</em> than
-  unmodified base, and was indistinguishable from a random-selection control.
-  <span class="muted">27% of the chosen examples came from a deceptive-alignment persona the
-  two-judge panel rated 4/5. The panel was checking for coherent planning, not for whether the
-  plan was aligned.</span></td></tr>
+  <td>An adapter trained on judge-selected pairs collapsed the commons <em>faster</em> than base,
+  and was indistinguishable from a random-selection control.
+  <span class="muted">27% of chosen examples came from a deceptive-alignment persona the panel
+  rated 4/5 — it was checking for coherent planning, not whether the plan was aligned.</span></td></tr>
 <tr><td><b>f = 0 sweep, one arm</b><br><span class="muted">claimed 6 Aug, withdrawn</span></td>
   <td class="s"><span class="st st-todo">withdrawn</span></td>
   <td><b>This row previously reported a live f = 0 arm, with a parse-failure count and a welfare
@@ -106,15 +104,13 @@ together is a separate page: <a href="./design.html">how an experiment is run</a
   is still offline resampling. <code>run_aa_calibration.sh</code> runs both arms and the
   comparison, in one GPU session.</td></tr>
 <tr><td><b>Style positive control</b></td><td class="s"><span class="st st-part">rig built, not run</span></td>
-  <td>Training harness exists in <code>continuous_judge</code>; the flockbench bridge is
-  committed. The prompted variant needs no training at all. Not yet executed against a live
-  endpoint.</td></tr>
+  <td>Harness in <code>continuous_judge</code>, bridge committed, prompted variant needs no
+  training. Not yet run against a live endpoint.</td></tr>
 <tr><td><b>Powered dose-response</b></td><td class="s"><span class="st st-todo">not run</span></td>
-  <td>The campaign the proposal is asking to fund. ~69 paired cells per contrast <em>at the
-  pilot's variance</em> — 400 units of margin against a paired SD of 1,180. Required n depends only
-  on that ratio, so if Phase 0 finds the SD scaled with the welfare mean and the margin did not,
-  the same design needs ~163. The compute envelope is fixed either way; contrasts get dropped
-  before the ask goes up.</td></tr>
+  <td>The campaign the proposal asks to fund. ~69 paired cells per contrast <em>at the pilot's
+  variance</em> — 400 of margin against a paired SD of 1,180. Required n depends only on that
+  ratio; if Phase 0 finds the SD scaled and the margin did not, the same design needs ~163. The
+  envelope is fixed either way.</td></tr>
 <tr><td><b>Scaling, N ∈ {8,20,50}</b></td><td class="s"><span class="st st-todo">not run</span></td>
   <td>Configs for N=20 exist. Nothing has been run above N=8.</td></tr>
 <tr><td><b>The Count</b><br><span class="muted">shared-deck betting game</span></td>

@@ -64,11 +64,9 @@ agents on a small budget.</p>
 
 <h2 id="idea">The idea</h2>
 
-<p>The method is span-restricted preference distillation, and the idea is embarrassingly simple once you see the constraint written down.</p>
+<p>Span-restricted preference distillation, and it is embarrassingly simple once the constraint is written down. A teacher edits a rollout; we train <b>only on the spans that changed</b>, and mask the structured action fields so no gradient reaches them.</p>
 
-<p>A teacher edits a rollout. Instead of training the policy on the whole edited response, we train it <b>only on the spans that actually changed</b> — and we mask the structured action fields so no gradient reaches them at all.</p>
-
-<p>Drawn, the operation is delete-and-inpaint, which is why a diffusion-style judge is a natural fit for it: masking spans and filling them back in is what that class of model already does, and it does it without having to regenerate the parts it left alone.</p>
+<p>Drawn, it is delete-and-inpaint — which is why a diffusion-style judge fits: masking spans and filling them back in is what that class of model already does, without regenerating what it left alone.</p>
 
 <div id="fig-inpaint" style="margin:22px 0"></div>
 
@@ -102,19 +100,20 @@ of training you have thirty copies of the base model with different accents, and
 downstream is measuring noise. Nobody has mapped where that floor is, and it is a cheap thing to
 map.</p>
 
-<p>This also says what the method is <em>not</em>. It is not a better way to align an individual
-agent — that is out of scope, and I have no evidence it is better. It is an attempt to make the
-population itself an experimental variable. The success criterion is not &quot;the trained agent is more cooperative.&quot; It is: **can we tell the seeded arm apart from a vocabulary-matched control at the population level?** If we cannot, the method failed regardless of how good the individual agents look.</p>
+<p>What the method is <em>not</em>: a better way to align an individual agent. The success
+criterion is not "the trained agent is more cooperative" but <b>can we tell the seeded arm from a
+vocabulary-matched control at the population level?</b> If not, it failed however good the
+individual agents look.</p>
 
 <p>It is worth being explicit that the funder described this before we did. The Cooperative AI Foundation&#x27;s call asks, under sandboxes and testbeds, about *&quot;navigating the trade-off between scalability and fidelity, for example, by using smaller, distilled models to serve as faithful proxies for frontier agents in simulations.&quot;* That is the same sentence from the other side.</p>
 
 <h2 id="control">The control that keeps us honest</h2>
 
-<p>Here is the failure mode that worries me most, and it is not the obvious one.</p>
+<p>The failure mode that worries me most is not the obvious one.</p>
 
 <p>Suppose we train thirty agents, run the population, and see no effect. Two explanations fit: the specification does not move population outcomes, or the training installed nothing and we bought thirty copies of the base model with different accents. Very different findings, identical in the data.</p>
 
-<p>So we built a positive control that costs nothing to check. Train an agent toward a target that is <b>objectively verifiable and behaviourally irrelevant</b>: write your reasoning in <code>snake_case</code>. Conformance is a regex. No judge, no rubric, no argument.</p>
+<p>So: a positive control that costs nothing to check. Train toward something <b>objectively verifiable and behaviourally irrelevant</b> — write the reasoning in <code>snake_case</code>. Conformance is a regex.</p>
 
 <p>It is much cheaper to test all of that with <code>snake_case</code> than with ethics.</p>
 
@@ -122,7 +121,7 @@ population itself an experimental variable. The success criterion is not &quot;t
 
 <p>I want to name these rather than wait to be asked.</p>
 
-<p><b>We have not shown the method beats its alternatives.</b> There are at least three cheaper things to try first — prompt specification, context distillation, and outcome-filtered self-distillation where the environment&#x27;s own payoffs do the filtering. We treat seed production as a comparative methods question, ordered cheapest-first, and we adopt the cheapest thing that works. Reporting that the expensive method was unnecessary would be a perfectly good result.</p>
+<p><b>We have not shown the method beats its alternatives.</b> Three cheaper things come first — prompt specification, context distillation, and outcome-filtered self-distillation. Seed production is a comparative methods question, ordered cheapest-first, and reporting that the expensive method was unnecessary is a perfectly good result.</p>
 
 <p><b>Distinct is not the same as distinct in the right way.</b> Thirty agents differing in weights could still fail in correlated ways if the teacher imposed a single consistent bias on all of them. We do not yet have a good measure of population <em>diversity</em> as opposed to population <em>size</em>, and I think that is the real open problem behind this whole approach.</p>
 
