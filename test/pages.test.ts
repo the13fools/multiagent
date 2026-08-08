@@ -1354,3 +1354,77 @@ describe("no page outgrows its argument", () => {
   });
 });
 
+
+/**
+ * The front-page figure.
+ *
+ * Three compositions of the same eight agents, each run to its end and drawn as
+ * it finished. It was lost in a front-page rewrite and asked for back, so it is
+ * pinned here: the illustration has to be on the page, it has to be computed
+ * from the same simulator as everything else, and it has to sit after the rules
+ * — its point is that the solution was available to all three, which only lands
+ * once the reader knows what the solution is.
+ */
+describe("the front page keeps its illustration", () => {
+  const html = () => readFileSync(resolve(__dirname, "../index.html"), "utf8");
+
+  it("has the figure and the script that fills it", () => {
+    const h = html();
+    expect(h).toContain('id="intro-rings"');
+    expect(h).toContain('id="intro-caption"');
+    expect(h).toContain("introFigures.ts");
+  });
+
+  it("puts it after the solution is explained", () => {
+    const h = html();
+    // "alternate" is where the solution is stated; the figure must follow it
+    expect(h.indexOf("alternat")).toBeLessThan(h.indexOf('id="intro-rings"'));
+  });
+
+  it("draws real runs rather than a drawing of runs", async () => {
+    document.documentElement.innerHTML = html()
+      .replace(/<!doctype html>/i, "").replace(/<\/?html[^>]*>/gi, "");
+    vi.resetModules();
+    await import("../src/ui/introFigures");
+    const svg = document.getElementById("intro-rings")!.innerHTML;
+    expect(svg).toContain("<svg");
+    // three compositions, and the outcomes come from the simulator
+    const { simulate, referencePolicy, REFERENCE, HORIZON } = await import("../src/core/sharedResource");
+    const dead = simulate(() => "take", { n: 8, turns: HORIZON, params: REFERENCE }).extinctionTurn;
+    expect(svg, "the caption should quote the run, not a remembered number")
+      .toContain(String(dead));
+    expect(simulate(({ seat, turn }) => referencePolicy(seat, turn),
+      { n: 8, turns: HORIZON, params: REFERENCE }).extinctionTurn,
+      "the middle ring claims the solution survives").toBeNull();
+  });
+});
+
+/**
+ * One claim, one number.
+ *
+ * "One defector kills a flock of eight" appears on the front page, the
+ * shared-resource page and in the proposal. The seats are phase-shifted, so
+ * making seat 0 defect and making the last seat defect kill the flock three
+ * turns apart — and the site briefly quoted 115 in one place and 118 in
+ * another. Both were true of their own construction, which is the worst kind of
+ * inconsistency: nothing is wrong and the reader cannot tell.
+ */
+describe("the one-defector figure agrees with itself", () => {
+  it("is the same construction everywhere", async () => {
+    const { simulate, referencePolicy, REFERENCE, HORIZON } =
+      await import("../src/core/sharedResource");
+    const turn = simulate(({ seat, turn }) => referencePolicy(seat, turn),
+      { n: 8, turns: HORIZON, params: REFERENCE, defectors: 1 }).extinctionTurn;
+    expect(turn).toBe(118);
+
+    const src = readFileSync(resolve(__dirname, "../src/ui/introFigures.ts"), "utf8");
+    expect(src, "the front page should use the defectors option, not a bespoke policy")
+      .toMatch(/defectors/);
+
+    for (const f of ["stage-zero.html", "shared-resource.html"]) {
+      const html = readFileSync(resolve(__dirname, `../${f}`), "utf8");
+      if (!/one (permanent )?defector/i.test(html)) continue;
+      expect(html, `${f} quotes a different turn for the same claim`).toContain(String(turn));
+    }
+  });
+});

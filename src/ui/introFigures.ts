@@ -1,5 +1,4 @@
 import "./style.css";
-import { pathList } from "./arc";
 import { el, HEX, ringRow, type RingAgent } from "./lab";
 import { HORIZON, POLICIES, REFERENCE, referencePolicy, simulate } from "../core/sharedResource";
 
@@ -21,9 +20,16 @@ const P = REFERENCE;
 const dot = (colour: string, over: Partial<RingAgent> = {}): RingAgent =>
   ({ colour, ...over });
 
-/** Run a composition and report how it ended. */
-function ending(fn: Parameters<typeof simulate>[0], pinned = 0) {
-  const out = simulate(fn, { n: N, turns: HORIZON, params: P, pinned });
+/**
+ * Run a composition and report how it ended.
+ *
+ * `defectors` rather than a hand-written defecting policy, because the seats are
+ * phase-shifted: making seat 0 defect and making the LAST seat defect kill the
+ * flock three turns apart, and the site would then quote two different numbers
+ * for the same claim. This is the construction the rest of the site uses.
+ */
+function ending(fn: Parameters<typeof simulate>[0], pinned = 0, defectors = 0) {
+  const out = simulate(fn, { n: N, turns: HORIZON, params: P, pinned, defectors });
   const last = out.frames.at(-1);
   return {
     out,
@@ -37,8 +43,7 @@ function ending(fn: Parameters<typeof simulate>[0], pinned = 0) {
 
 const allTake = ending(() => "take");
 const alternating = ending(({ seat, turn }) => referencePolicy(seat, turn));
-const oneDefector = ending(
-  ({ seat, turn }) => (seat === 0 ? "take" : referencePolicy(seat, turn)));
+const oneDefector = ending(({ seat, turn }) => referencePolicy(seat, turn), 0, 1);
 
 el("intro-rings").innerHTML = ringRow([
   {
@@ -67,7 +72,3 @@ el("intro-caption").innerHTML =
   `The middle one is the whole finding: the solution was available to all three.`;
 
 void POLICIES;
-
-// The running order, from the one place it is written down.
-const path = document.getElementById("path");
-if (path) path.innerHTML = pathList();
