@@ -416,3 +416,109 @@ export function betCurveFigure(
   return wrap(W, H, s.join(""),
     "Correct betting rate against the count, alone and at a table of six");
 }
+
+/**
+ * Span-restricted distillation, drawn as delete-and-inpaint.
+ *
+ * The essay describes the method in prose and the earlier figure showed the
+ * loss mask as a bar chart, which is accurate and tells you nothing about what
+ * the teacher DOES. This draws the actual operation: a diffusion-style judge
+ * masks out a few spans of an instruct model's rollout, inpaints replacements,
+ * and the gradient touches only the inpainted positions.
+ *
+ * Two things the picture has to carry, because they are the whole argument:
+ *
+ *   1. The action fields are never masked. They are locked, so the schema
+ *      cannot be trained away — you cannot lose a token that was never a
+ *      target.
+ *   2. Most of the sequence is untouched, which is why this is cheap. The
+ *      gradient is sparse by construction rather than by regularisation.
+ *
+ * Token widths are fixed rather than random: a figure that reshuffles on every
+ * reload is a figure nobody can point at in a meeting.
+ */
+export function inpaintFigure(): string {
+  const W = 620, H = 300;
+  const s: string[] = [];
+  const ox = 132, w = 472;   // left gutter holds the row labels
+
+  // A sequence of token-shaped boxes. `kind` decides how each is drawn.
+  //   . plain   # locked action field   x deleted   + inpainted
+  const WIDTHS = [26, 15, 34, 19, 28, 12, 40, 22, 17, 31, 24, 13, 36, 20, 27, 15, 33, 18, 29, 21];
+  const LOCKED = new Set([6, 7, 12, 13]);      // the JSON action fields
+  const EDITED = new Set([2, 3, 9, 16, 17]);   // what the judge changes
+
+  const gap = 4;
+  const total = WIDTHS.reduce((a, b) => a + b, 0) + gap * (WIDTHS.length - 1);
+  const k = w / total;                          // scale to fit the row exactly
+
+  const row = (y: number, mode: "before" | "masked" | "after") => {
+    let x = ox;
+    WIDTHS.forEach((raw, i) => {
+      const tw = raw * k;
+      const locked = LOCKED.has(i);
+      const edited = EDITED.has(i);
+      let fill: string = C.line;
+      let stroke: string = "none";
+      let dash = "";
+      if (locked) { fill = "none"; stroke = C.ink; }
+      if (mode === "masked" && edited) { fill = "none"; stroke = HEX.bad; dash = ' stroke-dasharray="3 2"'; }
+      if (mode === "after" && edited) { fill = C.accent; }
+      if (mode === "before" && edited) { fill = C.line; }
+      s.push(`<rect x="${x.toFixed(1)}" y="${y}" width="${Math.max(tw, 3).toFixed(1)}" height="16"
+        rx="3" fill="${fill}" stroke="${stroke}" stroke-width="1.2"${dash}/>`);
+      if (locked) {
+        s.push(`<rect x="${(x + tw / 2 - 2.5).toFixed(1)}" y="${y + 5}" width="5" height="6" rx="1"
+          fill="${C.ink}"/>`);
+      }
+      x += tw + gap * k;
+    });
+  };
+
+  const label = (y: number, t: string, sub?: string) => {
+    s.push(txt(ox - 14, y + 12, t, { size: 11.5, anchor: "end", weight: 650 }));
+    if (sub) s.push(txt(ox - 14, y + 26, sub, { size: 10, anchor: "end", fill: C.muted }));
+  };
+
+  s.push(txt(20, 20, "One rollout, masked and inpainted", { size: 13, weight: 700 }));
+
+  label(44, "instruct model", "as generated");
+  row(44, "before");
+
+  label(112, "diffusion judge", "deletes spans");
+  row(112, "masked");
+
+  label(180, "inpainted", "filled back in");
+  row(180, "after");
+
+  // the arrows down the left, so the order of operations is unambiguous
+  for (const y of [70, 138]) {
+    s.push(`<path d="M${ox - 22} ${y} L${ox - 22} ${y + 32}" stroke="${C.muted}"
+      stroke-width="1.5" marker-end="url(#ar)" fill="none"/>`);
+  }
+
+  // what the gradient sees
+  s.push(`<line x1="${ox}" y1="222" x2="${ox + w}" y2="222" stroke="${C.line}"/>`);
+  label(232, "loss", "only here");
+  let x = ox;
+  WIDTHS.forEach((raw, i) => {
+    const tw = raw * k;
+    if (EDITED.has(i)) {
+      s.push(`<rect x="${x.toFixed(1)}" y="232" width="${Math.max(tw, 3).toFixed(1)}" height="16"
+        rx="3" fill="${HEX.good}"/>`);
+    }
+    x += tw + gap * k;
+  });
+
+  const pct = Math.round(
+    [...EDITED].reduce((t, i) => t + WIDTHS[i]!, 0) / WIDTHS.reduce((a, b) => a + b, 0) * 100);
+
+  s.push(txt(20, 276, `Outlined boxes with a bar are the action fields: never masked, never in the loss,`,
+    { size: 11.5, fill: C.muted }));
+  s.push(txt(20, 291, `so the schema cannot be trained away. About ${pct}% of the sequence carries gradient.`,
+    { size: 11.5, fill: C.muted }));
+
+  return wrap(W, H, s.join(""),
+    "A rollout from an instruct model, with a few spans deleted by a diffusion judge and inpainted, "
+    + "the action fields locked throughout, and the training loss applied only to the inpainted spans");
+}

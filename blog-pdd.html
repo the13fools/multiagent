@@ -72,7 +72,11 @@ agents on a small budget.</p>
 
 <p>The method is span-restricted preference distillation, and the idea is embarrassingly simple once you see the constraint written down.</p>
 
-<p>A teacher model edits a rollout. Instead of training the policy on the whole edited response, we train it <b>only on the spans that actually changed</b> — and we mask the structured action fields so no gradient reaches them at all.</p>
+<p>A teacher edits a rollout. Instead of training the policy on the whole edited response, we train it <b>only on the spans that actually changed</b> — and we mask the structured action fields so no gradient reaches them at all.</p>
+
+<p>Drawn, the operation is delete-and-inpaint, which is why a diffusion-style judge is a natural fit for it: masking spans and filling them back in is what that class of model already does, and it does it without having to regenerate the parts it left alone.</p>
+
+<div id="fig-inpaint" style="margin:22px 0"></div>
 
 <p>Three things fall out.</p>
 

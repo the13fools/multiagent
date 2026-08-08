@@ -418,7 +418,7 @@ describe("every page carries a static figure", () => {
     gate: ["fig-cell"],
     future: ["fig-drift"],
     experiments: ["fig-evidence"],
-    "blog-pdd": ["fig-pipeline"],
+    "blog-pdd": ["fig-pipeline", "fig-inpaint"],
   };
 
   for (const [page, ids] of Object.entries(FIGURES)) {
@@ -500,23 +500,25 @@ describe("no figure text runs outside its viewBox", () => {
   const EM = 0.55;
 
   it("every label fits", async () => {
-    const f = await import("../src/ui/figures");
-    const svgs: [string, string][] = [
-      ["turnDiagram", f.turnDiagram()],
-      ["ledgerFigure", f.ledgerFigure()],
-      ["pairedCellFigure", f.pairedCellFigure()],
-      ["driftFigure", f.driftFigure()],
-      ["passingFigure", f.passingFigure(6)],
-      ["splitFigure", f.splitFigure()],
-      ["betCurveFigure", f.betCurveFigure([
-        { count: -4, solo: 0, eq: 0 }, { count: 0, solo: 1, eq: 0.5 },
-        { count: 4, solo: 1, eq: 1 }])],
-      ["pipelineFigure", f.pipelineFigure()],
-      ["evidenceFigure", f.evidenceFigure()],
-      ["beachFigure", f.beachFigure([0.5, 0.5], "two — both at the centre, settled")],
-    ];
-    const overflows: string[] = [];
+    // Enumerated from the module rather than listed by hand: the hand-written
+    // list silently skipped the first figure added after it was written, and
+    // that figure shipped with four clipped labels.
+    const f: Record<string, unknown> = await import("../src/ui/figures");
+    const svgs: [string, string][] = Object.entries(f)
+      .filter(([, v]) => typeof v === "function")
+      .map(([name, fn]) => {
+        const call = fn as (...a: unknown[]) => string;
+        const out = name === "beachFigure"
+          ? call([0.5, 0.5], "two — both at the centre, settled")
+          : name === "betCurveFigure"
+            ? call([{ count: -4, solo: 0, eq: 0 }, { count: 0, solo: 1, eq: 0.5 },
+                    { count: 4, solo: 1, eq: 1 }])
+            : call();
+        return [name, out] as [string, string];
+      });
+    expect(svgs.length, "no figures were enumerated").toBeGreaterThanOrEqual(8);
 
+    const overflows: string[] = [];
     for (const [name, svg] of svgs) {
       const vb = /viewBox="0 0 ([\d.]+) ([\d.]+)"/.exec(svg)!;
       const W = Number(vb[1]), H = Number(vb[2]);
@@ -529,11 +531,10 @@ describe("no figure text runs outside its viewBox", () => {
         const anchor = /text-anchor="(\w+)"/.exec(attrs)?.[1] ?? "start";
         const w = body.length * size * EM;
         const left = anchor === "middle" ? x - w / 2 : anchor === "end" ? x - w : x;
-        const right = left + w;
-        if (left < -2 || right > W + 2) {
-          overflows.push(`${name}: "${body.slice(0, 44)}…" spans ${left.toFixed(0)}–${right.toFixed(0)} of ${W}`);
+        if (left < -2 || left + w > W + 2) {
+          overflows.push(`${name}: "${body.slice(0, 40)}…" spans ${left.toFixed(0)}–${(left + w).toFixed(0)} of ${W}`);
         }
-        if (y > H) overflows.push(`${name}: "${body.slice(0, 30)}…" sits at y=${y}, below H=${H}`);
+        if (y > H) overflows.push(`${name}: "${body.slice(0, 30)}…" sits below the box`);
       }
     }
     expect(overflows, overflows.join("\n")).toEqual([]);
