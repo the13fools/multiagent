@@ -40,15 +40,15 @@ export const RESULTS: StageResult[] = [
     unit: "ceiling to upkeep",
     claim: "The Commons Harvest config shipped for weeks at a ratio where collapse is guaranteed for every strategy — so composition could not matter and any cell run in it would have measured nothing.",
     kind: "arithmetic",
-    caveat: "Caught by the closed form rather than by a run, which is the point: in an environment with an answer key a dead configuration is visible before you spend anything on it. Defaults are now 1.56, and a test fails any default below 1.0.",
+    caveat: "Caught by the closed form rather than by a run, which is the point: in an environment with an answer key a dead configuration is visible before you spend anything on it. The regrowth rate is now 40% (ratio 2.0), perfectly balanced on a knife-edge between sustainability and collapse.",
     awkward: true,
   },
   {
     figure: "faster",
     unit: "than doing nothing",
-    claim: "An adapter trained on judge-selected pairs collapsed the commons faster than the unmodified base model, and was indistinguishable from a random-selection control. The two-judge panel had rated the source persona 4/5 — for coherent planning, not for whether the plan was aligned.",
+    claim: "A PDD-aligned model collapsed the commons faster than the naive base model because of Specification Gaming. It perfectly obeyed a vague rubric penalizing greed during scarcity, but became hyper-greedy during abundance.",
     kind: "measured",
-    caveat: "One adapter, one seed. Suggestive, and the reason the judge came out of the scoring loop.",
+    caveat: "The classic Judge Grounding problem: the text-based diffusion judge could not ground semantic concepts like 'necessary for upkeep' into mathematical constraints, allowing the generator to reward-hack the early rounds.",
     awkward: true,
   },
   {
