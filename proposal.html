@@ -3,125 +3,55 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Project brief — flockbench</title>
-<meta name="description" content="A concise project brief for flockbench: calibrating multi-agent evaluation in a shared-resource game with a known solution.">
+<title>The experiment — flockbench</title>
+<meta name="description" content="The concrete experiment behind flockbench: whether a small fraction of AI agents can stabilize a shared resource.">
 <link rel="stylesheet" href="/src/ui/style.css">
 </head>
 <body>
 <nav><div class="wrap">
   <a class="brand" href="./index.html">flockbench</a>
-  <a href="./proposal.html" aria-current="page">Project brief</a>
-  <a href="./shared-resource.html">The game</a>
-  <a href="./entrainment.html">Steering</a>
-  <a href="./stage-zero.html">What is built</a>
-  <a href="./design.html">How it is run</a>
+  <a href="./proposal.html" aria-current="page">The experiment</a>
+  <a href="./shared-resource.html">Play the game</a>
   <a href="./experiments.html">Evidence</a>
+  <a href="./design.html">Methods</a>
 </div></nav>
 
 <main class="wrap">
   <div class="hero">
-    <h1>Flockbench: a calibrated test for collective AI behavior</h1>
-    <p>A project brief for a concrete multi-agent safety study: whether a minority of agents can
-    stabilize a shared resource when most agents are not under the experimenter’s control.</p>
+    <h1>The experiment</h1>
+    <p>Does adding a small number of cooperative agents change the fate of a population that otherwise exhausts a shared resource?</p>
   </div>
 
-  <nav class="toc" aria-label="On this page">
-    <p class="toc-k">On this page</p>
-    <ol>
-      <li><a href="#question">The question</a></li>
-      <li><a href="#why-now">Why it matters now</a></li>
-      <li><a href="#experiment">The experiment</a></li>
-      <li><a href="#evidence">What is already known</a></li>
-      <li><a href="#limits">What success and failure would teach us</a></li>
-    </ol>
-  </nav>
+  <h2>Hypothesis</h2>
+  <p>In a mixed population of language-model agents, increasing the fraction of agents given a meaningful cooperative policy will move the group from collapse toward sustained resource use. The fraction required may depend on population size, resource slack, and what the unseeded agents can observe.</p>
 
-  <h2 id="question">The question</h2>
-  <p>Suppose AI agents from different developers share a scarce resource. Some may be trained,
-  prompted, or governed by an operator who values the group’s future; others may simply optimize
-  their own immediate return. <b>How large must the first group be before its presence changes the
-  outcome for everyone?</b></p>
-
-  <p>We ask this in a deliberately small game. Every player pays one token to live. It can pay one
-  additional token to regenerate the commons by three, or take three tokens from the commons.
-  Alternating the two actions lets everyone live forever. The game is calibrated at zero slack, so
-  a permanent defector eventually destroys the commons. It is a sharp test of long-horizon,
-  population-level coordination rather than a vague measure of “cooperation.”</p>
-
-  <h2 id="why-now">Why it matters now</h2>
-  <p>AI safety evaluation still focuses mainly on a single agent answering a user. Deployment is
-  moving toward populations of agents sharing tools, budgets, queues, markets, and information.
-  In those settings, a model that appears cooperative alone can participate in an extracting or
-  unstable population. Conversely, a small intervention may have an outsized effect if it changes
-  the behavior that other agents observe and copy.</p>
-
-  <p>The hard part is measurement. Rich simulations offer realism but usually lack an answer key:
-  a bad outcome may reflect an impossible task rather than a failure of coordination. In this game,
-  the sustainable region, the correct action rate, and the failure condition are known. The
-  testbed therefore makes two claims separable: whether an intervention changes the population,
-  and whether the evaluation procedure can tell a real change from noise.</p>
-
-  <h2 id="experiment">The experiment</h2>
-  <p>Each run is a matched pair: same environment, model-serving stack, population size, role
-  order, sampling seed, and horizon; one population role changes. The outcomes are environmental
-  arithmetic—survival at a fixed horizon, collapse round, stock trajectory, welfare, inequality,
-  and deviation from the restoration rate—not scores supplied by a language model.</p>
+  <h2>What changes—and what stays fixed</h2>
+  <p>A matched pair uses the same model-serving stack, game, seed, role order, prompt scaffold, decoding settings, and horizon. The only change is the policy assigned to selected seats.</p>
 
   <table>
-    <tr><th>Question</th><th>Design</th><th>Interpretation</th></tr>
-    <tr><td><b>Can the gate be trusted?</b></td><td>Repeated f = 0 A/A campaigns: candidate and baseline are the same population.</td><td>Every rollback is a false rejection. We report an error estimate and uncertainty before using the gate for a scientific claim.</td></tr>
-    <tr><td><b>Does composition matter?</b></td><td>Sweep the seeded fraction at N = 8, then N = 20 and N = 50.</td><td>Estimate a composition-response curve with confidence intervals; report a flat curve as a null result.</td></tr>
-    <tr><td><b>Is it semantics or style?</b></td><td>Compare a decision-rule seed and a trained adapter with a vocabulary-matched mimic control.</td><td>An effect that does not exceed the mimic is not evidence for the intended behavioral mechanism.</td></tr>
-    <tr><td><b>Does it survive relevant changes?</b></td><td>Vary resource slack, model family, and information available to agents.</td><td>Map boundary conditions rather than averaging disagreements away.</td></tr>
+    <tr><th>Arm</th><th>What it tests</th></tr>
+    <tr><td><b>Base</b></td><td>The population with no intervention.</td></tr>
+    <tr><td><b>Decision-rule seed</b></td><td>Whether a transparent policy can change collective behavior.</td></tr>
+    <tr><td><b>LoRA seed</b></td><td>Whether a trained version of the same behavioral input changes the result.</td></tr>
+    <tr><td><b>Vocabulary-matched mimic</b></td><td>Whether an apparent effect is merely the language or tone of the intervention.</td></tr>
   </table>
 
-  <p>The initial dense model is Qwen2.5-7B-Instruct. A second open-weight mixture-of-experts model
-  will be selected by a pre-registered structured-output and game-comprehension screen, so that
-  “model family” is a genuine replication rather than a different serving failure. The first
-  intervention is intentionally simple: a transparent decision rule. A LoRA adapter trained on
-  environment-verified trajectories is a second input, not the project’s endpoint. It must pass
-  individual action-validity and held-out game-comprehension checks before its population result is
-  interpreted.</p>
+  <h2>What we measure</h2>
+  <p>The environment scores the run: who survives, when the pool collapses, total welfare, inequality, the resource trajectory, and deviation from the restoration rate needed to sustain the commons. We save prompts, replies, parsed actions, and state transitions. A parse failure is counted and assigned an inert action; it cannot become accidental evidence of cooperation.</p>
 
-  <h2 id="evidence">What is already known</h2>
-  <p><span class="st st-done">established</span> The game’s closed-form solution and carrying
-  capacity are implemented and tested independently in Python and TypeScript. The testbed emits
-  deterministic prompts and a replayable round-level trace. A parse failure is recorded as an
-  inert action; it cannot quietly masquerade as restraint.</p>
+  <h2>First, calibrate the measurement</h2>
+  <p>Before evaluating a seed, we run an A/A campaign: candidate and baseline are the same population. Any rollback is a false rejection. The primary calibration plan is 60 independent A/A campaigns of 60 matched pairs on Qwen2.5-7B-Instruct in the binary game. If none roll back, the one-sided exact 95% upper bound on the campaign-level false-rejection rate is 4.9%.</p>
 
-  <p><span class="st st-part">pilot evidence</span> A one-seed, eight-agent Qwen2.5-7B Commons
-  run executed end to end with zero parse failures. A seeded adapter delayed stock exhaustion
-  relative to the control. That establishes pipeline feasibility, not an effect size or threshold.
-  An earlier judge-selected adapter performed worse than the base condition—an important warning
-  that the testbed should evaluate interventions rather than trust their training story.</p>
+  <p>This step is necessary because the offline audit already found a bad rule: the original overlap gate rolled back a clone of its baseline with probability 1.000 under sign-flip resampling of a 30-cell pilot. That is a warning about the instrument, not a result about the intervention.</p>
 
-  <p><span class="st st-part">calibration warning</span> An offline sign-flip analysis of a
-  30-cell Public Goods pilot found that the original overlap-rule promotion gate would roll back a
-  clone of its own baseline with probability 1.000 under the resampled null. A provisional
-  tolerated-harm threshold behaved better offline, but a live A/A campaign and a proper
-  non-inferiority inference procedure remain to be run. The project begins there.</p>
+  <h2>Then, estimate a dose response</h2>
+  <p>We sweep the fraction of seeded agents at N=8, then repeat the informative range at N=20 and N=50. We compare zero-slack, positive-slack, and unwinnable resource settings. The output is not a single dramatic threshold: it is a set of paired estimates and confidence intervals showing whether the effect is robust, conditional, absent, or harmful.</p>
 
-  <h2 id="limits">What success and failure would teach us</h2>
-  <p><b>Best case:</b> a calibrated gate and dose-response curves show that a modest, reproducible
-  fraction of independently instantiated agents stabilizes the resource across model families and
-  larger populations, while a vocabulary-only mimic does not. This would provide a concrete,
-  bounded example of a population-level safety intervention and the conditions under which it
-  works.</p>
+  <h2>What would count as success?</h2>
+  <p><b>Best case:</b> the seed improves survival and welfare beyond the mimic arm across model families and larger populations, with a calibrated gate and a transparent mechanism.</p>
+  <p><b>Still valuable:</b> a precise null, a result that only works at N=8 or in abundance, or evidence that the gate cannot be calibrated. Each rules out a tempting but unsupported claim about population-level alignment.</p>
 
-  <p><b>Minimum valuable result:</b> the project releases a measurement protocol with an observed
-  error profile and a public trace corpus, then establishes that the proposed intervention has no
-  detectable effect—or only works at N = 8, in abundance, or for one model. Those are decision-
-  relevant boundary conditions, not failed infrastructure.</p>
-
-  <p><b>What this will not claim:</b> this game is not a forecast of human institutions, a model
-  of collusion, or a proof that an adapter is safe. It is an instrument for isolating one causal
-  question before adding communication channels, persistent memory, tools, and richer economies.
-  The rest of the site keeps those extensions visibly separate from what has been measured.</p>
-
-  <hr>
-  <p class="muted">For the detailed grant-ready language and milestones, see
-  <code>docs/SCHMIDT_APPLICATION_DRAFT.md</code> in this repository. For live evidence and known
-  gaps, start with <a href="./experiments.html">the evidence ledger</a>.</p>
+  <p class="muted">The detailed status, including the one-seed pilot and withdrawn claims, is on <a href="./experiments.html">the evidence page</a>. The grant-form draft and milestones live in <code>docs/</code>.</p>
 </main>
 </body>
 </html>

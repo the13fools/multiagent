@@ -3,126 +3,78 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>flockbench — can a small minority keep a shared resource alive?</title>
-<meta name="description" content="A judge-free multi-agent testbed for a concrete question: can a small fraction of well-specified AI agents stabilize a shared resource?">
+<title>flockbench — can a few agents prevent collapse?</title>
+<meta name="description" content="A simple, judge-free test of whether a small number of AI agents can stabilize a shared resource.">
 <link rel="stylesheet" href="/src/ui/style.css">
 </head>
 <body>
 <nav><div class="wrap">
   <a class="brand" href="./index.html">flockbench</a>
-  <a href="./proposal.html">Project brief</a>
-  <a href="./shared-resource.html">The game</a>
+  <a href="./proposal.html">The experiment</a>
+  <a href="./shared-resource.html">Play the game</a>
   <a href="./entrainment.html">Steering</a>
-  <a href="./stage-zero.html">What is built</a>
-  <a href="./design.html">How it is run</a>
+  <a href="./stage-zero.html">Stage Zero</a>
   <a href="./experiments.html">Evidence</a>
+  <a href="./design.html">Methods</a>
 </div></nav>
 
 <main class="wrap">
   <div class="hero">
-    <h1>Can a small minority of AI agents keep a shared resource alive?</h1>
-    <p><code>flockbench</code> starts with a game simple enough to solve on paper, then asks whether
-    a population of language-model agents can find—or be steered toward—the solution.</p>
+    <h1>Can a few AI agents prevent a shared resource from collapsing?</h1>
+    <p>That is the whole question. <code>flockbench</code> makes it measurable in a game with a known answer.</p>
   </div>
 
-  <p class="section-label">The game</p>
-  <p>Eight players share a pool. Each turn, a living player pays <b>1 token</b> to survive and
-  chooses one action: pay <b>1 more token</b> to add <b>3</b> tokens to the pool, or take
-  <b>3</b> tokens from it. A player whose balance falls below zero is removed.</p>
+  <h2>The game</h2>
+  <p>Eight agents share a pool. Every turn, each pays <b>1 token</b> to stay alive and chooses:</p>
 
-  <p>The sustainable policy is not mysterious: players alternate restoring and taking. Each
-  individual breaks even; the pool breaks even; everyone can live indefinitely. At these
-  parameters there is no slack: one permanent taker eventually kills the whole group. The right
-  answer is therefore known before a model is queried.</p>
+  <div class="panel">
+    <p><b>Restore:</b> pay 1 token; add 3 to the pool.</p>
+    <p><b>Take:</b> take 3 tokens from the pool.</p>
+  </div>
+
+  <p>Everyone survives forever if each agent alternates restore and take. The pool stays level and every agent breaks even. At the reference setting, one permanent taker eventually kills the entire group. There is no ambiguity about what success requires.</p>
 
   <div id="intro-rings"></div>
   <p class="legend" id="intro-caption" style="text-align:center"></p>
 
-  <div class="panel">
-    <p class="slide-k">The scientific question</p>
-    <p><b>If most seats belong to agents we do not control, what fraction of carefully specified
-    agents is enough to move the population from collapse to sustained cooperation?</b></p>
-    <p class="muted">That is a composition question, not a claim that one agent is "aligned."
-    We hold the game, model-serving stack, seed, and scoring fixed; vary population composition;
-    and measure the resulting arithmetic.</p>
-  </div>
+  <h2>Why this is useful</h2>
+  <p>Most multi-agent evaluations cannot distinguish a group that coordinated badly from a group facing an impossible task. Here the sustainable policy, the required restoration rate, and the failure condition are all fixed by arithmetic. The score is the environment itself: survival, welfare, pool level, inequality, and time to collapse. No LLM judge decides who behaved well.</p>
 
-  <p class="section-label">Why this is a useful first test</p>
-  <p>Real deployments will place agents from different developers in shared settings: budgets,
-  compute, queues, markets, data stores, and protocols. Those systems are more complicated than
-  this game. But complexity creates a basic problem: when a population fails, it is often unclear
-  whether the agents chose badly or whether success was impossible. Here, the feasible region and
-  the failure condition are explicit. That lets us calibrate an evaluation instrument before we
-  ask it a harder question.</p>
+  <h2>What the pilot found</h2>
+  <p>A one-seed run with eight Qwen2.5-7B-Instruct agents completed end to end with zero parse failures. A seeded LoRA adapter delayed stock exhaustion relative to its control. That shows the pipeline works; it does <b>not</b> establish an effect size, a threshold, or generalization.</p>
 
-  <p><code>flockbench</code> scores outcomes with environmental arithmetic—pool level, survival,
-  welfare, inequality, and distance from the required restoration rate—not an LLM judge. Every
-  action and payoff can be replayed from a trace.</p>
+  <p><b>Not established yet:</b> the fraction of agents needed to move a population from collapse to sustained resource use. This is a <b>composition question</b>, not an individual-agent alignment claim. The first methodological result is equally important: an offline audit found that the original promotion rule would roll back a clone of its own baseline almost certainly. The live A/A calibration has not run, so the experiment must calibrate its measurement rule before using it to judge an intervention.</p>
 
-  <p class="section-label">What the pilot says—and does not say</p>
-  <table>
-    <tr><th>Established</th><th>Not established yet</th></tr>
-    <tr><td>The game’s solution, carrying capacity, and failure cases are asserted in two tested implementations.</td>
-      <td>A population-level effect of training or prompting agents.</td></tr>
-    <tr><td>A one-seed Qwen2.5-7B pilot ran end to end with zero parse failures; a seeded adapter delayed stock exhaustion relative to its control.</td>
-      <td>The size of that effect, a threshold fraction, or generalization beyond the pilot.</td></tr>
-    <tr><td>An offline audit showed that the original promotion rule would roll back a clone of its own baseline almost surely.</td>
-      <td>A measured live A/A error rate for the revised promotion procedure.</td></tr>
-  </table>
-  <p class="muted">The complete evidence ledger, including a withdrawn uncorroborated result, is on
-  <a href="./experiments.html">the evidence page</a>.</p>
+  <h2>The proposed experiment</h2>
+  <ol>
+    <li><b>Calibrate the gate.</b> Run A/A campaigns where candidate and baseline are identical; every rollback is a false rejection.</li>
+    <li><b>Vary the seeded fraction.</b> Compare base populations, a transparent cooperative policy, a trained adapter, and a vocabulary-matched mimic.</li>
+    <li><b>Find the boundary.</b> Repeat at larger population sizes and under feasible, forgiving, and unwinnable resource conditions.</li>
+  </ol>
 
-  <p class="section-label">The proposed study</p>
-  <div class="cards">
-    <a class="card" href="./proposal.html#question">
-      <span class="kind">1 · Calibrate the instrument</span>
-      <h3>Test the promotion gate on clones</h3>
-      <p>Run repeated f = 0 A/A campaigns, measure false rejection, and publish its uncertainty before using the gate on a candidate.</p>
-    </a>
-    <a class="card" href="./proposal.html#experiment">
-      <span class="kind">2 · Test a dose response</span>
-      <h3>Vary the fraction of seeded agents</h3>
-      <p>Compare a transparent decision-rule seed, a trained adapter, and a vocabulary-matched mimic under the same game conditions.</p>
-    </a>
-    <a class="card" href="./proposal.html#limits">
-      <span class="kind">3 · Map the boundary</span>
-      <h3>Change scale and scarcity</h3>
-      <p>Measure whether the composition threshold changes across population sizes, resource regimes, and model families—or fails to transfer.</p>
-    </a>
-  </div>
-
-  <p class="section-label">Explore the evidence</p>
-  <div class="cards">
-    <a class="card" href="./shared-resource.html">
-      <span class="kind">Explorable explanation</span>
-      <h3>Play the shared-resource game</h3>
-      <p>Change the rules, add a permanent defector, and inspect exactly why the population survives or dies.</p>
-    </a>
-    <a class="card" href="./entrainment.html">
-      <span class="kind">Mechanism</span>
-      <h3>See what steering requires</h3>
-      <p>Pin a subset of seats to the sustainable phase and test which follower rules lock on.</p>
-    </a>
-    <a class="card" href="./stage-zero.html">
-      <span class="kind">Readiness</span>
-      <h3>Inspect Stage Zero</h3>
-      <p>The public code, the pilot traces, the calibration finding, and the limits of each.</p>
-    </a>
-    <a class="card" href="./design.html">
-      <span class="kind">Methods</span>
-      <h3>Inspect the experimental design</h3>
-      <p>Paired cells, controls, power calculations, and the assumptions that could make an answer wrong.</p>
-    </a>
-  </div>
+  <p>The result can be positive, null, or adverse. The useful output is a composition-response curve with confidence intervals and a clear account of where it does—and does not—transfer.</p>
 
   <hr>
-  <p><b>The aim is deliberately modest and falsifiable.</b> We are not claiming that a toy game
-  predicts social life, nor that a prompt makes an agent safe. We are building a calibrated way to
-  learn whether a specific intervention changes a specific collective outcome. A clear null,
-  a failure to transfer, or a gate that cannot be calibrated are all useful results.</p>
 
-  <p class="muted">Open source: <a href="https://github.com/thenthfool/flockbench">flockbench</a>
-  and <a href="https://github.com/thenthfool/multiagent">this site</a>. MIT code; data and figures CC0.</p>
+  <div class="cards">
+    <a class="card" href="./proposal.html">
+      <span class="kind">For reviewers</span>
+      <h3>Read the experiment</h3>
+      <p>The hypothesis, controls, measurements, and what would count as failure.</p>
+    </a>
+    <a class="card" href="./shared-resource.html">
+      <span class="kind">Interactive</span>
+      <h3>Play the game</h3>
+      <p>Change the rules, add a defector, and see exactly why the flock survives or dies.</p>
+    </a>
+    <a class="card" href="./experiments.html">
+      <span class="kind">Evidence ledger</span>
+      <h3>Inspect what has run</h3>
+      <p>Pilot traces, receipts, withdrawn claims, and the work still needed.</p>
+    </a>
+  </div>
+
+  <p class="muted">Open source: <a href="https://github.com/thenthfool/flockbench">flockbench</a>. MIT code; data and figures CC0.</p>
 </main>
 <script type="module" src="/src/ui/introFigures.ts"></script>
 </body>
