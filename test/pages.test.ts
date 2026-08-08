@@ -1001,7 +1001,14 @@ describe("long pages can be read and skimmed", () => {
   it("prose is held to a comfortable measure", () => {
     const css = readFileSync(resolve(__dirname, "../src/ui/style.css"), "utf8");
     const rule = css.slice(css.indexOf(".wrap > p,"));
-    expect(rule, "prose has no max-width, so it runs the full column").toMatch(/max-width:\s*34rem/);
+    // A measure, not a specific number: 34rem read as a ribbon on a desktop
+    // monitor, so it is 42rem at 17px now. What must not come back is prose
+    // running the full 900px column.
+    const m = /max-width:\s*(\d+)rem/.exec(rule);
+    expect(m, "prose has no max-width, so it runs the full column").not.toBeNull();
+    expect(Number(m![1]), "the measure has drifted out of readable range")
+      .toBeGreaterThanOrEqual(38);
+    expect(Number(m![1])).toBeLessThanOrEqual(46);
     // and the wide things stay wide: a table squeezed into a text column is worse
     expect(rule.slice(0, 400)).not.toMatch(/\btable\b/);
   });
@@ -1320,21 +1327,21 @@ describe("no page outgrows its argument", () => {
    * adding a page requires declaring its budget and growing one still fails.
    */
   const CEILING: Record<string, number> = {
-    "index.html": 900,
-    "proposal.html": 1100,
-    "shared-resource.html": 800,
-    "entrainment.html": 600,
-    "stage-zero.html": 1200,
-    "design.html": 1500,
-    "experiments.html": 1700,
-    "future.html": 2700,
-    "blog-pdd.html": 1900,
-    "lineage.html": 2100,
+    "index.html": 700,
+    "proposal.html": 900,
+    "shared-resource.html": 750,
+    "entrainment.html": 500,
+    "stage-zero.html": 1000,
+    "design.html": 1400,
+    "experiments.html": 1650,
+    "future.html": 2300,
+    "blog-pdd.html": 1700,
+    "lineage.html": 1850,
     "gate.html": 800,
-    "boardwalk.html": 600,
-    "cards.html": 800,
-    "juggling.html": 800,
-    "figure.html": 500,
+    "boardwalk.html": 500,
+    "cards.html": 700,
+    "juggling.html": 700,
+    "figure.html": 400,
   };
 
   for (const [file, max] of Object.entries(CEILING)) {

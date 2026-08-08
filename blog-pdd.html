@@ -46,17 +46,13 @@ agents on a small budget.</p>
 
 <h2 id="hats">Why the hats matter</h2>
 
-<p>The whole premise of multi-principal safety is that the other agents in the system were built by somebody else. Different training data, different objectives, different failure modes, different blind spots. When a market breaks or a commons collapses, it breaks because the participants are genuinely unlike one another and their differences interact.</p>
+<p>The premise of multi-principal safety is that the other agents were built by somebody else: different training data, different objectives, different blind spots. When a commons collapses, it collapses because the participants are unlike one another and their differences interact.</p>
 
-<p>A simulation where every agent shares a weight matrix cannot exhibit that. It can exhibit prompt-sensitivity, which is a real and interesting thing, and is not the thing. Two agents with the same weights and different system prompts fail in <em>correlated</em> ways, because their failure modes come from the same place. Correlated failure is exactly the property a multi-principal study is supposed to be measuring the absence of.</p>
-
-<p>Everyone in the field knows this. The reason nobody fixes it is arithmetic: a population of thirty genuinely distinct fine-tuned agents used to cost more than the study.</p>
+<p>A simulation where every agent shares a weight matrix cannot exhibit that. It exhibits prompt-sensitivity, which is real and is not the same thing — two agents with the same weights fail in <em>correlated</em> ways, and correlated failure is the property a multi-principal study exists to measure the absence of. The reason this is rarely fixed is arithmetic: thirty genuinely distinct fine-tuned agents used to cost more than the study.</p>
 
 <h2 id="needed">What we actually needed</h2>
 
-<p>For <a href="https://github.com/thenthfool/flockbench">flockbench</a>, the requirement was specific and slightly odd. We did not need better agents. We needed <em>many different</em> agents, each one distinct in a way that survives contact with a long rollout, and each one cheap enough that a population is an experimental variable rather than a capital expense.</p>
-
-<p>We also needed something most alignment training explicitly does not care about: the agents had to keep working.</p>
+<p>For <a href="https://github.com/thenthfool/flockbench">flockbench</a> the requirement was odd: not better agents, but <em>many different</em> ones, each distinct in a way that survives a long rollout and each cheap enough that a population is a variable rather than a capital expense. And something most alignment training does not care about — they had to keep working.</p>
 
 <p>Our environments parse structured actions out of free text. An agent emits something like</p>
 
@@ -80,7 +76,7 @@ agents on a small budget.</p>
 
 <p>Three things fall out.</p>
 
-<p><b>The action schema is preserved by construction, not by hope.</b> Legal-action masking means the tokens that make the output parseable are never in the loss. You cannot accidentally train a model out of emitting valid JSON if the JSON was never a training target. This sounds like a detail. It is the difference between a population of thirty agents and a population of thirty parse failures.</p>
+<p><b>The action schema is preserved by construction, not by hope.</b> The tokens that make the output parseable are never in the loss, and you cannot train a model out of emitting JSON that was never a target. It sounds like a detail; it is the difference between thirty agents and thirty parse failures.</p>
 
 <p><b>Cheap, because the loss is sparse.</b> Most of a rollout is unchanged by the teacher. If you train on the whole target you spend most of your gradient re-learning text the model already produces. Restricting to changed spans is a large constant-factor saving, and constant factors are the entire game when you need thirty of something.</p>
 

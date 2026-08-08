@@ -40,9 +40,8 @@ produced results, two of which are inconvenient for the person who produced them
 
 <h2 id="repos">The repositories</h2>
 
-<p>Three, with a deliberate separation: the testbed does not train anything, the trainer does not
-score anything, and the site links empirical claims to receipts or labels them as simulation,
-arithmetic, or planned work.</p>
+<p>Three, deliberately separated: the testbed does not train, the trainer does not score, and
+the site labels every claim as measured, resampled, arithmetic, or planned.</p>
 
 <table>
 <tr><th>repository</th><th>holds</th><th>does not hold</th><th>size</th></tr>
@@ -80,24 +79,21 @@ arithmetic, or planned work.</p>
 harness. It is the thing whose limitations led to the judge being removed from the loop
 entirely.</p>
 
-<p><b>What "public" is doing here.</b> Not licensing hygiene. Every number quoted on this site is
-recoverable by a stranger: <code>tools/replay_receipt.py</code> re-derives each published figure
-from a committed receipt, without the run directories. That is the standard the gate result had to
-meet, and it is the standard the funded work would be held to.</p>
+<p><b>What "public" is doing here.</b> Not licensing hygiene: every number should be recoverable
+by a stranger. <code>tools/replay_receipt.py</code> re-derives a published figure from a committed
+receipt, without the run directories. An audit applied that standard to this site in August 2026
+and withdrew a result that could not meet it.</p>
 
 <h2 id="results">Five results, and what each is worth</h2>
 
-<p>Stage Zero was not a demo. It was five measurements, of which the two most useful are
-embarrassing.</p>
+<p>Five results. The two most useful are embarrassing.</p>
 
 <div class="results" id="results"></div>
 
-<p><b>Why the awkward ones matter most.</b> A gate that rolls back a clone of its own baseline is
-not a bug in someone else's system; it is the tool this proposal is built around, failing a test
-nobody had thought to run. The dead commons configuration is the same story smaller: invisible
-without ground truth, obvious with it. That is the argument for the whole approach in one line —
-<b>in an environment with an answer key, an instrument can be caught being wrong</b>, and in one
-without, it cannot.</p>
+<p><b>Why the awkward ones matter most.</b> The gate is the tool this proposal is built around,
+failing a test nobody had thought to run; the dead commons config is the same story smaller. That
+is the argument for the whole approach in one line — <b>in an environment with an answer key, an
+instrument can be caught being wrong</b>, and in one without, it cannot.</p>
 
 <h2 id="who">Who built it, and why the timing</h2>
 

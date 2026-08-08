@@ -42,13 +42,10 @@ assumption every line of it shares, which nobody has tested and which is false i
 
 <h2 id="the-gap">The gap</h2>
 
-<p>Every result on this site assumes a <b>stationary population</b>. The agents are whatever they
-were at turn 1. That assumption is load-bearing and nobody states it.</p>
-
-<p>A paired comparison assumes the baseline holds still. A carrying capacity assumes the policies
-are what they were. A dose-response curve assumes the dose does not change itself.</p>
-
-<p>Deployed agent populations do not hold still.</p>
+<p>Every result on this site assumes a <b>stationary population</b>: the agents are whatever they
+were at turn 1. A paired comparison assumes the baseline holds still; a carrying capacity assumes
+the policies are what they were. Deployed populations do not hold still, and nobody states the
+assumption.</p>
 
 <div id="fig-drift" style="margin:22px 0"></div>
 
@@ -63,30 +60,23 @@ measurement taken at turn 20 and one taken at turn 200 disagree, and neither is 
 
 <h2 id="pitch">The pitch, in three paragraphs</h2>
 
-<p><b>Pick games small enough that an agent is cheap to train for them.</b> That constraint is not
-a compromise, it is the method. A game whose sustainable pattern is known in closed form can be
-learned by a small specialised model, which means a population of thirty <em>different</em>
-policies is affordable, which means composition becomes an experimental variable instead of a
-limitation paragraph. Big environments give you one model in thirty hats and no answer key. Small
-solved ones give you thirty agents and a number to check them against.</p>
+<p><b>Pick games small enough that an agent is cheap to train for them.</b> Not a compromise —
+the method. A closed-form game can be learned by a small specialised model, so thirty
+<em>different</em> policies are affordable, so composition becomes a variable rather than a
+limitations paragraph. Big environments give you one model in thirty hats and no answer key.</p>
 
-<p><b>What we are actually trying to measure is whether a model reasons about the other
-players.</b> Not whether it cooperates — whether it represents what the others are about to do and
-acts on that. In these games that is observable rather than inferred: the sustainable pattern is
-anti-correlated, so an agent that models the others moves <em>against</em> the majority and an
-agent that does not moves with it, and the two are distinguishable from the action sequence alone.
-The guessing games in the port list make it sharper still, giving a number for how many steps of
-"if they think that, then I…" a population actually takes. That capability is the thing everything
-else rests on: you cannot steer a population that is not reading each other, and you cannot design
-a mechanism for one either.</p>
+<p><b>What we are measuring is whether a model reasons about the other players</b> — not whether
+it cooperates. That is observable here rather than inferred: the sustainable pattern is
+anti-correlated, so an agent modelling the others moves <em>against</em> the majority and one that
+is not moves with it, separably from the action sequence alone. Everything else rests on it. You
+cannot steer a population that is not reading each other, and you cannot give one a mechanism
+either.</p>
 
-<p><b>And then the constructive half.</b> Measuring how a group fails is the near-term work.
-The reason to build the instrument is the question after it: <b>what decentralised rules leave a
-population of agents better off than it started</b> — no central authority, no judge, each agent
-acting for itself, and the arrangement still flourishing at turn 200. That is mechanism design with
-the mechanism designer removed from the room, and it is testable here for the same reason
-everything else is: the games have an answer key, so "better off" is arithmetic rather than
-opinion.</p>
+<p><b>Then the constructive half.</b> Measuring how a group fails is the near-term work; the
+reason to build the instrument is the question after it. <b>What decentralised rules leave a
+population better off than it started</b> — no central authority, no judge, still flourishing at
+turn 200. Mechanism design with the designer removed from the room, testable here because "better
+off" is arithmetic.</p>
 
 <p>What the funding buys is the population: fifty distinct fine-tuned policies instead of one model
 in fifty hats, learning inside the campaign rather than between campaigns, measured by a gate whose
@@ -219,12 +209,10 @@ setup actually cost.</b></p>
   <p class="legend" id="cost-setup"></p>
 </div>
 
-<p><b>Three things this makes visible.</b> The teacher pass is a fixed cost, so per-agent price
-falls as the population grows — the thirtieth agent is much cheaper than the first. Rollout
-generation, not training, is the larger half of the bill, which is why the cheap methods on the
-list above are worth trying first. And the whole population is small against a campaign run
-<em>against</em> it: at 7B the agents cost less than a tenth of the compute needed to measure
-them, which is the entire reason population size can be a variable.</p>
+<p><b>Three things it makes visible.</b> The teacher pass is fixed, so the thirtieth agent is
+much cheaper than the first. Rollout generation, not training, is the larger half of the bill. And
+at 7B the whole population costs a fraction of the campaign that measures it — which is why
+population size can be a variable at all.</p>
 
 <table>
 <tr><th>&nbsp;</th><th>now</th><th>next</th></tr>
@@ -239,17 +227,11 @@ them, which is the entire reason population size can be a variable.</p>
 
 <h3>Scope: 7B now, one order of magnitude later</h3>
 
-<p>The plan is to stay at <b>7B for the first year</b>. Not because larger models are
-uninteresting, but because everything this project is trying to establish — whether the steering
-threshold is measurable, whether the gate can be calibrated, whether populations of genuinely
-distinct policies behave differently from one model in many hats — is answerable at 7B, and
-answerable often enough to iterate.</p>
-
-<p>Move the size dial to 70B and the reason is on the screen: the same population costs an order
-of magnitude more, which turns a week of iteration into a quarter of it. <b>The right time to
-spend that is after the method is settled</b>, as a test of whether the findings survive a step up
-in capability — one order of magnitude, once, on the questions that turned out to matter, rather
-than on all of them at the start.</p>
+<p><b>7B for the first year.</b> Not because larger models are uninteresting, but because
+everything this project needs to establish is answerable at 7B, and answerable often enough to
+iterate. Move the size dial to 70B and the reason is on the screen: an order of magnitude more,
+which turns a week of iteration into a quarter. <b>One order of magnitude, once, after the method
+is settled</b>, on the questions that turned out to matter.</p>
 
 <p class="muted">Two caveats. The size multiplier is assumed roughly linear in parameters and is
 not measured — larger models also want more or bigger GPUs, which this does not attempt — so treat
@@ -260,14 +242,13 @@ lower spot price we actually paid, which is why the price is a dial and not a co
 <h2 id="ladder">The ladder: from an answer key to a real crowd</h2>
 
 <p>Eight agents and a pool is rung one; the destination is large multiplayer games with real
-negotiation. The obstacle is that <b>every rung up trades away the answer key</b>, so what has to
-survive the climb is the calibration rather than ground truth: a gate with a measured error rate, a
-horizon long enough to see drift, and a dial that says who in the room is yours.</p>
+negotiation. <b>Every rung up trades away the answer key</b>, so what survives the climb is the
+calibration, not ground truth.</p>
 
-<p>Composition is the thread. Today it is one number, the seeded fraction <code>f</code>. Above,
-it becomes a <b>composition vector</b> — what fraction is seeded, what fraction is <em>mimic</em>
-(the specification's vocabulary with its decision rules stripped), and what fraction is
-<b>adversarial</b>. A flock is a mixture, and the mixture is the independent variable.</p>
+<p>Composition is the thread. Today it is one number, the seeded fraction <code>f</code>; above, a
+<b>composition vector</b> — seeded, <em>mimic</em> (the vocabulary with the decision rules
+stripped), and <b>adversarial</b>. A flock is a mixture, and the mixture is the independent
+variable.</p>
 
 <table>
 <tr><th>rung</th><th>what it adds</th><th>what it costs</th></tr>
@@ -310,29 +291,24 @@ it becomes a <b>composition vector</b> — what fraction is seeded, what fractio
   instrument gets pointed once it is trustworthy, not where it gets built.</td></tr>
 </table>
 
-<p>Rung two is inside the funded plan, as the mechanism variants in
-<a href="./lineage.html">the work described above</a>. Rungs three and four are the direction, and
-the reason to be strict about rung one: the only way a result at Utopia scale means anything is if
-the instrument reading it was calibrated somewhere the answer was known.</p>
+<p>Rung two is in the funded plan. Three and four are direction — and the reason to be strict
+about rung one, since a result at Utopia scale means something only if the instrument reading it
+was calibrated where the answer was known.</p>
 
 <h2 id="mechanisms">Decentralised mechanism design, and what "flourishing" means</h2>
 
 <p>Classical mechanism design assumes a designer who sets the rules and can enforce them. In a
-population you do not own, nobody is in that chair. The rules that matter are the ones a minority
-can propose, that the rest adopt because adopting them is individually sensible, and that survive
-agents who did not read the proposal.</p>
+population you do not own, nobody is in that chair: the rules that matter are the ones a minority
+can propose, that the rest adopt because adopting them is individually sensible.</p>
 
 <p>The experiments are concrete: hold the game fixed and vary <em>what agents can see, say and
-commit to</em> — a public tally of who restored, a binding commitment, persistent reputation, a
-side-payment channel — and measure which additions move a population out of the collapsing region,
-and at what controlled fraction. Each is a few lines of environment with a closed-form best case
-to be scored against.</p>
+commit to</em> — a public tally, a binding commitment, persistent reputation, a side-payment
+channel — and measure which move a population out of the collapsing region, and at what controlled
+fraction.</p>
 
 <p><b>Flourishing</b> is defined so it can be computed: every agent alive at the horizon, the
-resource no lower than it started, and no agent's outcome achieved by another's ruin. Three
-arithmetic conditions. A small definition, deliberately not a moral one — but a mechanism that
-reliably produces it in a game with an answer key is worth more than one that sounds wise where
-nobody can say what winning was.</p>
+resource no lower than it started, no agent's outcome achieved by another's ruin. Three arithmetic
+conditions, deliberately not a moral definition.</p>
 
 <h2 id="requirements">What would have to be true</h2>
 

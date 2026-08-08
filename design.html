@@ -23,10 +23,9 @@
 <p class="lede">What a cell is, what is paired with what, and whether the campaign can see the
 effect it was sized for.</p>
 
-<p>Multi-agent results are often reported without their design. You get the finding and a model
-name, and no way to tell whether the comparison could have come out any other way. This page is
-the design, with the arithmetic exposed: <b>every number below is computed on the page, from dials
-you can move.</b></p>
+<p>Multi-agent results are often reported without their design — the finding and a model name,
+with no way to tell whether the comparison could have come out otherwise. This is the design, and
+<b>every number below is computed on the page, from dials you can move.</b></p>
 
 <nav class="toc" aria-label="On this page">
   <p class="toc-k">On this page</p>
@@ -49,10 +48,9 @@ is the difference between them, not either number on its own.</p>
 
 <div id="fig-cell" style="margin:22px 0"></div>
 
-<p>Pairing is doing real work here. Run-to-run variance in these environments is large — a paired
-standard deviation of 1,180 against a baseline mean of 3,363 in the pilot — so an unpaired
-comparison of two campaigns would need several times the compute to see the same effect. Pairing
-removes the seed from the comparison; what is left is the swap.</p>
+<p>Pairing does real work. Variance is large — a paired SD of 1,180 against a 3,363 mean in the
+pilot — so an unpaired comparison would need several times the compute for the same effect.
+Pairing removes the seed; what is left is the swap.</p>
 
 <h2 id="factors">What varies, and what is held still</h2>
 
@@ -82,10 +80,9 @@ removes the seed from the comparison; what is left is the swap.</p>
 
 <h2 id="planner">The campaign, and whether it is powered</h2>
 
-<p>Two numbers decide whether a campaign is worth running: what it costs, and how large an effect
-it can see. A design where the first is affordable and the second is bigger than the effect you
-care about produces a null nobody can interpret. That is the ordinary way compute is wasted, and
-it is arithmetic, so here it is.</p>
+<p>Two numbers decide whether a campaign is worth running: what it costs, and the smallest
+effect it can see. Affordable and underpowered produces a null nobody can interpret — the ordinary
+way compute is wasted. Both are arithmetic, so here they are.</p>
 
 <div class="panel">
   <div id="stats" class="stats"></div>
@@ -136,9 +133,8 @@ $1.99 an A100-hour.</p>
 
 <h2 id="aa">The break experiment: pointing the gate at a clone</h2>
 
-<p>One experiment matters more than the rest, because everything downstream is a comparison and a
-comparison is only worth what the rule that reads it is worth. It is called an <b>A/A</b>, and it
-is the cheapest important thing in this whole plan.</p>
+<p>Everything downstream is a comparison, and a comparison is worth what the rule reading it is
+worth. The <b>A/A</b> is the cheapest important thing in the plan.</p>
 
 <div class="panel slide">
   <p class="slide-k">The break experiment</p>
@@ -180,14 +176,12 @@ is the cheapest important thing in this whole plan.</p>
   somebody points it at a clone.</p>
 </div>
 
-<p>The interactive version, where you can move the true effect to zero and watch three reasonable-
-looking rules disagree about a candidate that is its own baseline, is on
-<a href="./gate.html">the gate page</a>.</p>
+<p>The interactive version — set the true effect to zero and watch three reasonable-looking rules
+disagree about a clone — is on <a href="./gate.html">the gate page</a>.</p>
 
 <h2 id="controls">The controls, and what each is against</h2>
 
-<p>A control is only worth its compute if you can name the alternative explanation it kills.
-Each of these exists because a specific one would otherwise survive.</p>
+<p>A control is worth its compute only if you can name the alternative explanation it kills.</p>
 
 <div id="controls"></div>
 

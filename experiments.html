@@ -26,8 +26,8 @@
 <p class="lede">What has actually been run, what has not, and which claim rests on which.</p>
 
 <p>Many research sites describe the project that will exist once everything works. This one
-describes what exists. <span class="st st-todo">not run</span> means a plan, and any claim resting
-on it is a prediction.</p>
+describes what exists. A row is <span class="st st-done">measured</span> only if a plan, traces and
+a receipt are committed; <span class="st st-todo">not run</span> means a plan.</p>
 
 <div class="scoreboard" id="scoreboard"></div>
 
@@ -215,13 +215,11 @@ the proposal is stale. Please tell us.</p>
 
 <h2 id="live-runs">Replays of the live runs</h2>
 
-<p>Everything above is a claim about runs. This is the runs themselves: real traces from
-Qwen2.5-7B agents playing Continuous Harvest, replayed turn by turn rather than summarised.</p>
-
-<p>Each row is an agent and each column a turn. Agents ask for a harvest between 0 and 10, and the
-cell is shaded by how much they took — <span style="color:var(--restore);font-weight:600">green</span>
-for nothing, <span style="color:var(--take);font-weight:600">red</span> for the maximum. Hover a
-cell for the exact figure. The three runs differ only in how many seats were trained agents.</p>
+<p>Everything above is a claim about runs; this is the runs. Qwen2.5-7B agents playing
+Continuous Harvest, replayed turn by turn. Rows are agents, columns are turns, and a cell is shaded
+by how much that agent took — <span style="color:var(--restore);font-weight:600">green</span> for
+nothing, <span style="color:var(--take);font-weight:600">red</span> for the maximum. The three runs
+differ only in how many seats were trained agents.</p>
 
 <div class="panel">
   <div id="stats" class="stats"></div>

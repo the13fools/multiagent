@@ -54,8 +54,7 @@ name on it; this one has a closed-form sustainable region, so a rule can be poin
 whose answer is already known.</p>
 
 <p>Their "differential access to tools, data, memory and resources" is the asymmetry the
-<a href="./entrainment.html">steering chapter</a> is entirely about, reduced to its smallest form:
-some seats are yours and most are not.</p>
+<a href="./entrainment.html">steering chapter</a> is about: some seats are yours, most are not.</p>
 
 <h2 id="scaling-trust">Scaling Trust</h2>
 
@@ -68,13 +67,12 @@ more capable.</p>
 intermediary and no judge, whether a candidate agent may join a shared deployment — which is what
 "programmatic and without intermediaries" looks like in practice.</p>
 
-<p>And <a href="./gate.html">the obvious version of the rule is wrong</a>. It rolls back a clone of
-its own baseline with probability ~1.0, and it gets <em>worse</em> the more data you give it. It
-looks completely reasonable written down. The lesson generalises past this testbed: an automated
-rule with no published error rate is not trustworthy for being automated — it is
-<b>confidently wrong at scale</b>, which is the specific failure mode infrastructure makes cheap.
-Two things should ship with any such rule: a measured false-decision rate, and a declared minimum
-amount of evidence below which its outputs do not count.</p>
+<p>And <a href="./gate.html">the obvious version of the rule is wrong</a>: in offline resampling
+it rolls back a clone of its own baseline in ~100% of null draws, and gets <em>worse</em> with more
+data. It looks reasonable written down. An automated rule with no published error rate is not
+trustworthy for being automated — it is <b>confidently wrong at scale</b>. Two things should ship
+with any such rule: a measured false-decision rate, and a minimum evidence threshold below which
+its outputs do not count.</p>
 
 <h2 id="multi-agent-risks">Multi-Agent Risks from Advanced AI</h2>
 
@@ -144,9 +142,8 @@ Jennings (1995)</a>, <a href="https://longtermrisk.org/research-agenda/">Clifton
 
 <h2 id="call">Answering the call, section by section</h2>
 
-<p>The call is organised into four sections with named requirements under each. It also says it
-will prioritise depth over breadth, so this claims two sections and one bounded piece of a third,
-and says plainly where it does not reach.</p>
+<p>Four sections, and a stated preference for depth over breadth. This claims two, plus one
+bounded piece of a third, and says where it does not reach.</p>
 
 <h3>§1 · Sandboxes and testbeds <span class="muted">— primary</span></h3>
 
@@ -213,8 +210,7 @@ and says plainly where it does not reach.</p>
 
 <h3>§4 · Multi-agent oversight and control <span class="muted">— one bounded piece</span></h3>
 
-<p>Not claimed as a section. Two of its four subsections have something specific in them, and the
-rest do not.</p>
+<p>Not claimed as a section. Two of its four subsections have something specific in them.</p>
 
 <table>
 <tr><td><b>C</b> multi-agent control and scalable oversight</td>
@@ -242,10 +238,9 @@ rest do not.</p>
 <p><b>Section 3, agent infrastructure, is not targeted.</b> Saying so is part of answering a call
 that prioritises depth.</p>
 
-<p class="muted">Prior testbed work the call names — generative-agent societies, LLMs in repeated
-games, strategic-reasoning benchmarks — is what this is a complement to rather than a replacement
-for: richer worlds, no answer key. The bet here is the opposite trade, and the two are only worth
-having together.</p>
+<p class="muted">The prior testbeds the call names — generative-agent societies, LLMs in
+repeated games, strategic-reasoning benchmarks — are richer worlds without an answer key. This is
+the opposite trade, and a complement rather than a replacement.</p>
 
 <h2 id="what-it-adds">What this adds, and what it does not</h2>
 
@@ -253,14 +248,10 @@ having together.</p>
 for one question — how few agents you must control to hold a population you do not — in
 environments small enough that the answer is known before the experiment runs.</p>
 
-<p><b>It is aimed at the constructive question those programmes are actually asking.</b> Scaling
-Trust and the sandbox-economy papers both want mechanisms: rules under which a population of agents
-coordinates well. Designing those is not the same as measuring them, and the measuring has to come
-first — a mechanism that sounds wise in an environment where nobody can say what winning was
-cannot be evaluated at all. Here it can: hold the game fixed, vary what agents can see, say and
-commit to, and measure which additions move a population out of the collapsing region. The word for
-that is decentralised mechanism design, and the reason this instrument is small is so that the
-answer key survives.</p>
+<p><b>It aims at the constructive question those programmes are asking.</b> Scaling Trust and
+the sandbox-economy papers both want mechanisms — rules under which a population coordinates well.
+Measuring has to come first, because a mechanism that sounds wise where nobody can say what winning
+was cannot be evaluated at all. The instrument is small so that the answer key survives.</p>
 
 <p><b>The bet is that small and solved beats large and suggestive.</b> In a rich environment you
 cannot distinguish a population that <em>failed</em> from one that faced an impossible problem, and

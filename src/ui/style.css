@@ -408,10 +408,13 @@ hr { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
 .wrap > h3,
 .wrap > .def,
 .wrap > .lede {
-  max-width: 34rem;
+  max-width: 42rem;
 }
-.wrap > p { line-height: 1.68; margin: 0 0 18px; }
-.lede { font-size: 19px; line-height: 1.5; margin-bottom: 22px; }
+/* 42rem at 17px is roughly 78 characters a line. The first attempt was 34rem at
+ * 16px, which is a comfortable measure on paper and reads as a narrow ribbon on
+ * a desktop monitor -- correct by the rule and wrong in the room. */
+.wrap > p { font-size: 17px; line-height: 1.65; margin: 0 0 18px; }
+.lede { font-size: 20px; line-height: 1.5; margin-bottom: 22px; }
 
 /* Headings that actually break the page up. A 3,000-word page with no rule
  * between sections reads as one undifferentiated wall. */
@@ -435,7 +438,7 @@ td .muted { display: block; margin-top: 3px; }
  * see the shape of beats eight sections you discover by scrolling. */
 .toc {
   position: static;        /* never sticky: it is a list, not a bar */
-  max-width: 34rem;
+  max-width: 42rem;
   margin: 20px 0 8px;
   padding: 14px 18px;
   border: 1px solid var(--line);
