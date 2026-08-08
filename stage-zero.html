@@ -20,8 +20,8 @@
 
 <div class="wrap">
 <h1>What is already built</h1>
-<p class="lede">Two chapters of theory, and then the part where somebody had to actually write
-it. This is Stage Zero: the code, the runs, and what they found.</p>
+<p class="lede">Math becomes a test harness; the harness becomes evidence. This is Stage Zero:
+code, numerical experiments, and checks that make claims falsifiable.</p>
 
 <p>Everything up to here has been an argument about a game. This page answers the reasonable next
 question — <b>is any of it real?</b> Three public repositories, MIT or CC0, roughly eleven thousand
@@ -122,21 +122,24 @@ instrument can be caught being wrong</b>, and in one without, it cannot.</p>
   It is also the reason to think it needs doing now rather than later.</p>
 </div>
 
-<h2 id="next">Where this leaves the proposal</h2>
+<h2 id="next">The three-stage programme</h2>
 
 <table>
-<tr><td><b>Chapters 1–2</b><br><span class="muted">theory and setup</span></td>
-  <td><a href="./shared-resource.html">The game</a> and <a href="./entrainment.html">steering</a>.
-  A commons with a closed-form solution, and the question of how few agents you must control to
-  hold a population you do not own.</td></tr>
-<tr><td><b>This chapter</b><br><span class="muted">Stage Zero, done</span></td>
-  <td>The instrument, built and public, and five results — including the two that say the
-  instrument was broken in ways only an answer key could reveal.</td></tr>
-<tr><td><b>Chapters after</b><br><span class="muted">the proposal</span></td>
-  <td><a href="./design.html">How a campaign is run</a> and what would make it interpretable;
-  <a href="./experiments.html">what has and has not run</a>; and
-  <a href="./future.html">what the funding buys</a> — a population that is a variable rather than
-  a limitation, and the decentralised-mechanism question underneath it.</td></tr>
+<tr><td><b>Stage 0 · now</b><br><span class="muted">math → harness</span></td>
+  <td><a href="./shared-resource.html">The game</a> gives a closed-form target; the public
+  harness implements numerical experiments; unit and integration tests prevent the simulation,
+  the figures, and the claim ledger from drifting apart. This stage is built, including results
+  that exposed flaws in the instrument.</td></tr>
+<tr><td><b>Stage 1 · funded research</b><br><span class="muted">harness → evidence</span></td>
+  <td>A small team runs the calibrated, larger-scale training campaign: matched LoRA arms,
+  multiple model families and population sizes, and a public dose-response rather than one
+  promising trace. <a href="./design.html">The campaign design</a> and
+  <a href="./experiments.html">evidence ledger</a> define what counts.</td></tr>
+<tr><td><b>Stage 2 · only if Stage 1 earns it</b><br><span class="muted">evidence → user control</span></td>
+  <td>Build resources for people to customize, share, and remix evaluated agent personas without
+  being locked to one inference substrate. The portable object is not a universal LoRA:
+  it is a persona specification, provenance, evaluation receipt, and model-specific realization.
+  Stage 1 determines which behavioral ingredients are worth packaging.</td></tr>
 </table>
 
 <p>Two things situate it beyond this site. The call's own starting points are answered one at a
