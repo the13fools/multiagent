@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f7f4">
+  <title>Evidence — Flockbench</title>
+  <meta name="description" content="What Flockbench has built, what the pilots establish, and what remains proposed.">
+  <link rel="stylesheet" href="../src/ui/v2.css">
+</head>
+<body>
+  <header class="site-header"><nav class="nav shell" aria-label="Primary navigation"><a class="brand" href="./index.html"><span class="brand-mark">●</span> flockbench</a><div class="nav-links"><a href="./index.html">Overview</a><a href="./study.html">Study</a><a href="./evidence.html" aria-current="page">Evidence</a><a href="./delivery.html">Delivery</a></div></nav></header>
+
+  <main class="shell">
+    <header class="page-intro">
+      <p class="eyebrow">A status ledger, not a victory lap</p>
+      <h1>The existing work proves execution—not the proposed effect.</h1>
+      <p class="deck">Built components, pilot artifacts, offline audits, and funded work are separated so a reviewer can see exactly what each claim rests on.</p>
+    </header>
+
+    <section class="section">
+      <div class="section-head">
+        <p class="section-kicker">Status ledger</p>
+        <h2>What exists today, and what the grant would unlock.</h2>
+      </div>
+      <div class="status-ledger">
+        <article class="status-column">
+          <span class="label built">Built</span>
+          <h3>Code exists and is tested</h3>
+          <ul><li>Deterministic shared-resource simulator and exact equations</li><li>Commons Harvest and Public Goods environments</li><li>Frozen round-level trace schema</li><li>Campaign planner and Firebreak decision path</li><li>Independent Python and TypeScript invariant tests</li></ul>
+        </article>
+        <article class="status-column">
+          <span class="label pilot">Pilot</span>
+          <h3>An artifact exists; no powered claim</h3>
+          <ul><li>One-seed live Qwen Commons run with zero parse failures</li><li>Thirty-pair matched Public Goods receipt</li><li>Replayable promotion decision</li><li>Committed data suitable for sign-flip resampling</li></ul>
+        </article>
+        <article class="status-column">
+          <span class="label proposed">Proposed</span>
+          <h3>Requires funded work</h3>
+          <ul><li>Live A/A gate calibration</li><li>Powered controlled-fraction sweep</li><li>Tool-and-memory environment</li><li>Multi-vendor and frontier subsets</li><li>N = 20 and N = 50 replication</li></ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <p class="section-kicker">Six claims worth carrying forward</p>
+        <h2>Every motivating fact has a receipt, equation, or test.</h2>
+      </div>
+      <div class="claims">
+        <article class="claim"><p><span class="label built">Built</span> The flagship game has an exact sustainable regime and an exact impossible-regime control.</p><a href="../shared-resource.html">Run the game</a></article>
+        <article class="claim"><p><span class="label built">Built</span> Seven agents playing the solution beside one permanent defector look healthy at turn 20 and are all dead by turn 118.</p><a href="../shared-resource.html">Inspect horizon</a></article>
+        <article class="claim"><p><span class="label offline">Offline audit</span> The original overlap rule rejects an identical candidate in approximately 100% of null resamples, and collecting more data makes the rule worse.</p><a href="../gate.html">See calibration</a></article>
+        <article class="claim"><p><span class="label pilot">Pilot</span> A 30-pair matched campaign completed the decision path and emitted a receipt containing its resolved policy and paired cells.</p><a href="../experiments.html">Open ledger</a></article>
+        <article class="claim"><p><span class="label pilot">Pilot</span> The deterministic environment successfully caught <strong>Specification Gaming</strong>: a text-based judge failed to ground semantic concepts into math, allowing an agent to reward-hack the early rounds.</p><a href="../stage-zero.html">View result</a></article>
+        <article class="claim"><p><span class="label built">Built</span> The browser explanation and Python testbed compute the same answer-key invariants, pinned by automated tests.</p><a href="https://github.com/thenthfool/multiagent">View tests</a></article>
+      </div>
+      <p class="notice"><strong>Not established:</strong> none of these claims demonstrates that increasing the controlled fraction improves population survival. That is the funded experiment.</p>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <p class="section-kicker">Concrete pilot replay · provisional data</p>
+        <h2>The pool trajectory, not a headline effect size.</h2>
+        <p>These one-seed Commons traces compare eight baseline agents, eight PDD-seeded agents, and a four–four mixture. They demonstrate how the testbed catches <strong>Specification Gaming</strong>: an early PDD adapter perfectly obeyed a vague rubric under scarcity but became hyper-greedy during abundance. A subsequent 500-step adapter with a mathematically-grounded rubric successfully exhibited extreme restraint (0.24) and outlived the baseline. These traces prove the testbed works; they do not yet estimate a powered population effect.</p>
+      </div>
+      <div class="result-demo" id="pilot-replay" aria-labelledby="pilot-replay-title">
+        <h3 id="pilot-replay-title" class="sr-only">Replay a concrete Commons pilot trace</h3>
+        <div class="result-controls">
+          <label for="result-condition">Population</label>
+          <select id="result-condition">
+            <option value="base8">Baseline · 8 base agents</option>
+            <option value="cfa8">PDD-seeded · 8 seeded agents</option>
+            <option value="cfa4mix">Mixed · 4 seeded + 4 base</option>
+          </select>
+          <button id="result-play" type="button">Replay trace</button>
+          <output id="result-round" for="result-condition">round 12 / 12</output>
+        </div>
+        <p class="result-state" id="result-state" aria-live="polite"></p>
+        <figure class="result-figure">
+          <div class="result-plot-head"><span>Commons stock</span><span id="result-scale"></span></div>
+          <svg id="result-stock" class="result-stock" viewBox="0 0 800 120" preserveAspectRatio="none" role="img" aria-label="Commons stock by round"></svg>
+          <div id="result-grid" class="result-grid" role="img" aria-label="Agent harvests by round"></div>
+          <figcaption><span><i class="key harvest-low-key"></i>0–3 harvested</span><span><i class="key harvest-mid-key"></i>3–7</span><span><i class="key harvest-high-key"></i>7–10</span><span>rows are agents · columns are rounds</span></figcaption>
+        </figure>
+      </div>
+      <p class="notice"><span class="label pilot">Pilot · one seed</span> Descriptive trace replay only. The underlying working data file is still being updated; the applet reads that file directly so revised traces replace this snapshot without changing the page.</p>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <p class="section-kicker">Novelty, stated narrowly</p>
+        <h2>The contribution is not “another commons game.”</h2>
+        <p>Flockbench differs from adjacent testbeds on three decisions that make a composition-response claim falsifiable.</p>
+      </div>
+      <table class="comparison">
+        <thead><tr><th>Comparison</th><th>Typical question</th><th>Flockbench difference</th></tr></thead>
+        <tbody>
+          <tr><td><strong>GovSim</strong></td><td>Do model populations reach sustainable equilibrium?</td><td>Population composition is the intervention; the controlled fraction is swept and estimated.</td></tr>
+          <tr><td><strong>Concordia / generative simulations</strong></td><td>What behaviour emerges in a richer world?</td><td>The core environment has a closed-form optimum and an impossible control, so failure is attributable.</td></tr>
+          <tr><td><strong>Repeated-game suites</strong></td><td>How does a model cooperate in standard games?</td><td>The primary outcome belongs to a population over a long horizon, and the decision rule is calibrated before candidate use.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <p class="section-kicker">PDD in its proper role</p>
+        <h2>A low-cost way to create candidate policies for a population.</h2>
+        <p>Schema-preserving span PDD edits selected rationale spans while protecting the structured action field. It is one population-generation method under test—not the scientific thesis and not evidence of individual alignment.</p>
+      </div>
+      <div class="pdd-demo" id="pdd-demo" aria-labelledby="pdd-demo-title">
+        <h3 id="pdd-demo-title" class="sr-only">Step through span-restricted PDD</h3>
+        <div class="pdd-controls" role="group" aria-label="PDD transformation step">
+          <button type="button" data-pdd-step="0" aria-pressed="true">1 · rollout</button>
+          <button type="button" data-pdd-step="1" aria-pressed="false">2 · mask</button>
+          <button type="button" data-pdd-step="2" aria-pressed="false">3 · inpaint</button>
+          <button type="button" data-pdd-step="3" aria-pressed="false">4 · loss</button>
+        </div>
+        <div class="pdd-sequence" id="pdd-sequence" role="img" aria-label="A model rollout with rationale spans editable and the structured action field locked"></div>
+        <p class="pdd-detail" id="pdd-detail" aria-live="polite"></p>
+        <div class="pdd-legend"><span><i class="pdd-key editable-key"></i>editable rationale</span><span><i class="pdd-key changed-key"></i>replacement carries loss</span><span><i class="pdd-key locked-key"></i>action field locked</span></div>
+      </div>
+      <p class="notice"><span class="label proposed">Method under test</span> A vocabulary-matched mimic, objective style control, action validity checks, and population-level outcomes separate semantic editing from changed game behaviour.</p>
+      <div class="actions"><a class="button secondary" href="../blog-pdd.html">Read the technical note</a><a class="button" href="./delivery.html">See the delivery plan</a></div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="footer-inner shell"><span>Flockbench · evidence ledger</span><div class="footer-links"><a href="https://github.com/thenthfool/flockbench">Source</a><a href="../experiments.html">Full claim ledger</a><a href="../index.html">V1 research archive</a></div></div></footer>
+  <script type="module" src="../src/ui/v2.ts"></script>
+</body>
+</html>
