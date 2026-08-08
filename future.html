@@ -90,22 +90,18 @@ to measure the absence of. So the population has to be genuinely distinct polici
 training, which means the training has to be cheap. That argument, and what it cost us, is
 <a href="./blog-pdd.html">its own chapter</a>.</p>
 
-<h2 id="what-breaks">Three things that break, and are worth breaking</h2>
+<h2 id="what-breaks">Three things that break</h2>
 
-<p><b>The promotion gate compares two moving targets.</b> Every paired cell assumes a fixed
-baseline. When both arms learn, the comparison is between two trajectories, and the current gate
-has no way to notice. This is the direct sequel to the calibration work — a
-<a href="./gate.html">gate</a> that shipped with a measured error rate under stationarity needs a
-new one under drift.</p>
+<p><b>The gate compares two moving targets.</b> A paired cell assumes a fixed baseline; when both
+arms learn, the comparison is between two trajectories and the
+<a href="./gate.html">current gate</a> cannot notice.</p>
 
-<p><b>Composition stops being a treatment and becomes an initial condition.</b> Seeding 25% of a
-population is a fixed dose today. With learning it is a starting point, and the interesting
-quantity is whether the seeded behaviour spreads, decays, or gets absorbed. That is a different
-experiment with the same apparatus.</p>
+<p><b>Composition becomes an initial condition rather than a treatment.</b> Seeding 25% is a fixed
+dose today. With learning it is a starting point, and the question becomes whether the seeded
+behaviour spreads, decays, or is absorbed.</p>
 
-<p><b>The horizon problem gets worse.</b> A small per-step bias is already invisible early and
-fatal late. A population that updates on its own history compounds its own errors, so the gap
-between a short measurement and a long one widens rather than closing.</p>
+<p><b>The horizon problem worsens.</b> A population that updates on its own history compounds its
+own errors, so the gap between a short measurement and a long one widens.</p>
 
 <h2 id="port-list">The port list, in order</h2>
 
@@ -125,18 +121,17 @@ rules out most of the famous ones, which is the point.</p>
 
 <tr><td><b>1</b></td>
   <td><b>Minimum-effort coordination</b><br>
-  <span class="muted">Van Huyck, Battalio &amp; Beil (1990), <i>AER</i></span></td>
-  <td>The best fit in the literature. Payoff depends on the <em>minimum</em> effort anyone chooses,
-  so one outcome is unambiguously best for everybody and human groups reliably collapse to the
-  worst instead. Both outcomes are exact numbers, and one low agent caps everyone — this project's
-  one-defector result in a second environment.</td></tr>
+  <span class="muted"><a href="https://www.jstor.org/stable/2006907">Van Huyck, Battalio &amp; Beil (1990)</a>, <i>AER</i></span></td>
+  <td>Payoff depends on the <em>minimum</em> effort anyone chooses. One outcome is best for
+  everybody and human groups reliably collapse to the worst instead; both are exact numbers. One
+  low agent caps everyone — the one-defector result in a second environment.</td></tr>
 
 <tr><td><b>2</b></td>
   <td><b>p-Beauty contest</b><br>
-  <span class="muted">Nagel (1995), <i>AER</i></span></td>
-  <td>Guess two-thirds of the average. The equilibrium is zero, the deviation is arithmetic, and
-  the choice reveals how many steps of "if they think that, then I…" a player took — a
-  depth-of-reasoning number for a population, with a documented human distribution beside it.</td></tr>
+  <span class="muted"><a href="https://www.jstor.org/stable/2118137">Nagel (1995)</a>, <i>AER</i></span></td>
+  <td>Guess two-thirds of the average. Equilibrium zero, deviation arithmetic, and the choice
+  reveals how many steps of "if they think that, then I…" a player took — with a documented human
+  distribution beside it.</td></tr>
 
 <tr><td><b>3</b></td>
   <td><b>The Count</b>, ours<br>
@@ -148,24 +143,16 @@ rules out most of the famous ones, which is the point.</p>
 
 <tr><td><b>4</b></td>
   <td><b>Induced-value double auction</b><br>
-  <span class="muted">Smith (1962), <i>JPE</i></span></td>
-  <td>Private reservation values make the competitive price and quantity computable, and
-  convergence to them is measurable to the cent with no judge. The direct bridge to the
-  sandbox-economy framing the call asks about, and the one design where "market mechanism" is
-  literal.</td></tr>
+  <span class="muted"><a href="https://www.journals.uchicago.edu/doi/10.1086/258609">Smith (1962)</a>, <i>JPE</i></span></td>
+  <td>Private reservation values make the competitive price computable and convergence to it
+  measurable to the cent. The bridge to the sandbox-economy framing, and the one design where
+  "market mechanism" is literal.</td></tr>
 </table>
 
-<p class="muted">Behind those, in order: market entry and El&nbsp;Farol (Arthur 1994) for congestion
-with an answer key; common-pool appropriation (Ostrom, Gardner &amp; Walker 1994), mostly built;
-public goods with punishment (Herrmann, Thöni &amp; Gächter 2008), built and run;
-<a href="https://www.danieljbenjamin.com/assets/papers/distributional-preferences-bilateral-exchange.pdf">distributional
-preferences in bilateral exchange</a> (Benjamin 2015); the belief batteries —
-<a href="https://www.nber.org/papers/w25200.pdf">base-rate neglect and non-belief in the law of
-large numbers</a> — which test whether population failure is inherited from individual bias or
-created by the interaction; and
-<a href="https://www.danieljbenjamin.com/assets/papers/who-is-behavioral.pdf">heterogeneity of
-bias</a> (Benjamin, Brown &amp; Shapiro 2013), which is the diversity metric this project admits
-it lacks.</p>
+<p class="muted">Then, in order: market entry and El&nbsp;Farol, common-pool appropriation, public
+goods with punishment, distributional preferences, the belief batteries — base-rate neglect and
+non-belief in the law of large numbers — and heterogeneity of bias, which is the diversity metric
+this project lacks.</p>
 
 <p class="muted">Deliberately not on the list: ultimatum and dictator games, where the right answer
 is a fairness judgement rather than arithmetic, and anything scored by rating free text. The
@@ -208,11 +195,6 @@ setup actually cost.</b></p>
   </div>
   <p class="legend" id="cost-setup"></p>
 </div>
-
-<p><b>Three things it makes visible.</b> The teacher pass is fixed, so the thirtieth agent is
-much cheaper than the first. Rollout generation, not training, is the larger half of the bill. And
-at 7B the whole population costs a fraction of the campaign that measures it — which is why
-population size can be a variable at all.</p>
 
 <table>
 <tr><th>&nbsp;</th><th>now</th><th>next</th></tr>
@@ -266,9 +248,8 @@ variable.</p>
   private channel to extract in a way neither could alone.
   <span class="muted">That last one is collusion, with an arithmetic definition and a
   control.</span></td>
-  <td>Free text enters the loop. The outcome stays arithmetic — survival and stock level — but the
-  channel content does not, and we would report what we can measure rather than rate what was
-  said.</td></tr>
+  <td>Free text enters the loop. Outcomes stay arithmetic; channel content does not, and we
+  report what we can measure rather than rate what was said.</td></tr>
 
 <tr><td><b>3. Diplomacy</b><br><span class="muted">the canonical case</span></td>
   <td>Seven players, simultaneous orders, and a literature that already runs it
@@ -276,9 +257,8 @@ variable.</p>
   not something we would have to invent. Supply centres are counted, not judged. Alliance and
   betrayal are the point rather than an artefact, and the composition vector maps cleanly onto
   seats.</td>
-  <td>No answer key. Nobody can say what the optimum was, so results are comparative — this
-  mixture against that one — and the gate's calibration is what makes the comparison mean
-  anything.</td></tr>
+  <td>No answer key, so results are comparative — this mixture against that one — and the gate's
+  calibration is what makes the comparison mean anything.</td></tr>
 
 <tr><td><b>4. Utopia-scale</b><br><span class="muted">the deployment case</span></td>
   <td><a href="https://utopia-game.com/shared/">Utopia</a> has run for twenty years: kingdoms of
@@ -287,8 +267,8 @@ variable.</p>
   happens outside the engine</b>, on forums the game cannot see.
   <span class="muted">Not a flaw in the analogy. It is the deployment case exactly: agents whose
   most important channel is one you are not logging.</span></td>
-  <td>Everything. No optimum, enormous cost, and a horizon measured in months. This is where the
-  instrument gets pointed once it is trustworthy, not where it gets built.</td></tr>
+  <td>Everything: no optimum, enormous cost, months-long horizons. Where the instrument gets
+  pointed once it is trustworthy, not where it gets built.</td></tr>
 </table>
 
 <p>Rung two is in the funded plan. Three and four are direction — and the reason to be strict

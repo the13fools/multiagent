@@ -723,8 +723,9 @@ describe("the behavioural-economics reading list", () => {
     // The list was cut from nine entries to four plus a paragraph naming the
     // rest, because a list nobody finishes is not a list. What has to survive
     // is that the designs are named and the papers are reachable.
-    const links = [...html.matchAll(/href="https?:\/\/[^"]*(nber|ssrn|danieljbenjamin|mitpress)[^"]*"/g)];
-    expect(links.length).toBeGreaterThanOrEqual(3);
+    const links = [...html.matchAll(/href="https?:\/\/[^"]*(nber|ssrn|danieljbenjamin|jstor|uchicago)[^"]*"/g)];
+    expect(links.length, "the designs should be one click from their papers")
+      .toBeGreaterThanOrEqual(4);
     for (const design of ["Minimum-effort", "Beauty contest", "double auction", "El Farol",
                           "base-rate neglect"]) {
       // &nbsp; is deliberate typography in a couple of names, so normalise it
@@ -791,7 +792,7 @@ describe("where this sits", () => {
     const h = html();
     expect(h, "claiming collusion coverage would be a lie").toMatch(
       /Collusion and multi-agent security are not modelled/i);
-    expect(h).toMatch(/not infrastructure and not a governance proposal/i);
+    expect(h).toMatch(/not infrastructure,? (and )?not a governance proposal/i);
     expect(h, "an honest page names what would make it worthless")
       .toMatch(/What would make it not worth doing/i);
   });
@@ -1330,16 +1331,16 @@ describe("no page outgrows its argument", () => {
     "index.html": 700,
     "proposal.html": 900,
     "shared-resource.html": 750,
-    "entrainment.html": 500,
-    "stage-zero.html": 1000,
+    "entrainment.html": 450,
+    "stage-zero.html": 950,
     "design.html": 1400,
     "experiments.html": 1650,
-    "future.html": 2300,
-    "blog-pdd.html": 1700,
-    "lineage.html": 1850,
+    "future.html": 2050,
+    "blog-pdd.html": 1500,
+    "lineage.html": 1650,
     "gate.html": 800,
     "boardwalk.html": 500,
-    "cards.html": 700,
+    "cards.html": 650,
     "juggling.html": 700,
     "figure.html": 400,
   };

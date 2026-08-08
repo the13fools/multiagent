@@ -86,9 +86,9 @@ together is a separate page: <a href="./design.html">how an experiment is run</a
   tracked.</span></td></tr>
 <tr><td><b>End-to-end Commons</b><br><span class="muted">1 seed, 14 Jul</span></td>
   <td class="s"><span class="st st-part">one seed</span></td>
-  <td>Seeded agents delayed collapse to round 9 against round 7 for the control, and doubled
-  restraint under scarcity. <b>One seed and one adapter.</b> Enough to show the pipeline runs end
-  to end; not enough to estimate an effect, and we do not claim one.</td></tr>
+  <td>Seeded agents delayed collapse to round 9 against 7 for the control, and doubled restraint
+  under scarcity. <b>One seed, one adapter</b> — enough to show the pipeline runs end to end, not
+  enough to estimate an effect.</td></tr>
 <tr><td><b>Deceptive-alignment adapter</b><br><span class="muted">14 Jul</span></td>
   <td class="s"><span class="st st-done">complete</span></td>
   <td>An adapter trained on judge-selected pairs collapsed the commons <em>faster</em> than
@@ -104,11 +104,10 @@ together is a separate page: <a href="./design.html">how an experiment is run</a
   <span class="muted">It goes back on this page when they do, and not before. The rule the page
   now runs on: no claim without a committed plan, traces and receipt.</span></td></tr>
 <tr><td><b>Live A/A calibration</b></td><td class="s"><span class="st st-todo">not run</span></td>
-  <td>An A/A needs <em>two</em> campaigns — baseline and candidate, identical at f = 0 except the
-  seeded role mapping — then Firebreak comparing them. <b>Neither arm has a corroborated
-  receipt</b>, so the gate's error rate remains an offline resampling of the pilot's deltas rather
-  than a measurement. <code>run_aa_calibration.sh</code> runs both arms and the comparison; it
-  needs one GPU session.</td></tr>
+  <td>Two campaigns — baseline and candidate, identical at f = 0 except the seeded role mapping —
+  then Firebreak comparing them. <b>Neither arm has a corroborated receipt</b>, so the error rate
+  is still offline resampling. <code>run_aa_calibration.sh</code> runs both arms and the
+  comparison, in one GPU session.</td></tr>
 <tr><td><b>Style positive control</b></td><td class="s"><span class="st st-part">rig built, not run</span></td>
   <td>Training harness exists in <code>continuous_judge</code>; the flockbench bridge is
   committed. The prompted variant needs no training at all. Not yet executed against a live
@@ -189,8 +188,8 @@ now runs on an explicit rule: no result without a committed plan, traces and rec
 machine-verifiable from the receipt, which embeds the resolved policy — but for that one run,
 "thresholds committed before evaluation" is backed by the receipt rather than by git history.
 Disclosed rather than discovered.</li>
-<li><b>The threshold is not identifiable at N = 8.</b> Reachable fractions are {0, 12.5, 25,
-37.5}%, coarser than the interval of interest. Everything at N=8 is a pilot by construction.</li>
+<li><b>Not identifiable at N = 8.</b> Reachable fractions are {0, 12.5, 25, 37.5}%, coarser than
+the interval of interest. Everything at N = 8 is a pilot by construction.</li>
 <li><b>One serving endpoint.</b> "Different principals" currently means different specifications
 over identical weights. Cheap seed production addresses this; cross-vendor populations do not
 exist yet.</li>
