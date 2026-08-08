@@ -60,10 +60,10 @@ measurement taken at turn 20 and one taken at turn 200 disagree, and neither is 
 
 <h2 id="pitch">The pitch, in three paragraphs</h2>
 
-<p><b>Pick games small enough that an agent is cheap to train for them.</b> Not a compromise —
-the method. A closed-form game can be learned by a small specialised model, so thirty
-<em>different</em> policies are affordable, so composition becomes a variable rather than a
-limitations paragraph. Big environments give you one model in thirty hats and no answer key.</p>
+<p><b>Pick games small enough that an agent is cheap to train for.</b> Not a compromise — the
+method. A closed-form game can be learned by a small specialised model, so thirty
+<em>different</em> policies are affordable, so composition becomes a variable. Big environments
+give you one model in thirty hats and no answer key.</p>
 
 <p><b>What we are measuring is whether a model reasons about the other players</b> — not whether
 it cooperates. That is observable here rather than inferred: the sustainable pattern is
@@ -221,74 +221,54 @@ the 70B column as an order of magnitude rather than a quote. And the price dial 
 Lambda's current on-demand A100 rate; the "about $50 an agent" in the essay was a receipt at the
 lower spot price we actually paid, which is why the price is a dial and not a constant.</p>
 
-<h2 id="ladder">The ladder: from an answer key to a real crowd</h2>
+<h2 id="ladder">The ladder</h2>
 
-<p>Eight agents and a pool is rung one; the destination is large multiplayer games with real
-negotiation. <b>Every rung up trades away the answer key</b>, so what survives the climb is the
-calibration, not ground truth.</p>
-
-<p>Composition is the thread. Today it is one number, the seeded fraction <code>f</code>; above, a
-<b>composition vector</b> — seeded, <em>mimic</em> (the vocabulary with the decision rules
-stripped), and <b>adversarial</b>. A flock is a mixture, and the mixture is the independent
-variable.</p>
+<p>Rung one is here, today. <b>Every rung up trades away the answer key</b>, so what climbs with
+you is the calibration, not ground truth. Composition climbs too: today one number, the seeded
+fraction <code>f</code>; above, a <b>composition vector</b> of seeded, <em>mimic</em> and
+adversarial.</p>
 
 <table>
-<tr><th>rung</th><th>what it adds</th><th>what it costs</th></tr>
+<tr><th>rung</th><th>adds</th><th>costs</th></tr>
 
-<tr><td><b>1. Games with a solution</b><br><span class="muted">here, today</span></td>
-  <td>Closed-form sustainable region, closed-form carrying capacity, no communication at all.
-  Every failure is measured against a known right answer.</td>
-  <td>Nothing yet, which is why it is first.</td></tr>
+<tr><td><b>1 · Games with a solution</b><br><span class="muted">here, today</span></td>
+  <td>Closed-form sustainable region and carrying capacity. No communication.</td>
+  <td>—</td></tr>
 
-<tr><td><b>2. The same games, with a channel</b><br><span class="muted">the rung that matters</span></td>
-  <td>Let the agents talk: silent, public broadcast, or private pairwise. The only place you can
-  ask <b>what communication does</b> while still knowing the right answer. Three measurements fall
-  out: whether a channel moves a population out of the collapsing region, whether a minority can
-  steer more cheaply by talking than by holding seats, and whether an adversarial pair can use a
-  private channel to extract in a way neither could alone.
-  <span class="muted">That last one is collusion, with an arithmetic definition and a
+<tr><td><b>2 · The same games, with a channel</b><br><span class="muted">funded</span></td>
+  <td>Silent, public broadcast, or private pairwise. The only place to ask <b>what communication
+  does</b> while still knowing the right answer. Three measurements: does a channel move a
+  population out of the collapsing region; can a minority steer more cheaply by talking than by
+  holding seats; can an adversarial pair extract through a private channel in a way neither could
+  alone. <span class="muted">That last one is collusion, with an arithmetic definition and a
   control.</span></td>
-  <td>Free text enters the loop. Outcomes stay arithmetic; channel content does not, and we
-  report what we can measure rather than rate what was said.</td></tr>
+  <td>Free text enters the loop. Outcomes stay arithmetic; channel content does not.</td></tr>
 
-<tr><td><b>3. Diplomacy</b><br><span class="muted">the canonical case</span></td>
-  <td>Seven players, simultaneous orders, and a literature that already runs it
-  <b>with and without side channels</b>: full-press against gunboat is a standard manipulation,
-  not something we would have to invent. Supply centres are counted, not judged. Alliance and
-  betrayal are the point rather than an artefact, and the composition vector maps cleanly onto
-  seats.</td>
-  <td>No answer key, so results are comparative — this mixture against that one — and the gate's
-  calibration is what makes the comparison mean anything.</td></tr>
+<tr><td><b>3 · Diplomacy</b><br><span class="muted">direction</span></td>
+  <td>Seven seats, simultaneous orders, and a literature that already runs it <b>with and without
+  side channels</b> — full-press against gunboat. Supply centres are counted, not judged.</td>
+  <td>No answer key. Results become comparative, which is what the gate's calibration is
+  for.</td></tr>
 
-<tr><td><b>4. Utopia-scale</b><br><span class="muted">the deployment case</span></td>
-  <td><a href="https://utopia-game.com/shared/">Utopia</a> has run for twenty years: kingdoms of
-  about twenty-five inside a world of hundreds, hourly ticks, ages lasting months. Two properties
-  are hard to get anywhere else — <b>teams inside a population</b>, and <b>coordination that
-  happens outside the engine</b>, on forums the game cannot see.
-  <span class="muted">Not a flaw in the analogy. It is the deployment case exactly: agents whose
-  most important channel is one you are not logging.</span></td>
-  <td>Everything: no optimum, enormous cost, months-long horizons. Where the instrument gets
-  pointed once it is trustworthy, not where it gets built.</td></tr>
+<tr><td><b>4 · Utopia-scale</b><br><span class="muted">direction</span></td>
+  <td><a href="https://utopia-game.com/shared/">Twenty years</a> of kingdoms of twenty-five inside
+  worlds of hundreds, hourly ticks, months-long ages. <b>Teams inside a population</b>, and
+  <b>coordination outside the engine</b> — which is the deployment case, not a flaw in the
+  analogy.</td>
+  <td>Everything. No optimum, months-long horizons.</td></tr>
 </table>
 
-<p>Rung two is in the funded plan. Three and four are direction — and the reason to be strict
-about rung one, since a result at Utopia scale means something only if the instrument reading it
-was calibrated where the answer was known.</p>
-
-<h2 id="mechanisms">Decentralised mechanism design, and what "flourishing" means</h2>
+<h2 id="mechanisms">Decentralised mechanism design</h2>
 
 <p>Classical mechanism design assumes a designer who sets the rules and can enforce them. In a
-population you do not own, nobody is in that chair: the rules that matter are the ones a minority
-can propose, that the rest adopt because adopting them is individually sensible.</p>
-
-<p>The experiments are concrete: hold the game fixed and vary <em>what agents can see, say and
-commit to</em> — a public tally, a binding commitment, persistent reputation, a side-payment
-channel — and measure which move a population out of the collapsing region, and at what controlled
+population you do not own, nobody is in that chair. So: hold the game fixed, vary <em>what agents
+can see, say and commit to</em> — a public tally, a binding commitment, reputation, side payments
+— and measure which move a population out of the collapsing region, and at what controlled
 fraction.</p>
 
-<p><b>Flourishing</b> is defined so it can be computed: every agent alive at the horizon, the
-resource no lower than it started, no agent's outcome achieved by another's ruin. Three arithmetic
-conditions, deliberately not a moral definition.</p>
+<p><b>Flourishing</b> is three arithmetic conditions, so it can be computed rather than argued:
+every agent alive at the horizon, the resource no lower than it started, no agent's outcome
+achieved by another's ruin.</p>
 
 <h2 id="requirements">What would have to be true</h2>
 
