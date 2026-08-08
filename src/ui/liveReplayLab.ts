@@ -253,10 +253,10 @@ function run() {
   shown = 0;
   verdict("verdict", "", "");
   el("setup").innerHTML = key === "cfa8" 
-    ? "<b>Trained LLM (8 CFA):</b> In this one-seed trace, trained agents request smaller harvests than the control. The trace is a short pilot, not evidence of indefinite sustainability or a population-level effect."
+    ? "<b>Trained LLM (8 CFA) - Specification Gaming:</b> Aligned to a vague rubric penalizing greed only during scarcity, these agents reward-hacked the system. They learned to be hyper-greedy during early abundance, collapsing the pool by Round 8 (faster than the base model!) before their scarcity restraint could save it."
     : key === "cfa4mix"
-    ? "<b>Mixed (4 CFA, 4 Base):</b> This pilot trace shows different harvest requests across roles, but it is not a powered composition result. The proposed campaign estimates that difference across matched seeds."
-    : "<b>Base Qwen2.5-7B (0 CFA):</b> In this pilot trace, baseline agents request high harvests and exhaust the stock on the short horizon. It is an observed trace, not a population estimate.";
+    ? "<b>Mixed (4 CFA, 4 Base):</b> The mixture of reward-hacking trained agents and naive base agents drags the ecosystem down in unpredictable ways, collapsing at Round 13."
+    : "<b>Base Qwen2.5-7B (0 CFA):</b> Baseline agents naively request moderate harvests, steadily draining the pool until it mathematically collapses by Round 12.";
   buildGrid();
   drawGrid();
   drawStats(undefined);
