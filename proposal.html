@@ -18,15 +18,15 @@
 
 <main class="wrap">
   <div class="hero">
-    <h1>The experiment</h1>
-    <p>Does adding a small number of cooperative agents change the fate of a population that otherwise exhausts a shared resource?</p>
+    <h1>What the experiment will test</h1>
+    <p>When a population of language-model agents depletes a shared resource, can changing a small number of seats to a cooperative policy make the whole group survive?</p>
   </div>
 
-  <h2>Hypothesis</h2>
-  <p>In a mixed population of language-model agents, increasing the fraction of agents given a meaningful cooperative policy will move the group from collapse toward sustained resource use. The fraction required may depend on population size, resource slack, and what the unseeded agents can observe.</p>
+  <h2>The claim, stated narrowly</h2>
+  <p>Increasing the fraction of agents given a meaningful cooperative policy may move a mixed population from collapse toward sustained resource use. The required fraction may depend on population size, resource slack, and what unseeded agents can observe. We will measure those conditions rather than assume one universal threshold.</p>
 
-  <h2>What changes—and what stays fixed</h2>
-  <p>A matched pair uses the same model-serving stack, game, seed, role order, prompt scaffold, decoding settings, and horizon. The only change is the policy assigned to selected seats.</p>
+  <h2>One controlled change</h2>
+  <p>A matched pair uses the same Qwen2.5-7B-Instruct serving stack, game, random seed, role order, prompt scaffold, decoding settings, and horizon. The only change is the policy assigned to selected seats.</p>
 
   <table>
     <tr><th>Arm</th><th>What it tests</th></tr>
@@ -36,20 +36,20 @@
     <tr><td><b>Vocabulary-matched mimic</b></td><td>Whether an apparent effect is merely the language or tone of the intervention.</td></tr>
   </table>
 
-  <h2>What we measure</h2>
-  <p>The environment scores the run: who survives, when the pool collapses, total welfare, inequality, the resource trajectory, and deviation from the restoration rate needed to sustain the commons. We save prompts, replies, parsed actions, and state transitions. A parse failure is counted and assigned an inert action; it cannot become accidental evidence of cooperation.</p>
+  <h2>The outcome is scored by the game</h2>
+  <p>We measure who survives, when the pool collapses, total welfare, inequality, the resource trajectory, and deviation from the restoration rate needed to sustain the commons. We save prompts, replies, parsed actions, and state transitions. A parse failure is counted and assigned an inert action; it cannot become accidental evidence of cooperation.</p>
 
-  <h2>First, calibrate the measurement</h2>
-  <p>Before evaluating a seed, we run an A/A campaign: candidate and baseline are the same population. Any rollback is a false rejection. The primary calibration plan is 60 independent A/A campaigns of 60 matched pairs on Qwen2.5-7B-Instruct in the binary game. If none roll back, the one-sided exact 95% upper bound on the campaign-level false-rejection rate is 4.9%.</p>
+  <h2>First: prove the comparison is trustworthy</h2>
+  <p>Before evaluating any intervention, we run an A/A campaign: candidate and baseline are the same population. Any rollback is a false rejection. The primary calibration is 60 independent campaigns of 60 matched pairs on Qwen2.5-7B-Instruct in the binary game. If none roll back, the one-sided exact 95% upper bound on the campaign-level false-rejection rate is 4.9%.</p>
 
   <p>This step is necessary because the offline audit already found a bad rule: the original overlap gate rolled back a clone of its baseline with probability 1.000 under sign-flip resampling of a 30-cell pilot. That is a warning about the instrument, not a result about the intervention.</p>
 
-  <h2>Then, estimate a dose response</h2>
-  <p>We sweep the fraction of seeded agents at N=8, then repeat the informative range at N=20 and N=50. We compare zero-slack, positive-slack, and unwinnable resource settings. The output is not a single dramatic threshold: it is a set of paired estimates and confidence intervals showing whether the effect is robust, conditional, absent, or harmful.</p>
+  <h2>Then: vary the fraction</h2>
+  <p>We sweep the seeded fraction at N=8, then repeat the informative range at N=20 and N=50. We compare zero-slack, positive-slack, and unwinnable resource settings. The output is not one dramatic threshold. It is paired estimates and confidence intervals showing whether the effect is robust, conditional, absent, or harmful.</p>
 
-  <h2>What would count as success?</h2>
-  <p><b>Best case:</b> the seed improves survival and welfare beyond the mimic arm across model families and larger populations, with a calibrated gate and a transparent mechanism.</p>
-  <p><b>Still valuable:</b> a precise null, a result that only works at N=8 or in abundance, or evidence that the gate cannot be calibrated. Each rules out a tempting but unsupported claim about population-level alignment.</p>
+  <h2>What will we learn?</h2>
+  <p><b>Success:</b> the trained seed improves survival and welfare beyond the vocabulary-matched mimic across model families and larger populations, with a calibrated comparison and a transparent mechanism.</p>
+  <p><b>A useful negative result:</b> a precise null, an effect confined to N=8 or generous resource conditions, or evidence that the gate cannot be calibrated. Each rules out a tempting but unsupported claim about population-level alignment.</p>
 
   <p class="muted">The detailed status, including the one-seed pilot and withdrawn claims, is on <a href="./experiments.html">the evidence page</a>. The grant-form draft and milestones live in <code>docs/</code>.</p>
 </main>

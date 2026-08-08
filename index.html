@@ -12,47 +12,45 @@
   <a class="brand" href="./index.html">flockbench</a>
   <a href="./proposal.html">The experiment</a>
   <a href="./shared-resource.html">Play the game</a>
-  <a href="./entrainment.html">Steering</a>
-  <a href="./stage-zero.html">Stage Zero</a>
   <a href="./experiments.html">Evidence</a>
   <a href="./design.html">Methods</a>
 </div></nav>
 
 <main class="wrap">
   <div class="hero">
-    <h1>Can a few AI agents prevent a shared resource from collapsing?</h1>
-    <p>That is the whole question. <code>flockbench</code> makes it measurable in a game with a known answer.</p>
+    <h1>Can a cooperative minority keep a group of AI agents from exhausting a commons?</h1>
+    <p>Eight agents share a resource. They can restore it or take from it. <code>flockbench</code> tests whether changing a few seats changes the fate of everyone.</p>
   </div>
 
-  <h2>The game</h2>
-  <p>Eight agents share a pool. Every turn, each pays <b>1 token</b> to stay alive and chooses:</p>
+  <h2>Two actions. A known solution.</h2>
+  <p>Every turn, each agent pays <b>1 token</b> to stay alive and chooses one action:</p>
 
   <div class="panel">
     <p><b>Restore:</b> pay 1 token; add 3 to the pool.</p>
     <p><b>Take:</b> take 3 tokens from the pool.</p>
   </div>
 
-  <p>Everyone survives forever if each agent alternates restore and take. The pool stays level and every agent breaks even. At the reference setting, one permanent taker eventually kills the entire group. There is no ambiguity about what success requires.</p>
+  <p>With eight agents, four restores and four takes each turn keep the pool level. An agent can contribute to that balance by alternating actions; the group can then survive indefinitely. Persistent taking drains the pool. The arithmetic makes the target exact: enough restoration to keep the commons alive.</p>
 
   <div id="intro-rings"></div>
   <p class="legend" id="intro-caption" style="text-align:center"></p>
 
-  <h2>Why this is useful</h2>
-  <p>Most multi-agent evaluations cannot distinguish a group that coordinated badly from a group facing an impossible task. Here the sustainable policy, the required restoration rate, and the failure condition are all fixed by arithmetic. The score is the environment itself: survival, welfare, pool level, inequality, and time to collapse. No LLM judge decides who behaved well.</p>
+  <h2>Why make the problem this small?</h2>
+  <p>Most multi-agent evaluations blur a bad outcome with an impossible task. Here the sustainable rate and the failure condition are fixed by arithmetic. The environment scores the run—survival, welfare, pool level, inequality, and time to collapse. No LLM judge decides who behaved well.</p>
 
-  <h2>What the pilot found</h2>
-  <p>A one-seed run with eight Qwen2.5-7B-Instruct agents completed end to end with zero parse failures. A seeded LoRA adapter delayed stock exhaustion relative to its control. That shows the pipeline works; it does <b>not</b> establish an effect size, a threshold, or generalization.</p>
+  <h2>The motivating observation</h2>
+  <p>In the initial eight-agent Qwen2.5-7B-Instruct trace, agents repeatedly took from the pool until the group collapsed. A one-seed run of a cooperative LoRA adapter delayed exhaustion relative to its control. That is enough to motivate a proper test, not enough to claim an effect.</p>
 
-  <p><b>Not established yet:</b> the fraction of agents needed to move a population from collapse to sustained resource use. This is a <b>composition question</b>, not an individual-agent alignment claim. The first methodological result is equally important: an offline audit found that the original promotion rule would roll back a clone of its own baseline almost certainly. The live A/A calibration has not run, so the experiment must calibrate its measurement rule before using it to judge an intervention.</p>
+  <p><b>Not established yet:</b> the fraction of agents needed to move a population from collapse to sustained resource use. This is a <b>composition question</b> about a population, not a claim that one agent is “aligned.” An offline audit also found that the original promotion rule would reject a clone of its own baseline almost certainly. The live A/A calibration has not run, so we must first prove that the measurement rule does not manufacture a result.</p>
 
   <h2>The proposed experiment</h2>
   <ol>
-    <li><b>Calibrate the gate.</b> Run A/A campaigns where candidate and baseline are identical; every rollback is a false rejection.</li>
-    <li><b>Vary the seeded fraction.</b> Compare base populations, a transparent cooperative policy, a trained adapter, and a vocabulary-matched mimic.</li>
+    <li><b>Calibrate the measurement.</b> Run A/A campaigns where candidate and baseline are identical; every rollback is a false rejection.</li>
+    <li><b>Vary the cooperative fraction.</b> Compare the base population, a transparent policy, a trained adapter, and a vocabulary-matched mimic.</li>
     <li><b>Find the boundary.</b> Repeat at larger population sizes and under feasible, forgiving, and unwinnable resource conditions.</li>
   </ol>
 
-  <p>The result can be positive, null, or adverse. The useful output is a composition-response curve with confidence intervals and a clear account of where it does—and does not—transfer.</p>
+  <p>The result can be positive, null, or adverse. The useful output is a curve showing how group outcomes change as more seats receive the intervention, with confidence intervals and clear limits on where it transfers.</p>
 
   <hr>
 
@@ -74,7 +72,7 @@
     </a>
   </div>
 
-  <p class="muted">Open source: <a href="https://github.com/thenthfool/flockbench">flockbench</a>. MIT code; data and figures CC0.</p>
+  <p class="muted">Further reading: <a href="./entrainment.html">how a minority might steer a flock</a>; <a href="./stage-zero.html">what is already built</a>; and the <a href="https://github.com/thenthfool/flockbench">open-source repository</a>. MIT code; data and figures CC0.</p>
 </main>
 <script type="module" src="/src/ui/introFigures.ts"></script>
 </body>
