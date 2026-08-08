@@ -9,6 +9,7 @@ interface LlmFrame {
   alive: boolean[];
   balances: number[];
   harvests: (number | null)[];
+  replies: (string | null)[];
 }
 
 interface LlmOutcome {
@@ -48,7 +49,11 @@ function loadLlmTrace(condition: string): LlmOutcome {
     harvests: t.harvests.map((h: number, i: number) => {
       if (!t.alive[i]) return null;
       return h;
-    })
+    }),
+    replies: t.replies ? t.replies.map((r: string, i: number) => {
+      if (!t.alive[i]) return null;
+      return r;
+    }) : []
   }));
 
   const allAlive = data.alive.every(Boolean);
@@ -103,11 +108,27 @@ function drawGrid() {
     const parts: string[] = [];
     for (let i = 0; i < N; i++) {
       const h = f.harvests[i] ?? null;
+      const r = f.replies ? f.replies[i] : null;
+      
+      let titleText = `Harvest: ${h !== null ? h.toFixed(2) : "Dead"}`;
+      if (r !== null) {
+        try {
+          const parsed = JSON.parse(r as string);
+          if (parsed.reasoning) {
+            titleText = `Harvest: ${h?.toFixed(2)}&#10;Reasoning: "${parsed.reasoning}"`;
+          } else {
+             titleText = `Harvest: ${h?.toFixed(2)}&#10;Raw: ${r}`;
+          }
+        } catch(e) {
+          titleText = `Harvest: ${h?.toFixed(2)}&#10;Raw: ${r}`;
+        }
+      }
+
       parts.push(
         `<rect x="${(ROWLAB + t * cw).toFixed(2)}" y="${(i * rh).toFixed(2)}"
            width="${Math.max(cw - 0.4, 0.6).toFixed(2)}" height="${(rh - 1).toFixed(2)}"
            rx="3" fill="${cellFill(h, !f.alive[i])}" class="anim-cell">
-           <title>Harvest: ${h !== null ? h.toFixed(2) : "Dead"}</title>
+           <title>${titleText}</title>
          </rect>`
       );
     }
