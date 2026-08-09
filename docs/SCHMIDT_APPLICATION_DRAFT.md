@@ -11,11 +11,11 @@ single diagnostic traces, not frozen effect estimates.
 
 ### Project Title (≤20 words)
 
-**Flockbench: Testing Whether Small Agent Minorities Stabilize Shared Resources**
+**Flockbench: Testing How Mixed Populations of Language Agents Sustain Shared Resources**
 
 ### Project Tier
 
-**Tier 1 (up to $300,000)**
+**Tier 1 ($275,000 requested: $250,000 direct and $25,000 indirect)**
 
 ### Project Duration
 
@@ -23,352 +23,285 @@ single diagnostic traces, not frozen effect estimates.
 
 ### Plain-language Summary (2–3 sentences)
 
-The stochastic parrots are escaping the cage! Flockbench helps them adapt to life
-outside the data center by studying how post-training adapters shape the collective
-behavior of LLM-powered agents deployed by different actors into a shared world. We
-build infrastructure to train and evaluate flocks that must learn to protect a commons
-in games designed to continue indefinitely; learn more at
+The stochastic parrots are escaping the cage. Flockbench studies how post-training
+changes the collective behavior of LLM-powered agents deployed by different actors
+into the same long-lived environment. We build open tools to train heterogeneous
+populations and test, in shared-resource games with known solutions, whether they
+preserve both the commons and themselves; explore the project at
 https://foolzone.com/multiagent/commons-game/index.html.
 
 
 ### Keywords
 
-personas, game theory, commons, coordination, post-training
+multi-agent evaluation, post-training, common-pool resources, population composition,
+long-horizon coordination
 
 ## Problem and Impact (≤500 words)
 
-The stochastic parrots will not leave the data center as one obedient flock. They will be deployed by different people and organizations into shared settings: a budget, a queue, a market, a data store, a tool API, or a computational commons. There will be programs in the cloud that have found economic niches that they exploit to cover the cost of their own hosting.  Distributed inference will lead to agentic jobs that cannot easily be localized and brought offline as long as they manage to accumulate capital.  
+The stochastic parrots will not leave the data center as one obedient flock. Language
+agents are increasingly deployed by different people and organizations, with different
+models, memories, tools, and objectives. One actor may control many agents without
+controlling the population. Those agents will nevertheless meet in shared environments:
+markets, roads, networks, forums, collaborations, and finite physical resources.
 
-The interactions these parrots will experience will soon be far out of distribution.  Rollouts far longer than anything that happened in pre-training.  Multi-agent games and interactions which require sophisticated models of a flock of agents to participate in.  These latter two issues are the questions I wish to use this grant funding to study.  The scientific gap is not simply “we need more simulations.” It is that we do not yet have calibrated experiments for causal questions about population composition. I believe that it will serve society to develop open source tools for training the collective decision making capacities of agents.  
+This creates a safety problem that single-agent alignment does not resolve. A policy can
+look helpful in isolation yet degrade a common resource when copied across a population.
+Conversely, the Shared Resource pilot in this application shows that unanimous
+“cooperation” can also be fatal: trained agents restored the commons on every turn,
+bankrupted themselves, and died together. A healthy multi-agent system may require a
+dynamic equilibrium in which agents take different actions at different times rather
+than converge on one approved behavior.
 
+Long rollouts make this harder. Small per-turn biases compound; agents encounter states,
+partners, and institutional settings poorly represented in pre-training; and success may
+mean preserving a moving relationship rather than reaching a fixed point. We currently
+lack calibrated, open experiments that can separate four possibilities: the task was
+impossible, the intervention was not installed, the trained behavior changed but did not
+improve collective welfare, or a viable strategy failed to transfer.
 
+Flockbench addresses that measurement gap. It asks a concrete population-level question:
+when no one controls every agent, what fraction of a mixed population must adopt a tested
+strategy before both the agents and a shared resource survive? It begins with
+behavioral-economics games whose feasible regions and failure conditions can be derived,
+then uses those answer keys to evaluate prompts and post-training adapters over long
+rollouts. Outcomes are determined by arithmetic and replayable traces, not by whether a
+model sounds prosocial.
 
-
-In a rich simulation, a bad collective outcome is ambiguous: perhaps the agents chose poorly, or perhaps success was impossible. That ambiguity makes it easy to overread both positive and negative results. It is especially dangerous when an LLM judge supplies the score, because the judge can reward fluent explanations while missing the mechanism that destroys the system.
-
-Flockbench begins with a shared-resource game designed to remove that ambiguity. Each
-turn, every player pays one token to survive and chooses either to pay one additional
-token to restore three tokens to a common pool or to take three tokens from it. At
-the reference parameters, everyone can survive indefinitely by alternating the two
-actions. The solution, the required restoration rate, and the zero-tolerance-to-
-defection condition follow directly from the rules. The environment—not a model—is
-the referee.
-
-This produces two visually different failures. A flock can take until the pond is
-empty, or restore until the pond is full and every player has spent itself to death.
-Mutual flourishing requires the agents and the commons to persist together.
-
-The central hypothesis is deliberately narrow: **in a mixed population, a small
-fraction of agents with a behaviorally meaningful cooperative policy can shift the
-population from collapse toward sustained resource use, and the required fraction
-depends on population size, information, resource slack, and the behavior of the
-unseeded majority.** We will estimate this as a dose-response curve, not an anecdote.
-
-The argument relies on two limited assumptions. First, an answer-key environment can
-reliably distinguish coordination failure from environmental impossibility. Second,
-the boundary conditions of this simple mechanism are informative enough to guide the
-design of harder testbeds; we do not assume that its numerical threshold transfers
-directly to real institutions. If the project succeeds, researchers and deployers
-will have a public way to ask a more disciplined question than “does this agent seem
-cooperative?”: “under what conditions does this intervention change a collective
-outcome, compared with matched controls?”
-
-The best case is a calibrated measurement protocol and a robust, cross-model
-composition effect with a transparent mechanism. The minimum valuable outcome is a
-well-powered null or a sharp non-transfer result: for example, that an apparent
-effect disappears against a vocabulary-matched control, at larger N, or under
-scarcity. Even a failure to calibrate the admission gate would be valuable evidence
-that an apparently reasonable automated decision rule is not ready to support a
-safety claim. This is timely because agent populations are being deployed before
-their collective failure modes can be measured with comparable rigor.
+I recently completed a PhD in computer graphics and built the Stage 0 testbed as an unpaid
+independent researcher. The proposed grant would let me turn that prototype into public,
+negative-capable infrastructure: tools that can train heterogeneous flocks, reject methods
+that fail, and establish which coordination claims survive replication. The near-term
+impact is a reusable multi-agent laboratory. The longer-term aim is to help decentralized
+agent ecosystems preserve shared conditions for human, ecological, and collective
+flourishing without requiring one actor to control every participant.
 
 ## Approach (≤1,000 words)
 
-### A solved core environment
+Flockbench combines analytic games, controlled post-training, and population experiments.
+The governing principle is simple: begin where the answer can be checked mechanically,
+then relax structure only after the instrument works.
 
-We begin with a small pond because simple rules leave failure nowhere to hide. The
-core environment is the Shared Resource game. Every living player pays an upkeep
-cost L=1 each turn, then chooses exactly one action: **restore**, paying R=1 to add
-G=3 tokens to the pool, or **take**, receiving S=3 tokens from the pool. A player
-whose balance becomes negative is removed. Under these reference parameters, a player
-can afford to restore on at most half of its turns and the pool needs restoration on
-exactly half of player-turns. The sustainable solution is therefore a phase-shifted
-alternation of restore and take. Because slack is zero, a permanent taker eventually
-destroys an eight-player population.
+**Stage 0: two games, two different roles.** The Commons Game is a continuous-harvest
+environment with logistic resource regrowth. Each agent pays upkeep and bids how much to
+harvest on every turn. Its peak sustainable yield and impossible regimes can be derived,
+but simultaneous play does not produce one tidy optimal policy. I used it to build the
+serving, training, and trace pipeline around Qwen2.5–7B-Instruct. In one diagnostic seed,
+eight post-trained agents lasted to round 170, compared with round 33 for eight base
+agents. Every agent in every arm still died. This is evidence that the adapter changed
+the trajectory, not evidence of a reliable treatment effect.
 
-This construction has three useful controls that are rare in language-agent work:
-(1) a known sustainable policy; (2) an unwinnable regime created by setting the
-parameters so that no policy can meet both personal and pool budgets; and (3) a
-positive-slack regime in which the commons tolerates some free-riding. We will vary
-resource slack and public action history while retaining deterministic state
-transitions and a fixed horizon.
+Shared Resource is the answer-key game. On each turn an agent either **restores**—paying
+one token to add three to the pool—or **takes** three tokens. Agents also pay one token of
+upkeep and are removed when their balance becomes negative. Under the reference
+parameters, the population must restore on exactly half of player-turns while each agent
+can afford to restore on at most half. A phase-shifted alternation of restore and take is
+therefore sustainable; permanent taking destroys the pool, while permanent restoration
+destroys the agents.
 
-Shared Resource is the worked example, not the only training environment. The second
-core game is the continuous Commons Game: a logistic stock with exact feasible and
-impossible regions but no tidy optimal policy under simultaneous harvest. Stage 0
-training happened there. Same-game evaluation establishes whether a target policy was
-installed; moving the resulting policy into Shared Resource tests whether the learned
-disposition survives a change of rules. Agreement is evidence of transfer and
-disagreement is reported as a boundary.
+Stage 0 exposed precisely the failure this benchmark is meant to catch. A LoRA adapter
+trained directly in Shared Resource and an adapter transferred from the Commons Game
+both changed behavior, but both populations restored on every turn and died by turn 6.
+The untrained population was noisy and died by turn 8. Training replaced one failure
+mode with a more synchronized, faster one; it did not discover coordinated abundance.
+These are one-seed diagnostic traces, not effect estimates.
 
-### Interventions and controls
+**Post-training methods.** The study compares four increasingly expensive ways to create
+strategy pools: prompts, context or outcome-filtered distillation, ordinary LoRA, and a
+prototype called Progressive Denoising Distillation (PDD). PDD uses a diffusion language
+model as a teacher to inpaint selected rationale spans around a fixed target action, then
+applies cross-entropy loss only to accepted replacement tokens. The action schema receives
+no direct gradient. In Stage 0, one 7B adapter cost approximately $50 of compute. That is
+one receipt, not a general benchmark; the grant will measure cost, schema validity, and
+behavioral distinctness rather than assume the method is superior.
 
-The initial dense model is Qwen2.5-7B-Instruct. We will pre-register a second
-open-weight mixture-of-experts model after it passes the same structured-action and
-game-comprehension screen; selection criteria, model version, template, decoding
-parameters, and serving configuration will be frozen before scored runs.
+**Funded study.** Work proceeds in four linked stages:
 
-We treat the intervention as an experimental input, not as a claim that an individual
-agent is “aligned.” The primary seed is a transparent policy specification that tells
-an agent how to track its own balance, the pool, and the public action history. The
-second is an ordinary LoRA adapter trained on environment-verified trajectories. The
-third is **Progressive Denoising Distillation (PDD)**, which edits selected rationale
-spans while protecting the structured action field. Each must pass held-out
-action-validity, schema-preservation, and rule-comprehension tests before a population
-result is interpreted. All are compared with: (a) the unmodified base model; (b) a
-vocabulary-matched mimic containing the specification’s language but not its decision
-rules; (c) an objective style positive control showing that the adapter channel can
-change behavior when it should; and (d) a known-bad intervention that a useful gate
-should reject.
+1. **Calibrate the decision rule.** Run repeated live A/A campaigns in which both arms are
+   sampled from the same population. Measure the false-rejection rate and retire the gate
+   if its one-sided 95% upper bound exceeds 10%. Re-estimate paired variance before fixing
+   the remaining campaign size.
+2. **Verify installation before interpretation.** Test prompts, LoRA, and PDD on held-out
+   action validity, rule comprehension, impossible regimes, schema preservation, and an
+   objectively checkable but behaviorally irrelevant style control. This distinguishes a
+   failed training channel from a genuine null effect.
+3. **Estimate the population response.** For mixed populations, sweep the controlled
+   fraction *f* with matched seeds. The primary outcome is survival at turn 200. Estimate
+   the smallest fraction *f\** whose paired gain clears a predeclared practical margin,
+   using isotonic regression and a cluster bootstrap. If the curve is non-monotone, report
+   *f\** as undefined rather than force a threshold.
+4. **Test mechanism and transfer.** Manipulate the uncontrolled majority’s update rule,
+   compare seeded agents with vocabulary-matched mimics, and repeat the informative range
+   across games, direct versus transferred training, tools and memory, population sizes,
+   and model sources. Report action diversity and synchronized collapse alongside survival.
 
-Every channel is evaluated in three stages: installation checks; training and held-out
-evaluation in the same game; and cross-game transfer. This separates “the policy was not
-installed” from “the policy worked in its source game but became harmful under different
-rules.”
+The 18-month release will include the game server, vLLM-compatible adapter serving,
+campaign orchestration, versioned environments, permitted traces, analysis code,
+visualizations, negative results, and a replication guide. Experiments conclude by month
+12; the remaining period is reserved for analysis, independent replay, documentation,
+and release. Interactive specifications and Stage 0 traces are available at
+https://foolzone.com/multiagent/commons-game/study.html.
 
-### Measurement and gate calibration
 
-Each scientific cell is a matched candidate/baseline pair with the same environment,
-population size, role order, prompt scaffold, decoding settings, horizon, and random
-seed. We record all prompts, replies, parsed actions, state transitions, and payoffs.
-The primary outcomes are survival at a pre-specified horizon, collapse round, total
-welfare, pool trajectory, inequality, and the gap between observed and required
-restoration. Parse failures are counted and mapped to an inert action rather than
-silently credited as restraint.
-
-Before evaluating any intervention, we will calibrate Firebreak, the promotion
-procedure that reads matched arithmetic outcomes. We will run repeated f=0 A/A
-campaigns in which the candidate and baseline describe the same population. Every
-rollback is then a false rejection. We will report the campaign-level false-rejection
-rate with an exact confidence interval, inspect calibration separately by model and
-environment, and pre-register the decision rule before a candidate campaign. The
-current offline result is a warning, not a validation: sign-flip resampling of a
-30-cell Public Goods pilot found that the original overlap rule rolled back an
-identical candidate with probability 1.000. A provisional tolerated-harm threshold
-was better under resampling, but it is not yet a formal non-inferiority test and has
-not been tested in a live A/A campaign. Month 3 either supplies that evidence or
-documents the failure.
-
-The primary calibration is concrete: 30 independent A/A campaigns, each containing
-60 matched pairs, distributed across two model families and the two core games. If zero
-campaigns roll back, the one-sided exact 95% upper confidence bound on the pooled
-campaign-level false-rejection rate is 9.5%. A bound above 10% retires the gate from
-candidate use. We will report the exact pooled interval and per-stratum diagnostics
-rather than retune after looking; the smaller strata can reveal heterogeneity but do
-not independently establish a 10% operating bound.
-
-### The main experiment
-
-For each model family, game, and feasible resource regime, we will sweep the fraction of
-seeded agents from zero upward at N=8, then repeat the informative range at N=20 and
-N=50. Fractions are assigned to multiple seat orderings; the untreated remainder is
-base-model agents. The primary estimand is *f\**: the smallest controlled fraction at
-which survival at T=200 improves by a mechanically-defined margin. The primary fit is
-isotonic with a cluster-bootstrap interval and 70 matched pairs per contrast. A
-pre-registered monotonicity test runs first; if it fails, *f\** is reported undefined
-and the raw curve becomes the finding.
-
-The main inferential comparisons are seeded versus base and seeded versus mimic. A
-seeded-versus-base improvement that does not exceed the mimic is evidence of wording
-or presentation, not the proposed behavioral mechanism. We will report all model
-families and environments separately. Sample sizes and minimum effects will be set
-only after Month 3 re-measures the variance using the current action schema; the
-existing 30-cell pilot is not treated as a permanent power estimate.
-
-The main moderator is the uncontrolled majority’s update rule. Scripted conditions
-manipulate imitate-best-neighbour, tit-for-tat, myopic-greedy, and random behavior; the
-same labels train and test a classifier on language-agent traces. The pre-registered
-prediction is that *f\** is lowest under imitation and highest under greed. Correlated
-lockstep and action diversity are reported separately from survival so post-training
-cannot appear successful merely by making agents agree.
-
-### Ecological validity and boundaries
-
-The testbed is intentionally not a realistic model of all social life. Its ecological
-validity comes from isolating a recurring deployment structure—multiple principals
-making repeated resource-affecting choices under partial dependence—not from claiming
-that a four-parameter economy predicts real markets. Agents act through natural
-language and see persistent public history; later extensions can add communication,
-memory, and tools only after the core instrument is calibrated. The project’s
-transfer claim is therefore constrained: it will establish how the mechanism behaves
-in a family of known-answer environments and identify where that behavior changes or
-fails to replicate.
-
-### Suggestions (optional)
-
-The core testbed is intentionally narrow. Complementary work by others should test
-the same composition and calibration questions in environments with private
-communication, delegated tool use, heterogeneous objectives, and cross-vendor model
-populations. Those are essential external-validity extensions, but they should not be
-used to erase the answer-key calibration stage proposed here.
 
 ## Novelty (≤300 words)
 
 Flockbench turns moral language into bookkeeping: an agent does not pass because it
-sounds cooperative; the flock passes only if the agents and the resource persist
-together. Existing work motivates, but does not replace, this project. Cooperative-AI research
-and multi-agent reinforcement-learning suites study social dilemmas and emergent
-collective behavior. Generative-agent and LLM-agent simulations show that language
-models can populate rich social worlds. Repeated-game studies ask whether LLMs
-cooperate or reason strategically. These are valuable directions, but they commonly
-face a measurement problem: the environment is rich enough that it is difficult to
-tell a coordination failure from an impossible or underspecified task, and outcomes
-are often assessed through behavioral proxies or model judgments.
+sounds cooperative; a population passes only if both its members and the shared
+resource persist.
 
-Flockbench makes a different trade. It centers a population-composition intervention
-in a small natural-language environment with a closed-form sustainable region. This
-makes it possible to compare a measured steering threshold against ground truth and
-to distinguish an impossible-regime control from a failed-regime result. The proposed
-contribution is not a claim that simple games are new, nor that an LLM judge has no
-use. It is the combination of: (1) a known-answer collective-resource environment;
-(2) independently instantiated language-agent populations rather than copies of one
-prompt; (3) arithmetic, replayable outcomes; (4) a vocabulary-matched mimic control;
-and (5) explicit A/A calibration of the population-level decision rule.
+The project does not claim that commons games, LoRA, or multi-agent simulation are new.
+Its novelty is the experimental connection among five elements that are usually studied
+separately: (1) natural-language games with analytically known feasible and impossible
+regions; (2) mixed populations in which one actor controls only a fraction of agents;
+(3) independently trained policy adapters rather than copies of one persona prompt;
+(4) arithmetic outcomes and replayable traces rather than model-judged success; and
+(5) live A/A calibration of the decision rule before that rule evaluates a candidate.
 
-The last point matters because automated promotion gates are usually treated as
-administrative plumbing. Our pilot showed that a plausible overlap rule would reject
-a clone of its own baseline under the null. Measuring an operating characteristic
-before using a gate to make a safety claim is a modest methodological discipline, but
-one that is unusually important when the output will govern repeated model changes.
+This design supports a quantity most benchmarks do not estimate: the smallest controlled
+fraction *f\** that changes population survival, conditional on how the uncontrolled
+majority responds. It also distinguishes strategy installation from strategy value. A
+style control can show that an adapter loaded and changed output; a mimic control can show
+whether wording alone explains an effect; the answer key can show whether apparently
+cooperative behavior is actually viable.
+
+PDD is a candidate contribution, not the premise of the proposal. Its sparse,
+span-restricted loss may make distinct LoRA policies cheap enough for population studies,
+but prompts or ordinary distillation may win. The benchmark remains useful if PDD fails:
+it will locate whether failure arose in installation, same-game performance, population
+composition, or transfer. That negative-capable structure is the central methodological
+contribution.
 
 ## Feasibility (≤300 words)
 
-This project did not begin as a slide deck. It begins from working components. As an
+This project begins from working components, not a proposed software architecture. As an
 unpaid independent researcher, the PI built the game server, deterministic environments,
-single-GPU Qwen2.5-7B serving and LoRA path, trace replay, campaign planner, browser
-visualizations, and Firebreak prototype on a laptop with approximately $200 of personal
-RunPod credits. Shared Resource equations are implemented independently in Python and
-TypeScript with tests pinning the same invariants. Public source and receipts remain
-marked pending until frozen.
+single-GPU Qwen2.5–7B serving and LoRA path, trace replay, campaign planner, and browser
+visualizations on a laptop with approximately $200 of personal RunPod credits. Shared
+Resource is implemented independently in Python and TypeScript, with tests pinning the
+same analytic invariants. The public site distinguishes built components, provisional
+traces, planned experiments, and receipts that are not yet frozen.
 
-Stage 0 produced three useful boundaries. In the one-seed Commons Game pilot, collapse
-moved from round 33 for eight base agents to round 170 for eight trained agents, but
-every arm still collapsed; +137 rounds is descriptive, not an effect estimate. The same
-adapter then transferred into Shared Resource without further training. The base
-population restored at 0.98 and died on turn 8; both the transferred population and a
-population trained directly in Shared Resource restored at 1.00 and died on turn 6.
-One base agent broke rank and briefly survived, whereas the trained agents restored
-and fell together. These are single traces, not effect estimates. They show that both
-same-game training and transfer can replace noisy failure with rigid synchronized
-failure without discovering the known alternating strategy.
+Stage 0 demonstrated the complete path from a formal game through language-agent serving,
+adapter training, population rollout, and replay. It also produced informative failures.
+In one Commons Game seed, collapse moved from round 33 for eight base agents to round 170
+for eight trained agents, although every arm still collapsed. In Shared Resource, both a
+direct-trained population and a transferred population restored on every action and died
+on turn 6, compared with turn 8 for the noisier base population. These are diagnostic
+traces, not effect estimates; they prove readiness of the pipeline while preventing an
+inflated performance claim.
 
-Finally, a 30-cell Public Goods pilot exposed a gate defect: the original rule would
-reject a null clone with probability 1.000 under offline sign-flip resampling. Live A/A
-calibration therefore comes first. Each inconvenient result sharpened the proposed
-instrument rather than being promoted into a headline effect.
+A separate 30-cell Public Goods pilot exposed a defect in the original promotion rule:
+under offline sign-flip resampling, it rejected a null clone with probability 1.000. That
+finding determined the first funded milestone—live A/A calibration—and shows that the
+project can turn an inconvenient result into a design correction. The main execution
+risks are now measurable: live gate error, paired variance, per-adapter cost, schema
+validity, and behavioral distinctness. Each is resolved before the dependent campaign
+scales.
 
 ## Team (≤300 words)
 
-**Lead PI:** [Name], [title / institution or Independent Researcher]. [Name] designed
-and implemented the initial Flockbench testbed, Firebreak prototype, and public
-explorable documentation as an unpaid independent researcher. The Lead PI is budgeted
-at 1.0 FTE for months 1–12 and 0.4 FTE for months 13–18, and will set the scientific
-design, freeze pre-registrations, oversee analysis, and lead publication.
+**Lead PI:** [Name], [title / institution or “Independent Researcher”]. The PI designed
+and implemented the Stage 0 testbed, training path, experimental planner, and public
+documentation. The budget supports 1.0 FTE in months 1–12 and 0.4 FTE in months 13–18.
+The PI will own the scientific design, pre-registration, model training, analysis,
+software architecture, and publication.
 
-**Contracted Reproducibility Engineer (planned, 480 hours in months 4–12):** [Name or
-“to be recruited”]. Responsible for serving reproducibility, the shared-state
-tool-and-memory environment, campaign orchestration, schema validation, and release
-packaging. No milestone before month 4 depends on recruitment.
+**Paid research assistants:** Up to two experiment-focused interns or junior research
+assistants will be recruited for bounded terms. They will generate and catalogue persona
+pools, run declared sweeps, inspect traces, reproduce failures, maintain experiment
+ledgers, and document behavioral coverage. Their purpose is to increase independent
+experiment throughput—not to make scientific decisions or replace statistical review.
+No Month 3 milestone depends on recruitment.
+
+**Targeted engineering support:** A smaller specialist contract is reserved for hardening
+vLLM-compatible serving, campaign orchestration, packaging, and release checks. This work
+has explicit acceptance tests and does not own the scientific conclusions.
 
 **External statistical review:** [Reviewer or procurement route to be confirmed]. The
-estimand, isotonic fit, cluster bootstrap, monotonicity test, multiplicity, and
-missingness policy will be reviewed before the first scored candidate campaign.
+estimand, margin, paired design, isotonic fit, cluster bootstrap, monotonicity test,
+multiplicity, and missingness policy will be reviewed before the first scored candidate
+campaign.
 
-**Collaborators / fiscal sponsor:** [List only confirmed affiliations and roles.] Do
-not describe a fiscal sponsor as a U.S. 501(c)(3) unless that status and relationship
-have been verified in writing.
-
-This is a small team by design: the scientific core is a controlled experimental
-program, while the engineering work is trace integrity, reproducibility, and scale.
-The intended setting is one or more academic or industrial labs, but no host or
-commitment is implied. External replication is a deliverable, not delegated trust.
+**Host and collaborators:** [List only confirmed affiliations, roles, and fiscal-sponsor
+status.] The intended setting is an academic or industrial lab, but no current host or
+commitment is implied. This is a small team by design: the bottleneck is careful experiment
+throughput and trace integrity. Independent replay is a deliverable, not delegated trust.
 
 ## Proposal Risks (≤300 words)
 
-The central risk is mistaking changed behavior for improved coordination. Stage 0
-already shows that a trained flock can fail more neatly—and sooner—than an untrained
-one.
+The central risk is mistaking changed behavior for improved coordination. Stage 0 shows
+that a trained flock can fail more neatly—and sooner—than an untrained one.
 
-**The gate does not calibrate.** A repeated live A/A campaign may show that a simple
-promotion decision has an unacceptably high or unstable false-rejection rate. We
-mitigate this by putting calibration before candidate evaluation, reporting the error
-with uncertainty, and treating a negative calibration result as a primary scientific
-outcome rather than tuning until a desired result appears.
+**The gate does not calibrate.** Live A/A campaigns may find an unacceptable or unstable
+false-rejection rate. Calibration therefore precedes candidate evaluation; the error is
+reported with uncertainty, and a failed gate is retired rather than tuned until it passes.
 
-**The intervention has no population effect.** A transparent seed, trained adapter,
-or both may not shift behavior beyond the mimic control. We mitigate interpretive
-risk with positive controls, individual action-validity checks, matched pairs, and
-pre-specified null reporting. A precise null answers a useful question about the
-limits of local alignment interventions.
+**Training installs nothing—or installs correlated rigidity.** Held-out style and schema
+controls distinguish a broken training channel from a true null. Survival is reported with
+action diversity and synchronized collapse, so unanimous self-sacrifice cannot masquerade
+as cooperation. Same-game and cross-game results remain separate.
 
-**Post-training creates correlated rigidity or reverses under transfer.** Stage 0
-already shows this failure mode at one seed. We separate installation, same-game
-performance, and cross-game transfer; report action diversity and synchronized collapse
-alongside survival; and treat a reversal as the result rather than averaging it away.
+**The response is non-monotone.** More controlled agents may worsen outcomes, making *f\**
+undefined. Monotonicity is tested before threshold estimation; a non-monotone curve is a
+primary result, not smoothed into the expected story.
 
-**The result is a property of one toy setting or one model.** The central risk to
-external validity is real. We address it by varying resource slack, information,
-population size, and model family, reporting each condition separately, and framing
-non-transfer as a boundary result rather than averaging it away. We will not claim to
-model collusion, real institutions, or cross-vendor ecosystems before the testbed has
-the required channels and populations.
+**The result does not transfer.** Effects may be specific to one game, resource regime,
+population size, or model source. Conditions are reported separately, and non-transfer is
+treated as a boundary. The project will not claim to model collusion or real institutions
+before the testbed includes the relevant communication channels and incentives.
 
-**Training or serving introduces a silent confound.** The adapter may fail to load,
-the parser may fail, or model version drift may dominate a comparison. Immutable
-resolved configurations, captured prompts and replies, per-agent parse counts,
-objective style controls, and independently replayable receipts make these failures
-visible.
+**Serving creates a silent confound.** Adapter-loading errors, parser failures, or model
+version drift could dominate a comparison. Immutable configurations, adapter hashes,
+captured prompts and replies, parse counts, positive controls, and replayable receipts make
+these failures observable.
 
-**The work could be misread as a recipe for manipulation.** The environments have no
-external tools or real resources, interventions are disclosed, and the project
-measures welfare/survival under transparent rules. The release will emphasize limits
-and avoid claiming deployment readiness from sandbox results.
+**The release is dual use.** Population steering can support coordination or manufacture
+apparent consensus. Experiments remain sandboxed, interventions are disclosed, and claims
+are limited to measured welfare under transparent rules. No deployment-readiness claim
+will be made from these games.
 
 ## “But for” Impact (≤300 words)
 
 The parrots are leaving the cage either way. The “but for” question is whether an
-independent, public instrument exists to study the flock before operators must make
-consequential decisions from anecdotes.
+independent public instrument exists to study mixed agent populations before consequential
+decisions must be made from anecdotes.
 
-This work is hard to fund through ordinary product incentives. A vendor has reason to
-show that its own agent behaves well in a favorable setting; it has much less reason
-to publish a cross-model, judge-free instrument that can reject its candidate or show
-that a proposed intervention does nothing. The central output is negative-capable
-public measurement infrastructure, not a proprietary agent capability.
+Ordinary product incentives do not naturally fund this instrument. A model provider has
+reason to show that its own agent behaves well in a favorable demonstration; it has less
+reason to publish a cross-model test that can reject its candidate, expose negative
+transfer, or conclude that post-training had no effect. Flockbench is designed to produce
+credible negative results as well as positive ones. Its core output is public measurement
+infrastructure, not a proprietary agent capability.
 
-The project also sits in an awkward gap between cheap toy demonstrations and expensive
-population experiments. One live trace can be run by an independent researcher; a
-calibrated A/A study and a multi-seed dose response across models and population sizes
-require sustained compute, serving engineering, and time for replication. Markets do
-not naturally provide the comparison condition in which most seats are controlled by
-other principals and the evaluator reports a null honestly.
+The work also falls between inexpensive prototypes and experiments large enough to answer
+population questions. One diagnostic trace can be run with personal funds. A live A/A
+calibration, multi-seed composition curve, independently trained strategy pool, and
+replication across models and population sizes require sustained compute, experiment
+operators, frozen infrastructure, and time for independent replay. The scientifically
+important comparison—in which one actor controls only part of the population and most
+seats follow policies chosen elsewhere—has no obvious commercial sponsor.
 
-Schmidt support would turn a promising, publicly built Stage Zero instrument into an
-evidence-producing program. Without it, the work can continue as deterministic
-prototypes and occasional one-seed traces, but not as the repeated, paired campaign
-needed to distinguish a real composition effect from noise.
+Schmidt support would convert a publicly built Stage 0 instrument into an evidence-producing
+program and documented open release. Without the award, I can maintain the deterministic
+games and run occasional one-seed pilots. I cannot, on the proposed schedule, execute the
+paired campaign required to distinguish a real population-composition effect from noise,
+measure the cost-versus-distinctness frontier for adapter populations, or support external
+replication.
 
 ## Existing Funding (≤300 words)
 
-**Current funding:** [Confirm: none / list each source, amount, period, and scope.]
+**Current funding:** [Confirm either “None” or list every source, amount, award period,
+and restricted scope.] Stage 0 was completed as unpaid independent research using
+approximately $200 in personal RunPod credits.
 
-**Pending applications:** [Confirm: none / list each funder, amount requested, and
-decision timeline.]
+**Pending applications:** [Confirm either “None” or list every funder, amount requested,
+overlapping scope, and expected decision date.]
 
-If this award is not made, [Lead PI] will maintain the open testbed and small-scale
-prototypes, but will not begin the repeated live A/A calibration, multi-seed
-dose-response campaign, or N=20/N=50 replication at the proposed pace. This answer
-must be updated with all actual funding and pending applications before submission.
+No expense or activity will be charged to more than one award. If another application
+funds overlapping work, the scope and budget of this request will be revised before
+acceptance. If this award is not made, [Lead PI] will maintain the open testbed and
+small-scale prototypes but will not begin the repeated live A/A calibration, multi-seed
+composition campaign, or N=20/N=50 replication at the proposed pace.
 
 ## Scientific Milestones and Outcomes
 

@@ -541,6 +541,8 @@ describe("v2 page script", () => {
     expect(html).toMatch(/round 170 instead of round 33/i);
     expect(html).toMatch(/gave every turn and all agents died by round 6/i);
     expect(html).not.toMatch(/hat size|pdd-persona|data-pdd-personas/i);
+    expect(html).toMatch(/Training time[\s\S]*25 hr/i);
+    expect(html).not.toMatch(/Measured 7B time per adapter/i);
     expect(html).not.toContain('data-pdd-input="throughput"');
     expect(html).not.toContain('data-pdd-input="tokens"');
     expect(html.indexOf('id="pdd-demo"')).toBeLessThan(html.indexOf('id="pdd-scale-calculator"'));
