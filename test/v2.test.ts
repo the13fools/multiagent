@@ -128,9 +128,9 @@ describe("Commons Game reviewer path", () => {
     // table, the power arithmetic, the 0-to-8 swing in seats needed as the
     // majority rule changes, and the explicit assumptions in the PDD scaling
     // calculator. Lower it again if the questions get their own page.
-    study: 1_500,
+    study: 1_700,
     evidence: 850,
-    delivery: 800,
+    delivery: 1_200,
   };
 
   for (const page of PAGES) {
@@ -172,6 +172,7 @@ describe("Commons Game reviewer path", () => {
 
   it("gives the longer research programme one page and archives its technical foundations", () => {
     const html = read("program");
+    const delivery = read("delivery");
     const archive = readFileSync(resolve(ROOT, "archive/program-foundations.html"), "utf8");
     expect(html).toMatch(/From answer-key games to institutions for a world of agents/i);
     expect(html).toMatch(/Intelligence is becoming plural before governance does/i);
@@ -179,7 +180,6 @@ describe("Commons Game reviewer path", () => {
     expect(html).toMatch(/Population science/i);
     expect(html).toMatch(/Side-channel games/i);
     expect(html).toMatch(/Agent institutions/i);
-    expect(html).toMatch(/Open infrastructure for training and studying flocks/i);
     expect(html).toMatch(/Coordination is not the same as consensus/i);
     expect(html).toContain('id="stable-flocks-demo"');
     expect(html).toMatch(/Stability is a shape, not a stop/i);
@@ -191,9 +191,15 @@ describe("Commons Game reviewer path", () => {
     expect(html).not.toContain('href="../archive/juggling.html"');
     expect(html).toContain('href="../archive/program-foundations.html"');
     expect(html).toContain('href="./delivery.html"');
+    expect(html).not.toContain('id="first-grant"');
+    expect(html).not.toMatch(/Why begin with games/i);
+    expect(delivery).toContain('id="first-grant"');
+    expect(delivery).toMatch(/Known-answer games are the scaffold/i);
+    expect(delivery).toMatch(/Create strategy pools[\s\S]*Scale the laboratory[\s\S]*Make the work reusable/i);
     expect(html).not.toContain('id="commons-theory"');
     expect(archive).toContain('id="commons-theory"');
     expect(archive).toMatch(/<p class="section-kicker">Two games<\/p>/i);
+    expect(archive).toMatch(/Why begin with games/i);
     expect(archive).toMatch(/Stage 0 implementation/i);
     expect(archive).toMatch(/Boardwalk/i);
     expect(read("study")).not.toContain('id="commons-theory"');
@@ -243,7 +249,7 @@ describe("Commons Game reviewer path", () => {
     expect(program).toMatch(/made of the same earth/i);
     expect(program).toMatch(/long-term abundance/i);
     expect(program).toMatch(/mutual flourishing/i);
-    expect(program).toMatch(/A null result still advances the program/i);
+    expect(program).toMatch(/A null result still advances the arc/i);
     expect(program).toMatch(/not simply how to align one model/i);
   });
 
@@ -297,7 +303,7 @@ describe("Commons Game reviewer path", () => {
     const html = read("evidence");
     expect(html).toMatch(/One seed per condition/i);
     expect(html).toMatch(/Instrumentation defect/i);
-    expect(read("program")).toContain('class="label proposed"');
+    expect(read("delivery")).toContain('class="label proposed"');
     expect(readFileSync(resolve(ROOT, "archive/program-foundations.html"), "utf8")).toContain("Built");
     expect(html).toMatch(/Receipts and caveats, at the bottom where they belong/i);
     expect(html).not.toMatch(/Six claims worth carrying forward/i);
@@ -340,7 +346,7 @@ describe("Commons Game reviewer path", () => {
     expect(html).toMatch(/One trace per condition · no effect size/i);
     expect(html).toMatch(/bought \+137 rounds where it trained, then cost 2 turns here/i);
     expect(html).not.toContain('id="pdd-demo"');
-    expect(html).toContain('href="./program.html#first-grant"');
+    expect(html).toContain('href="./delivery.html#first-grant"');
     expect(html).not.toContain('href="../archive/boardwalk.html"');
     expect(read("program")).toContain('href="../archive/program-foundations.html"');
   });
@@ -372,7 +378,7 @@ describe("Commons Game reviewer path", () => {
     expect(html).toContain(formatUsd(GRANT_FACTS.totalRequest));
     expect(html).not.toMatch(/Explore general funding scopes/i);
     expect(html).not.toContain("$300,000");
-    expect(program).toMatch(/A null result still advances the program/i);
+    expect(program).toMatch(/A null result still advances the arc/i);
     expect(program).toMatch(/only when the evidence earns them/i);
     expect(html).not.toContain('id="power-demo"');
     expect(html).toContain("../archive/experiments.html#variance-risk");
@@ -395,6 +401,12 @@ describe("Commons Game reviewer path", () => {
     expect(html).toMatch(/Award boundary/i);
     expect(html).toContain('href="./program.html"');
     expect(html).not.toMatch(/The institutional horizon|Side-channel games/i);
+    expect(html).toContain('class="scaffold-stack"');
+    expect(html).toMatch(/The middle layer is the funded work/i);
+    expect(html).toMatch(/Answer-key games[\s\S]*Flockbench infrastructure[\s\S]*Less structured worlds|Less structured worlds[\s\S]*Flockbench infrastructure[\s\S]*Answer-key games/i);
+    expect(html).toMatch(/up to two experiment-focused interns/i);
+    expect(html).toMatch(/80 GB GPU compute/i);
+    expect(html).toMatch(/Compute remains below \$50,000/i);
     expect(html).toMatch(/The flock is leaving the cage/i);
   });
 
@@ -506,17 +518,24 @@ describe("v2 page script", () => {
       steps: 2000,
       tokensPerStep: 8192,
       adapters: 16,
+      tokensPerSecond: 250,
     });
     expect(estimate.trainableParameters).toBe(8_400_000);
     expect(estimate.adapterBytesBf16).toBe(16_800_000);
     expect(estimate.optimizerBytes).toBe(100_800_000);
     expect(estimate.tokensPerAdapter).toBe(16_384_000);
     expect(estimate.poolTokenUpdates).toBe(262_144_000);
+    expect(estimate.gpuHours80Gb).toBeCloseTo(291.271, 3);
+    expect(estimate.computeCostUsd).toBeCloseTo(582.542, 3);
 
     const html = read("study");
     expect(html).toContain('id="pdd-scale-calculator"');
-    expect(html).toMatch(/scaling sketch, not a cost quote/i);
+    expect(html).toMatch(/scaling sketch, not a quote/i);
     expect(html).toMatch(/LoRA rank and target modules/i);
+    expect(html).toMatch(/diffusion language model as an LLM-as-a-Judge/i);
+    expect(html).toMatch(/round 170 instead of round 33/i);
+    expect(html).toMatch(/gave every turn and all agents died by round 6/i);
+    expect(html).toMatch(/hat size \+ opacity encode training exposure/i);
     expect(html.indexOf('id="pdd-demo"')).toBeLessThan(html.indexOf('id="pdd-scale-calculator"'));
   });
 
@@ -528,25 +547,47 @@ describe("v2 page script", () => {
         <input data-pdd-input="steps" value="2000">
         <input data-pdd-input="tokens" value="8192">
         <input data-pdd-input="adapters" value="16">
+        <input data-pdd-input="throughput" value="250">
         <output data-pdd-output="base"></output>
         <output data-pdd-output="share"></output>
         <output data-pdd-output="steps"></output>
         <output data-pdd-output="tokens"></output>
         <output data-pdd-output="adapters"></output>
+        <output data-pdd-output="throughput"></output>
+        <span data-pdd-persona-tokens></span>
+        <div data-pdd-personas></div>
         <strong data-pdd-result="params"></strong>
-        <strong data-pdd-result="storage"></strong>
-        <strong data-pdd-result="optimizer"></strong>
-        <strong data-pdd-result="poolTokens"></strong>
+        <strong data-pdd-result="tokensPerPersona"></strong>
+        <strong data-pdd-result="gpuHours"></strong>
+        <strong data-pdd-result="computeCost"></strong>
+        <strong data-pdd-result="budgetShare"></strong>
+        <progress data-pdd-budget max="50000"></progress>
       </section>`;
     const root = document.getElementById("pdd-scale-calculator")!;
     mountPddScale(root);
     expect(root.querySelector('[data-pdd-result="params"]')?.textContent).toBe("8.4M");
-    expect(root.querySelector('[data-pdd-result="poolTokens"]')?.textContent).toBe("262M");
+    expect(root.querySelector('[data-pdd-result="tokensPerPersona"]')?.textContent).toBe("16.4M");
+    expect(root.querySelector('[data-pdd-result="gpuHours"]')?.textContent).toBe("291");
+    expect(root.querySelector('[data-pdd-result="computeCost"]')?.textContent).toBe("$583");
+    expect(root.querySelectorAll(".pdd-persona")).toHaveLength(16);
+    const initialHat = root.querySelector<HTMLElement>(".pdd-hat")!;
+    const initialOpacity = Number(initialHat.style.getPropertyValue("--hat-opacity"));
+    const initialScale = Number(initialHat.style.getPropertyValue("--hat-scale"));
 
     const adapters = root.querySelector<HTMLInputElement>('[data-pdd-input="adapters"]')!;
     adapters.value = "32";
     adapters.dispatchEvent(new Event("input"));
-    expect(root.querySelector('[data-pdd-result="poolTokens"]')?.textContent).toBe("524M");
+    expect(root.querySelectorAll(".pdd-persona")).toHaveLength(32);
+    expect(root.querySelector('[data-pdd-result="computeCost"]')?.textContent).toBe("$1,165");
+
+    const steps = root.querySelector<HTMLInputElement>('[data-pdd-input="steps"]')!;
+    const tokens = root.querySelector<HTMLInputElement>('[data-pdd-input="tokens"]')!;
+    steps.value = "5000";
+    tokens.value = "32768";
+    tokens.dispatchEvent(new Event("input"));
+    const trainedHat = root.querySelector<HTMLElement>(".pdd-hat")!;
+    expect(Number(trainedHat.style.getPropertyValue("--hat-opacity"))).toBeGreaterThan(initialOpacity);
+    expect(Number(trainedHat.style.getPropertyValue("--hat-scale"))).toBeGreaterThan(initialScale);
   });
 
   /**

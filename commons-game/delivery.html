@@ -44,6 +44,32 @@
       </div>
     </section>
 
+    <section class="section" id="first-grant">
+      <div class="section-head">
+        <p class="section-kicker">What the first grant releases</p>
+        <h2>Known-answer games are the scaffold for open population infrastructure.</h2>
+        <p>Simple behavioral-economics games make failure attributable before open-ended language makes every explanation plausible. The grant uses that scaffold to create a curriculum of known-answer fixtures, train many distinct policy adapters, test held-out transfer, and release the machinery needed to run the same questions at population scale.</p>
+      </div>
+
+      <figure class="delivery-scaffold" aria-labelledby="delivery-scaffold-caption">
+        <div class="scaffold-stack" role="img" aria-label="A three-level research scaffold: answer-key games support the Flockbench infrastructure funded by this grant, which can later support less structured multiagent worlds">
+          <article class="scaffold-level scaffold-level-3"><span>Later · only if evidence holds</span><h3>Less structured worlds</h3><p>Memory · side channels · coalitions · voting · agent institutions</p></article>
+          <div class="scaffold-evidence">↑ each layer must earn the next</div>
+          <article class="scaffold-level scaffold-level-2"><span>This grant · reusable release</span><h3>Flockbench infrastructure</h3><p>Train diverse LoRAs · serve through vLLM · run long rollouts · evaluate populations</p></article>
+          <div class="scaffold-evidence">↑ measured transfer, not plausible language</div>
+          <article class="scaffold-level scaffold-level-1"><span>Now · diagnostic foundation</span><h3>Answer-key games</h3><p>Explicit incentives · mechanical outcomes · known viable and impossible regimes</p></article>
+        </div>
+        <figcaption id="delivery-scaffold-caption"><strong>Theory is scaffolding, not the destination.</strong><span>The middle layer is the funded work. The layer below makes its claims attributable; the layer above is a future research direction, not a promised deliverable.</span></figcaption>
+      </figure>
+
+      <div class="program-horizon">
+        <article class="program-phase"><span class="label proposed">Train</span><h3>Create strategy pools</h3><p>Low-cost LoRA post-training for many small adapters on open models, so a population contains genuinely different learned policies rather than copies of one prompt.</p></article>
+        <article class="program-phase is-core"><span class="label proposed">Run</span><h3>Scale the laboratory</h3><p>vLLM-compatible serving, campaign orchestration, long-rollout traces, population sweeps, and visualizations that make collective failure inspectable.</p></article>
+        <article class="program-phase"><span class="label proposed">Document</span><h3>Make the work reusable</h3><p>Public fixtures, examples, evaluation recipes, and honest negative results: useful simulation infrastructure the broader community should not have to rebuild.</p></article>
+      </div>
+      <p class="notice"><strong>A null result still produces a useful release.</strong> The laboratory can reject candidate training methods, preserve their failure traces, and identify which assumptions must change before moving to less structured environments.</p>
+    </section>
+
     <section class="section">
       <div class="section-head">
         <p class="section-kicker">Budget</p>
@@ -55,12 +81,13 @@
       </div>
       <div class="budget-lines" aria-label="Budget allocation">
         <div class="budget-line"><span>Lead investigator · 1.0 FTE m1–12, 0.4 FTE m13–18</span><div class="budget-bar"><i style="width:55.3%"></i></div><b>$138,240</b></div>
-        <div class="budget-line"><span>Reproducibility engineering · 480 hours</span><div class="budget-bar"><i style="width:20.2%"></i></div><b>$50,400</b></div>
-        <div class="budget-line"><span>GPU compute · 20,769 A100-hours</span><div class="budget-bar"><i style="width:16.5%"></i></div><b>$41,330</b></div>
+        <div class="budget-line"><span>Paid research assistants · up to two experiment-focused interns</span><div class="budget-bar"><i style="width:14.4%"></i></div><b>$36,000</b></div>
+        <div class="budget-line"><span>Targeted reproducibility and release engineering</span><div class="budget-bar"><i style="width:5.8%"></i></div><b>$14,400</b></div>
+        <div class="budget-line"><span>80 GB GPU compute · 20,769 hours at about $2/hour</span><div class="budget-bar"><i style="width:16.5%"></i></div><b>$41,330</b></div>
         <div class="budget-line"><span>Multi-vendor and frontier API</span><div class="budget-bar"><i style="width:4.4%"></i></div><b>$11,030</b></div>
         <div class="budget-line"><span>Operations and dissemination</span><div class="budget-bar"><i style="width:3.6%"></i></div><b>$9,000</b></div>
       </div>
-      <p class="notice"><strong>Twelve funded build months inside an eighteen-month window.</strong> Experiments finish by month 12; analysis and release follow at reduced effort. If runtime grows, N = 50 and non-informative arms drop first; calibration and the powered core remain protected. A $196,967 reduced-scope alternative is costed in the application.</p>
+      <p class="notice"><strong>Compute remains below $50,000.</strong> The budget uses roughly $2 per hour for an 80 GB cloud GPU; actual spot availability and effective throughput remain execution risks. Experiments finish by month 12; analysis and release follow at reduced effort. If runtime grows, N = 50 and non-informative arms drop first; calibration and the powered core remain protected.</p>
       <div class="actions"><a class="button secondary" href="../archive/experiments.html#variance-risk">Inspect the variance and descope analysis</a></div>
     </section>
 
@@ -72,10 +99,11 @@
         </div>
         <div class="prose">
           <p><strong>Lead investigator.</strong> 1.0 FTE months 1–12, then 0.4 FTE. Built the current testbed, server, decision path, training pipeline, and visualizations independently with about $200 in compute.</p>
-          <p><strong>Reproducibility engineer.</strong> 480 contracted hours, months 4–12, for serving, campaign orchestration, the tool-and-memory environment, validation, and release.</p>
+          <p><strong>Paid research assistants.</strong> The budget can support up to two experiment-focused interns or junior research assistants. Their work is to generate and catalogue persona pools, run declared sweeps, inspect traces, reproduce failures, and document the parts of the behavioral space the lead investigator cannot explore sequentially.</p>
+          <p><strong>Targeted engineering support.</strong> A smaller contract is reserved for the bounded work that genuinely benefits from specialist help: hardening vLLM serving, campaign orchestration, packaging, and release checks. The scientific bottleneck is experiment throughput, not adding an engineer by default.</p>
           <p><strong>External review.</strong> The estimand, intervals, multiplicity, and missingness plan are reviewed before the first scored campaign.</p>
           <p><strong>Host.</strong> Eligible nonprofit sponsorship is pending; no current host commitment is implied.</p>
-          <p class="notice"><span class="label built">Stage Zero</span> The grant pays for calibration, power, transfer, and reproducibility—not a first prototype.</p>
+          <p class="notice"><span class="label built">Stage Zero</span> The grant pays for calibration, powered persona sweeps, transfer, and a documented release—not a first prototype.</p>
         </div>
       </div>
     </section>

@@ -116,7 +116,12 @@
       <div class="section-head">
         <p class="section-kicker">Progressive Denoising Distillation (PDD)</p>
         <h2>A low-cost way to create strategy pools, not one universal agent.</h2>
-        <p>Begin with a failure to change: the model sees a low pool and chooses <em>take</em>. PDD builds a target around a desired <em>restore</em>, inpaints only its rationale, and trains on accepted replacement words alone. Whether the behaviour shifts is an evaluation question.</p>
+        <p>We wanted to train many distinct commons-game personas without repeating a full-model fine-tune. The prototype uses a diffusion language model as an LLM-as-a-Judge: it inpaints rationale around a fixed target action, filters the proposed words, and distills accepted replacements into small LoRA adapters.</p>
+      </div>
+      <div class="pdd-story" aria-label="Stage Zero post-training story">
+        <article><span>01 · aim</span><h3>One base, many strategies</h3><p>Create cheap adapters whose behavior differs because of learned updates, not merely a persona prompt.</p></article>
+        <article><span>02 · source-game result</span><h3>Longevity improved once</h3><p>In the Commons Game—logistic stock regrowth and a harvest bid from every agent each turn—the trained diagnostic trace reached round 170 instead of round 33 for the baseline.</p></article>
+        <article><span>03 · simpler answer key</span><h3>Training found the wrong extreme</h3><p>In Shared Resource, the sustainable population alternates give and take. Both trained flocks instead gave every turn and all agents died by round 6.</p></article>
       </div>
       <div class="pdd-demo" id="pdd-demo" aria-labelledby="pdd-demo-title">
         <h3 id="pdd-demo-title" class="sr-only">Step through span-restricted PDD</h3>
@@ -233,7 +238,7 @@
         </div>
         <div class="pdd-legend"><span><i class="pdd-key noise-key"></i>masked / inpainted span</span><span><i class="pdd-key changed-key"></i>accepted replacement</span><span><i class="pdd-key locked-key"></i>target action excluded from gradient</span></div>
       </div>
-      <p class="notice"><span class="label proposed">Method under test</span> Style controls, action-validity checks and population outcomes separate changed wording from changed strategy — and so far the wording moves more readily. <strong>Two thousand steps of this procedure, against a rubric that explicitly penalised self-sacrifice, still produced agents that restored every turn and died by round 6.</strong> Cheap enough to build a population with; not yet shown to install what it targets.</p>
+      <p class="notice"><span class="label proposed">Method under test</span> These are one-seed diagnostic traces, not an effect estimate. The source-game improvement shows the adapter can matter; the synchronized self-sacrifice shows that more “cooperative” language is not the same as a viable collective strategy.</p>
       <div class="actions"><a class="button" href="./evidence.html#shared-trained-playthrough">See that run</a></div>
 
       <details class="pdd-scale-question">
@@ -241,20 +246,26 @@
         <div class="pdd-scale-copy">
           <p>Low-rank adaptation keeps the base model fixed and stores a small trainable adapter for each strategy. The relevant quantity is not model size alone: LoRA rank, target projections, layer shapes, sequence length, batch construction, and optimization steps all change the bill. This calculator exposes a few of those assumptions without pretending to quote a GPU price.</p>
           <div class="pdd-scale-calculator" id="pdd-scale-calculator" aria-label="Estimate the scale of a pool of low-rank adapters">
+            <div class="pdd-persona-visual">
+              <div class="pdd-persona-head"><span data-pdd-persona-tokens>16.4M training tokens per persona</span><span>hat size + opacity encode training exposure</span></div>
+              <div class="pdd-personas" data-pdd-personas role="img" aria-label="Sixteen distinct chess-piece personas wearing differently shaped hats"></div>
+            </div>
             <div class="pdd-scale-controls">
               <label><span>Base model parameters <output data-pdd-output="base">7B</output></span><input data-pdd-input="base" type="range" min="0.5" max="32" step="0.5" value="7"></label>
               <label><span>Trainable share per adapter <output data-pdd-output="share">0.12%</output></span><input data-pdd-input="share" type="range" min="0.02" max="1" step="0.01" value="0.12"></label>
               <label><span>Optimization steps <output data-pdd-output="steps">2,000</output></span><input data-pdd-input="steps" type="range" min="100" max="5000" step="100" value="2000"></label>
               <label><span>Tokens per step <output data-pdd-output="tokens">8,192</output></span><input data-pdd-input="tokens" type="range" min="512" max="32768" step="512" value="8192"></label>
-              <label><span>Distinct strategy adapters <output data-pdd-output="adapters">16</output></span><input data-pdd-input="adapters" type="range" min="1" max="64" step="1" value="16"></label>
+              <label><span>Distinct personas <output data-pdd-output="adapters">16</output></span><input data-pdd-input="adapters" type="range" min="1" max="32" step="1" value="16"></label>
+              <label><span>Effective all-in throughput <output data-pdd-output="throughput">250 tok/s</output></span><input data-pdd-input="throughput" type="range" min="100" max="2000" step="50" value="250"></label>
             </div>
             <div class="pdd-scale-results" aria-live="polite">
-              <div><span>trainable / adapter</span><strong data-pdd-result="params">8.4M</strong></div>
-              <div><span>stored adapter · bf16</span><strong data-pdd-result="storage">16.8 MB</strong></div>
-              <div><span>optimizer state · rough</span><strong data-pdd-result="optimizer">100.8 MB</strong></div>
-              <div><span>pool token-updates</span><strong data-pdd-result="poolTokens">262M</strong></div>
+              <div><span>trainable / persona</span><strong data-pdd-result="params">8.4M</strong></div>
+              <div><span>tokens / persona</span><strong data-pdd-result="tokensPerPersona">16.4M</strong></div>
+              <div><span>80 GB GPU-hours</span><strong data-pdd-result="gpuHours">291</strong></div>
+              <div><span>compute at ~$2/hour</span><strong data-pdd-result="computeCost">$583</strong></div>
             </div>
-            <p class="pdd-scale-caveat"><strong>Read this as a scaling sketch, not a cost quote.</strong> “Trainable share” stands in for the architecture-specific consequence of LoRA rank and target modules. The optimizer estimate uses 12 bytes per trainable parameter and excludes activations, gradients, the frozen base, evaluation rollouts, rejected samples, and serving overhead.</p>
+            <div class="pdd-budget-meter"><span>Compute envelope</span><strong data-pdd-result="budgetShare">1.2% of a &lt;$50k budget</strong><progress data-pdd-budget max="50000" value="583">$583 of $50,000</progress></div>
+            <p class="pdd-scale-caveat"><strong>Read this as a scaling sketch, not a quote.</strong> It assumes an 80 GB cloud GPU at roughly $2/hour. “Trainable share” stands in for the architecture-specific consequence of LoRA rank and target modules. “All-in throughput” must absorb judge generation, filtering, optimizer work, rejected samples, and serving overhead; measuring that number is part of the proposed work.</p>
           </div>
           <p><strong>This is a fundamental open engineering question for the grant.</strong> Training large flocks with deliberately different behaviors becomes scientifically useful only when adapters are cheap to create, easy to serve together, and evaluated as a population rather than one persona at a time. The proposed work measures those tradeoffs and releases the harness needed to reproduce them.</p>
         </div>
