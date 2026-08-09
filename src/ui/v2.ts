@@ -86,3 +86,8 @@ const stableFlocks = document.querySelector<HTMLElement>("#stable-flocks-demo");
 if (stableFlocks) {
   void import("./v2StableFlocks").then(({ mountStableFlocks }) => mountStableFlocks(stableFlocks));
 }
+
+const pddScaleCalculator = document.querySelector<HTMLElement>("#pdd-scale-calculator");
+if (pddScaleCalculator) {
+  void import("./v2PddScale").then(({ mountPddScale }) => mountPddScale(pddScaleCalculator));
+}

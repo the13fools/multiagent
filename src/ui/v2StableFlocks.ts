@@ -42,6 +42,12 @@ export const STABILITY_MODES: Record<StabilityMode, {
   },
 };
 
+export const STABLE_DEFAULTS = {
+  jugglingTimingErrorPercent: 1,
+  jugglingListening: 0.2,
+  jugglingControlledPlayers: 1,
+} as const;
+
 const COLORS = ["#70d7ff", "#ffb45c", "#cf8cff", "#80e0b2", "#ff7b8a", "#f7df73", "#7f9cff", "#f29ee2"];
 const INK = "#f5f3ff";
 const MUTED = "#aaa5bf";
@@ -292,9 +298,9 @@ export function mountStableFlocks(root: HTMLElement): () => void {
   let boardwalk = initialBoardwalk(boardwalkN, 7, 21);
   let boardwalkHistory = [boardwalk.positions.slice()];
   let boardwalkStill = 0;
-  let jugglingBias = 2;
-  let jugglingCoupling = 35;
-  let jugglingPinned = 1;
+  let jugglingBias = STABLE_DEFAULTS.jugglingTimingErrorPercent * 10;
+  let jugglingCoupling = STABLE_DEFAULTS.jugglingListening * 100;
+  let jugglingPinned: number = STABLE_DEFAULTS.jugglingControlledPlayers;
   let jugglingConfig: PatternConfig = {
     ...JUGGLING_DEFAULTS,
     bias: jugglingBias / 1000,

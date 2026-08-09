@@ -25,6 +25,7 @@ import {
   SHARED_PILOT, anySurvived, crossGameSignFlip, overRestored, poolOutlivedEveryone,
 } from "../src/core/sharedPilot";
 import { divergenceTurn, mountSharedPilot } from "../src/ui/v2SharedPilot";
+import { estimateAdapterPool, mountPddScale } from "../src/ui/v2PddScale";
 
 /** The campaign sizes the gate figure plots. */
 const SWEEP = [10, 20, 30, 40, 60, 80, 100, 140, 200] as const;
@@ -124,10 +125,10 @@ describe("Commons Game reviewer path", () => {
     program: 1_600,
     // Raised from 1,100 when the three RQ bodies stopped linking to unpolished
     // archive posts and started carrying their own evidence: the clone-test
-    // table, the power arithmetic, and the 0-to-8 swing in seats needed as the
-    // majority rule changes. That is ~250 words the page did not previously
-    // hold. Lower it again if the questions get their own page.
-    study: 1_200,
+    // table, the power arithmetic, the 0-to-8 swing in seats needed as the
+    // majority rule changes, and the explicit assumptions in the PDD scaling
+    // calculator. Lower it again if the questions get their own page.
+    study: 1_500,
     evidence: 850,
     delivery: 800,
   };
@@ -178,7 +179,7 @@ describe("Commons Game reviewer path", () => {
     expect(html).toMatch(/Population science/i);
     expect(html).toMatch(/Side-channel games/i);
     expect(html).toMatch(/Agent institutions/i);
-    expect(html).toMatch(/A trustworthy laboratory before an agent society/i);
+    expect(html).toMatch(/Open infrastructure for training and studying flocks/i);
     expect(html).toMatch(/Coordination is not the same as consensus/i);
     expect(html).toContain('id="stable-flocks-demo"');
     expect(html).toMatch(/Stability is a shape, not a stop/i);
@@ -186,8 +187,8 @@ describe("Commons Game reviewer path", () => {
     expect(html).toMatch(/Protect the commons/i);
     expect(html).toMatch(/Bound the chase/i);
     expect(html).toMatch(/Keep the pattern alive/i);
-    expect(html).toContain('href="../archive/boardwalk.html"');
-    expect(html).toContain('href="../archive/juggling.html"');
+    expect(html).not.toContain('href="../archive/boardwalk.html"');
+    expect(html).not.toContain('href="../archive/juggling.html"');
     expect(html).toContain('href="../archive/program-foundations.html"');
     expect(html).toContain('href="./delivery.html"');
     expect(html).not.toContain('id="commons-theory"');
@@ -200,11 +201,16 @@ describe("Commons Game reviewer path", () => {
   });
 
   it("defines three explicit forms of stable collective motion", async () => {
-    const { STABILITY_MODES } = await import("../src/ui/v2StableFlocks");
+    const { STABILITY_MODES, STABLE_DEFAULTS } = await import("../src/ui/v2StableFlocks");
     expect(Object.keys(STABILITY_MODES)).toEqual(["commons", "boardwalk", "juggling"]);
     expect(STABILITY_MODES.commons.title).toMatch(/commons stays level/i);
     expect(STABILITY_MODES.boardwalk.description).toMatch(/no pure-strategy equilibrium/i);
     expect(STABILITY_MODES.juggling.title).toMatch(/stable pattern.*motion/i);
+    expect(STABLE_DEFAULTS).toEqual({
+      jugglingTimingErrorPercent: 1,
+      jugglingListening: 0.2,
+      jugglingControlledPlayers: 1,
+    });
   });
 
   it("makes the three shared-resource outcomes explicit on the Overview", () => {
@@ -279,8 +285,8 @@ describe("Commons Game reviewer path", () => {
     expect(html).toContain('id="pdd-demo"');
     expect(html).not.toContain('id="commons-theory"');
     expect(html).not.toMatch(/<p class="section-kicker">The estimand<\/p>/i);
-    expect(html.indexOf('class="question-list"')).toBeLessThan(html.indexOf('id="pilot-replay"'));
-    expect(html.indexOf('id="pilot-replay"')).toBeLessThan(html.indexOf('id="pdd-demo"'));
+    expect(html.indexOf('id="pilot-replay"')).toBeLessThan(html.indexOf('class="question-list"'));
+    expect(html.indexOf('class="question-list"')).toBeLessThan(html.indexOf('id="pdd-demo"'));
 
     const archive = readFileSync(resolve(ROOT, "archive/design.html"), "utf8");
     expect(archive).toContain('id="estimand"');
@@ -491,6 +497,56 @@ describe("v2 page script", () => {
     expect(html).toMatch(/pre-training rationale[\s\S]*take now[\s\S]*restore is fixed[\s\S]*target rationale · Mad Libs mask/i);
     expect(html).toMatch(/same model[\s\S]*fresh rollout · hypothesis[\s\S]*restore\?/i);
     expect(css).toMatch(/#pdd-step-3:checked ~ \.pdd-stages \.pdd-stage-3/);
+  });
+
+  it("makes the adapter-pool assumptions inspectable", () => {
+    const estimate = estimateAdapterPool({
+      baseBillions: 7,
+      trainableSharePercent: 0.12,
+      steps: 2000,
+      tokensPerStep: 8192,
+      adapters: 16,
+    });
+    expect(estimate.trainableParameters).toBe(8_400_000);
+    expect(estimate.adapterBytesBf16).toBe(16_800_000);
+    expect(estimate.optimizerBytes).toBe(100_800_000);
+    expect(estimate.tokensPerAdapter).toBe(16_384_000);
+    expect(estimate.poolTokenUpdates).toBe(262_144_000);
+
+    const html = read("study");
+    expect(html).toContain('id="pdd-scale-calculator"');
+    expect(html).toMatch(/scaling sketch, not a cost quote/i);
+    expect(html).toMatch(/LoRA rank and target modules/i);
+    expect(html.indexOf('id="pdd-demo"')).toBeLessThan(html.indexOf('id="pdd-scale-calculator"'));
+  });
+
+  it("updates the visible adapter-pool estimate", () => {
+    document.body.innerHTML = `
+      <section id="pdd-scale-calculator">
+        <input data-pdd-input="base" value="7">
+        <input data-pdd-input="share" value="0.12">
+        <input data-pdd-input="steps" value="2000">
+        <input data-pdd-input="tokens" value="8192">
+        <input data-pdd-input="adapters" value="16">
+        <output data-pdd-output="base"></output>
+        <output data-pdd-output="share"></output>
+        <output data-pdd-output="steps"></output>
+        <output data-pdd-output="tokens"></output>
+        <output data-pdd-output="adapters"></output>
+        <strong data-pdd-result="params"></strong>
+        <strong data-pdd-result="storage"></strong>
+        <strong data-pdd-result="optimizer"></strong>
+        <strong data-pdd-result="poolTokens"></strong>
+      </section>`;
+    const root = document.getElementById("pdd-scale-calculator")!;
+    mountPddScale(root);
+    expect(root.querySelector('[data-pdd-result="params"]')?.textContent).toBe("8.4M");
+    expect(root.querySelector('[data-pdd-result="poolTokens"]')?.textContent).toBe("262M");
+
+    const adapters = root.querySelector<HTMLInputElement>('[data-pdd-input="adapters"]')!;
+    adapters.value = "32";
+    adapters.dispatchEvent(new Event("input"));
+    expect(root.querySelector('[data-pdd-result="poolTokens"]')?.textContent).toBe("524M");
   });
 
   /**

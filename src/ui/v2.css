@@ -1725,6 +1725,45 @@ p { margin-bottom: 16px; }
   border-block: 1px solid var(--line);
 }
 
+.pdd-scale-question {
+  margin-top: 46px;
+  padding-top: 0;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.pdd-scale-question > summary {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr) auto;
+  gap: 28px;
+  align-items: baseline;
+  padding: 24px 0;
+  list-style: none;
+}
+
+.pdd-scale-question > summary::-webkit-details-marker { display: none; }
+.pdd-scale-question > summary::after { content: "+"; color: var(--accent); font: 500 1rem/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.pdd-scale-question[open] > summary::after { content: "−"; }
+.pdd-scale-question > summary > span { color: var(--accent); font: 700 0.66rem/1.3 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing: 0.05em; text-transform: uppercase; }
+.pdd-scale-question > summary h3 { margin: 0; }
+.pdd-scale-copy { padding: 2px 0 32px 178px; }
+.pdd-scale-copy > p { max-width: 720px; color: var(--muted); font-size: 0.86rem; }
+
+.pdd-scale-calculator { margin: 28px 0; border-block: 1px solid var(--line); }
+.pdd-scale-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 42px; padding: 27px 0; }
+.pdd-scale-controls label { display: block; }
+.pdd-scale-controls label > span { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 9px; color: var(--muted); font: 650 0.66rem/1.35 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.pdd-scale-controls output { color: var(--ink); }
+.pdd-scale-controls input { width: 100%; accent-color: var(--accent); }
+
+.pdd-scale-results { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--line); }
+.pdd-scale-results > div { min-width: 0; padding: 19px 18px 19px 0; }
+.pdd-scale-results > div + div { padding-left: 18px; border-left: 1px solid var(--line); }
+.pdd-scale-results span { display: block; color: var(--muted); font: 650 0.58rem/1.35 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing: 0.04em; text-transform: uppercase; }
+.pdd-scale-results strong { display: block; margin-top: 5px; font: 700 1rem/1.2 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.pdd-scale-caveat { margin: 0; padding: 18px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.74rem; }
+.pdd-scale-caveat strong { color: var(--ink); }
+
 .pdd-step {
   position: relative;
   display: grid;
@@ -2301,6 +2340,13 @@ summary { cursor: pointer; font-size: 0.84rem; font-weight: 700; }
   .program-game small,
   .program-game > a { grid-column: 2; justify-self: start; }
   .pdd-controls { gap: 6px 18px; }
+  .pdd-scale-question > summary { grid-template-columns: 1fr auto; gap: 8px; }
+  .pdd-scale-question > summary > span { grid-column: 1 / -1; }
+  .pdd-scale-copy { padding-left: 0; }
+  .pdd-scale-controls { grid-template-columns: 1fr; }
+  .pdd-scale-results { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pdd-scale-results > div:nth-child(3) { padding-left: 0; border-top: 1px solid var(--line); border-left: 0; }
+  .pdd-scale-results > div:nth-child(4) { border-top: 1px solid var(--line); }
   .pdd-lane { grid-template-columns: 1fr; }
   .pdd-lane-head {
     flex-direction: row;
