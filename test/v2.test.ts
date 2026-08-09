@@ -513,81 +513,81 @@ describe("v2 page script", () => {
 
   it("makes the adapter-pool assumptions inspectable", () => {
     const estimate = estimateAdapterPool({
-      baseBillions: 7,
-      trainableSharePercent: 0.12,
-      steps: 2000,
-      tokensPerStep: 8192,
-      adapters: 16,
-      tokensPerSecond: 250,
+      personas: 30,
+      repetitions: 1,
+      gpuHoursPerAdapter7B: 25,
+      modelMultiplier: 1,
+      gpuPricePerHour: 2,
+      computeBudgetUsd: 41_330,
     });
-    expect(estimate.trainableParameters).toBe(8_400_000);
-    expect(estimate.adapterBytesBf16).toBe(16_800_000);
-    expect(estimate.optimizerBytes).toBe(100_800_000);
-    expect(estimate.tokensPerAdapter).toBe(16_384_000);
-    expect(estimate.poolTokenUpdates).toBe(262_144_000);
-    expect(estimate.gpuHours80Gb).toBeCloseTo(291.271, 3);
-    expect(estimate.computeCostUsd).toBeCloseTo(582.542, 3);
+    expect(estimate.trainingRuns).toBe(30);
+    expect(estimate.gpuHoursPerRun).toBe(25);
+    expect(estimate.gpuHours).toBe(750);
+    expect(estimate.costPerRunUsd).toBe(50);
+    expect(estimate.computeCostUsd).toBe(1_500);
+    expect(estimate.budgetShare).toBeCloseTo(0.036293, 5);
+    expect(estimate.maxTrainingRuns).toBe(826);
+    expect(estimate.maxPersonasAtBudget).toBe(826);
 
     const html = read("study");
     expect(html).toContain('id="pdd-scale-calculator"');
-    expect(html).toMatch(/scaling sketch, not a quote/i);
-    expect(html).toMatch(/LoRA rank and target modules/i);
+    expect(html).toMatch(/one measured anchor is[\s\S]*a Stage 0 receipt/i);
+    expect(html).toContain('href="../archive/blog-pdd.html#adapter-cost"');
+    expect(html).toMatch(/one Qwen2\.5–7B adapter cost about \$50/i);
+    expect(html).toMatch(/does not infer runtime from parameter counts or nominal token throughput/i);
+    expect(html).toMatch(/planning cost, not a training-time prediction/i);
+    expect(html).toMatch(/unknown floor[\s\S]*indistinguishable copies with different accents/i);
     expect(html).toMatch(/diffusion language model as an LLM-as-a-Judge/i);
     expect(html).toMatch(/round 170 instead of round 33/i);
     expect(html).toMatch(/gave every turn and all agents died by round 6/i);
-    expect(html).toMatch(/hat size \+ opacity encode training exposure/i);
+    expect(html).not.toMatch(/hat size|pdd-persona|data-pdd-personas/i);
+    expect(html).not.toContain('data-pdd-input="throughput"');
+    expect(html).not.toContain('data-pdd-input="tokens"');
     expect(html.indexOf('id="pdd-demo"')).toBeLessThan(html.indexOf('id="pdd-scale-calculator"'));
   });
 
   it("updates the visible adapter-pool estimate", () => {
     document.body.innerHTML = `
       <section id="pdd-scale-calculator">
-        <input data-pdd-input="base" value="7">
-        <input data-pdd-input="share" value="0.12">
-        <input data-pdd-input="steps" value="2000">
-        <input data-pdd-input="tokens" value="8192">
-        <input data-pdd-input="adapters" value="16">
-        <input data-pdd-input="throughput" value="250">
-        <output data-pdd-output="base"></output>
-        <output data-pdd-output="share"></output>
-        <output data-pdd-output="steps"></output>
-        <output data-pdd-output="tokens"></output>
-        <output data-pdd-output="adapters"></output>
-        <output data-pdd-output="throughput"></output>
-        <span data-pdd-persona-tokens></span>
-        <div data-pdd-personas></div>
-        <strong data-pdd-result="params"></strong>
-        <strong data-pdd-result="tokensPerPersona"></strong>
+        <input data-pdd-input="personas" value="30">
+        <input data-pdd-input="repetitions" value="1">
+        <input data-pdd-input="hours" value="25">
+        <select data-pdd-input="model"><option value="1" selected>7B · measured · 1×</option><option value="2">14B · planning · 2×</option></select>
+        <output data-pdd-output="personas"></output>
+        <output data-pdd-output="repetitions"></output>
+        <output data-pdd-output="hours"></output>
+        <output data-pdd-output="model"></output>
+        <strong data-pdd-result="personas"></strong>
+        <strong data-pdd-result="repetitions"></strong>
+        <strong data-pdd-result="hoursPerRun"></strong>
+        <strong data-pdd-result="trainingRuns"></strong>
         <strong data-pdd-result="gpuHours"></strong>
+        <strong data-pdd-result="costPerRun"></strong>
         <strong data-pdd-result="computeCost"></strong>
         <strong data-pdd-result="budgetShare"></strong>
-        <progress data-pdd-budget max="50000"></progress>
+        <progress data-pdd-budget max="41330"></progress>
+        <p data-pdd-capacity></p>
       </section>`;
     const root = document.getElementById("pdd-scale-calculator")!;
     mountPddScale(root);
-    expect(root.querySelector('[data-pdd-result="params"]')?.textContent).toBe("8.4M");
-    expect(root.querySelector('[data-pdd-result="tokensPerPersona"]')?.textContent).toBe("16.4M");
-    expect(root.querySelector('[data-pdd-result="gpuHours"]')?.textContent).toBe("291");
-    expect(root.querySelector('[data-pdd-result="computeCost"]')?.textContent).toBe("$583");
-    expect(root.querySelectorAll(".pdd-persona")).toHaveLength(16);
-    const initialHat = root.querySelector<HTMLElement>(".pdd-hat")!;
-    const initialOpacity = Number(initialHat.style.getPropertyValue("--hat-opacity"));
-    const initialScale = Number(initialHat.style.getPropertyValue("--hat-scale"));
+    expect(root.querySelector('[data-pdd-result="trainingRuns"]')?.textContent).toBe("30");
+    expect(root.querySelector('[data-pdd-result="gpuHours"]')?.textContent).toBe("750");
+    expect(root.querySelector('[data-pdd-result="costPerRun"]')?.textContent).toBe("$50");
+    expect(root.querySelector('[data-pdd-result="computeCost"]')?.textContent).toBe("$1,500");
+    expect(root.querySelector("[data-pdd-capacity]")?.textContent).toContain("826 adapter trainings");
 
-    const adapters = root.querySelector<HTMLInputElement>('[data-pdd-input="adapters"]')!;
-    adapters.value = "32";
-    adapters.dispatchEvent(new Event("input"));
-    expect(root.querySelectorAll(".pdd-persona")).toHaveLength(32);
-    expect(root.querySelector('[data-pdd-result="computeCost"]')?.textContent).toBe("$1,165");
+    const personas = root.querySelector<HTMLInputElement>('[data-pdd-input="personas"]')!;
+    personas.value = "60";
+    personas.dispatchEvent(new Event("input"));
+    expect(root.querySelector('[data-pdd-result="trainingRuns"]')?.textContent).toBe("60");
+    expect(root.querySelector('[data-pdd-result="computeCost"]')?.textContent).toBe("$3,000");
 
-    const steps = root.querySelector<HTMLInputElement>('[data-pdd-input="steps"]')!;
-    const tokens = root.querySelector<HTMLInputElement>('[data-pdd-input="tokens"]')!;
-    steps.value = "5000";
-    tokens.value = "32768";
-    tokens.dispatchEvent(new Event("input"));
-    const trainedHat = root.querySelector<HTMLElement>(".pdd-hat")!;
-    expect(Number(trainedHat.style.getPropertyValue("--hat-opacity"))).toBeGreaterThan(initialOpacity);
-    expect(Number(trainedHat.style.getPropertyValue("--hat-scale"))).toBeGreaterThan(initialScale);
+    const model = root.querySelector<HTMLSelectElement>('[data-pdd-input="model"]')!;
+    model.value = "2";
+    model.dispatchEvent(new Event("input"));
+    expect(root.querySelector('[data-pdd-result="costPerRun"]')?.textContent).toBe("$100");
+    expect(root.querySelector('[data-pdd-result="computeCost"]')?.textContent).toBe("$6,000");
+    expect(root.querySelector("[data-pdd-capacity]")?.textContent).toContain("413 adapter trainings");
   });
 
   /**
