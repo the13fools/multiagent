@@ -182,6 +182,7 @@ describe("Commons Game reviewer path", () => {
     expect(html).toMatch(/Coordination is not the same as consensus/i);
     expect(html).toContain('id="stable-flocks-demo"');
     expect(html).toMatch(/Stability is a shape, not a stop/i);
+    expect(html.indexOf('id="stable-flocks"')).toBeLessThan(html.indexOf('id="longer-program"'));
     expect(html).toMatch(/Protect the commons/i);
     expect(html).toMatch(/Bound the chase/i);
     expect(html).toMatch(/Keep the pattern alive/i);
