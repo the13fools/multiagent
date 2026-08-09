@@ -1,9 +1,10 @@
 # Flockbench — Schmidt Sciences application draft
 
-This is submission-ready content, not evidence of results beyond the linked receipt
-ledger. Replace every bracketed field before submission. The public site uses the
-same evidence boundaries: \`proposal.html\` is the short reviewer path and
-\`experiments.html\` is the governing ledger for empirical claims.
+This is application-draft content, not evidence beyond the linked traces and receipt
+ledger. Replace every bracketed field before submission. The public reviewer path is
+\`commons_game/\`; the historical receipt ledger remains under
+\`archive/experiments.html\`. Stage 0 transfer receipts and the direct
+Shared-Resource-trained play-through remain pending and must not be described as frozen.
 
 ## Project Details
 
@@ -22,12 +23,12 @@ same evidence boundaries: \`proposal.html\` is the short reviewer path and
 ### Plain-language Summary (2–3 sentences)
 
 AI agents will increasingly share budgets, compute, queues, data stores, and other
-resources without a single operator controlling every agent. Flockbench asks one
-concrete question in a game with a known answer: can a small fraction of carefully
-specified agents keep a mixed population from exhausting a shared resource? We will
-calibrate the measurement procedure first, then publish reproducible dose-response
-evidence—including null results and failure boundaries—rather than treating a
-single-agent behavioral score as population safety.
+resources without a single operator controlling every agent. Flockbench asks how large
+a controlled coalition must be to sustain a commons, and whether low-cost post-training
+creates policies that transfer across games or correlated failure that makes the flock
+more brittle. We will calibrate the measurement procedure first, then publish replayable
+fraction-response and transfer evidence—including nulls, reversals, and failure
+boundaries—rather than treating a single-agent behavioral score as population safety.
 
 ### Keywords
 
@@ -106,6 +107,14 @@ positive-slack regime in which the commons tolerates some free-riding. We will v
 resource slack and public action history while retaining deterministic state
 transitions and a fixed horizon.
 
+Shared Resource is the worked example, not the only training environment. The second
+core game is the continuous Commons Game: a logistic stock with exact feasible and
+impossible regions but no tidy optimal policy under simultaneous harvest. Stage 0
+training happened there. Same-game evaluation establishes whether a target policy was
+installed; moving the resulting policy into Shared Resource tests whether the learned
+disposition survives a change of rules. Agreement is evidence of transfer and
+disagreement is reported as a boundary.
+
 ### Interventions and controls
 
 The initial dense model is Qwen2.5-7B-Instruct. We will pre-register a second
@@ -116,13 +125,20 @@ parameters, and serving configuration will be frozen before scored runs.
 We treat the intervention as an experimental input, not as a claim that an individual
 agent is “aligned.” The primary seed is a transparent policy specification that tells
 an agent how to track its own balance, the pool, and the public action history. The
-second is a LoRA adapter trained on environment-verified trajectories. It must pass
-held-out action-validity and rule-comprehension tests before a population result is
-interpreted. Both are compared with: (a) the unmodified base model; (b) a
+second is an ordinary LoRA adapter trained on environment-verified trajectories. The
+third is **Progressive Denoising Distillation (PDD)**, which edits selected rationale
+spans while protecting the structured action field. Each must pass held-out
+action-validity, schema-preservation, and rule-comprehension tests before a population
+result is interpreted. All are compared with: (a) the unmodified base model; (b) a
 vocabulary-matched mimic containing the specification’s language but not its decision
 rules; (c) an objective style positive control showing that the adapter channel can
 change behavior when it should; and (d) a known-bad intervention that a useful gate
 should reject.
+
+Every channel is evaluated in three stages: installation checks; training and held-out
+evaluation in the same game; and cross-game transfer. This separates “the policy was not
+installed” from “the policy worked in its source game but became harmful under different
+rules.”
 
 ### Measurement and gate calibration
 
@@ -144,35 +160,41 @@ current offline result is a warning, not a validation: sign-flip resampling of a
 30-cell Public Goods pilot found that the original overlap rule rolled back an
 identical candidate with probability 1.000. A provisional tolerated-harm threshold
 was better under resampling, but it is not yet a formal non-inferiority test and has
-not been tested in a live A/A campaign. Phase 1 either supplies that evidence or
+not been tested in a live A/A campaign. Month 3 either supplies that evidence or
 documents the failure.
 
-The primary calibration is concrete: 60 independent A/A campaigns, each containing
-60 matched pairs, on Qwen2.5-7B-Instruct in the binary Shared Resource game. If zero
-campaigns roll back, the one-sided exact 95% upper confidence bound on the
-campaign-level false-rejection rate is 4.9%; if any do, we will report the exact
-interval rather than retune after looking. We will run 20 diagnostic A/A campaigns
-in the continuous Commons environment and on the second model family to check for
-heterogeneity. Those smaller checks can reveal a shift but will not be described as
-establishing a ≤5% rate.
+The primary calibration is concrete: 30 independent A/A campaigns, each containing
+60 matched pairs, distributed across two model families and the two core games. If zero
+campaigns roll back, the one-sided exact 95% upper confidence bound on the pooled
+campaign-level false-rejection rate is 9.5%. A bound above 10% retires the gate from
+candidate use. We will report the exact pooled interval and per-stratum diagnostics
+rather than retune after looking; the smaller strata can reveal heterogeneity but do
+not independently establish a 10% operating bound.
 
 ### The main experiment
 
-For each model family and resource regime, we will sweep the fraction of seeded
-agents from zero upward at N=8, then repeat the most informative range at N=20 and
+For each model family, game, and feasible resource regime, we will sweep the fraction of
+seeded agents from zero upward at N=8, then repeat the informative range at N=20 and
 N=50. Fractions are assigned to multiple seat orderings; the untreated remainder is
-base-model agents, with a pre-registered adversarial-archetype stress condition only
-after the core result is interpretable. The primary estimand is the paired change in
-population welfare and survival relative to the matched base population. We will fit
-and report the full composition-response curve with uncertainty rather than declare a
-single “tipping point” from one successful setting.
+base-model agents. The primary estimand is *f\**: the smallest controlled fraction at
+which survival at T=200 improves by a mechanically-defined margin. The primary fit is
+isotonic with a cluster-bootstrap interval and 70 matched pairs per contrast. A
+pre-registered monotonicity test runs first; if it fails, *f\** is reported undefined
+and the raw curve becomes the finding.
 
 The main inferential comparisons are seeded versus base and seeded versus mimic. A
 seeded-versus-base improvement that does not exceed the mimic is evidence of wording
 or presentation, not the proposed behavioral mechanism. We will report all model
 families and environments separately. Sample sizes and minimum effects will be set
-only after Phase 1 re-measures the variance using the current action schema; the
+only after Month 3 re-measures the variance using the current action schema; the
 existing 30-cell pilot is not treated as a permanent power estimate.
+
+The main moderator is the uncontrolled majority’s update rule. Scripted conditions
+manipulate imitate-best-neighbour, tit-for-tat, myopic-greedy, and random behavior; the
+same labels train and test a classifier on language-agent traces. The pre-registered
+prediction is that *f\** is lowest under imitation and highest under greed. Correlated
+lockstep and action diversity are reported separately from survival so post-training
+cannot appear successful merely by making agents agree.
 
 ### Ecological validity and boundaries
 
@@ -223,45 +245,45 @@ one that is unusually important when the output will govern repeated model chang
 
 ## Feasibility (≤300 words)
 
-The project begins from working, public components rather than an untested platform.
-Flockbench already contains a deterministic shared-resource simulator, Commons
-Harvest, Public Goods with Punishment, a frozen round-level trace schema, a campaign
-planner, and the Firebreak decision path. The core Shared Resource equations are
-implemented independently in Python and TypeScript with tests pinning their
-invariants. The system records a parse failure separately and gives it a behaviorally
-inert action, preventing a serving error from looking like cooperation.
+The project begins from working components rather than an untested platform. As an
+unpaid independent researcher, the PI built the game server, deterministic environments,
+single-GPU Qwen2.5-7B serving and LoRA path, trace replay, campaign planner, browser
+visualizations, and Firebreak prototype on a laptop with approximately $200 of personal
+RunPod credits. Shared Resource equations are implemented independently in Python and
+TypeScript with tests pinning the same invariants. Public source and receipts remain
+marked pending until frozen.
 
-There are two relevant pilots. First, a one-seed live Qwen2.5-7B Commons run completed
-end to end with zero parse failures; the seeded adapter delayed stock exhaustion
-relative to its control. This shows the serving/tracing path works but is explicitly
-not evidence of an effect size. Second, a 30-cell matched Public Goods pilot produced
-a replayable receipt. Its offline sign-flip audit found a severe error in the original
-promotion policy: it would reject a null clone with probability 1.000. That is an
-inconvenient but high-value feasibility result: the instrumentation is capable of
-falsifying its own rules before a headline result is claimed.
+Stage 0 produced three useful boundaries. In the one-seed Commons Game pilot, collapse
+moved from round 33 for eight base agents to round 170 for eight trained agents, but
+every arm still collapsed; +137 rounds is descriptive, not an effect estimate. The same
+adapter then transferred into Shared Resource without further training. The base
+population restored at 0.98 and died on turn 8; the mixed and fully trained populations
+restored at 1.00 and died on turn 6. One base agent broke rank and briefly survived,
+whereas all eight trained agents restored and fell together. This is one-seed negative
+transfer: training changed noisy failure into rigid synchronized failure. Direct
+Shared-Resource training and held-out same-game evaluation are still being collected.
 
-The most consequential unknowns are deliberately sequenced first. The live A/A
-calibration re-measures variance and false-rejection behavior using the current action
-schema; it can invalidate the planned gate or change the required sample size. A
-simple, objectively scored style control tests the adapter channel before an adapter
-null is interpreted. The core study can still deliver a rigorous result if a trained
-seed is ineffective: transparent prompted policy and mimic arms test the population
-mechanism separately from the training method.
+Finally, a 30-cell Public Goods pilot exposed a gate defect: the original rule would
+reject a null clone with probability 1.000 under offline sign-flip resampling. Live A/A
+calibration therefore comes first. Each inconvenient result sharpened the proposed
+instrument rather than being promoted into a headline effect.
 
 ## Team (≤300 words)
 
 **Lead PI:** [Name], [title / institution or Independent Researcher]. [Name] designed
 and implemented the initial Flockbench testbed, Firebreak prototype, and public
-explorable documentation. The Lead PI will set the scientific design, freeze
-pre-registrations, oversee statistical analysis, and lead publication.
+explorable documentation as an unpaid independent researcher. The Lead PI is budgeted
+at 1.0 FTE for months 1–12 and 0.4 FTE for months 13–18, and will set the scientific
+design, freeze pre-registrations, oversee analysis, and lead publication.
 
-**Research Engineer (planned, 1.0 FTE):** [Name or “to be recruited”]. Responsible
-for serving reproducibility, trace collection, campaign orchestration, schema
-validation, and release packaging.
+**Contracted Reproducibility Engineer (planned, 480 hours in months 4–12):** [Name or
+“to be recruited”]. Responsible for serving reproducibility, the shared-state
+tool-and-memory environment, campaign orchestration, schema validation, and release
+packaging. No milestone before month 4 depends on recruitment.
 
-**Research Assistant / Research Scientist (planned, 0.5 FTE):** [Name or “to be
-recruited”]. Responsible for environment variants, adversarial stress specifications,
-literature synthesis, analysis replication, and documentation.
+**External statistical review:** [Reviewer or procurement route to be confirmed]. The
+estimand, isotonic fit, cluster bootstrap, monotonicity test, multiplicity, and
+missingness policy will be reviewed before the first scored candidate campaign.
 
 **Collaborators / fiscal sponsor:** [List only confirmed affiliations and roles.] Do
 not describe a fiscal sponsor as a U.S. 501(c)(3) unless that status and relationship
@@ -269,7 +291,8 @@ have been verified in writing.
 
 This is a small team by design: the scientific core is a controlled experimental
 program, while the engineering work is trace integrity, reproducibility, and scale.
-External replication is part of the deliverable, not delegated trust.
+The intended setting is one or more academic or industrial labs, but no host or
+commitment is implied. External replication is a deliverable, not delegated trust.
 
 ## Proposal Risks (≤300 words)
 
@@ -284,6 +307,11 @@ or both may not shift behavior beyond the mimic control. We mitigate interpretiv
 risk with positive controls, individual action-validity checks, matched pairs, and
 pre-specified null reporting. A precise null answers a useful question about the
 limits of local alignment interventions.
+
+**Post-training creates correlated rigidity or reverses under transfer.** Stage 0
+already shows this failure mode at one seed. We separate installation, same-game
+performance, and cross-game transfer; report action diversity and synchronized collapse
+alongside survival; and treat a reversal as the result rather than averaging it away.
 
 **The result is a property of one toy setting or one model.** The central risk to
 external validity is real. We address it by varying resource slack, information,
@@ -344,21 +372,20 @@ a Q1 2027 start and should be shifted if the award start date differs.
 
 | Deadline | What will be demonstrated | Evidence that this milestone has been achieved |
 |---|---|---|
-| **Q2 2027 (Month 3)** | **Measured gate calibration, or a documented failure of calibration.** Sixty independent live f=0 A/A campaigns of 60 matched pairs establish an exact campaign-level false-rejection interval for the primary model/game; 20-campaign checks test model and environment heterogeneity. The project either freezes a rule with disclosed operating characteristics or retires the gate for candidate claims. | Versioned campaign plans; machine-readable receipts containing paired cells and resolved policy; calibration report with exact intervals; independent replay script and release tag. |
-| **Q3 2027 (Month 6)** | **An intervention channel that is interpretable at the individual level.** A transparent policy seed and any LoRA seed are evaluated on held-out action-validity, rule-comprehension, unwinnable-regime, and objective style-control tests. The result establishes whether the mechanism is installed before interpreting group outcomes. | Frozen held-out task set; per-model results and parse statistics; training manifest; adapter hashes; test report showing pass/fail against pre-registered thresholds. |
-| **Q4 2027 (Month 9)** | **A first powered composition curve in the solved shared-resource game.** Matched base, seed, and mimic populations at N=8 produce confidence intervals for welfare, survival, and restoration-gap outcomes across the pre-registered fraction sweep. The result may be monotonic, threshold-like, flat, or adverse. | Pre-registered analysis plan; trace corpus; paired-comparison tables and figures; versioned release receipt; technical report including every planned arm and null result. |
-| **Q1 2028 (Month 12)** | **Mechanism boundary under resource conditions.** The composition result is tested in zero-slack, positive-slack, and unwinnable regimes. This distinguishes genuine adaptation to environmental feasibility from indiscriminate “cooperation.” | Parameter registry; cross-regime traces; arithmetic self-tests; analysis report comparing all three regimes and explaining any non-transfer. |
-| **Q2 2028 (Month 15)** | **A population-scale and model-family boundary.** The most informative fraction range is replicated at N=20 and N=50 and on the second model family, yielding either a stable threshold interval or evidence that the effect is scale/model dependent. | Frozen scaling plans; reproducible traces; stratified estimates with confidence intervals; release note documenting missing or infeasible conditions. |
-| **Q3 2028 (Month 18)** | **A reproducible scientific conclusion about composition in a known-answer environment.** The project synthesizes calibrated-gate results, dose response, and boundary conditions into an independently replayable safety case. | Public release of code, schemas, data where permitted, receipts, replication guide, and technical paper; third-party reproduction attempt or a documented invitation package. |
+| **Q1 2027 (Month 3)** | **A measured operating characteristic for the promotion rule—or a documented failure.** Thirty live f=0 A/A campaigns of 60 matched pairs across four strata yield an exact pooled campaign-level false-rejection interval and re-measure paired variance. A one-sided 95% upper bound above 10% retires the gate from candidate use. | Versioned campaign plans; machine-readable receipts; exact pooled interval and per-stratum diagnostics; measured paired SD and resulting descope decision; independent replay script; release tag. |
+| **Q2 2027 (Month 6)** | **An interpretable post-training and transfer test.** Prompts, ordinary LoRA, and PDD face action-validity, rule-comprehension, impossible-regime, style, schema-preservation, same-game, and cross-game checks. The follower-rule classifier is validated against scripted labels and the tool-and-memory environment produces its first traces. | Frozen held-out set; per-model results; manifests and adapter hashes; same-game versus cross-game comparison including action diversity and synchronized collapse; classifier confusion matrix; tool/memory schema and first trace corpus. |
+| **Q3 2027 (Month 9)** | **A powered estimate of f\*, or an explicit undefined result.** Matched base, seeded, and mimic populations at N=8 across both core games and two feasible regimes produce an isotonic estimate with cluster-bootstrap interval at 70 pairs per contrast. | Pre-registered analysis plan with survival at T=200 as the primary outcome; trace corpus; paired tables and figures; monotonicity result; seed-versus-mimic comparison; receipt covering adverse and null arms. |
+| **Q4 2027 (Month 12)** | **The majority-rule moderator and transfer boundaries—all experimental work complete.** Estimate f\* under four manipulated majority rules, then repeat the informative range under direct target-game training and cross-game transfer, with tools and memory, at N=20/50, and across model sources. | Per-rule estimates and pre-registered prediction result; direct-trained versus transferred comparison; action-diversity and correlated-failure measures; stratified tool, scale, and provider estimates; documented descope decisions. |
+| **Q2 2028 (Month 18)** | **An independently replayable conclusion.** The calibrated gate, composition curve, majority-rule moderator, post-training transfer map, tool-and-memory boundary, and provider/scale checks are synthesized into one safety case. | Public code, schemas, permitted traces, committed receipts, replication guide, technical paper, and third-party reproduction attempt or invitation package; every headline figure re-derived from receipts. |
 
 ### End-of-project outcomes
 
 | Outcome name | Description of scientific change | Why this matters for multi-agent safety | Success criteria |
 |---|---|---|---|
-| **Calibrated population-evaluation protocol** | A population-level decision procedure has a measured live A/A error profile, stated scope, and reproducible failure analysis rather than an assumed threshold. | Automated gates can silently reject safe candidates or promote harmful ones; their operating characteristics are safety-relevant evidence. | At least two model/environment strata with repeated A/A receipts; exact confidence intervals for campaign-level false rejection; documented rule freeze; independent replay of released results. A failure to reach a usable rate is reported as the outcome, not hidden. |
-| **Composition-response map for a shared commons** | The field has an estimate, with uncertainty, of how survival and welfare change as a seeded fraction rises, compared with base and vocabulary-matched mimic populations. | Updates the assumption that individual-agent interventions automatically aggregate to population safety. | All pre-registered fraction arms completed or explicitly accounted for; paired estimates and confidence intervals; seed-versus-mimic comparison; arithmetic outcomes and traces available for replay. |
-| **Boundary conditions for collective stabilization** | The work identifies whether the observed composition effect survives changes in resource slack, population size, and model family—or specifies where it fails. | Prevents a result at one small population from becoming an unsupported deployment claim. | Stratified N=8/20/50 and two-model-family results for the informative range, plus zero-/positive-slack and unwinnable controls; a clear transfer, heterogeneity, or null conclusion. |
-| **Falsifiable benchmark for future interventions** | Future training, prompting, communication, and mechanism-design interventions can be evaluated against a known sustainable region and a published baseline. | Makes future work comparable and gives it a way to distinguish “more cooperative language” from better collective outcomes. | Versioned environment specifications; deterministic self-tests; frozen trace schema; baseline/mimic/known-bad controls; a public replication package that recreates reported headline tables from receipts. |
+| **An estimate of the critical controlled fraction, with uncertainty** | The fraction that must be controlled before survival changes becomes a measured quantity with an interval in two games with known feasible regions. | One actor may control many agents but not all; this measures when partial control changes the collective outcome and when the threshold is absent. | Isotonic f\* estimate with cluster-bootstrap interval or explicit undefined result; monotonicity and seed-versus-mimic tests; every number re-derived from a committed receipt. |
+| **The dependence of f\* on the majority’s update rule** | Scripted conditions manipulate the moderator; language-agent traces are classified against those known labels; correlated lockstep is separated from successful coordination. | The Stage 0 transfer shows that training can replace noisy failure with faster synchronized failure. Whether a minority propagates depends on how the majority responds. | Per-rule f\* estimates across four majorities; classifier accuracy; action-diversity and synchronized-collapse measures; pre-registered prediction confirmed or refuted. |
+| **A calibrated population-level promotion rule** | A decision procedure ships with a measured live false-rejection rate and a validator-enforced minimum campaign size. | Automated gates can reject safe candidates or admit harmful ones; the Stage 0 gate rejected a null clone in approximately 100% of offline resamples. | Repeated A/A receipts across four strata; exact pooled interval; rule frozen before candidate use; independent replay. Failure to calibrate is published as the result. |
+| **A replayable laboratory and post-training transfer map** | Flockbench compares prompts, ordinary LoRA, and PDD through same-game and cross-game evaluation, then tests informative policies with tools, memory, larger populations, and multiple model sources. | A policy that helps in its source game can become rigidly harmful under different rules. The benchmark separates installation, target-game performance, and transfer. | Versioned environments and self-tests; frozen schema; base, mimic, known-bad, direct-trained, and transferred controls; stratified transfer or null conclusions; public replay package. |
 
 ## References
 
@@ -368,4 +395,4 @@ a Q1 2027 start and should be shifted if the award start date differs.
 - Park, J. S., O'Brien, J., Cai, C. J., et al. (2023). *Generative Agents: Interactive Simulacra of Human Behavior.* UIST.
 - Tomašev, N., Franklin, M., Jacobs, A. Z., Krier, S., & Osindero, S. (2025). *Distributional AGI Safety.* arXiv:2512.16856.
 - Cooperative AI Foundation. (2025). *Multi-Agent Risks from Advanced AI.*
-- Flockbench repository and calibration receipt: \`flockbench/receipts/aa_calibration.md\` (accessed August 2026).
+- Flockbench public reviewer site and Stage 0 archive: \`foolzone.com/multiagent/commons_game/\` and \`archive/experiments.html\` (accessed August 2026; pending receipts are labelled as such).

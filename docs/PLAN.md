@@ -1,207 +1,425 @@
-# multiagent — lab plan
+# Flockbench website v2 — reviewer-skim plan
 
-**Written 2026-08-06, revised same day.** Two labs exist. This is the case for
-which others to build, in what order, and the one refactor that goes first.
+**Current routing.** The broader research-program landing page now lives at the
+site root. This four-page reviewer path lives under `commons_game/`; former root
+detail URLs and `/v2/` remain compatibility redirects. The scientific and skim
+contracts below still govern the Commons Game pages.
 
-## The story the site tells
+**Revised 8 August 2026.** This plan supersedes the lab-led site plan. V2 is a
+fresh, grant-reviewer-facing implementation. V1 remains intact as the lab archive.
 
-The labs are not a menu of demos. They are one argument in five moves:
+## The decision this site supports
 
-1. **Simple rules, many players, long rollouts.** A commons with a solution one
-   sentence long. → `shared-resource.html` *(built)*
-2. **The solution is a rhythm, and rhythms are hard to hold.** Nobody conducts.
-   Each player keeps its own time, and the pattern is the shared resource. →
-   `juggling.html` *(the centrepiece — see below)*
-3. **Being slightly wrong is fine, until suddenly it isn't.** A small per-beat
-   bias is invisible for thirty beats and fatal by ninety. → folded into juggling
-4. **A few players can hold the whole thing together — or fail to.** Pin some
-   metronomes and see whether the rest lock on. → juggling + shared-resource
-5. **How would you know you had measured any of this?** → `gate.html`
+A reviewer should be able to answer these questions after five minutes:
 
-Written out, the thesis is: *influencing the dynamics of a large population, with
-a small number of players, toward stability and good stewardship of a shared
-resource.* Every lab is a move in that sentence, and any lab that isn't gets cut.
+1. What is the project?
+2. Why is it a genuinely multi-principal, multi-agent safety project?
+3. What is the narrow, falsifiable scientific question?
+4. What exists today, and what would the grant pay for?
+5. Is the proposed study rigorous, feasible, and appropriately scoped?
 
-## The selection rule
+The site has one governing sentence:
 
-Not every claim deserves a lab. A lab earns its place when three things hold:
+> **Flockbench is a known-answer testbed for measuring how much of a mixed agent
+> population must be controlled to keep a shared resource from collapsing, and
+> when that intervention stops working.**
 
-1. **There is a counterintuitive fact, and arithmetic settles it.** No judgement
-   call, no "it depends" — you run it and the number is the number.
-2. **A dial changes the answer.** If the only interaction is pressing play, it is
-   a figure, and a figure should be a static SVG in the proposal instead.
-3. **It carries a specific claim the proposal makes.** Otherwise it is a toy that
-   costs maintenance and dilutes the ones that matter.
+Everything in the main reviewer path must advance that sentence. PDD, Firebreak,
+mechanism design, entrainment, and future learning populations are supporting
+methods or extensions, not competing theses.
 
-Everything below is scored against those three. Three candidates fail and are
-listed at the bottom with the reason, because the discipline is the point.
+## What the call feedback changes
 
-## Do this first: extract the lab harness
+The public Q&A notes become design constraints, not quotations on the site:
 
-`sharedResourceLab.ts` (160 lines) and `boardwalkLab.ts` (119) already duplicate
-the `$` helper, a bare `let timer` play loop, `clearInterval` in four places
-each, and ad-hoc SVG string assembly. Two copies is tolerable. **Eight copies is
-the `make_asker` bug again** — the one where `commons.py` and `pgg.py` drifted
-until one had the `stop` fix and the other silently did not.
-
-So before lab three, build `src/ui/lab.ts`:
-
-- `el(id)` — the typed lookup, once
-- `Ticker` — start/stop/step/reset, so no lab hand-rolls an interval again
-- `svg` tag helper — string building with the theme variables applied
-- `statRow(...)` — the four-number header every lab has
-- `embedMode()` — reads `?embed=1` and strips nav and prose
-
-That last one is not cosmetic. The proposal links these; an embeddable mode
-means one URL serves both the standalone page and the iframe, and there is no
-second copy of the lab to keep in sync.
-
-Cost: about half a day. It pays for itself at lab four.
-
----
-
-## Tier 1 — build these
-
-### 0 · Juggling `juggling.html` — 3D, and the centre of the site
-
-Juggling is not a metaphor for the Shared Resource game. It is the same object
-with intuitions people already have. Many players, rules a child can state, a
-pattern that only exists while everyone keeps time, and a failure mode everybody
-has seen. "Take and restore in equal measure" *is* a two-beat pattern.
-
-**The model, and it is a real one.** N jugglers in a ring on discrete beats. Each
-holds a phase and throws on its own count — sometimes to itself, sometimes across
-the ring. A club thrown from *i* to *j* arrives some beats later; if *j*'s hand is
-not ready within tolerance, it drops, and dropped clubs leave play. **The clubs in
-the air are the shared resource.** Each juggler carries a small per-throw timing
-error, and errors compound.
-
-Why this earns the centrepiece slot:
-
-- **Drift becomes visible rather than argued.** A juggler running 4% fast does not
-  drop anything for thirty beats. The pattern just breathes slightly. Then it goes.
-  That is §2's whole long-horizon argument and it needs no explanation at all.
-- **Entrainment becomes obvious.** Pin *k* jugglers as metronomes and watch the
-  others lock on — or fail to. Same question as the pacemaker slider, but you can
-  see the phases pulling together.
-- **Virtue still has a ceiling.** One juggler cannot compensate for a neighbour's
-  drift; it can only drop its own clubs trying.
-- **The natural metric is already the right one.** Kuramoto's order parameter *R*
-  measures phase coherence, which is exactly the coupled-oscillator framing §2
-  claims, arriving here as the obvious thing to plot rather than an imported idea.
-
-**3D is justified, not decorative.** Clubs travel on parabolas between points in a
-ring; that is a spatial fact and flattening it costs real information — you cannot
-see a pass being late in 2D, you can only read it in a number. Orbitable camera,
-clubs on arcs, jugglers coloured by phase error.
-
-*Implementation note:* hand-rolled perspective projection onto a canvas, not
-Three.js. Perhaps sixty lines for balls on parabolic arcs, no 600 KB dependency,
-and it keeps the "opens straight off disk" promise. Revisit if the pattern
-library grows.
-
-This replaces the separately-planned `drift.html`; a drift readout lives inside it
-as a panel, so there is one lab instead of two saying the same thing.
-
-### 1 · The promotion gate `gate.html`
-
-**The best remaining lab, and it is not close.** The most counterintuitive claim
-in the whole proposal is that a sensible-looking promotion rule rolls back a
-candidate identical to its own baseline **100% of the time**, and that collecting
-more evidence makes it worse. Nobody believes that from a table. They believe it
-from a slider.
-
-- Dials: policy (overlap rules / superiority test / non-inferiority), paired
-  cells *n*, true effect, and the non-inferiority margin.
-- Shows: P(roll back) against *n*, with the true effect at zero highlighted as
-  the A/A case. Watch the overlap-rule curve go **up** with more data.
-- The payoff: drag the margin and watch a broken gate become a working one.
-
-Carries §4 entirely — the gate calibration, the A/A validity requirement, the
-minimum campaign size, and the power analysis all fall out of the same widget.
-
-*Core:* port `tools/aa_calibrate.py`. Test: reproduce 1.000 / 1.000 / 0.076.
-
-### 2 · Phase diagram `phase.html`
-
-- Dials: `L`, `R`, `G`, `S`.
-- Shows: a 2D heatmap of slack over two chosen parameters, with the zero contour
-  drawn — the surface where `p_self = p_need` and solutions exist at all — and
-  the negative region shaded as unwinnable.
-- The payoff: the reference parameters sit exactly on a knife edge. You can see
-  that it was *chosen*, not stumbled into, and you can see the unwinnable control
-  condition as a region rather than a footnote.
-
-Carries RQ3 and the ground-truth claim. Overlay the measured carrying capacity on
-the closed-form one and the whole "we have an answer key" argument is one image.
-
----
-
-## Tier 2 — strong, build if there is room
-
-### 4 · Identifiability `resolution.html`
-
-At N=8 the reachable seeded fractions are {0, 12.5, 25, 37.5}%, so a threshold
-near 10% **cannot be located at all** — the grid is coarser than the interval of
-interest. §5 argues this in prose; a picture settles it in one second. Small lab,
-high clarity, and it justifies the N=50 line in the budget.
-
-### 5 · El Farol `elfarol.html`
-
-Arthur's bar problem: go if you expect it under-crowded, and the good outcome
-requires that *not everyone reasons alike*. It is the canonical anti-coordination
-problem and it generalises the conformity finding beyond our one game — which
-matters, because right now "imitation is the wrong heuristic" rests on a single
-environment. A second classic showing the same thing turns an observation into a
-pattern.
-
-### 6 · Rule inference `whichrule.html`
-
-Given an action trace, which follower rule best explains it? This *is* RQ2's
-measurement, so the lab doubles as a specification of the method. Paste a trace
-from a real flockbench run and it reports the fit. Build after a live run exists,
-otherwise it has nothing real to chew on.
-
----
-
-## Not building, and why
-
-- **Mimic control (RQ4).** Needs live models to be interesting. Scripted agents
-  make the control look trivially effective, which would be a lie about the
-  experiment.
-- **Ostrom's design principles.** A good essay, not a lab — no dial changes an
-  answer.
-- **PGG with punishment.** Already in flockbench and genuinely interesting, but
-  antisocial punishment needs live agents to be surprising. Scripted, it just
-  replays whatever policy we wrote.
-
----
-
-## Sequencing
-
-| | |
+| Call participant | Constraint on v2 |
 |---|---|
-| **Slice A — before submission** | harness → **juggling (3D)** → gate |
-| **Slice B — the week after** | phase → resolution |
-| **Slice C — once live runs exist** | El Farol → rule inference |
+| **James Fox** | Be focused and specific. State why findings from the small setting could generalise, and where they should not. Do not drift into network security. |
+| **Matija Franklin** | Make the unit of analysis the interacting population. Do not present chatbot alignment or AI ethics as multi-agent research. |
+| **Nenad Tomašev** | Do not imply a scaling law from a few population sizes. Use N = 8, 20, and 50 to test whether the threshold moves with scale. |
+| **Adriana Uy** | Make Stage Zero visible and organize delivery around concrete 3/6/9/12/15/18-month decision points. |
+| **Katia Sycara** | Explain what “effective” means and why the chosen population sizes are sufficient for this question. Scale is question-dependent. |
 
-Ordered by the story rather than by my estimate of value. Juggling comes before
-the gate because it is move 2 of the argument and the gate is move 5: a visitor
-who reads one page should read the one that makes the problem felt, not the one
-that audits the instrument. Juggling also absorbs the drift lab, so Slice A is
-two builds and a refactor rather than three builds.
+The call prioritises depth. V2 therefore presents:
 
-Slice B and C are for the site as a research artifact rather than for the grant.
+- **Primary fit:** Sandboxes and Testbeds.
+- **Scientific demonstration:** Science of Agent Networks.
+- **Bounded downstream use:** a population-level promotion decision.
+- **Not claimed:** agent infrastructure, network security, collusion detection, or
+  general-purpose alignment.
 
-## Invariants for every lab
+## The skim contract
 
-Non-negotiable, because these are what make the site evidence rather than
-decoration:
+### In 30 seconds
 
-1. **Engines in `src/core/`, pure, no DOM.** UI never computes anything a test
-   could check.
-2. **Every claim on the page is asserted in `test/`.** If the prose says 75%, a
-   test says 75%. This is why the site cannot drift away from flockbench.
-3. **No judge, anywhere.** Every number computed from rules.
-4. **Cross-pinned to flockbench** where an engine exists on both sides.
-5. **Works from any subpath and from disk.** Relative base, no server.
+The first viewport must communicate:
+
+- the concrete problem: agents from different sources share a quota, queue, or
+  datastore;
+- the question: how large a controlled minority is needed;
+- the differentiator: the environment has a computable answer key and no LLM
+  judge;
+- the status and ask: working public components; Tier 1, $277,343, 18 months.
+
+### In two minutes
+
+A visitor should additionally understand:
+
+- the primary outcome is survival at T = 200;
+- the estimand is the critical seeded fraction f*;
+- the pre-registered prediction concerns the majority's update rule;
+- simple environments buy ground truth, while tools, persistent memory,
+  multi-vendor populations, a frontier-model subset, and N = 20/50 test the
+  boundary of transfer;
+- the current evidence motivates the study but does not establish that minority
+  steering works.
+
+### In five minutes
+
+A reviewer should have seen:
+
+- the complete experimental logic and its failure conditions;
+- a clean Built / Pilot / Funded distinction;
+- the strongest replayable receipts;
+- milestones, team, budget, risks, and minimum valuable outcomes;
+- links to technical details without needing them to understand the proposal.
+
+## Information architecture
+
+Use one brand, **Flockbench**, and four primary navigation items:
+
+1. **Overview**
+2. **Study**
+3. **Evidence**
+4. **Delivery**
+
+Methods and Archive are footer links, not top-level peers.
+
+Target total for the four-page path: **3,000–3,500 words**. No main page should
+exceed 950 words. Every page begins with a one-sentence claim and a compact
+summary of the evidence or decision it contains.
+
+---
+
+## Page 1 — Overview
+
+**Job:** answer the Plain-language Summary, Problem and Impact, and “But for”
+prompts in a reviewer-readable sequence.
+
+**Target:** 650–750 words.
+
+### First viewport
+
+Eyebrow:
+
+> Flockbench · Tier 1 · 18 months · $277,343
+
+Headline:
+
+> **How much of a mixed agent population must you control to stop a shared
+> resource collapsing?**
+
+Deck:
+
+> Flockbench is a known-answer testbed for measuring that threshold across
+> agent populations assembled from different sources. Outcomes are scored by
+> arithmetic, not by another model's opinion.
+
+Primary action: **See the study**. Secondary action: **Inspect the evidence**.
+
+One compact visual shows agents from several sources acting on a shared resource,
+with only a minority highlighted as controlled. It must be labelled as the
+experimental setup, not as a measured result.
+
+### Remaining sections
+
+1. **The deployment problem.** One quota, queue, or datastore; several vendors
+   and operators; no principal controls every seat.
+2. **The measurement gap.** Individual-agent evaluation cannot distinguish a
+   failed population from an impossible task, and a fluent model judge can miss
+   destructive mechanics.
+3. **The answer-key environment.** Explain restore/take/upkeep in one short block.
+   Show the three terminal outcomes: sustainable, coordination failure, and
+   arithmetically impossible.
+4. **The study in one screen.** Primary outcome, f*, the follower-rule
+   hypothesis, and the three transfer moderators.
+5. **Why public funding.** The useful instrument can reject its author's own
+   candidate and publish a precise null; vendors have weak incentives to build
+   it.
+6. **What success changes.** Best case, minimum valuable outcome, and the meaning
+   of a flat or non-transfer result.
+
+Do not put a history of the project, a literature review, PDD, or the full gate
+calibration story on this page.
+
+---
+
+## Page 2 — Study
+
+**Job:** answer Approach and the scientific parts of Proposal Risks.
+
+**Target:** 850–950 words.
+
+### Opening summary
+
+Show four facts before prose:
+
+- **Primary outcome:** population survival fraction at T = 200.
+- **Estimand:** f*, the smallest controlled fraction producing the mechanical
+  one-defector margin.
+- **Core design:** 6,720 cells / 3,360 matched pairs / 70 pairs per contrast.
+- **Prediction:** f* is lowest for imitate-best-neighbour majorities and highest
+  for myopic-greedy majorities.
+
+### Research logic
+
+Present the central question first, even though gate calibration runs first in
+time:
+
+1. **RQ2 — How large a minority is needed?** Fractions, primary outcome,
+   isotonic curve, interval for f*, monotonicity failure, mimic and style
+   controls.
+2. **RQ3 — What does the majority do with the signal?** Four manipulated update
+   rules; classifier validated on scripted answer-key populations before use on
+   LLM traces.
+3. **RQ1 — Can the measurement rule be trusted?** A/A calibration licenses the
+   downstream claims. Keep this visibly subordinate: 17.3% of compute, not a
+   second project.
+
+### “Simple, not toy” section
+
+Answer the call's largest objection directly:
+
+- natural-language LLM agents act against a live endpoint;
+- agents have separate resources and mixed incentives, not a shared reward;
+- the known-answer core distinguishes failure from impossibility;
+- a shared key-value-store environment adds auditable tools and persistent
+  memory while preserving the resource invariant;
+- seats come from two open-weight families and a commercial provider;
+- a frontier-grade matched subset tests proxy fidelity;
+- N = 8, 20, and 50 tests the direction and stability of scaling, not a law for
+  populations of millions.
+
+### Failure logic
+
+End with a compact table: flat curve, non-monotone curve, gate above 10% error,
+classifier failure, model-specific result, and failed transfer. For every failure,
+state the reportable conclusion rather than promising success.
+
+Move full missingness rules, multiplicity, power derivation, configuration grids,
+and campaign schemas to Methods.
+
+---
+
+## Page 3 — Evidence
+
+**Job:** answer Novelty and Feasibility, while making overclaiming difficult.
+
+**Target:** 750–850 words.
+
+### Status ledger
+
+The first element is a three-column ledger:
+
+| **Built** | **Pilot evidence** | **Funded work** |
+|---|---|---|
+| Deterministic environments, answer-key equations, trace schema, campaign planner, Firebreak path, tests | One-seed live Commons run; 30-pair matched PGG receipt; offline sign-flip gate audit | Powered fraction sweep, live A/A campaigns, tool-and-memory environment, multi-vendor and frontier subsets, N = 20/50 replication |
+
+Status words must be used consistently:
+
+- **Built:** code exists and is tested.
+- **Pilot:** an empirical artifact exists, but it is not a powered result.
+- **Offline audit:** computed from committed data without a new live campaign.
+- **Proposed:** requires grant-funded work.
+
+Never label a proposed extension “in the testbed” without the qualifier.
+
+### Strongest evidence
+
+Use at most five claims, each paired with a receipt or test:
+
+1. The flagship environment has an exact sustainable regime and an exact
+   impossible control.
+2. One permanent defector can look safe at turn 20 and produce total collapse by
+   turn 118.
+3. The original promotion rule rejects a clone in approximately 100% of offline
+   null resamples.
+4. A 30-pair matched pilot completed the decision path and produced a replayable
+   receipt.
+5. The site and Python implementation pin the same arithmetic in tests.
+
+Clearly state: none of these demonstrates that minority steering works.
+
+### Novelty comparison
+
+A small comparison against GovSim, Melting Pot/Concordia, and repeated-game work
+should use only three axes:
+
+- population composition as the intervention;
+- a closed-form answer key and impossible-regime control;
+- a calibrated, population-level decision rule.
+
+### PDD illustration
+
+Keep the requested PDD illustration here as a compact method card:
+
+> prompt or source material → span-restricted rationale edits → protected action
+> schema → distinct candidate policy → population-level evaluation
+
+Label it **population-generation method under test**. Do not describe PDD as
+alignment, proof of moral behavior, or the proposal's primary contribution. Link
+to the full Methods note.
+
+---
+
+## Page 4 — Delivery
+
+**Job:** answer Feasibility, Team, Budget, Milestones, Existing Funding, and the
+operational parts of Risks.
+
+**Target:** 700–850 words.
+
+### Milestone spine
+
+Use six decision points rather than an activity-heavy Gantt chart:
+
+- **Month 3:** promotion rule calibrated or retired.
+- **Month 6:** intervention channel and follower-rule classifier validated or
+  bounded.
+- **Month 9:** f* estimated or declared undefined.
+- **Month 12:** follower-rule and tool/memory transfer results.
+- **Month 15:** scale, provider, and frontier-fidelity boundaries.
+- **Month 18:** independently replayable synthesis and release.
+
+Every milestone shows: what is demonstrated, evidence produced, and what changes
+if the result fails.
+
+### Budget
+
+Lead with the actual proposal, not the general calculator:
+
+> **$277,343 over 18 months** — $252,130 direct and $25,213 indirect.
+
+Show four grouped lines: PI, contracted reproducibility engineering, GPU/API
+compute, and operations. The compute allocation may expand on request.
+
+The existing interpolation tool may appear behind **Explore other scopes**, but
+must open in “general planning” mode and explicitly say that `$300k → one year`
+is not this proposal. It must never replace or visually compete with the actual
+18-month ask.
+
+### Team and readiness
+
+Show the PI, relevant credentials and prior work, exact FTE, contracted role,
+statistical review, and sponsorship status plainly. Do not publish placeholders.
+Stage Zero belongs here as proof of execution: working code, public receipts,
+tests, and self-funded pilots already completed.
+
+### “With / without funding” close
+
+Two short columns:
+
+- **With funding:** powered study, live calibration, tool/memory extension,
+  provider and scale boundaries, reproducibility engineering.
+- **Without funding:** public maintenance and small-N pilots continue; the powered
+  claims and external-validity programme do not.
+
+---
+
+## Methods and archive
+
+These remain available without burdening the primary navigation.
+
+### Methods
+
+- full campaign specification and power derivation;
+- PDD method note;
+- claim ledger and replay receipts;
+- equations and answer-key derivations;
+- literature and funder-fit mapping;
+- statistical missingness, multiplicity, and stopping rules.
+
+### Archive
+
+- Boardwalk;
+- Cards;
+- Juggling;
+- the long PDD essay;
+- Lineage;
+- figure builder;
+- the ten-chapter v1 narrative.
+
+Archive pages must carry a small banner: “Research archive — not part of the
+five-minute proposal path.”
+
+## Visual and editorial rules
+
+1. **One claim per section.** Section headings state the conclusion, not a theme.
+2. **Status beside every empirical claim.** Built, Pilot, Offline audit, or
+   Proposed appears where the claim is made.
+3. **No paragraph longer than 80 words.** Use prose first; lists only when they
+   improve scanning.
+4. **No more than one primary visual per page.** A visual must settle a question
+   faster than text.
+5. **No unexplained acronyms in the first viewport.** Define f* on first use; PDD
+   never appears on Overview.
+6. **No invented precision.** N = 8/20/50 is a scale comparison, not a scaling
+   law. Frontier agreement is a declared test, not assumed fidelity.
+7. **No duplicated stories.** The gate failure lives on Evidence; its study role
+   gets one short block on Study. PDD lives on Evidence/Methods only.
+8. **One brand and one nav.** Remove the competing “multiagent” chapter identity
+   from v2.
+9. **Mobile is a first-class skim.** Summary facts stack without horizontal
+   scrolling; tables become labelled cards.
+10. **Fast by default.** No 3D hero, autoplay, scroll-jacking, or animation needed
+    to understand a claim.
+
+## Canonical facts for v2
+
+V2 must source shared grant facts from one data module rather than copying them
+into page scripts:
+
+- Tier 1;
+- 18 months;
+- $277,343 total request;
+- 30 A/A campaigns of 60 matched pairs across four strata;
+- 9.5% one-sided upper bound with zero rollbacks;
+- 6,720 cells / 3,360 paired comparisons;
+- 70 paired cells per contrast;
+- T = 200;
+- N = 8, 20, 50.
+
+The final application narrative is authoritative if older site copy disagrees.
+
+## Implementation sequence
+
+1. **Content lock.** Resolve PI/team placeholders, existing funding, host wording,
+   and the reduced-scope alternative before public v2 copy is frozen.
+2. **Fresh shell.** Build v2 separately, preserving all v1 URLs and behavior.
+3. **Overview first.** Write and test the complete skim path before migrating any
+   interactive component.
+4. **Study and Evidence.** Add the design and status ledger; wire every evidence
+   claim to a receipt or test.
+5. **Delivery.** Add canonical milestones and budget, with the actual proposal
+   visually dominant over the general calculator.
+6. **Methods and archive.** Move technical depth and older labs out of the main
+   route without deleting them.
+7. **Verification.** Test navigation, numeric invariants, status labels, word
+   budgets, responsive layout, reduced motion, keyboard access, and production
+   build.
+8. **Reviewer trials.** Run three timed checks: 30 seconds, two minutes, and five
+   minutes. After each, ask the reviewer to state the question, contribution,
+   evidence status, ask, and largest risk. Revise any answer they cannot recover.
+
+## Definition of done
+
+V2 is ready when a technically literate reader, without opening Methods, can say:
+
+> This is a working known-answer multi-agent testbed. The grant funds a narrow,
+> powered test of the population fraction needed to prevent resource collapse,
+> with an explicit hypothesis about the uncontrolled majority and honest tests of
+> transfer across tools, memory, providers, and scale. The existing results prove
+> execution and expose measurement failure; they do not pre-announce the result.
+
+If the reader instead remembers PDD, juggling, moral infrastructure, or the broken
+gate as the main project, the site is still too diffuse.
