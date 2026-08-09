@@ -17,9 +17,11 @@ import {
   POLICIES as cardPolicies,
 } from "../src/core/cards";
 import {
-  CONTROLS, REFERENCE_DESIGN, cells, pairedCells, requiredN, detectableEffect, evaluate,
+  CONTROLS, REFERENCE_DESIGN, cells, pairedCells, pairedComparisons, requiredN,
+  detectableEffect, evaluate,
 } from "../src/core/design";
 import { REFERENCE_PLAN, SIZES, budgetCurve, seedingCost } from "../src/core/seeding";
+import { FUNDING_ANCHORS, interpolateFunding } from "../src/core/funding";
 
 /**
  * These assertions mirror `flockbench-shared --selftest` exactly. Two
@@ -278,10 +280,20 @@ describe("the card game has two answer keys and they disagree", () => {
  */
 describe("the campaign planner", () => {
   it("multiplies the factors out", () => {
-    const d = { ...REFERENCE_DESIGN, families: 2, environments: 4, fractions: 8, arms: 2,
-                salt: 2, seeds: 69 };
-    expect(cells(d)).toBe(2 * 4 * 8 * 2 * 2 * 69);
-    expect(pairedCells(d)).toBe(2 * 69);
+    const d = { ...REFERENCE_DESIGN, families: 2, environments: 4, fractions: 6, arms: 2,
+                salt: 2, seeds: 35 };
+    expect(cells(d)).toBe(2 * 4 * 6 * 2 * 2 * 35);
+    expect(pairedCells(d)).toBe(2 * 35);
+  });
+
+  // The submitted budget quotes these four numbers. If someone retunes a dial
+  // default and forgets the application, this is where it surfaces.
+  it("pins the reference campaign to the figures in the application", () => {
+    expect(cells(REFERENCE_DESIGN)).toBe(6720);
+    expect(pairedComparisons(REFERENCE_DESIGN)).toBe(3360);
+    expect(pairedCells(REFERENCE_DESIGN)).toBe(70);
+    // sized to clear the requirement, and only just -- 70 against 69
+    expect(pairedCells(REFERENCE_DESIGN)).toBeGreaterThanOrEqual(requiredN(400, 1180));
   });
 
   it("reproduces the sample sizes the proposal quotes", () => {
@@ -364,5 +376,27 @@ describe("seeding cost", () => {
     expect(curve[1]!.hoursEach).toBeGreaterThan(curve[2]!.hoursEach);
     // at its own budget, the reference population gets back what it started with
     expect(curve[1]!.hoursEach).toBeCloseTo(p.trainHours, 4);
+  });
+});
+
+describe("funding scope", () => {
+  it("passes exactly through all three declared anchors", () => {
+    for (const anchor of FUNDING_ANCHORS) {
+      const s = interpolateFunding(anchor.position);
+      expect(s.budget).toBe(anchor.budget);
+      expect(s.months).toBe(anchor.months);
+    }
+  });
+
+  it("interpolates within each interval rather than smoothing away the middle anchor", () => {
+    expect(interpolateFunding(25).budget).toBeCloseTo(150_100, 6);
+    expect(interpolateFunding(25).months).toBeCloseTo(6.5, 6);
+    expect(interpolateFunding(75).budget).toBeCloseTo(650_000, 6);
+    expect(interpolateFunding(75).months).toBeCloseTo(18, 6);
+  });
+
+  it("clamps inputs to the stated planning range", () => {
+    expect(interpolateFunding(-1).budget).toBe(200);
+    expect(interpolateFunding(101).budget).toBe(1_000_000);
   });
 });

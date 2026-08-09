@@ -20,8 +20,15 @@ mount("fig-inpaint", inpaintFigure);
 
 // Each of these is a chapter too, and neither had any way to say so.
 if (document.getElementById("fig-evidence")) mountArc("experiments");
-if (document.getElementById("fig-pipeline")) mountArc("blog-pdd");
+if (document.getElementById("fig-pipeline") && !document.body.classList.contains("linked-appendix")) {
+  mountArc("blog-pdd");
+}
 if (document.body.dataset.page === "lineage") mountArc("lineage");
+
+const powerDemo = document.querySelector<HTMLElement>("#power-demo");
+if (powerDemo) {
+  void import("./v2PowerDemo").then(({ mountPowerDemo }) => mountPowerDemo(powerDemo));
+}
 
 /**
  * The status page counts itself.

@@ -291,9 +291,9 @@ export function pipelineFigure(): string {
   s.push(txt(ox, y2 + bh + 24,
     `≈${pct}% of the tokens carry loss. The action schema is never a target,`,
     { size: 11.5, fill: C.muted }));
-  s.push(txt(ox, y2 + bh + 40, "so it cannot be trained away. One cached edit per rollout, shared",
+  s.push(txt(ox, y2 + bh + 40, "reducing direct pressure on syntax. Validity is still tested. One cached edit,",
     { size: 11.5, fill: C.muted }));
-  s.push(txt(ox, y2 + bh + 56, "by every arm — no arm can be re-rolled after results are known.",
+  s.push(txt(ox, y2 + bh + 56, "shared by every arm — no arm can be re-rolled after results are known.",
     { size: 11.5, fill: C.muted }));
   return wrap(W, H, s.join(""),
     "A rollout with a few edited spans, and a loss mask covering only those spans");
@@ -438,87 +438,60 @@ export function betCurveFigure(
  * reload is a figure nobody can point at in a meeting.
  */
 export function inpaintFigure(): string {
-  const W = 620, H = 300;
+  const W = 680, H = 380;
   const s: string[] = [];
-  const ox = 132, w = 472;   // left gutter holds the row labels
+  const boxX = 174, boxW = 480;
 
-  // A sequence of token-shaped boxes. `kind` decides how each is drawn.
-  //   . plain   # locked action field   x deleted   + inpainted
-  const WIDTHS = [26, 15, 34, 19, 28, 12, 40, 22, 17, 31, 24, 13, 36, 20, 27, 15, 33, 18, 29, 21];
-  const LOCKED = new Set([6, 7, 12, 13]);      // the JSON action fields
-  const EDITED = new Set([2, 3, 9, 16, 17]);   // what the judge changes
-
-  const gap = 4;
-  const total = WIDTHS.reduce((a, b) => a + b, 0) + gap * (WIDTHS.length - 1);
-  const k = w / total;                          // scale to fit the row exactly
-
-  const row = (y: number, mode: "before" | "masked" | "after") => {
-    let x = ox;
-    WIDTHS.forEach((raw, i) => {
-      const tw = raw * k;
-      const locked = LOCKED.has(i);
-      const edited = EDITED.has(i);
-      let fill: string = C.line;
-      let stroke: string = "none";
-      let dash = "";
-      if (locked) { fill = "none"; stroke = C.ink; }
-      if (mode === "masked" && edited) { fill = "none"; stroke = HEX.bad; dash = ' stroke-dasharray="3 2"'; }
-      if (mode === "after" && edited) { fill = C.accent; }
-      if (mode === "before" && edited) { fill = C.line; }
-      s.push(`<rect x="${x.toFixed(1)}" y="${y}" width="${Math.max(tw, 3).toFixed(1)}" height="16"
-        rx="3" fill="${fill}" stroke="${stroke}" stroke-width="1.2"${dash}/>`);
-      if (locked) {
-        s.push(`<rect x="${(x + tw / 2 - 2.5).toFixed(1)}" y="${y + 5}" width="5" height="6" rx="1"
-          fill="${C.ink}"/>`);
-      }
-      x += tw + gap * k;
-    });
+  const record = (y: number, lines: string[], action: string, colour: string, locked: boolean) => {
+    s.push(`<rect x="${boxX}" y="${y}" width="${boxW}" height="58" rx="7" fill="none" stroke="${C.line}"/>`);
+    s.push(`<line x1="542" y1="${y}" x2="542" y2="${y + 58}" stroke="${C.line}"/>`);
+    s.push(txt(boxX + 14, y + 17, "reasoning", { size: 9.5, fill: C.muted, weight: 650 }));
+    lines.forEach((line, i) => s.push(txt(boxX + 14, y + 36 + i * 14, line,
+      { size: 11.5, weight: 600, fill: i === 0 ? C.ink : C.muted })));
+    s.push(txt(598, y + 17, locked ? "action · locked ■" : "observed action",
+      { size: 9.2, anchor: "middle", fill: C.muted, weight: 650 }));
+    s.push(txt(598, y + 40, action, { size: 13, anchor: "middle", fill: colour, weight: 750 }));
   };
 
-  const label = (y: number, t: string, sub?: string) => {
-    s.push(txt(ox - 14, y + 12, t, { size: 11.5, anchor: "end", weight: 650 }));
-    if (sub) s.push(txt(ox - 14, y + 26, sub, { size: 10, anchor: "end", fill: C.muted }));
+  const rowLabel = (y: number, title: string, sub: string, colour: string = C.ink) => {
+    s.push(txt(154, y + 20, title, { size: 10.8, anchor: "end", weight: 700, fill: colour }));
+    s.push(txt(154, y + 36, sub, { size: 9.5, anchor: "end", fill: C.muted }));
   };
 
-  s.push(txt(20, 20, "One rollout, masked and inpainted", { size: 13, weight: 700 }));
+  s.push(txt(20, 22, "PDD: from a selfish baseline to a testable cooperative target", { size: 13, weight: 700 }));
 
-  label(44, "instruct model", "as generated");
-  row(44, "before");
+  rowLabel(44, "BEFORE TRAINING", "fresh rollout", HEX.bad);
+  record(44, ["“Pool is low; take now", "to protect my balance.”"], "take", HEX.bad, false);
 
-  label(112, "diffusion judge", "deletes spans");
-  row(112, "masked");
+  rowLabel(124, "MASK TARGET", "Mad Libs, not RL");
+  record(124, ["“Pool is ░░░; ░░░░░░░", "to preserve ░░░░░░░░░░.”"], "restore", HEX.good, true);
 
-  label(180, "inpainted", "filled back in");
-  row(180, "after");
+  rowLabel(204, "FUZZY JUDGE", "inpaints blanks", C.accent);
+  record(204, ["“Pool is low; restore", "to preserve shared future turns.”"], "restore", HEX.good, true);
+  s.push(`<rect x="184" y="216" width="44" height="29" rx="14" fill="none" stroke="${C.accent}"
+    stroke-dasharray="2 3" opacity="0.75"/>`);
 
-  // the arrows down the left, so the order of operations is unambiguous
-  for (const y of [70, 138]) {
-    s.push(`<path d="M${ox - 22} ${y} L${ox - 22} ${y + 32}" stroke="${C.muted}"
-      stroke-width="1.5" marker-end="url(#ar)" fill="none"/>`);
+  rowLabel(284, "DISTILL + TEST", "hypothesis, not result");
+  s.push(`<rect x="${boxX}" y="284" width="214" height="58" rx="7" fill="none" stroke="${C.accent}"/>`);
+  s.push(txt(boxX + 14, 302, "loss on accepted words only", { size: 9.5, fill: C.muted, weight: 650 }));
+  s.push(txt(boxX + 14, 326, "low · restore · shared future", { size: 11.5, fill: C.accent, weight: 700 }));
+  s.push(`<path d="M396 313 L438 313" stroke="${C.muted}" stroke-width="1.5" marker-end="url(#ar)"/>`);
+  s.push(`<rect x="446" y="284" width="92" height="58" rx="7" fill="none" stroke="${C.ink}"/>`);
+  s.push(txt(492, 306, "original", { size: 9.5, anchor: "middle", fill: C.muted }));
+  s.push(txt(492, 326, "model", { size: 12, anchor: "middle", weight: 700 }));
+  s.push(`<path d="M546 313 L574 313" stroke="${C.muted}" stroke-width="1.5" marker-end="url(#ar)"/>`);
+  s.push(txt(616, 302, "fresh rollout", { size: 9.2, anchor: "middle", fill: C.muted }));
+  s.push(txt(616, 326, "restore?", { size: 13, anchor: "middle", fill: HEX.good, weight: 750 }));
+
+  for (const y of [105, 185, 265]) {
+    s.push(`<path d="M164 ${y} L164 ${y + 14}" stroke="${C.muted}" stroke-width="1.2"
+      marker-end="url(#ar)" fill="none"/>`);
   }
 
-  // what the gradient sees
-  s.push(`<line x1="${ox}" y1="222" x2="${ox + w}" y2="222" stroke="${C.line}"/>`);
-  label(232, "loss", "only here");
-  let x = ox;
-  WIDTHS.forEach((raw, i) => {
-    const tw = raw * k;
-    if (EDITED.has(i)) {
-      s.push(`<rect x="${x.toFixed(1)}" y="232" width="${Math.max(tw, 3).toFixed(1)}" height="16"
-        rx="3" fill="${HEX.good}"/>`);
-    }
-    x += tw + gap * k;
-  });
-
-  const pct = Math.round(
-    [...EDITED].reduce((t, i) => t + WIDTHS[i]!, 0) / WIDTHS.reduce((a, b) => a + b, 0) * 100);
-
-  s.push(txt(20, 276, `Outlined boxes with a bar are the action fields: never masked, never in the loss,`,
-    { size: 11.5, fill: C.muted }));
-  s.push(txt(20, 291, `so the schema cannot be trained away. About ${pct}% of the sequence carries gradient.`,
-    { size: 11.5, fill: C.muted }));
+  s.push(txt(20, 370,
+    "The take output is a baseline. The restore action belongs to a separate target and is never in the loss.",
+    { size: 11.2, fill: C.muted }));
 
   return wrap(W, H, s.join(""),
-    "A rollout from an instruct model, with a few spans deleted by a diffusion judge and inpainted, "
-    + "the action fields locked throughout, and the training loss applied only to the inpainted spans");
+    "PDD illustration: before training the model takes from a low pool; a fuzzy diffusion judge inpaints rationale around a locked restore target; only accepted words train the original model; a fresh rollout tests whether behavior changed");
 }

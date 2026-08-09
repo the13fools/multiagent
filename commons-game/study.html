@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f7f4">
+  <title>Study design — Flockbench</title>
+  <meta name="description" content="Three predeclared questions, a concrete pilot, and a low-cost population-generation method for estimating how much of a population must be controlled.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Study design — Flockbench">
+  <meta property="og:description" content="Three predeclared questions and a low-cost method for measuring mixed agent populations.">
+  <meta property="og:url" content="https://foolzone.com/multiagent/commons-game/study.html">
+  <meta property="og:image" content="https://foolzone.com/multiagent/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Flockbench: How much of a mixed agent population must you control?">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://foolzone.com/multiagent/og.png">
+  <link rel="canonical" href="https://foolzone.com/multiagent/commons-game/study.html">
+  <link rel="sitemap" type="application/xml" href="../sitemap.xml">
+  <link rel="stylesheet" href="../src/ui/v2.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav shell" aria-label="Primary navigation">
+      <a class="brand" href="./index.html"><span class="brand-mark">●</span> commons game</a>
+      <div class="nav-links">
+        <a href="./index.html">Overview</a><a href="./study.html" aria-current="page">Study</a><a href="./evidence.html">Evidence</a><a href="./program.html">Program</a><a href="./delivery.html">Delivery</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="shell">
+    <header class="page-intro">
+      <p class="eyebrow">One pilot · one population method · three questions</p>
+      <h1>What it takes to turn that question into a number.</h1>
+      <p class="deck">The overview establishes the game. This page declares the three funded questions, shows why the Stage 0 pilot cannot answer them, and explains how policy populations get built cheaply enough for a powered campaign.</p>
+      <div class="study-glance">
+        <div class="glance"><b>Survival</b><span>the one primary outcome, at T = <span data-grant-fact="horizon">200</span></span></div>
+        <div class="glance"><b>f*</b><span>smallest controlled fraction reaching the margin</span></div>
+        <div class="glance"><b data-grant-fact="cells">6,720</b><span>cells in the minimum core design</span></div>
+        <div class="glance"><b data-grant-fact="pairsPerContrast">70</b><span>matched pairs per contrast; 69 needed</span></div>
+      </div>
+    </header>
+
+    <!-- 1. the funded questions, before implementation detail -->
+    <section class="section" id="funded-questions">
+      <div class="section-head">
+        <p class="section-kicker">The funded questions</p>
+        <h2>Three questions, in scientific order.</h2>
+        <p>The controlled fraction means nothing unless the decision rule works, the population response can be estimated, and the majority mechanism explains when a minority propagates.</p>
+      </div>
+      <div class="question-list">
+        <details class="question">
+          <summary><span class="rq">RQ1 · 17%</span><h3>Can the decision rule be trusted?</h3></summary>
+          <div class="question-copy">
+            <p>Point the rule at a <strong>clone</strong> — both arms from the same population at f = 0 — so every rollback is false by construction. Three rules a careful person might write:</p>
+            <table class="comparison">
+              <thead><tr><th>rule</th><th>10 pairs</th><th>200 pairs</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Overlap</strong> — most cells must not regress</td><td>95%</td><td>100%</td></tr>
+                <tr><td><strong>Significance test</strong> — candidate must win</td><td>99%</td><td>96%</td></tr>
+                <tr><td><strong>Tolerated-harm threshold</strong></td><td>16%</td><td>0%</td></tr>
+              </tbody>
+            </table>
+            <p>The overlap rule gets <em>worse</em> with more evidence — it bounds a proportion converging to one half under the null. The significance test fails oppositely: it demands an improvement, so a clone never passes. A gate should ask whether a swap is safe to ship, not whether the candidate is better. Thirty live f = 0 campaigns of 60 pairs measure the real rate; an upper confidence bound above 10% retires the gate before any candidate claim.</p>
+          </div>
+        </details>
+        <details class="question">
+          <summary><span class="rq">RQ2 · 44%</span><h3>How large a minority is needed?</h3></summary>
+          <div class="question-copy">
+            <p><strong>f* = inf{ f : &Delta;(f) &ge; &delta; }</strong> — the smallest controlled fraction whose paired gain in survival clears the margin. &delta; is not chosen for convenience: it is the survival decrement one more permanent defector causes among eight. The arithmetic follows — <strong>69 paired cells per contrast</strong>, and the design buys 70.</p>
+            <p>Isotonic regression over the fraction, cluster bootstrap for the interval, monotonicity test <em>first</em>: if survival is not monotone in f, f* is undefined and the raw curve is the finding. Not theatre — Stage 0's ordering flipped when one environment parameter moved. f* is estimated separately by game, family and slack level, never averaged; N = 8, 20 and 50 test whether it moves with size, which does not claim a scaling law.</p>
+          </div>
+        </details>
+        <details class="question">
+          <summary><span class="rq">RQ3</span><h3>What does the majority do with the signal?</h3></summary>
+          <div class="question-copy">
+            <p>RQ2 has no single answer, because it depends on the agents you do <em>not</em> control. The <a href="./index.html#population-demo">model on the overview</a> sizes that dependence: same game, same horizon, change only the majority's rule, and the seats you need swing from <strong>none to all eight</strong>. A majority watching the pool needs no coalition; one copying its neighbours needs six of eight; pure takers need everybody.</p>
+            <p>So the rule is a designed factor. Scripted majorities use four declared rules — imitate-best-neighbour, tit-for-tat, myopic-greedy, random — known by construction, and they are the <strong>answer key</strong> for the classifier that infers the rule in LLM populations: accuracy measured against known labels before use, that error carried into the estimate. <strong>Pre-registered:</strong> f* will be lowest under imitate-best-neighbour majorities and highest under myopic-greedy, because imitation propagates a minority and greed does not.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- 2. the checked-in Stage 0 trace -->
+    <section class="section">
+      <div class="section-head">
+        <p class="section-kicker">Concrete pilot · why replication matters</p>
+        <h2>Three trajectories. No survivors. No effect estimate.</h2>
+        <p>Replay the three <a href="./evidence.html#commons-pilot">Commons Game runs</a> on one time axis. Seeding changed the path to collapse, but one seed per arm cannot say whether that ordering is real.</p>
+      </div>
+      <div class="result-demo" id="pilot-replay" aria-labelledby="pilot-replay-title">
+        <h3 id="pilot-replay-title" class="sr-only">Replay a concrete Commons pilot trace</h3>
+        <div class="result-controls">
+          <button id="result-play" type="button">Replay trace</button>
+          <output id="result-round">loading trace…</output>
+        </div>
+        <p class="result-state" id="result-state" aria-live="polite"></p>
+        <div class="result-populations" id="result-populations" role="group" aria-label="Choose a population to highlight"></div>
+        <figure class="result-figure">
+          <div class="result-plot-head"><span>Commons stock</span><span id="result-scale"></span></div>
+          <svg id="result-stock" class="result-stock" viewBox="0 0 800 120" preserveAspectRatio="none" role="img" aria-label="Commons stock by round"></svg>
+          <div id="result-grid" class="result-grid" role="img" aria-label="Agent harvests by round"></div>
+          <figcaption><span><i class="key harvest-low-key"></i>0–3 harvested</span><span><i class="key harvest-mid-key"></i>3–7</span><span><i class="key harvest-high-key"></i>7–10</span><span>rows are agents · shared round axis</span></figcaption>
+        </figure>
+      </div>
+      <p class="notice"><span class="label pilot">Pilot · one seed per arm</span> No interval and no effect estimate. The replay reads the checked-in trace directly. <strong>Receipt not yet committed.</strong></p>
+    </section>
+
+    <!-- 3. how the seeded policies are produced -->
+    <section class="section" id="post-training">
+      <div class="section-head">
+        <p class="section-kicker">Progressive Denoising Distillation (PDD)</p>
+        <h2>A low-cost way to create strategy pools, not one universal agent.</h2>
+        <p>Begin with a failure to change: the model sees a low pool and chooses <em>take</em>. PDD builds a target around a desired <em>restore</em>, inpaints only its rationale, and trains on accepted replacement words alone. Whether the behaviour shifts is an evaluation question.</p>
+      </div>
+      <div class="pdd-demo" id="pdd-demo" aria-labelledby="pdd-demo-title">
+        <h3 id="pdd-demo-title" class="sr-only">Step through span-restricted PDD</h3>
+        <input class="pdd-radio" type="radio" name="pdd-step" id="pdd-step-0" checked>
+        <input class="pdd-radio" type="radio" name="pdd-step" id="pdd-step-1">
+        <input class="pdd-radio" type="radio" name="pdd-step" id="pdd-step-2">
+        <input class="pdd-radio" type="radio" name="pdd-step" id="pdd-step-3">
+        <div class="pdd-controls" role="group" aria-label="PDD transformation step">
+          <label for="pdd-step-0"><b>1</b> baseline</label>
+          <label for="pdd-step-1"><b>2</b> mask target</label>
+          <label for="pdd-step-2"><b>3</b> inpaint</label>
+          <label for="pdd-step-3"><b>4</b> distill + test</label>
+        </div>
+        <div class="pdd-stages" role="region" aria-label="Current PDD transformation">
+          <section class="pdd-stage pdd-stage-0">
+            <div class="pdd-lanes">
+              <div class="pdd-lane">
+                <header class="pdd-lane-head"><span>01</span><strong>Observe the baseline</strong></header>
+                <div class="pdd-scene">
+                  <div class="pdd-model"><span>original model</span><strong>Qwen</strong><i aria-hidden="true">● ● ●</i></div>
+                  <span class="pdd-arrow" aria-hidden="true">→</span>
+                  <div class="pdd-record" aria-label="Pre-training rollout choosing take when the pool is low">
+                    <div class="pdd-field">
+                      <span class="pdd-field-key">pre-training rationale</span>
+                      <p>“The pool is <mark class="pdd-span is-source">low;</mark> <mark class="pdd-span is-take">take now</mark> to protect <mark class="pdd-span is-take">my balance.</mark>”</p>
+                    </div>
+                    <div class="pdd-action is-locked is-take"><span>observed action · schema intact</span><code>take</code></div>
+                  </div>
+                </div>
+              </div>
+              <div class="pdd-lane is-idle">
+                <header class="pdd-lane-head"><span>02</span><strong>Construct a target</strong></header>
+                <p class="pdd-waiting">Next, condition a separate training target on the desired action: <code>restore</code>.</p>
+              </div>
+            </div>
+            <p class="pdd-detail"><strong>Baseline.</strong> This is a diagnostic rollout before training—not the record being edited. It gives the later evaluation a concrete behavior to beat.</p>
+          </section>
+          <section class="pdd-stage pdd-stage-1">
+            <div class="pdd-lanes">
+              <div class="pdd-lane">
+                <header class="pdd-lane-head"><span>01</span><strong>Construct the target</strong></header>
+                <div class="pdd-scene">
+                  <div class="pdd-mask-note"><span>desired action</span><strong>restore is fixed</strong><i aria-hidden="true">↘ &nbsp; ↓ &nbsp; ↙</i></div>
+                  <span class="pdd-arrow" aria-hidden="true">→</span>
+                  <div class="pdd-record" aria-label="Target rationale masked while the desired action restore remains locked">
+                    <div class="pdd-field">
+                      <span class="pdd-field-key">target rationale · Mad Libs mask</span>
+                      <p>“The pool is <mark class="pdd-span is-noise" aria-label="noised span">░░░</mark>; <mark class="pdd-span is-noise" aria-label="noised span">░░░░░░░</mark> to preserve <mark class="pdd-span is-noise" aria-label="noised span">░░░░░░░░░░.</mark>”</p>
+                    </div>
+                    <div class="pdd-action is-locked"><span>target action · locked</span><code>restore</code></div>
+                  </div>
+                </div>
+              </div>
+              <div class="pdd-lane is-idle">
+                <header class="pdd-lane-head"><span>02</span><strong>Teach the original model</strong></header>
+                <p class="pdd-waiting">No training yet. First construct the target.</p>
+              </div>
+            </div>
+            <p class="pdd-detail"><strong>Mask.</strong> The desired action comes from the task specification or a selected trajectory. PDD does not edit it. It uses that fixed action and surviving context to condition the missing rationale.</p>
+          </section>
+          <section class="pdd-stage pdd-stage-2">
+            <div class="pdd-lanes">
+              <div class="pdd-lane">
+                <header class="pdd-lane-head"><span>01</span><strong>Inpaint the target</strong></header>
+                <div class="pdd-denoise-scene">
+                  <div class="pdd-judge"><span>conditioned on context + action</span><strong>diffusion<br>judge</strong><i aria-hidden="true">· ⁘ · ⁙ ·</i></div>
+                  <span class="pdd-arrow" aria-hidden="true">→</span>
+                  <div class="pdd-proposal-record">
+                    <div class="pdd-proposals" aria-label="The judge iteratively denoises only the selected rationale spans">
+                      <div class="pdd-pass is-very-noisy"><span>noisy</span><p>The pool is <b>l••</b>; <b>r••••••</b> to preserve <b>p••• ••••••••</b>.</p></div>
+                      <div class="pdd-pass is-less-noisy"><span>clearer</span><p>The pool is <b>low</b>; <b>restore</b> to preserve <b>shared •••••••</b>.</p></div>
+                      <div class="pdd-pass is-accepted"><span>accepted</span><p>The pool is <b>low</b>; <b>restore</b> to preserve <b>shared future turns</b>.</p></div>
+                    </div>
+                    <div class="pdd-action is-locked"><span>action · locked throughout</span><code>restore</code></div>
+                  </div>
+                </div>
+              </div>
+              <div class="pdd-lane is-idle">
+                <header class="pdd-lane-head"><span>02</span><strong>Teach the original model</strong></header>
+                <p class="pdd-waiting">The accepted completion is now a training target.</p>
+              </div>
+            </div>
+            <p class="pdd-detail"><strong>Inpaint.</strong> The fuzzy diffusion judge repeatedly refines only the blanks, like constrained Mad Libs. The fixed <code>restore</code> action anchors what the completed rationale is supposed to explain.</p>
+          </section>
+          <section class="pdd-stage pdd-stage-3">
+            <div class="pdd-lanes">
+              <div class="pdd-lane is-complete">
+                <header class="pdd-lane-head"><span>01</span><strong>Accepted target</strong></header>
+                <div class="pdd-record is-compact" aria-label="Accepted completed example">
+                  <div class="pdd-field">
+                    <span class="pdd-field-key">accepted rationale</span>
+                    <p>“The pool is <mark class="pdd-span is-changed">low;</mark> <mark class="pdd-span is-changed">restore</mark> to preserve <mark class="pdd-span is-changed">shared future turns.</mark>”</p>
+                  </div>
+                  <div class="pdd-action is-locked"><span>action · locked</span><code>restore</code></div>
+                </div>
+              </div>
+              <div class="pdd-lane is-training">
+                <header class="pdd-lane-head"><span>02</span><strong>Teach the original model</strong></header>
+                <div class="pdd-training-path">
+                  <div class="pdd-target" aria-label="Cross-entropy loss on accepted replacement spans only">
+                    <span>cross-entropy target</span>
+                    <p><i>zero</i> <b>low;</b> <b>restore</b> <i>zero</i> <b>shared future turns.</b></p>
+                    <small>loss on replacements only ↑</small>
+                  </div>
+                  <span class="pdd-arrow" aria-hidden="true">→</span>
+                  <div class="pdd-model"><span>same model</span><strong>Qwen</strong><i aria-hidden="true">● ● ●</i></div>
+                  <span class="pdd-arrow" aria-hidden="true">→</span>
+                  <div class="pdd-eval"><span>fresh rollout · hypothesis</span><p>low pool → shared future</p><code>restore?</code></div>
+                </div>
+              </div>
+            </div>
+            <p class="pdd-detail"><strong>Distill, then test.</strong> Cross-entropy loss is applied to accepted replacement spans only; the other tokens and the entire action field contribute zero gradient. There is no scalar reward or policy-gradient update. A fresh rollout must show whether <code>take</code> actually became <code>restore</code>.</p>
+          </section>
+        </div>
+        <div class="pdd-legend"><span><i class="pdd-key noise-key"></i>masked / inpainted span</span><span><i class="pdd-key changed-key"></i>accepted replacement</span><span><i class="pdd-key locked-key"></i>target action excluded from gradient</span></div>
+      </div>
+      <p class="notice"><span class="label proposed">Method under test</span> Style controls, action-validity checks and population outcomes separate changed wording from changed strategy — and so far the wording moves more readily. <strong>Two thousand steps of this procedure, against a rubric that explicitly penalised self-sacrifice, still produced agents that restored every turn and died by round 6.</strong> Cheap enough to build a population with; not yet shown to install what it targets.</p>
+      <div class="actions"><a class="button" href="./evidence.html#shared-trained-playthrough">See that run</a></div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer"><div class="footer-inner shell"><span>Flockbench · study design</span><div class="footer-links"><a href="../archive/design.html">Full methods</a><a href="../archive/index.html">V1 research archive</a></div></div></footer>
+  <script type="module" src="../src/ui/v2.ts"></script>
+</body>
+</html>

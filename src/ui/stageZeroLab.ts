@@ -1,5 +1,6 @@
 import "./style.css";
 import { mountArc } from "./arc";
+import { inpaintFigure } from "./figures";
 import { el, applyEmbedMode } from "./lab";
 import { RESULTS } from "../core/stageZero";
 
@@ -22,5 +23,7 @@ el("results").innerHTML = RESULTS.map((r) => `
     <p class="result-k"><span class="st st-${r.kind === "measured" ? "done" : "part"}">${KIND[r.kind]}</span>
       ${r.caveat}</p>
   </div>`).join("");
+
+el("pdd-figure").innerHTML = inpaintFigure();
 
 mountArc("stage-zero");

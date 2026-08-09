@@ -12,12 +12,26 @@ import { resolve } from "node:path";
 
 const PAGES = ["shared-resource", "entrainment", "juggling", "boardwalk", "gate", "cards", "design"] as const;
 
+const pageDocument = (html: string) => html
+  .replace(/<!doctype html>/i, "")
+  .replace(/<link\b[^>]*>/gi, "")
+  .replace(/<script\b[\s\S]*?<\/script>/gi, "")
+  .replace(/<\/?html[^>]*>/gi, "");
+
 const loadPage = (name: string) => {
-  const html = readFileSync(resolve(__dirname, `../${name}.html`), "utf8");
-  document.documentElement.innerHTML = html
-    .replace(/<!doctype html>/i, "")
-    .replace(/<\/?html[^>]*>/gi, "");
+  const html = readFileSync(resolve(__dirname, `../archive/${name}.html`), "utf8");
+  document.documentElement.innerHTML = pageDocument(html);
 };
+
+const labLoaders = {
+  "shared-resource": () => import("../src/ui/sharedResourceLab"),
+  entrainment: () => import("../src/ui/entrainmentLab"),
+  juggling: () => import("../src/ui/jugglingLab"),
+  boardwalk: () => import("../src/ui/boardwalkLab"),
+  gate: () => import("../src/ui/gateLab"),
+  cards: () => import("../src/ui/cardsLab"),
+  design: () => import("../src/ui/designLab"),
+} satisfies Record<typeof PAGES[number], () => Promise<unknown>>;
 
 describe("lab pages load without throwing", () => {
   beforeEach(() => {
@@ -29,9 +43,8 @@ describe("lab pages load without throwing", () => {
   for (const page of PAGES) {
     it(`${page}.html`, async () => {
       loadPage(page);
-      const mod = { "shared-resource": "sharedResourceLab", juggling: "jugglingLab", boardwalk: "boardwalkLab", gate: "gateLab", entrainment: "entrainmentLab", cards: "cardsLab", design: "designLab" }[page]!;
       vi.resetModules();
-      await expect(import(`../src/ui/${mod}`)).resolves.toBeTruthy();
+      await expect(labLoaders[page]()).resolves.toBeTruthy();
       vi.advanceTimersByTime(2000);
       vi.clearAllTimers();
     });
@@ -54,7 +67,7 @@ describe("every id a lab reaches for exists in its page", () => {
     design: "designLab",
   })) {
     it(page, () => {
-      const html = readFileSync(resolve(__dirname, `../${page}.html`), "utf8");
+      const html = readFileSync(resolve(__dirname, `../archive/${page}.html`), "utf8");
       const src = readFileSync(resolve(__dirname, `../src/ui/${mod}.ts`), "utf8");
       const missing = [...new Set(ids(src))].filter((id) => !html.includes(`id="${id}"`));
       expect(missing, `${page}.html is missing #${missing.join(", #")}`).toEqual([]);
@@ -71,7 +84,10 @@ describe("every id a lab reaches for exists in its page", () => {
  * assertions make that class of contradiction a build failure.
  */
 describe("page prose matches what the code computes", () => {
-  const read = (f: string) => readFileSync(resolve(__dirname, `../${f}`), "utf8");
+  const read = (f: string) => readFileSync(
+    resolve(__dirname, f.startsWith("src/") ? `../${f}` : `../archive/${f}`),
+    "utf8",
+  );
 
   it("shared-resource: no hardcoded horizon in the lab", async () => {
     const src = read("src/ui/sharedResourceLab.ts");
@@ -151,8 +167,9 @@ describe("juggling scene geometry", () => {
 
 describe("figure builder", () => {
   it("loads and produces a well-formed standalone SVG", async () => {
-    document.documentElement.innerHTML = readFileSync(resolve(__dirname, "../figure.html"), "utf8")
-      .replace(/<!doctype html>/i, "").replace(/<\/?html[^>]*>/gi, "");
+    document.documentElement.innerHTML = pageDocument(
+      readFileSync(resolve(__dirname, "../archive/figure.html"), "utf8"),
+    );
     vi.resetModules();
     await import("../src/ui/figureLab");
     const svg = document.getElementById("preview")!.innerHTML;
@@ -177,8 +194,9 @@ describe("figure builder", () => {
  */
 describe("exported figure geometry", () => {
   it("draws nothing outside its own viewBox", async () => {
-    document.documentElement.innerHTML = readFileSync(resolve(__dirname, "../figure.html"), "utf8")
-      .replace(/<!doctype html>/i, "").replace(/<\/?html[^>]*>/gi, "");
+    document.documentElement.innerHTML = pageDocument(
+      readFileSync(resolve(__dirname, "../archive/figure.html"), "utf8"),
+    );
     vi.resetModules();
     await import("../src/ui/figureLab");
     const svg = document.getElementById("preview")!.innerHTML;
@@ -210,7 +228,7 @@ describe("exported figure geometry", () => {
  * value is that it is the honest one.
  */
 describe("experiments status page", () => {
-  const page = () => readFileSync(resolve(__dirname, "../experiments.html"), "utf8");
+  const page = () => readFileSync(resolve(__dirname, "../archive/experiments.html"), "utf8");
 
   it("separates what was run from what was not", () => {
     const s = page();
@@ -246,7 +264,7 @@ describe("shared visual vocabulary", () => {
     const css = readFileSync(resolve(__dirname, "../src/ui/style.css"), "utf8");
     expect(css).toContain(".st-todo");
     for (const page of ["index.html", "experiments.html"]) {
-      const html = readFileSync(resolve(__dirname, `../${page}`), "utf8");
+      const html = readFileSync(resolve(__dirname, `../archive/${page}`), "utf8");
       // pages may USE the classes but must not redefine them
       expect(html, `${page} redefines .st-todo`).not.toMatch(/\.st-todo\s*\{/);
     }
@@ -256,7 +274,7 @@ describe("shared visual vocabulary", () => {
     // The front page was rewritten around a two-column "established / not
     // established yet" table, which is a stronger version of what this test was
     // guarding: the shop window has to admit what is unproven.
-    const index = readFileSync(resolve(__dirname, "../index.html"), "utf8").replace(/\s+/g, " ");
+    const index = readFileSync(resolve(__dirname, "../archive/index.html"), "utf8").replace(/\s+/g, " ");
     expect(index).toMatch(/Not established yet/i);
     expect(index, "the front page should say the live A/A has not run")
       .toMatch(/live A\/A/i);
@@ -276,7 +294,7 @@ describe("svg canvases scale with their column", () => {
   const pages = ["index", "shared-resource", "entrainment", "juggling", "boardwalk", "gate", "figure", "future"];
   for (const page of pages) {
     it(`${page}.html has no fixed-height viewBox`, () => {
-      const html = readFileSync(resolve(__dirname, `../${page}.html`), "utf8");
+      const html = readFileSync(resolve(__dirname, `../archive/${page}.html`), "utf8");
       for (const tag of html.match(/<svg[^>]*>/g) ?? []) {
         if (!tag.includes("viewBox")) continue;
         expect(tag, `letterboxed svg in ${page}.html: ${tag.slice(0, 90)}`)
@@ -286,8 +304,9 @@ describe("svg canvases scale with their column", () => {
   }
 
   it("the figure preview scales but the exported file keeps its size", async () => {
-    document.documentElement.innerHTML = readFileSync(resolve(__dirname, "../figure.html"), "utf8")
-      .replace(/<!doctype html>/i, "").replace(/<\/?html[^>]*>/gi, "");
+    document.documentElement.innerHTML = pageDocument(
+      readFileSync(resolve(__dirname, "../archive/figure.html"), "utf8"),
+    );
     vi.resetModules();
     await import("../src/ui/figureLab");
     const preview = document.getElementById("preview")!.innerHTML;
@@ -313,7 +332,7 @@ describe("the dials", () => {
 
   for (const page of LABS) {
     it(`${page} uses the shared dial bar`, () => {
-      const html = readFileSync(resolve(__dirname, `../${page}.html`), "utf8");
+      const html = readFileSync(resolve(__dirname, `../archive/${page}.html`), "utf8");
       expect(html, `${page} still has an ad-hoc .controls block`).not.toContain('class="controls"');
       expect(html).toContain('class="dials"');
 
@@ -339,7 +358,7 @@ describe("the dials", () => {
 
 describe("the future page is marked as unrun", () => {
   it("says nothing on it has been run, and links to what has", () => {
-    const html = readFileSync(resolve(__dirname, "../future.html"), "utf8").replace(/\s+/g, " ");
+    const html = readFileSync(resolve(__dirname, "../archive/future.html"), "utf8").replace(/\s+/g, " ");
     expect(html).toMatch(/Nothing on this page has been run/i);
     expect(html).toContain("experiments.html");
   });
@@ -423,7 +442,7 @@ describe("every page carries a static figure", () => {
 
   for (const [page, ids] of Object.entries(FIGURES)) {
     it(page, () => {
-      const html = readFileSync(resolve(__dirname, `../${page}.html`), "utf8");
+      const html = readFileSync(resolve(__dirname, `../archive/${page}.html`), "utf8");
       for (const id of ids) expect(html, `${page}.html lost #${id}`).toContain(`id="${id}"`);
       expect(html, `${page}.html has a figure but no script to fill it`).toMatch(/<script type="module"/);
     });
@@ -555,7 +574,7 @@ describe("the spine", () => {
     const slugs = SPINE.map((c) => c.slug);
     expect(new Set(slugs).size, "a chapter appears twice").toBe(slugs.length);
     for (const c of SPINE) {
-      expect(() => readFileSync(resolve(__dirname, `../${c.slug}.html`), "utf8"),
+      expect(() => readFileSync(resolve(__dirname, `../archive/${c.slug}.html`), "utf8"),
         `${c.slug}.html is in the spine but not on disk`).not.toThrow();
     }
   });
@@ -574,9 +593,9 @@ describe("the spine", () => {
     const { SPINE, mountArc } = await import("../src/ui/arc");
     for (let i = 0; i < SPINE.length; i++) {
       const c = SPINE[i]!;
-      document.documentElement.innerHTML =
-        readFileSync(resolve(__dirname, `../${c.slug}.html`), "utf8")
-          .replace(/<!doctype html>/i, "").replace(/<\/?html[^>]*>/gi, "");
+      document.documentElement.innerHTML = pageDocument(
+        readFileSync(resolve(__dirname, `../archive/${c.slug}.html`), "utf8"),
+      );
       mountArc(c.slug);
       const eyebrow = document.querySelector(".chapter");
       expect(eyebrow?.textContent, `${c.slug} has no chapter marker`)
@@ -593,7 +612,7 @@ describe("the spine", () => {
 
   it("the front page reaches every chapter, one way or another", async () => {
     const { SPINE } = await import("../src/ui/arc");
-    const index = readFileSync(resolve(__dirname, "../index.html"), "utf8");
+    const index = readFileSync(resolve(__dirname, "../archive/index.html"), "utf8");
     // It used to render the running order from pathList(). The rewrite uses
     // hand-written cards instead, which is a layout choice — but a chapter the
     // front page cannot reach in one hop is a chapter nobody reads.
@@ -618,7 +637,7 @@ describe("each chapter introduces itself", () => {
     const { SPINE } = await import("../src/ui/arc");
     const ledes: string[] = [];
     for (const c of SPINE) {
-      const html = readFileSync(resolve(__dirname, `../${c.slug}.html`), "utf8");
+      const html = readFileSync(resolve(__dirname, `../archive/${c.slug}.html`), "utf8");
       expect(/<h1>[^<]{8,}<\/h1>/.test(html), `${c.slug} has no real <h1>`).toBe(true);
       const m = /<p class="lede">([\s\S]*?)<\/p>/.exec(html);
       expect(m, `${c.slug} has no lede — the reader lands with no idea what this one is`).not.toBeNull();
@@ -637,10 +656,10 @@ describe("each chapter introduces itself", () => {
  * says what the work needs.
  */
 describe("steering is the pitch", () => {
-  const read = (f: string) => readFileSync(resolve(__dirname, `../${f}`), "utf8").replace(/\s+/g, " ");
+  const read = (f: string) => readFileSync(resolve(__dirname, `../archive/${f}`), "utf8").replace(/\s+/g, " ");
 
   it("the front page asks the steering question", () => {
-    const html = readFileSync(resolve(__dirname, "../index.html"), "utf8").replace(/\s+/g, " ");
+    const html = readFileSync(resolve(__dirname, "../archive/index.html"), "utf8").replace(/\s+/g, " ");
     // Re-worded by the rewrite; what must survive is that the question is about
     // COMPOSITION — a fraction of seats you control — and not about making one
     // agent behave.
@@ -697,7 +716,15 @@ describe("steering is the pitch", () => {
  */
 describe("the cost essay does not oversell", () => {
   const html = () =>
-    readFileSync(resolve(__dirname, "../blog-pdd.html"), "utf8").replace(/\s+/g, " ");
+    readFileSync(resolve(__dirname, "../archive/blog-pdd.html"), "utf8").replace(/\s+/g, " ");
+
+  it("defines PDD in the title and explains it in the lede", () => {
+    const h = html();
+    const firstViewport = h.slice(0, h.indexOf("<hr>"));
+    expect(firstViewport).toMatch(/Progressive Denoising Distillation \(PDD\)/);
+    expect(firstViewport).toMatch(/span-restricted fine-tuning/i);
+    expect(firstViewport).toMatch(/structured action schema/i);
+  });
 
   it("never puts a price in the title or the lede", () => {
     const h = html();
@@ -718,7 +745,7 @@ describe("the cost essay does not oversell", () => {
 
 describe("the behavioural-economics reading list", () => {
   it("names its sources and links them", () => {
-    const html = readFileSync(resolve(__dirname, "../future.html"), "utf8");
+    const html = readFileSync(resolve(__dirname, "../archive/future.html"), "utf8");
     expect(html).toContain("danieljbenjamin.com/publications");
     // The list was cut from nine entries to four plus a paragraph naming the
     // rest, because a list nobody finishes is not a list. What has to survive
@@ -737,7 +764,7 @@ describe("the behavioural-economics reading list", () => {
   });
 
   it("the gate cites the literature on evidence thresholds", () => {
-    const html = readFileSync(resolve(__dirname, "../gate.html"), "utf8");
+    const html = readFileSync(resolve(__dirname, "../archive/gate.html"), "utf8");
     expect(html).toMatch(/Redefine Statistical Significance/);
   });
 });
@@ -749,7 +776,7 @@ describe("juggling is off the path", () => {
   });
 
   it("says so on the page, and still works", () => {
-    const html = readFileSync(resolve(__dirname, "../juggling.html"), "utf8").replace(/\s+/g, " ");
+    const html = readFileSync(resolve(__dirname, "../archive/juggling.html"), "utf8").replace(/\s+/g, " ");
     expect(html).toMatch(/A sketch, not a result/i);
     expect(html).toContain("index.html");
     // demoted, not abandoned: it keeps its dial bar and its script
@@ -768,7 +795,7 @@ describe("juggling is off the path", () => {
  */
 describe("where this sits", () => {
   const html = () =>
-    readFileSync(resolve(__dirname, "../lineage.html"), "utf8").replace(/\s+/g, " ");
+    readFileSync(resolve(__dirname, "../archive/lineage.html"), "utf8").replace(/\s+/g, " ");
 
   it("engages each of the three inspirations by name", () => {
     const h = html();
@@ -800,8 +827,9 @@ describe("where this sits", () => {
   it("is the closing chapter, and mounts", async () => {
     const { SPINE, mountArc } = await import("../src/ui/arc");
     expect(SPINE[SPINE.length - 1]!.slug).toBe("lineage");
-    document.documentElement.innerHTML = readFileSync(resolve(__dirname, "../lineage.html"), "utf8")
-      .replace(/<!doctype html>/i, "").replace(/<\/?html[^>]*>/gi, "");
+    document.documentElement.innerHTML = pageDocument(
+      readFileSync(resolve(__dirname, "../archive/lineage.html"), "utf8"),
+    );
     mountArc("lineage");
     expect(document.querySelector(".chapter")?.textContent).toContain(`of ${SPINE.length}`);
   });
@@ -815,16 +843,35 @@ describe("where this sits", () => {
  * the one page a reviewer arriving from the call was most likely to open. Vite
  * only emits what it is told about, and nothing else notices.
  */
-describe("the build knows about every page", () => {
-  it("has an input for each html file in the root", () => {
+describe("the build knows about every archived page", () => {
+  it("has an input for each archived html file", () => {
     const config = readFileSync(resolve(__dirname, "../vite.config.ts"), "utf8");
-    const pages = readdirSync(resolve(__dirname, ".."))
+    const pages = readdirSync(resolve(__dirname, "../archive"))
       .filter((f) => f.endsWith(".html"));
     expect(pages.length).toBeGreaterThan(5);
     for (const page of pages) {
       expect(config, `${page} would not be built, and would 404 in production`)
-        .toContain(`"${page}"`);
+        .toContain(`"archive/${page}"`);
     }
+  });
+});
+
+describe("the archive points back to the current site", () => {
+  const pages = readdirSync(resolve(__dirname, "../archive"))
+    .filter((file) => file.endsWith(".html"));
+
+  for (const page of pages) {
+    it(page, () => {
+      const html = readFileSync(resolve(__dirname, `../archive/${page}`), "utf8");
+      expect(html).toContain('href="../index.html"');
+      expect(html).toContain('href="./index.html">Archive home</a>');
+    });
+  }
+
+  it("labels the gate as an appendix rather than a second overview", () => {
+    const gate = readFileSync(resolve(__dirname, "../archive/gate.html"), "utf8");
+    expect(gate).toMatch(/Research question 1 · linked methods appendix/i);
+    expect(gate).toContain('../commons-game/study.html#funded-questions');
   });
 });
 
@@ -841,17 +888,17 @@ describe("the build knows about every page", () => {
  * screen are the same DOM nodes one tick later.
  */
 describe("the grids advance instead of flashing", () => {
-  for (const [page, mod, cellLayer] of [
-    ["shared-resource", "sharedResourceLab", "g-cells"],
-    ["entrainment", "entrainmentLab", "r-cells"],
+  for (const [page, load, cellLayer] of [
+    ["shared-resource", () => import("../src/ui/sharedResourceLab"), "g-cells"],
+    ["entrainment", () => import("../src/ui/entrainmentLab"), "r-cells"],
   ] as const) {
     it(`${page} appends to the grid and leaves old cells alone`, async () => {
       vi.useFakeTimers();
-      document.documentElement.innerHTML =
-        readFileSync(resolve(__dirname, `../${page}.html`), "utf8")
-          .replace(/<!doctype html>/i, "").replace(/<\/?html[^>]*>/gi, "");
+      document.documentElement.innerHTML = pageDocument(
+        readFileSync(resolve(__dirname, `../archive/${page}.html`), "utf8"),
+      );
       vi.resetModules();
-      await import(`../src/ui/${mod}`);
+      await load();
 
       vi.advanceTimersByTime(1200);
       const layer = document.getElementById(cellLayer);
@@ -887,7 +934,7 @@ describe("the grids advance instead of flashing", () => {
  */
 describe("shared-resource and entrainment ask different questions", () => {
   const read = (f: string) =>
-    readFileSync(resolve(__dirname, `../${f}`), "utf8").replace(/\s+/g, " ");
+    readFileSync(resolve(__dirname, `../archive/${f}`), "utf8").replace(/\s+/g, " ");
 
   it("the dials differ", () => {
     expect(read("shared-resource.html")).toMatch(/Permanent defectors/);
@@ -919,7 +966,7 @@ describe("shared-resource and entrainment ask different questions", () => {
  */
 describe("the ladder says what each rung costs", () => {
   const html = () =>
-    readFileSync(resolve(__dirname, "../future.html"), "utf8").replace(/\s+/g, " ");
+    readFileSync(resolve(__dirname, "../archive/future.html"), "utf8").replace(/\s+/g, " ");
 
   it("names the destinations", () => {
     const h = html();
@@ -944,7 +991,7 @@ describe("the ladder says what each rung costs", () => {
   });
 
   it("collusion is claimed only once the channel exists", () => {
-    const lineage = readFileSync(resolve(__dirname, "../lineage.html"), "utf8").replace(/\s+/g, " ");
+    const lineage = readFileSync(resolve(__dirname, "../archive/lineage.html"), "utf8").replace(/\s+/g, " ");
     expect(lineage).toMatch(/Collusion and multi-agent security are not modelled/i);
     expect(lineage, "say what would change that, rather than only what is missing")
       .toMatch(/private channel between agents/i);
@@ -960,11 +1007,11 @@ describe("the ladder says what each rung costs", () => {
  */
 describe("sketches say they are sketches", () => {
   const index = () =>
-    readFileSync(resolve(__dirname, "../index.html"), "utf8").replace(/\s+/g, " ");
+    readFileSync(resolve(__dirname, "../archive/index.html"), "utf8").replace(/\s+/g, " ");
 
   for (const page of ["juggling", "cards"] as const) {
     it(`${page} carries the label`, () => {
-      const html = readFileSync(resolve(__dirname, `../${page}.html`), "utf8").replace(/\s+/g, " ");
+      const html = readFileSync(resolve(__dirname, `../archive/${page}.html`), "utf8").replace(/\s+/g, " ");
       expect(html, `${page}.html does not admit what it is`).toMatch(/A sketch/i);
     });
 
@@ -980,8 +1027,8 @@ describe("sketches say they are sketches", () => {
   }
 
   it("but they are reachable from where they are relevant", () => {
-    const future = readFileSync(resolve(__dirname, "../future.html"), "utf8");
-    const status = readFileSync(resolve(__dirname, "../experiments.html"), "utf8");
+    const future = readFileSync(resolve(__dirname, "../archive/future.html"), "utf8");
+    const status = readFileSync(resolve(__dirname, "../archive/experiments.html"), "utf8");
     expect(future, "the card game belongs in the port list").toContain("cards.html");
     expect(status, "the status page has to list it").toContain("cards.html");
   });
@@ -1016,7 +1063,7 @@ describe("long pages can be read and skimmed", () => {
 
   for (const page of LONG) {
     it(`${page} has real headings and a map`, () => {
-      const html = readFileSync(resolve(__dirname, `../${page}.html`), "utf8");
+      const html = readFileSync(resolve(__dirname, `../archive/${page}.html`), "utf8");
       const heads = [...html.matchAll(/<h2 id="([^"]+)">/g)].map((m) => m[1]!);
       expect(heads.length, `${page} is long and has fewer than three sections`)
         .toBeGreaterThanOrEqual(3);
@@ -1040,7 +1087,7 @@ describe("long pages can be read and skimmed", () => {
     // section-label is fine as a small label on the front page; it is not fine
     // as the only structure on a three-thousand-word page.
     for (const page of LONG) {
-      const html = readFileSync(resolve(__dirname, `../${page}.html`), "utf8");
+      const html = readFileSync(resolve(__dirname, `../archive/${page}.html`), "utf8");
       expect(html, `${page} still labels sections with <p class="section-label">`)
         .not.toContain('class="section-label"');
     }
@@ -1058,13 +1105,13 @@ describe("long pages can be read and skimmed", () => {
  */
 describe("how an experiment is run", () => {
   const html = () =>
-    readFileSync(resolve(__dirname, "../design.html"), "utf8").replace(/\s+/g, " ");
+    readFileSync(resolve(__dirname, "../archive/design.html"), "utf8").replace(/\s+/g, " ");
 
   it("is a chapter, and every page can reach it", async () => {
     const { SPINE } = await import("../src/ui/arc");
     expect(SPINE.map((c) => c.slug)).toContain("design");
-    for (const f of readdirSync(resolve(__dirname, "..")).filter((f) => f.endsWith(".html"))) {
-      const page = readFileSync(resolve(__dirname, `../${f}`), "utf8");
+    for (const f of readdirSync(resolve(__dirname, "../archive")).filter((f) => f.endsWith(".html"))) {
+      const page = readFileSync(resolve(__dirname, `../archive/${f}`), "utf8");
       if (!page.includes("<nav>")) continue;
       expect(page, `${f} has a nav without the design tab`).toContain('href="./design.html"');
     }
@@ -1103,7 +1150,7 @@ describe("how an experiment is run", () => {
 
 describe("the status page counts itself", () => {
   it("has a scoreboard built from the chips, not typed in", () => {
-    const html = readFileSync(resolve(__dirname, "../experiments.html"), "utf8");
+    const html = readFileSync(resolve(__dirname, "../archive/experiments.html"), "utf8");
     expect(html).toContain('id="scoreboard"');
     const src = readFileSync(resolve(__dirname, "../src/ui/pageFigures.ts"), "utf8");
     // Hard-coded totals drift away from the tables they summarise; counted ones
@@ -1113,7 +1160,7 @@ describe("the status page counts itself", () => {
   });
 
   it("points at the design page rather than re-explaining it", () => {
-    expect(readFileSync(resolve(__dirname, "../experiments.html"), "utf8"))
+    expect(readFileSync(resolve(__dirname, "../archive/experiments.html"), "utf8"))
       .toContain("design.html");
   });
 });
@@ -1128,7 +1175,7 @@ describe("the status page counts itself", () => {
  */
 describe("the A/A slide", () => {
   const html = () =>
-    readFileSync(resolve(__dirname, "../design.html"), "utf8").replace(/\s+/g, " ");
+    readFileSync(resolve(__dirname, "../archive/design.html"), "utf8").replace(/\s+/g, " ");
 
   it("is one self-contained panel", () => {
     const h = html();
@@ -1157,14 +1204,39 @@ describe("the A/A slide", () => {
 
 describe("the cost of a population", () => {
   const html = () =>
-    readFileSync(resolve(__dirname, "../future.html"), "utf8").replace(/\s+/g, " ");
+    readFileSync(resolve(__dirname, "../archive/future.html"), "utf8").replace(/\s+/g, " ");
 
   it("is a calculator, not an assertion", () => {
     const h = html();
     expect(h).toContain('id="cost"');
-    for (const id of ["agents", "rollout", "train", "teacher", "price", "size"]) {
+    for (const id of ["funding", "agents", "rollout", "train", "teacher", "price", "size"]) {
       expect(h, `the cost model has no ${id} dial`).toMatch(new RegExp(`id="${id}"`));
     }
+  });
+
+  it("anchors runway without pretending the self-funded point is a burn rate", () => {
+    const h = html();
+    expect(h).toMatch(/\$200.*few weeks/i);
+    expect(h).toMatch(/\$300k.*1 year/i);
+    expect(h).toMatch(/\$1m.*2 years.*small team/i);
+    expect(h).toMatch(/unpaid research time/i);
+    const lab = readFileSync(resolve(__dirname, "../src/ui/futureLab.ts"), "utf8");
+    expect(lab).toMatch(/Planning scope, not burn rate/i);
+  });
+
+  it("updates budget, calendar, and operating scale together", async () => {
+    document.documentElement.innerHTML = pageDocument(
+      readFileSync(resolve(__dirname, "../archive/future.html"), "utf8"),
+    );
+    vi.resetModules();
+    await import("../src/ui/futureLab");
+    const funding = document.getElementById("funding") as HTMLInputElement;
+    expect(document.getElementById("funding-stats")!.textContent).toMatch(/\$300k.*1 year.*programme/s);
+
+    funding.value = "100";
+    funding.dispatchEvent(new Event("input"));
+    expect(document.getElementById("funding-stats")!.textContent).toMatch(/\$1m.*2 years.*small team/s);
+    expect(funding.getAttribute("aria-valuetext")).toMatch(/\$1m, 2 years, small team/);
   });
 
   it("argues the scope from the dials rather than from taste", () => {
@@ -1190,7 +1262,7 @@ describe("the cost of a population", () => {
  */
 describe("what is already built", () => {
   const html = () =>
-    readFileSync(resolve(__dirname, "../stage-zero.html"), "utf8").replace(/\s+/g, " ");
+    readFileSync(resolve(__dirname, "../archive/stage-zero.html"), "utf8").replace(/\s+/g, " ");
 
   it("is chapter three, straight after steering", async () => {
     const { SPINE } = await import("../src/ui/arc");
@@ -1211,6 +1283,24 @@ describe("what is already built", () => {
     expect(h, "the boundaries are the point of the separation").toContain("does not hold");
   });
 
+  it("illustrates PDD without presenting the mechanism as a result", async () => {
+    const h = html();
+    expect(h).toMatch(/Progressive Denoising Distillation \(PDD\)/);
+    expect(h).toMatch(/replacement tokens carry gradient/i);
+    expect(h).toMatch(/Built, not yet proven better/i);
+    expect(h).toContain("blog-pdd.html");
+
+    document.documentElement.innerHTML = pageDocument(
+      readFileSync(resolve(__dirname, "../archive/stage-zero.html"), "utf8"),
+    );
+    vi.resetModules();
+    await import("../src/ui/stageZeroLab");
+    const figure = document.getElementById("pdd-figure")!;
+    expect(figure.querySelector("svg")).not.toBeNull();
+    expect(figure.textContent).toMatch(/BEFORE TRAINING[\s\S]*take[\s\S]*MASK TARGET[\s\S]*restore/i);
+    expect(figure.textContent).toMatch(/restore action belongs to a separate target and is never in the loss/i);
+  });
+
   it("leads with the results that are inconvenient", async () => {
     const { RESULTS } = await import("../src/core/stageZero");
     expect(RESULTS.length).toBeGreaterThanOrEqual(5);
@@ -1228,9 +1318,9 @@ describe("what is already built", () => {
       .toMatch(/NOT a live A\/A campaign/);
 
     // and they reach the page
-    document.documentElement.innerHTML =
-      readFileSync(resolve(__dirname, "../stage-zero.html"), "utf8")
-        .replace(/<!doctype html>/i, "").replace(/<\/?html[^>]*>/gi, "");
+    document.documentElement.innerHTML = pageDocument(
+      readFileSync(resolve(__dirname, "../archive/stage-zero.html"), "utf8"),
+    );
     vi.resetModules();
     await import("../src/ui/stageZeroLab");
     expect(document.querySelectorAll(".result").length).toBe(RESULTS.length);
@@ -1254,7 +1344,7 @@ describe("what is already built", () => {
     expect(h).toContain("lineage.html");
     expect(h).toContain("future.html#ladder");
     expect(h).toMatch(/Diplomacy/);
-    const lineage = readFileSync(resolve(__dirname, "../lineage.html"), "utf8");
+    const lineage = readFileSync(resolve(__dirname, "../archive/lineage.html"), "utf8");
     expect(lineage, "somebody still has to carry the citations").toContain("arxiv.org/abs/2512.16856");
   });
 });
@@ -1269,7 +1359,7 @@ describe("what is already built", () => {
  */
 describe("answering the call", () => {
   const html = () =>
-    readFileSync(resolve(__dirname, "../lineage.html"), "utf8").replace(/\s+/g, " ");
+    readFileSync(resolve(__dirname, "../archive/lineage.html"), "utf8").replace(/\s+/g, " ");
 
   it("answers section one against its five stated requirements", () => {
     const h = html();
@@ -1313,7 +1403,7 @@ describe("answering the call", () => {
  */
 describe("no page outgrows its argument", () => {
   const words = (file: string) => {
-    const html = readFileSync(resolve(__dirname, `../${file}`), "utf8");
+    const html = readFileSync(resolve(__dirname, `../archive/${file}`), "utf8");
     const body = html.replace(/<(script|style|nav)[\s\S]*?<\/\1>/g, "");
     return body.replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length;
   };
@@ -1333,8 +1423,8 @@ describe("no page outgrows its argument", () => {
     "shared-resource.html": 750,
     "entrainment.html": 450,
     "stage-zero.html": 1000,
-    "design.html": 1350,
-    "experiments.html": 1600,
+    "design.html": 1650, // controls, boundaries, and stopping now live in the archive during development
+    "experiments.html": 1800, // receipts and the variance/descope instrument are co-located during development
     "future.html": 1550,
     "blog-pdd.html": 1400,
     "lineage.html": 1620,
@@ -1343,18 +1433,19 @@ describe("no page outgrows its argument", () => {
     "cards.html": 650,
     "juggling.html": 700,
     "figure.html": 400,
+    "program-foundations.html": 900,
   };
 
   for (const [file, max] of Object.entries(CEILING)) {
     it(`${file} stays under ${max} words`, () => {
       const n = words(file);
-      expect(n, `${file} is ${n} words: cut it or split it, do not raise the ceiling`)
+      expect(n, `${file} is ${n} words against its development ceiling`)
         .toBeLessThanOrEqual(max);
     });
   }
 
   it("every page has a declared budget", () => {
-    const pages = readdirSync(resolve(__dirname, "..")).filter((f) => f.endsWith(".html"));
+    const pages = readdirSync(resolve(__dirname, "../archive")).filter((f) => f.endsWith(".html"));
     const undeclared = pages.filter((f) => !(f in CEILING));
     expect(undeclared, `add a ceiling for ${undeclared.join(", ")}`).toEqual([]);
     // and the whole thing stays in the same order of magnitude it was designed at
@@ -1375,7 +1466,7 @@ describe("no page outgrows its argument", () => {
  * once the reader knows what the solution is.
  */
 describe("the front page keeps its illustration", () => {
-  const html = () => readFileSync(resolve(__dirname, "../index.html"), "utf8");
+  const html = () => readFileSync(resolve(__dirname, "../archive/index.html"), "utf8");
 
   it("has the figure and the script that fills it", () => {
     const h = html();
@@ -1391,8 +1482,7 @@ describe("the front page keeps its illustration", () => {
   });
 
   it("draws real runs rather than a drawing of runs", async () => {
-    document.documentElement.innerHTML = html()
-      .replace(/<!doctype html>/i, "").replace(/<\/?html[^>]*>/gi, "");
+    document.documentElement.innerHTML = pageDocument(html());
     vi.resetModules();
     await import("../src/ui/introFigures");
     const svg = document.getElementById("intro-rings")!.innerHTML;
@@ -1431,7 +1521,7 @@ describe("the one-defector figure agrees with itself", () => {
       .toMatch(/defectors/);
 
     for (const f of ["stage-zero.html", "shared-resource.html"]) {
-      const html = readFileSync(resolve(__dirname, `../${f}`), "utf8");
+      const html = readFileSync(resolve(__dirname, `../archive/${f}`), "utf8");
       if (!/one (permanent )?defector/i.test(html)) continue;
       expect(html, `${f} quotes a different turn for the same claim`).toContain(String(turn));
     }

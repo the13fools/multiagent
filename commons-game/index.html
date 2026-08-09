@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f7f4">
+  <title>Flockbench — sustaining a commons without central control</title>
+  <meta name="description" content="A theory-led testbed for partial control of AI-agent populations, with a Stage 0 result showing that post-training changed—and worsened—a transferred failure mode.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Flockbench — sustaining a commons without central control">
+  <meta property="og:description" content="A known-answer commons testbed for partial control, low-cost post-training, and failures that only appear when policies transfer between games.">
+  <meta property="og:url" content="https://foolzone.com/multiagent/commons-game/">
+  <meta property="og:image" content="https://foolzone.com/multiagent/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Flockbench: How much of a mixed agent population must you control?">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Flockbench — sustaining a commons without central control">
+  <meta name="twitter:description" content="A known-answer multi-agent commons testbed that makes correlated post-training failures visible.">
+  <meta name="twitter:image" content="https://foolzone.com/multiagent/og.png">
+  <link rel="canonical" href="https://foolzone.com/multiagent/commons-game/">
+  <link rel="sitemap" type="application/xml" href="../sitemap.xml">
+  <link rel="stylesheet" href="../src/ui/v2.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav shell" aria-label="Primary navigation">
+      <a class="brand" href="./index.html"><span class="brand-mark">●</span> commons game</a>
+      <div class="nav-links">
+        <a href="./index.html" aria-current="page">Overview</a>
+        <a href="./study.html">Study</a>
+        <a href="./evidence.html">Evidence</a>
+        <a href="./program.html">Program</a>
+        <a href="./delivery.html">Delivery</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero shell">
+      <p class="eyebrow">Stage 0 built independently · <span data-grant-fact="tier">Tier 1</span> · <span data-grant-fact="total">$275,000</span></p>
+      <h1>How can a partial coalition keep a commons alive when no one controls the whole population?</h1>
+      <p class="deck">Flockbench models a commons where one actor may control many agents, but never all. It asks what the coalition must do—and how large it must be—while the rest follow self-regarding policies.</p>
+      <div class="actions">
+        <a class="button" href="./study.html">Read the study</a>
+        <a class="button secondary" href="./evidence.html">Stage 0 evidence</a>
+      </div>
+    </section>
+
+    <figure class="outcome-figure shell" aria-labelledby="outcome-caption">
+      <img src="../commons-game-outcomes.jpg" width="1536" height="1024" fetchpriority="high" alt="Three shared-resource outcomes: an empty pond with agents and wildlife fallen, a full pond with agents fallen but small animals upright, and a partly full pond with agents and wildlife upright.">
+      <figcaption id="outcome-caption">
+        <span class="caption-label">Outcomes</span>
+        <span><strong>Survival requires balance.</strong> Take only: empty pond, agents and wildlife fall. Give only: full pond, living wildlife, fallen agents. Give and take: all survive.</span>
+      </figcaption>
+    </figure>
+
+    <section class="demo shell" id="population-demo" aria-labelledby="demo-title">
+      <div class="demo-intro">
+        <div>
+          <p class="section-kicker">Live answer-key model</p>
+          <h2 id="demo-title">Move one control. Find the cliff.</h2>
+        </div>
+        <p>Eight agents share a finite pool for 200 turns. Change how many seats you control and how the others behave. This is a theoretical answer key—not yet a result about language models.</p>
+      </div>
+
+      <div class="demo-controls">
+        <label for="controlled-seats">Seats you control <output id="controlled-value" for="controlled-seats">5 / 8</output></label>
+        <input id="controlled-seats" type="range" min="0" max="8" value="5" step="1">
+        <div class="demo-sweep" id="demo-sweep" role="group" aria-label="Outcome at every controlled fraction"></div>
+        <p class="demo-sweep-key"><i class="key survive-key"></i>survives · <i class="key collapse-key"></i>collapses. The outline marks the smallest fraction that holds. Change the majority rule and the threshold moves—that dependence is what the study measures.</p>
+        <label for="uncontrolled-rule">Uncontrolled seats</label>
+        <select id="uncontrolled-rule">
+          <option value="take">always take</option>
+          <option value="copy" selected>copy the majority</option>
+          <option value="own">hold their own restore rate at one half</option>
+          <option value="pool">react to the pool level</option>
+        </select>
+      </div>
+
+      <div class="demo-transport">
+        <button id="demo-play" type="button">Replay dynamics</button>
+        <output id="demo-turn" for="controlled-seats uncontrolled-rule">turn 200 / 200</output>
+      </div>
+
+      <div class="demo-readout" aria-live="polite">
+        <strong id="demo-verdict">Calculating…</strong>
+        <span id="demo-threshold"></span>
+      </div>
+
+      <figure class="demo-figure">
+        <div class="demo-plot-head"><span>Shared pool</span><span id="demo-pool-scale"></span></div>
+        <svg id="demo-pool" class="demo-pool" viewBox="0 0 800 100" preserveAspectRatio="none" role="img" aria-label="Shared pool level over the run"></svg>
+        <div id="demo-grid" class="demo-grid" role="img" aria-label="Agent actions over the run"></div>
+        <figcaption><span><i class="key controlled-key"></i>controlled</span><span><i class="key restore-key"></i>restore</span><span><i class="key take-key"></i>take</span><span><i class="key dead-key"></i>dead</span><span>turn 1 → 200</span></figcaption>
+      </figure>
+    </section>
+
+    <div class="fact-strip shell" aria-label="Project at a glance">
+      <div class="fact"><b>≈ $200</b><span>RunPod credits spent out of pocket in Stage 0</span></div>
+      <div class="fact"><b>Qwen2.5–7B</b><span>small enough for single-GPU LoRA experiments</span></div>
+      <div class="fact"><b>1 researcher</b><span>independent and unpaid during the prototype</span></div>
+      <div class="fact"><b>No LLM judge</b><span>survival and stock follow from the rules</span></div>
+    </div>
+
+    <section class="finding-strip shell" id="stage-zero-finding" aria-labelledby="finding-title">
+      <div class="finding-head">
+        <p class="section-kicker">Stage 0 finding · one seed per condition</p>
+        <h2 id="finding-title">Training changed the failure mode. Neither route solved the game.</h2>
+        <p>In the source game, the adapter delayed collapse from round 33 to 170—but no arm survived. In Shared Resource, both direct training and cross-game transfer produced the same rigid failure.</p>
+      </div>
+
+      <div class="finding-grid" aria-label="Untrained and trained outcomes in Shared Resource">
+        <article class="finding-arm">
+          <span>Untrained · Shared Resource</span>
+          <strong>Noisy, staggered failure</strong>
+          <b>extinct turn 8</b>
+          <p>One bot breaks rank and takes, delaying the population's collapse.</p>
+        </article>
+        <article class="finding-arm is-trained">
+          <span>Direct- and Commons-trained · Shared Resource</span>
+          <strong>Rigid, unanimous failure</strong>
+          <b>extinct turn 6</b>
+          <p>In both uploaded traces, all eight restore together, spend themselves down, and fall at once.</p>
+        </article>
+      </div>
+
+      <div class="finding-verdict">
+        <p><strong>What the pilot supports:</strong> both training routes changed behavior, but neither discovered the alternating strategy. These are diagnostic traces—not effect sizes—and the receipts are not yet committed.</p>
+        <div class="finding-links">
+          <a class="route-button" href="./evidence.html#shared-resource-transfer">Watch the three flocks <span aria-hidden="true">→</span></a>
+          <a href="./evidence.html#commons-training">See the source-game trace</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell">
+      <div class="split">
+        <div class="section-head">
+          <p class="section-kicker">Next</p>
+          <h2>The pilot is the reason for the study, not its answer.</h2>
+        </div>
+        <div class="prose">
+          <p>Stage 0 shows that training can change a population and that the result can reverse across games. It does not estimate an effect.</p>
+          <p>The study predeclares the decision rule, measures the controlled-fraction response, and tests when the surrounding majority propagates or defeats a minority strategy.</p>
+          <div class="actions">
+            <a class="button" href="./study.html">Continue to the study</a>
+            <a class="button secondary" href="./evidence.html">Inspect the evidence</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner shell">
+      <span>Commons Game · a Flockbench study</span>
+      <div class="footer-links">
+        <span>Source release pending</span>
+        <a href="../index.html">Program home</a>
+        <a href="../archive/design.html">Methods</a>
+        <a href="../archive/index.html">V1 research archive</a>
+      </div>
+    </div>
+  </footer>
+  <script type="module" src="../src/ui/v2.ts"></script>
+</body>
+</html>

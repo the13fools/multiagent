@@ -1,6 +1,10 @@
 import "./style.css";
 import { el, C, HEX, mix, Ticker, renderStats, verdict, bindDials, wireControls } from "./lab";
-import pddData from "./data/pdd_results.json";
+// The gen 0 run, same file the live site reads. This previously imported
+// pdd_results.json -- a superseded run at 10/12/12 rounds -- so the archive
+// replay contradicted the evidence page's 33/90/170 for what looks like the
+// same experiment. One file, one set of numbers.
+import pddData from "./data/commons_pilot.json";
 
 interface LlmFrame {
   turn: number;

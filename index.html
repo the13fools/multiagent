@@ -1,89 +1,85 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>flockbench — can a few agents prevent collapse?</title>
-<meta name="description" content="A simple, judge-free test of whether a small number of AI agents can stabilize a shared resource.">
-<link rel="stylesheet" href="/src/ui/style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f7f4">
+  <title>Multi-agent coordination research — foolzone</title>
+  <meta name="description" content="Research tools for low-cost agent training, long-rollout experiments, and coordination in mixed multi-agent systems.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Multi-agent coordination research">
+  <meta property="og:description" content="Training agents for long-horizon coordination and mutual flourishing.">
+  <meta property="og:url" content="https://foolzone.com/multiagent/">
+  <meta property="og:image" content="https://foolzone.com/multiagent/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Flockbench: How much of a mixed agent population must you control?">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Multi-agent coordination research">
+  <meta name="twitter:description" content="Training agents for long-horizon coordination and mutual flourishing.">
+  <meta name="twitter:image" content="https://foolzone.com/multiagent/og.png">
+  <link rel="canonical" href="https://foolzone.com/multiagent/">
+  <link rel="sitemap" type="application/xml" href="./sitemap.xml">
+  <link rel="stylesheet" href="./src/ui/v2.css">
 </head>
 <body>
-<nav><div class="wrap">
-  <a class="brand" href="./index.html">flockbench</a>
-  <a href="./proposal.html">The experiment</a>
-  <a href="./shared-resource.html">Play the game</a>
-  <a href="./experiments.html">Evidence</a>
-  <a href="./design.html">Methods</a>
-</div></nav>
+  <header class="site-header">
+    <nav class="nav shell" aria-label="Primary navigation">
+      <a class="brand" href="./index.html"><span class="brand-mark">●</span> foolzone / multiagent</a>
+      <div class="nav-links"><a href="#projects">Projects</a><a href="./commons-game/index.html">Commons Game</a></div>
+    </nav>
+  </header>
 
-<main class="wrap">
-  <div class="hero">
-    <h1>Can a cooperative minority keep a group of AI agents from exhausting a commons?</h1>
-    <p>Eight agents share a resource. They can restore it or take from it. <code>flockbench</code> tests whether changing a few seats changes the fate of everyone.</p>
-  </div>
+  <main>
+    <section class="hero shell">
+      <p class="eyebrow">Independent research · training · long rollouts · populations</p>
+      <h1>Training agents for long-horizon coordination.</h1>
+      <p class="deck">A research program for cheap behavioral fine-tuning, experiments over long rollouts, and the study of mixed agent populations that must coordinate around shared resources.</p>
+      <div class="actions"><a class="button" href="./commons-game/index.html">Explore the Commons Game</a><a class="button secondary" href="#projects">View the software</a></div>
+    </section>
 
-  <h2>Two actions. A known solution.</h2>
-  <p>Every turn, each agent pays <b>1 token</b> to stay alive and chooses one action:</p>
+    <div class="fact-strip shell" aria-label="Research program at a glance">
+      <div class="fact"><b>Formation</b><span>low-cost fine-tuning for behavioral-economics games</span></div>
+      <div class="fact"><b>Long horizon</b><span>training signals drawn from behavior across extended rollouts</span></div>
+      <div class="fact"><b>Populations</b><span>agents with different policies acting in one environment</span></div>
+      <div class="fact"><b>Coordination</b><span>mechanical measures of common-resource survival and welfare</span></div>
+    </div>
 
-  <div class="panel">
-    <p><b>Restore:</b> pay 1 token; add 3 to the pool.</p>
-    <p><b>Take:</b> take 3 tokens from the pool.</p>
-  </div>
+    <section class="section shell" id="projects">
+      <div class="section-head">
+        <p class="section-kicker">Projects</p>
+        <h2>One research arc, four surfaces.</h2>
+        <p>Individual training, long-horizon evaluation, and population experiments are separate technical problems. These projects connect them without pretending that one prototype already solves the whole stack.</p>
+      </div>
+      <div class="two-up">
+        <article class="card">
+          <span class="label built">Software</span>
+          <h3>Flockbench</h3>
+          <p>Infrastructure for serving and studying mixed populations of language agents in behavioral-economics games. It records full traces and scores population outcomes with game arithmetic rather than an LLM judge.</p>
+          <div class="actions"><a class="button" href="https://github.com/thenthfool/flockbench">View Flockbench</a></div>
+        </article>
+        <article class="card">
+          <span class="label pilot">Early prototype</span>
+          <h3>Freetimebench</h3>
+          <p>Infrastructure for generating, perturbing, and evaluating long agent rollouts. The research question is how training signals can reflect coordination, recovery, and drift that only become visible over time.</p>
+          <div class="actions"><a class="button" href="https://github.com/thenthfool/freetimebench">View Freetimebench</a></div>
+        </article>
+        <article class="card emphasis">
+          <span class="label proposed">Current study</span>
+          <h3>Commons Game</h3>
+          <p>A theory-led study of partial control: when one actor controls some agents but nobody controls the whole population, what would it take to preserve both the community and its common resource?</p>
+          <div class="actions"><a class="button" href="./commons-game/index.html">Open the grant site</a></div>
+        </article>
+        <article class="card">
+          <span class="label offline">Coming soon</span>
+          <h3>Continuous Judge</h3>
+          <p>Exploratory work on low-cost differentiable and progressive-denoising fine-tuning. It remains a research prototype and is not part of the current public release.</p>
+        </article>
+      </div>
+    </section>
 
-  <p>With eight agents, four restores and four takes each turn keep the pool level. An agent can contribute to that balance by alternating actions; the group can then survive indefinitely. Persistent taking drains the pool. The arithmetic makes the target exact: enough restoration to keep the commons alive.</p>
+  </main>
 
-  <div id="intro-rings"></div>
-  <p class="legend" id="intro-caption" style="text-align:center"></p>
-
-  <h2>Why make the problem this small?</h2>
-  <p>Most multi-agent evaluations blur a bad outcome with an impossible task. Here the sustainable rate and the failure condition are fixed by arithmetic. The environment scores the run—survival, welfare, pool level, inequality, and time to collapse. No LLM judge decides who behaved well.</p>
-
-  <h2>The motivating observation</h2>
-  <p>In the initial eight-agent Qwen2.5-7B-Instruct trace, agents repeatedly took from the pool until the group collapsed. A one-seed run of a cooperative LoRA adapter delayed exhaustion relative to its control. That is enough to motivate a proper test, not enough to claim an effect.</p>
-
-  <p><b>Not established yet:</b> the fraction of agents needed to move a population from collapse to sustained resource use. This is a <b>composition question</b> about a population, not a claim that one agent is “aligned.” An offline audit also found that the original promotion rule would reject a clone of its own baseline almost certainly. The live A/A calibration has not run, so we must first prove that the measurement rule does not manufacture a result.</p>
-
-  <h2>The proposed experiment</h2>
-  <ol>
-    <li><b>Calibrate the measurement.</b> Run A/A campaigns where candidate and baseline are identical; every rollback is a false rejection.</li>
-    <li><b>Vary the cooperative fraction.</b> Compare the base population, a transparent policy, a trained adapter, and a vocabulary-matched mimic.</li>
-    <li><b>Find the boundary.</b> Repeat at larger population sizes and under feasible, forgiving, and unwinnable resource conditions.</li>
-  </ol>
-
-  <p>The result can be positive, null, or adverse. The useful output is a curve showing how group outcomes change as more seats receive the intervention, with confidence intervals and clear limits on where it transfers.</p>
-
-  <h2>A staged programme</h2>
-  <table>
-    <tr><th>Stage</th><th>Question and deliverable</th></tr>
-    <tr><td><b>0 · now</b></td><td><b>Math → test harness.</b> Derive the game's boundary conditions, implement numerical experiments, and make the claims replayable with unit and integration tests.</td></tr>
-    <tr><td><b>1 · funded research</b></td><td><b>Harness → evidence.</b> Run larger, properly controlled training campaigns with a small team; publish the dose response, null results, and failure boundaries.</td></tr>
-    <tr><td><b>2 · conditional on evidence</b></td><td><b>Evidence → user control.</b> Develop portable, inspectable persona packages that people can customize, share, and remix across model providers.</td></tr>
-  </table>
-
-  <p>Stage 2 is not a claim that LoRA weights magically transfer between models. A portable persona would carry a behavioral specification, training and evaluation provenance, and model-specific implementations—so its <em>meaning and evidence</em>, rather than one vendor's weight format, can travel.</p>
-
-  <hr>
-
-  <div class="cards">
-    <a class="card" href="./proposal.html">
-      <span class="kind">For reviewers</span>
-      <h3>Read the experiment</h3>
-      <p>The hypothesis, controls, measurements, and what would count as failure.</p>
-    </a>
-    <a class="card" href="./shared-resource.html">
-      <span class="kind">Interactive</span>
-      <h3>Play the game</h3>
-      <p>Change the rules, add a defector, and see exactly why the flock survives or dies.</p>
-    </a>
-    <a class="card" href="./experiments.html">
-      <span class="kind">Evidence ledger</span>
-      <h3>Inspect what has run</h3>
-      <p>Pilot traces, receipts, withdrawn claims, and the work still needed.</p>
-    </a>
-  </div>
-
-  <p class="muted">Further reading: <a href="./entrainment.html">how a minority might steer a flock</a>; <a href="./stage-zero.html">what is already built</a>; and the <a href="https://github.com/thenthfool/flockbench">open-source repository</a>. MIT code; data and figures CC0.</p>
-</main>
-<script type="module" src="/src/ui/introFigures.ts"></script>
+  <footer class="site-footer"><div class="footer-inner shell"><span>foolzone · multi-agent coordination research</span><div class="footer-links"><a href="./commons-game/index.html">Commons Game</a><a href="./archive/index.html">Research archive</a></div></div></footer>
 </body>
 </html>

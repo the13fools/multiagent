@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f7f4">
+  <title>Program foundations — Flockbench archive</title>
+  <meta name="description" content="Archived technical foundations for the Flockbench research program: the two games, feasibility arithmetic, prototype environments, and Stage 0 infrastructure.">
+  <link rel="stylesheet" href="../src/ui/v2.css">
+</head>
+<body>
+  <header class="site-header"><nav class="nav shell" aria-label="Archive navigation"><a class="brand" href="../index.html"><span class="brand-mark">●</span> program foundations</a><div class="nav-links"><a href="../commons-game/program.html">Current program</a><a href="./index.html">Archive home</a></div></nav></header>
+
+  <main class="shell">
+    <header class="page-intro">
+      <p class="eyebrow">Archived detail · Stage 0 foundations</p>
+      <h1>The games, arithmetic, and infrastructure beneath the program.</h1>
+      <p class="deck">The main grant site now keeps the reviewer path short. This page preserves the technical comparison, interactive feasibility check, prototype game family, and implementation inventory.</p>
+    </header>
+
+    <section class="section">
+      <div class="section-head"><p class="section-kicker">Two games</p><h2>One game is the worked example. The other is where agents play.</h2></div>
+      <table class="comparison">
+        <thead><tr><th>&nbsp;</th><th>Shared Resource</th><th>Commons Game</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Rules</strong></td><td>Pay upkeep 1, then restore (pay 1, add 3) or take 3. Deterministic and discrete.</td><td>A stock with logistic regrowth, harvested in continuous amounts. Not a reparameterisation of the left column.</td></tr>
+          <tr><td><strong>What is solvable</strong></td><td>The sustainable policy is alternation at exactly 0.5, and defection tolerance follows from the rules.</td><td>Peak sustainable yield is <code>rK/4</code> and the collapse edge is exact, but simultaneous moves leave no tidy optimal policy.</td></tr>
+          <tr><td><strong>Role</strong></td><td>Worked example and answer key.</td><td>Gen 0 platform for serving, training, traces, and campaigns.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section demo" id="commons-theory" aria-labelledby="ct-title">
+      <div class="demo-intro"><div><p class="section-kicker">The Commons Game, solved as far as it goes</p><h2 id="ct-title">One number says whether a parameter set can measure anything.</h2></div><p>Regrowth is logistic: <code>g(S) = rS(1 − S/K)</code>, peaking at <code>S = K/2</code> where it equals <code>rK/4</code>. If required draw exceeds that peak, no policy can sustain the population.</p></div>
+      <div class="ct-presets" id="ct-presets" role="group" aria-label="Parameter presets"></div>
+      <div class="demo-controls">
+        <label for="ct-capacity">Capacity K <output id="ct-capacity-value" for="ct-capacity">320</output></label><input id="ct-capacity" type="range" min="60" max="600" step="10" value="320">
+        <label for="ct-regrowth">Regrowth r <output id="ct-regrowth-value" for="ct-regrowth">0.75</output></label><input id="ct-regrowth" type="range" min="5" max="100" step="5" value="75">
+      </div>
+      <div class="demo-readout" aria-live="polite"><strong id="ct-verdict"></strong><span id="ct-detail"></span></div>
+      <figure class="power-figure"><svg id="ct-plot" viewBox="0 0 720 240" role="img" aria-label="Regrowth against stock, with upkeep and full-greed draws"></svg><figcaption>Try <b>shipped scarcity</b>: the upkeep line rises above the hump and both equilibria vanish.</figcaption></figure>
+      <div class="ct-stats" id="ct-stats"></div>
+      <p class="notice"><strong>Below a feasibility ratio of 1, the seeded fraction cannot matter.</strong> The project shipped a default at 0.39 for months; an f = 0 sweep later confirmed collapse at round 3 for all thirty seeds. The core campaign now runs only above 1, with the impossible regime retained as a small control.</p>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><p class="section-kicker">Prototype game family</p><h2>Different incentives expose different kinds of brittleness.</h2></div>
+      <div class="program-game-list">
+        <article class="program-game"><span class="label built">Built</span><h3>Shared Resource</h3><p>Common-pool stewardship with an exact sustainable policy and impossible regimes.</p><small>answer key</small></article>
+        <article class="program-game"><span class="label built">Built</span><h3>Commons Game</h3><p>Continuous harvesting, logistic regrowth, simultaneous moves, and an exact feasibility boundary.</p><small>source game</small></article>
+        <article class="program-game"><span class="label pilot">Prototype</span><h3>Public Goods</h3><p>Contribution, free-riding, inequality, and conditional cooperation without a physical stock.</p><small>training family</small></article>
+        <article class="program-game"><span class="label built">Interactive</span><h3>Boardwalk</h3><p>Hotelling-style location choice: two agents settle, while three can cycle without a pure-strategy equilibrium.</p><a href="./boardwalk.html">Play it →</a></article>
+        <article class="program-game"><span class="label proposed">Planned</span><h3>Trust and bargaining</h3><p>Reciprocity, credible commitments, distributional conflict, and strategies that depend on history.</p><small>held-out transfer</small></article>
+      </div>
+    </section>
+
+    <section class="section" id="built">
+      <div class="section-head"><p class="section-kicker">Stage 0 implementation</p><h2>Three connected software and research prongs.</h2><p>Built independently on a laptop with approximately $200 in RunPod credits, using Qwen2.5–7B-Instruct on a single-GPU path.</p></div>
+      <div class="status-ledger">
+        <article class="status-column"><span class="label built">Built</span><h3>Game server and harness</h3><ul><li>Cloud-GPU serving for many agents</li><li>Turn-based orchestration</li><li>Structured actions, traces, and replays</li></ul></article>
+        <article class="status-column"><span class="label built">Built</span><h3>Theory and answer keys</h3><ul><li>Sustainable and impossible regimes</li><li>Multiple behavioral-economics environments</li><li>Matching Python and TypeScript invariants</li></ul></article>
+        <article class="status-column"><span class="label pilot">Prototyped</span><h3>Low-cost policy populations</h3><ul><li>Prompt, LoRA, and PDD variants</li><li>Diverse strategy pools</li><li>One-seed training and transfer pilots</li></ul></article>
+      </div>
+      <div class="actions"><a class="button" href="../commons-game/program.html">Return to the longer program</a><a class="button secondary" href="../commons-game/evidence.html">Inspect the evidence</a></div>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="footer-inner shell"><span>Flockbench · archived foundations</span><div class="footer-links"><a href="../index.html">Program home</a><a href="../commons-game/program.html">Current program</a><a href="./index.html">Archive home</a></div></div></footer>
+  <script type="module" src="../src/ui/v2.ts"></script>
+</body>
+</html>

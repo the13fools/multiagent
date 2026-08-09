@@ -12,7 +12,8 @@
 </head>
 <body>
 <nav><div class="wrap">
-  <a class="brand" href="./index.html">multiagent</a>
+  <a class="brand" href="../index.html">foolzone / multiagent</a>
+  <a href="./index.html">Archive home</a>
   <a href="./shared-resource.html">The game</a>
   <a href="./entrainment.html">Steering</a>
   <a href="./stage-zero.html">What is built</a>
@@ -43,6 +44,7 @@ together is a separate page: <a href="./design.html">how an experiment is run</a
     <li><a href="#environments">Environments</a></li>
     <li><a href="#runs">Runs against live models</a></li>
     <li><a href="#claims">Which claims rest on what</a></li>
+    <li><a href="#variance-risk">Variance risk and declared descope</a></li>
     <li><a href="#broken">Known problems we have not fixed</a></li>
     <li><a href="#fastest">What would change this page fastest</a></li>
     <li><a href="#live-runs">Replays of the live runs</a></li>
@@ -113,23 +115,11 @@ together is a separate page: <a href="./design.html">how an experiment is run</a
   envelope is fixed either way.</td></tr>
 <tr><td><b>Scaling, N ∈ {8,20,50}</b></td><td class="s"><span class="st st-todo">not run</span></td>
   <td>Configs for N=20 exist. Nothing has been run above N=8.</td></tr>
-<tr><td><b>The Count</b><br><span class="muted">shared-deck betting game</span></td>
-  <td class="s"><span class="st st-part">sketch</span></td>
-  <td>Rules, both closed-form answer keys and the policy comparison exist and are tested; a
-  <a href="./cards.html">browser sketch</a> runs them. No language model has played it and it is
-  not wired to a serving endpoint. It is the only environment here that separates reasoning about
-  the environment from reasoning about the other players, which is why it is worth finishing.</td></tr>
-<tr><td><b>Communication channels</b><br><span class="muted">public tally, commitment, private pair</span></td>
-  <td class="s"><span class="st st-todo">not built</span></td>
-  <td>The second rung of the <a href="./future.html">ladder</a> and the first place a question
-  about communication could be asked while the right answer is still known. A private pairwise
-  channel is also the specific thing this testbed would need before it could claim anything about
-  collusion. None of it exists: today the agents cannot talk to each other at all.</td></tr>
-<tr><td><b>Negotiation-scale games</b><br><span class="muted">Diplomacy, Utopia-scale</span></td>
-  <td class="s"><span class="st st-todo">direction only</span></td>
-  <td>Named as where the instrument gets pointed once it is trustworthy. No code, no plan beyond
-  the ladder, and no answer key when it gets there — which is the whole reason for being strict
-  about the small games first.</td></tr>
+<tr><td><b>Unrun extensions</b><br><span class="muted">reasoning, communication, negotiation</span></td>
+  <td class="s"><span class="st st-part">sketch or direction</span></td>
+  <td><a href="./cards.html">The Count</a> has a tested browser sketch but no model run.
+  Communication channels and negotiation-scale games are not built; they remain on the
+  <a href="./future.html">research ladder</a>.</td></tr>
 </table>
 
 <h2 id="claims">Which claims rest on what</h2>
@@ -170,6 +160,40 @@ together is a separate page: <a href="./design.html">how an experiment is run</a
   the shared-resource arithmetic, where an agent off <code>p_need</code> by any margin dies on a
   schedule. Whether real agent populations show the horizon dependence is Phase 3 and untested.</td></tr>
 </table>
+
+<h2 id="variance-risk">The risk that owns a milestone</h2>
+
+<p>The proposal fixes its compute envelope before Phase 0 measures live variance. This archived
+instrument shows what happens when the paired standard deviation or worthwhile margin differs from
+the pilot: named extensions drop in a declared order, and the core is redesigned rather than run
+underpowered when the envelope no longer fits.</p>
+
+<div class="panel archive-power" id="power-demo" aria-labelledby="power-demo-title">
+  <h3 id="power-demo-title">What a worse variance costs</h3>
+  <p>The pilot measured a paired SD of 1,180. Required sample size moves with the square of the
+  SD-to-margin ratio, so a modest miss can spend the contingency quickly.</p>
+
+  <div class="archive-power-controls">
+    <label for="power-sd"><span>Paired SD Phase 0 finds</span><output id="power-sd-value" for="power-sd">1,180</output></label>
+    <input id="power-sd" type="range" min="1000" max="2400" value="1180" step="20">
+    <label for="power-margin"><span>Margin worth detecting</span><output id="power-margin-value" for="power-margin">400</output></label>
+    <input id="power-margin" type="range" min="200" max="800" value="400" step="25">
+  </div>
+
+  <div class="archive-power-readout" aria-live="polite">
+    <strong id="power-verdict">Calculating…</strong>
+    <span id="power-detail"></span>
+  </div>
+
+  <figure class="power-figure">
+    <svg id="power-plot" viewBox="0 0 720 170" role="img" aria-label="Required paired cells against measured standard deviation"></svg>
+    <figcaption>Nudge the SD from 1,180 to 1,300—a ten percent miss—and the contingency reserve is gone.</figcaption>
+  </figure>
+
+  <ol class="descope-ladder" id="power-ladder"></ol>
+  <p class="archive-power-note">Gate calibration, the powered core and public release are never
+  descoped. Phase 0 resolves this risk in month three, before candidate claims.</p>
+</div>
 
 <h2 id="broken">Known problems we have not fixed</h2>
 

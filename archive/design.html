@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How an experiment is run — multiagent</title>
+<meta name="description" content="The experimental design: what a cell is, what is paired, what is controlled, and whether the campaign is powered to see the effect it is sized for.">
+<link rel="stylesheet" href="/src/ui/style.css">
+</head>
+<body class="linked-appendix" data-page="design">
+<nav><div class="wrap">
+  <a class="brand" href="../commons-game/study.html">commons game / RQ2</a>
+  <a href="../commons-game/index.html">Overview</a>
+  <a href="../commons-game/study.html">Study</a>
+  <a href="../commons-game/evidence.html">Evidence</a>
+  <a href="../commons-game/program.html">Program</a>
+  <a href="./design.html" aria-current="page">Design appendix</a>
+  <a href="../index.html">Program home</a>
+  <a href="./index.html">Archive home</a>
+</div></nav>
+
+<div class="wrap">
+<p class="appendix-context"><b>Research question 2 · linked design appendix.</b> The Study asks how large a controlled minority must be. This page preserves the paired-cell design, estimand, power arithmetic, controls, and stopping rules. <a href="../commons-game/study.html#funded-questions">Return to the three questions.</a></p>
+<h1>How an experiment is run</h1>
+<p class="lede">What a cell is, what is paired with what, and whether the campaign can see the
+effect it was sized for.</p>
+
+<nav class="toc" aria-label="On this page">
+  <p class="toc-k">On this page</p>
+  <ol>
+    <li><a href="#cell">The unit: one paired cell</a></li>
+    <li><a href="#factors">What varies, and what is held still</a></li>
+    <li><a href="#estimand">The estimand: controlled-fraction threshold</a></li>
+    <li><a href="#planner">The campaign, and whether it is powered</a></li>
+    <li><a href="#aa">The break experiment: pointing the gate at a clone</a></li>
+    <li><a href="#controls">The controls, and what each is against</a></li>
+    <li><a href="#boundaries">Boundaries and stopping rules</a></li>
+    <li><a href="#registration">Pre-registration, and what a receipt contains</a></li>
+    <li><a href="#threats">What could still make the answer wrong</a></li>
+  </ol>
+</nav>
+
+<h2 id="cell">The unit: one paired cell</h2>
+
+<p>A <b>cell</b> is one run of one configuration at one seed. Cells come in pairs: the same
+environment, the same seed, the same role mapping, with exactly one thing swapped. The measurement
+is the difference, not either number alone.</p>
+
+<div id="fig-cell" style="margin:22px 0"></div>
+
+<p>Pairing removes the seed; what is left is the swap. The pilot paired SD was 1,180.</p>
+
+<h2 id="factors">What varies, and what is held still</h2>
+
+<table>
+<tr><th>factor</th><th>levels</th><th>why</th></tr>
+<tr><td><b>Seeded fraction <code>f</code></b></td><td>the sweep</td>
+  <td>The independent variable. What fraction of the population is yours.</td></tr>
+<tr><td><b>Arm</b></td><td>baseline, candidate</td>
+  <td>The swap. At <code>f = 0</code> the two arms are the same population, which is what makes
+  the A/A control free.</td></tr>
+<tr><td><b>Environment</b></td><td><b>two, both core</b></td>
+  <td>The Shared Resource game, and a shared key-value store reached through auditable tool calls
+  with memory carried between episodes. The second is core, not contingent: an answer key that only
+  survives in a discrete-action game is the weaker claim.</td></tr>
+<tr><td><b>Resource regime</b></td><td>zero slack, positive slack</td>
+  <td>Crossed with environment for the four strata the planner counts. Unwinnable runs alongside as
+  a control, not a stratum — nothing should work there.</td></tr>
+<tr><td><b>Seat provider</b></td><td>three sources</td>
+  <td>Two open-weight families served locally, plus a commercial model on some seats. Prompt and
+  LoRA variants over one endpoint are within-source controls, not principals.</td></tr>
+<tr><td><b>Model family</b></td><td>two</td>
+  <td>One dense, one mixture-of-experts. Reported separately, never averaged.</td></tr>
+<tr><td><b>Salt</b></td><td>two levels</td>
+  <td>Which seats the seeded agents occupy. Guards against a result that is really about seat
+  order.</td></tr>
+<tr><td><b>Seed</b></td><td>many</td>
+  <td>Replication. The only thing that differs within a pair is nothing — the seed is shared.</td></tr>
+<tr><td class="muted"><b>Held fixed</b></td><td class="muted">horizon, N, prompt scaffold,
+  sampling temperature, serving stack</td>
+  <td class="muted">Each is varied in its own study — horizon and N have a milestone of their own —
+  rather than allowed to drift inside a campaign.</td></tr>
+</table>
+
+<h2 id="estimand">The estimand</h2>
+
+<p>At each fraction, a candidate is matched to <code>f = 0</code> on seed, environment, slack,
+model source and seat order. <b>f*</b> is the smallest fraction that improves survival by the declared
+margin.</p>
+
+<p>Primary fit is isotonic with bootstrap intervals. A non-monotone curve leaves <b>f*</b> undefined;
+raw curve published. The margin is the survival cost of one permanent defector among eight.</p>
+
+<h2 id="planner">The campaign, and whether it is powered</h2>
+
+<p>Two numbers decide whether a campaign is worth running: what it costs, and the smallest
+effect it can see. Affordable and underpowered produces a null nobody can interpret. Both are
+arithmetic, so here they are.</p>
+
+<div class="panel">
+  <div id="stats" class="stats"></div>
+  <div id="power" style="margin-top:6px"></div>
+  <svg id="curve" viewBox="0 0 700 200" style="width:100%;height:auto;display:block" role="img"
+       aria-label="Detectable effect against the number of paired cells"></svg>
+  <div class="legend">The smallest effect this campaign could detect, against how many paired
+  cells it buys. The dashed line is the margin you asked for.</div>
+  <div class="dials">
+    <label class="dial"><span class="dial-k">Model families</span>
+      <span class="dial-row"><input id="families" type="range" min="1" max="3" value="2" data-dial>
+        <b class="dial-v" data-out="families">2</b></span></label>
+    <label class="dial"><span class="dial-k">Environment × regime strata</span>
+      <span class="dial-row"><input id="environments" type="range" min="1" max="6" value="4" data-dial>
+        <b class="dial-v" data-out="environments">4</b></span></label>
+    <label class="dial"><span class="dial-k">Seeded fractions</span>
+      <span class="dial-row"><input id="fractions" type="range" min="2" max="10" value="6" data-dial>
+        <b class="dial-v" data-out="fractions">6</b></span></label>
+    <label class="dial"><span class="dial-k">Salt levels</span>
+      <span class="dial-row"><input id="salt" type="range" min="1" max="4" value="2" data-dial>
+        <b class="dial-v" data-out="salt">2</b></span></label>
+    <label class="dial"><span class="dial-k">Seeds per configuration</span>
+      <span class="dial-row"><input id="seeds" type="range" min="5" max="120" step="1" value="35" data-dial>
+        <b class="dial-v" data-out="seeds">35</b></span></label>
+    <label class="dial"><span class="dial-k">Margin you care about</span>
+      <span class="dial-row"><input id="margin" type="range" min="100" max="1200" step="50" value="400" data-dial>
+        <b class="dial-v" data-out="margin">400</b></span></label>
+    <label class="dial"><span class="dial-k">Paired SD</span>
+      <span class="dial-row"><input id="sd" type="range" min="400" max="2400" step="20" value="1180" data-dial>
+        <b class="dial-v" data-out="sd">1180</b></span></label>
+    <span id="verdict" class="verdict"></span>
+  </div>
+  <p class="legend" id="setup"></p>
+</div>
+
+<p><b>Move the paired SD up and leave the margin alone.</b> The requirement rises with the square of
+the ratio, so Phase 0 re-measures variance before the powered compute is committed.</p>
+
+<p class="muted"><b>The envelope is fixed and the scope is ordered.</b> The core is gate calibration
+plus a powered dose-response across four environment × regime strata: 6,720 cells, 3,360 paired
+comparisons, 70 paired cells per contrast against the 69 the margin requires. Contingent, dropped
+in this order if Phase 0 needs the compute: N = 50, the unwinnable control, non-informative fraction
+points. 20,769 GPU-hours all in — $41,330 at $1.99 an A100-hour, plus $11,030 of commercial-API
+seats, so $52,360 of compute inside a $275,000 request. Gate calibration is 17% of that.</p>
+
+<h2 id="aa">The break experiment: pointing the gate at a clone</h2>
+
+<p>The <b>A/A</b> is the cheapest important check in the plan.</p>
+
+<div class="panel slide">
+  <p class="slide-k">The break experiment</p>
+
+  <table class="slide-t">
+  <tr><td><b>The question</b></td>
+    <td>How often does the gate reject a candidate <em>identical</em> to the baseline?</td></tr>
+  <tr><td><b>Why it is free</b></td>
+    <td>At <code>f = 0</code> no agent occupies the seeded role, so both arms describe the
+    <b>same population</b>, differing only in what an unused role points at. No new engine code,
+    no new environment.</td></tr>
+  <tr><td><b>What is measured</b></td>
+    <td>Every difference between the arms is noise, so every rejection is a false one. The
+    rejection rate <em>is</em> the false-rejection rate.</td></tr>
+  <tr><td><b>What it already found</b></td>
+    <td><b>Offline, not live.</b> Sign-flip resampling of the 30-cell pilot rolled the overlap-rule
+    gate back on a clone in <b>approximately 100% of null resamples</b> — and it worsens with more
+    data, bounding a proportion that converges to 0.5 under the null. A superiority test fails
+    oppositely: demanding significant improvement, a clone fails by construction. A <b>provisional
+    tolerated-harm threshold</b> did better under the same resampling (0.076 at n = 30, 0.015 at
+    n = 60), but is not a formal non-inferiority test.</td></tr>
+  <tr><td><b>Status</b></td>
+    <td><b>Not yet run live.</b> Everything above is resampling of committed pilot data. Phase 0
+    runs thirty matched f = 0 campaigns of sixty pairs, spread across four strata rather than
+    piled into one, to measure the live operating error. With no rollbacks the pooled exact 95%
+    upper bound is <b>9.5%</b> — looser than the 4.9% sixty single-stratum campaigns would buy,
+    and deliberately so: a tight bound that holds only where it was measured is the less useful
+    object. <b>Above 10% the gate is declared unfit and we say so.</b></td></tr>
+  <tr><td><b>Pre-registered</b></td>
+    <td>The live rate will exceed the offline one, and the 400-unit margin will need re-deriving
+    from measured variance. Written down before the campaign runs, so it can be wrong in
+    public.</td></tr>
+  <tr><td><b>What it changes</b></td>
+    <td>Two artifacts ship with the gate that we are not aware of anyone publishing: a measured
+    error rate, and a minimum campaign size below which its decisions are void, enforced by the
+    validator.</td></tr>
+  </table>
+
+  <p class="slide-f">A gate that rejects everything looks exactly like a careful gate until
+  somebody points it at a clone.</p>
+</div>
+
+<p>Set the true effect to zero and watch three reasonable rules disagree about a clone, on
+<a href="./gate.html">the gate page</a>.</p>
+
+<h2 id="controls">The controls, and what each is against</h2>
+
+<div id="controls"></div>
+
+<h2 id="boundaries">Boundaries and stopping rules</h2>
+
+<p>This detail was removed from the short Study page so the reviewer path stays focused. It remains
+here because these tests determine how far a result can travel and when the project must stop making
+a claim.</p>
+
+<table>
+<tr><th>boundary</th><th>what is tested rather than assumed</th></tr>
+<tr><td><b>Cross-game transfer</b></td><td>The same seeded policy in both games. Stage 0 found
+  opposite signs, so transfer is measured rather than assumed.</td></tr>
+<tr><td><b>Tools and memory</b></td><td>A shared key-value store with auditable reads and writes,
+  plus bounded cross-episode memory, while preserving the experimental invariant.</td></tr>
+<tr><td><b>Multiple principals</b></td><td>Two open-weight families plus commercial seats. Prompt
+  and adapter variants over one source remain within-source controls, not different principals.</td></tr>
+<tr><td><b>Frontier fidelity</b></td><td>A matched frontier subset must place f* inside the
+  open-weight interval and meet a declared action-rate tolerance before any proxy claim.</td></tr>
+<tr><td><b>Scale</b></td><td>N = 8, 20 and 50 tests whether f* moves with population size. This is
+  a boundary test, not a claim to have found a scaling law.</td></tr>
+<tr><td><b>Safe execution</b></td><td>Sandbox-scoped credentials and simulated resources only;
+  configurations, traces and receipts are released for replay.</td></tr>
+</table>
+
+<p><b>Four ways the study says no.</b> A flat curve means a controlled minority does not move
+survival by the declared margin. A non-monotone curve leaves f* undefined and the raw curve is
+published without repairing the estimand. A live gate error bound above 10% retires candidate
+decisions. A failed transfer is the boundary itself, and no universal threshold is claimed.</p>
+
+<h2 id="registration">Pre-registration, and what a receipt contains</h2>
+
+<p>Pre-registration here is a versioned plan, not a promise. Before a scored campaign it states the
+cells, thresholds, estimand, direction of effect, and what would count as no effect. The runner
+freezes and compares resolved plan files. Commit provenance is recorded in release receipts;
+enforcing it in the runner is remaining work, not a property we claim.</p>
+
+<p>Every gate decision emits an <b>auditable JSON receipt</b> — self-contained and versioned, not
+cryptographically signed — carrying the resolved policy, the paired deltas and the verdict. Our
+pilot's policy file changed after the run and the decision was still reconstructible, because the
+receipt embedded the policy it used. <code>tools/replay_receipt.py</code> re-derives every published
+figure from the receipt alone.</p>
+
+<h2 id="threats">What could still make the answer wrong</h2>
+
+<table>
+<tr><th>threat</th><th>what we do about it</th></tr>
+<tr><td><b>The threshold is not identifiable at N = 8</b></td>
+  <td>Reachable fractions are {0, 12.5, 25, 37.5}%, coarser than the interval of interest.
+  Everything at N = 8 is a pilot. Resolution reaches 5 points at N = 20.</td></tr>
+<tr><td><b>One serving endpoint</b></td>
+  <td>Today "different principals" means different specifications over identical weights — the
+  honest state of Stage Zero. The funded core fills seats from two open-weight families and a
+  commercial model, because relabelling prompts as principals is the thing to avoid.</td></tr>
+<tr><td><b>Variance measured at the wrong scale</b></td>
+  <td>The case above. Phase 0 measures it first.</td></tr>
+<tr><td><b>Small games may not transfer</b></td>
+  <td>Tested, not assumed: tool calls and persistent memory in the core, then N ∈ {20, 50}. If
+  thresholds do not transfer, that is the finding.</td></tr>
+<tr><td><b>Parse failures scored as behaviour</b></td>
+  <td>Recorded as an inert action and counted separately, never folded into the outcome. The last
+  live sweep had zero.</td></tr>
+</table>
+
+<p class="muted">The same arithmetic as <code>flockbench</code>'s campaign planner, pinned by test.
+What has been run is on the <a href="./experiments.html">status page</a>.</p>
+<div class="appendix-footer"><a href="../commons-game/study.html#funded-questions">← Return to RQ2</a><a href="./entrainment.html">Next appendix: majority dynamics →</a></div>
+</div>
+<script type="module" src="/src/ui/designLab.ts"></script>
+</body>
+</html>

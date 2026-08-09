@@ -5,12 +5,16 @@
   "type": "module",
   "description": "Interactive labs for multi-agent shared-resource games with known solutions",
   "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "vite --port 4173",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --port 4173",
     "test": "vitest run",
-    "check": "npm run test && npm run build"
+    "check:static": "node tools/check_static_site.mjs",
+    "check": "npm run test && npm run build && npm run check:static"
   },
   "devDependencies": {
     "happy-dom": "^20.11.1",

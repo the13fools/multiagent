@@ -3,31 +3,33 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cheap enough to have a population — multiagent</title>
-<meta name="description" content="Exploring low-cost fine-tuning as a way to build large, diverse agent populations on a small budget.">
+<title>Progressive Denoising Distillation (PDD) — multiagent</title>
+<meta name="description" content="Progressive Denoising Distillation (PDD): a span-restricted fine-tuning method for building diverse agent populations while protecting their action schema.">
 <link rel="stylesheet" href="/src/ui/style.css">
 </head>
-<body>
+<body class="linked-appendix">
 <nav><div class="wrap">
-  <a class="brand" href="./index.html">multiagent</a>
-  <a href="./shared-resource.html">The game</a>
-  <a href="./entrainment.html">Steering</a>
-  <a href="./stage-zero.html">What is built</a>
-  <a href="./design.html">How it is run</a>
-  <a href="./experiments.html">What has run</a>
-  <a href="./future.html">What next</a>
+  <a class="brand" href="../commons-game/study.html">commons game / methods</a>
+  <a href="../commons-game/index.html">Overview</a>
+  <a href="../commons-game/study.html">Study</a>
+  <a href="../commons-game/evidence.html">Evidence</a>
+  <a href="../commons-game/program.html">Program</a>
+  <a href="./design.html">Design appendix</a>
+  <a href="../index.html">Program home</a>
+  <a href="./index.html">Archive home</a>
 </div></nav>
 <div class="wrap" style="max-width:720px">
-<h1>Cheap enough to have a population</h1>
+<p class="appendix-context"><b>Linked methods note.</b> The short Study page carries the interactive explanation; this page preserves the mechanism, motivation, controls, and open questions. <a href="../commons-game/study.html#post-training">Return to PDD in the study.</a></p>
+<h1>Progressive Denoising Distillation (PDD)</h1>
 
-<p class="lede">Exploring low-cost fine-tuning as a way to get a large, diverse population of
-agents on a small budget.</p>
+<p class="lede"><b>Cheap enough to test populations.</b> PDD is a span-restricted fine-tuning
+method that inpaints rationale around a fixed target action, then applies loss only to accepted
+replacement words. The structured action schema is excluded from the target—but held-out tests must still
+show that syntax and behavior survived.</p>
 
 <hr>
 
-<p>There is a sentence in most multi-agent safety papers that nobody defends, because defending it is expensive: <em>we simulated a population of agents.</em> What it usually means is one model, prompted several different ways.</p>
-
-<p>That is not a population. It is one policy wearing hats.</p>
+<p>“We simulated a population of agents” often means one model prompted several ways: one policy wearing hats. PDD asks whether genuinely distinct, inexpensive policies can become an experimental variable.</p>
 
 <nav class="toc" aria-label="On this page">
   <p class="toc-k">On this page</p>
@@ -44,46 +46,44 @@ agents on a small budget.</p>
 
 <h2 id="hats">Why the hats matter</h2>
 
-<p>The premise of multi-principal safety is that the other agents were built by somebody else: different training data, different objectives, different blind spots. When a commons collapses, it collapses because the participants are unlike one another and their differences interact.</p>
+<p>Multi-principal safety assumes the other agents were built by somebody else: different training data, objectives, and blind spots. Their differences can interact when a commons fails.</p>
 
-<p>A simulation where every agent shares a weight matrix cannot exhibit that. It exhibits prompt-sensitivity, which is real and is not the same thing — two agents with the same weights fail in <em>correlated</em> ways, and correlated failure is the property a multi-principal study exists to measure the absence of. The reason this is rarely fixed is arithmetic: thirty genuinely distinct fine-tuned agents used to cost more than the study.</p>
+<p>A simulation where every agent shares a weight matrix instead measures prompt sensitivity. Two such agents can fail in <em>correlated</em> ways. The practical obstacle is arithmetic: thirty genuinely distinct fine-tuned agents used to cost more than the study.</p>
 
 <h2 id="needed">What we actually needed</h2>
 
 <p>For <a href="https://github.com/thenthfool/flockbench">flockbench</a> the requirement was odd: not better agents, but <em>many different</em> ones, each distinct in a way that survives a long rollout and each cheap enough that a population is a variable rather than a capital expense. And something most alignment training does not care about — they had to keep working.</p>
 
-<p>Our environments parse structured actions out of free text. An agent emits something like</p>
+<p>Our environments parse structured actions out of free text. Before training, an agent may emit</p>
 
 <pre><code>
-{&quot;reasoning&quot;: &quot;the pool is low and I restored last turn&quot;, &quot;action&quot;: &quot;take&quot;}
+{&quot;reasoning&quot;: &quot;the pool is low; take now to protect my balance&quot;, &quot;action&quot;: &quot;take&quot;}
 </code></pre>
 
 <p>and the environment reads <code>action</code>. If training bends the model such that it stops emitting valid JSON, the run does not produce an interestingly-changed agent. It produces a parse failure, which our harness scores as a behaviourally inert action, and the experiment quietly measures nothing.</p>
 
-<p>So the constraint was: <b>change the agent&#x27;s disposition, do not touch its schema.</b></p>
+<p>So the constraint was: <b>try to change the agent&#x27;s disposition without directly training on its schema.</b></p>
 
 <h2 id="idea">The idea</h2>
 
-<p>Span-restricted preference distillation, and it is embarrassingly simple once the constraint is written down. A teacher edits a rollout; we train <b>only on the spans that changed</b>, and mask the structured action fields so no gradient reaches them.</p>
+<p><b>Progressive Denoising Distillation (PDD)</b> builds a target around a desired structured action. A diffusion-style teacher masks and inpaints selected reasoning spans; <b>only accepted replacement tokens carry gradient</b>, while the action field remains fixed and never enters the loss. This is not REINFORCE-style training: there is no scalar reward or policy-gradient update.</p>
 
-<p>Drawn, it is delete-and-inpaint — which is why a diffusion-style judge fits: masking spans and filling them back in is what that class of model already does, without regenerating what it left alone.</p>
+<p>The crucial distinction is easy to lose in an abstract token diagram. The initial <em>take</em> below is a pre-training diagnostic. The <em>restore</em> action belongs to a separate target and stays fixed while its rationale is filled in. After distillation, a fresh rollout tests whether the model actually changed behavior.</p>
 
 <div id="fig-inpaint" style="margin:22px 0"></div>
 
 <p>Three things fall out.</p>
 
-<p><b>The action schema is preserved by construction, not by hope.</b> The tokens that make the output parseable are never in the loss, and you cannot train a model out of emitting JSON that was never a target. It sounds like a detail; it is the difference between thirty agents and thirty parse failures.</p>
+<p><b>The action schema is not a training target.</b> This removes direct gradient pressure on the tokens that make the output parseable. It does not guarantee schema preservation: a changed model can still drift elsewhere, so held-out action-validity and parse checks remain mandatory.</p>
 
 <p><b>Cheap, because the loss is sparse.</b> Most of a rollout is unchanged, so training on the whole target spends most of the gradient re-learning text the model already produces. Constant factors are the entire game when you need thirty of something.</p>
 
 <p><b>The teacher's edit is cached once.</b> Every training arm consumes the same immutable cache, so no arm can get a fresher sample after results are known. A cost measure that turned into a fairness guarantee: the comparison is fair because re-rolling is impossible, not because we promised.</p>
 
-<p>In our setup a distinct adapter came in around <b>fifty dollars of compute</b>. I want to be
-careful with that number: it is one figure, from one model on one set of environments, and I am
-reporting it because it is what happened, not because I think it generalises. The claim I am
-willing to make is the direction — <b>a distinct agent can be cheap enough that the population
-stops being the expensive part of the study</b> — and the work I am proposing is to find out how
-cheap, and what you give up.</p>
+<p>In our setup a distinct adapter cost about <b>fifty dollars of compute</b>. That is one receipt
+from one model and environment family, not a general benchmark. The claim under study is the
+direction: <b>can distinct agents become cheap enough that the campaign, rather than the
+population, is the expensive part?</b></p>
 
 <div id="fig-pipeline" style="margin:22px 0"></div>
 
@@ -141,7 +141,9 @@ and you can therefore afford eight, that is a useful finding and I will publish 
 
 <hr>
 
-<p>*<code>flockbench</code> and <code>Firebreak</code> are CC0. Interactive versions of the population results are at <a href="https://foolzone.com/multiagent">foolzone.com/multiagent</a>. The style-control harness lives in <code>continuous_judge</code>; the population side, including the gate that scores it, is in <code>flockbench</code>.*</p>
+<p>*<code>flockbench</code> and <code>Firebreak</code> are CC0. The current grant narrative and interactive population results begin at <a href="../commons-game/index.html">the Commons Game overview</a>. The style-control harness lives in <code>continuous_judge</code>; the population side, including the gate that scores it, is in <code>flockbench</code>.*</p>
+
+<div class="appendix-footer"><a href="../commons-game/study.html#post-training">← Return to PDD in the study</a><a href="../commons-game/evidence.html#shared-trained-playthrough">See what the direct-trained agent actually did →</a></div>
 
 </div>
 <script type="module" src="/src/ui/pageFigures.ts"></script>

@@ -28,11 +28,22 @@ export interface Design {
 
 export const REFERENCE_DESIGN: Design = {
   families: 2,
-  environments: 2,      // the core is the two existing environments
-  fractions: 8,
+  // Environment x resource-regime strata. The two core environments are the
+  // SHARED RESOURCE game, which has a closed form and therefore an answer key,
+  // and COMMONS HARVEST, which does not but is where the Stage 0 language-model
+  // pilots actually ran. Running only the solvable one invites the objection
+  // that the result is an artifact of solvability; running only the realistic
+  // one is what makes collective failures unattributable everywhere else.
+  // Crossed with two regimes (zero slack, positive slack). The unwinnable
+  // regime is a control, not a stratum, and the tool-mediated key-value store
+  // is a separately budgeted boundary test rather than one of the core two.
+  environments: 4,
+  fractions: 6,
   arms: 2,
   salt: 2,
-  seeds: 69,
+  // 2 salt x 35 seeds = 70 paired cells per contrast, against the 69 the
+  // margin requires. Sized to clear the requirement, not to look large.
+  seeds: 35,
   // A budget rate, not a measurement: the pilot's per-cell time predates the
   // deliberation span, and Phase 0 measures it. Price is Lambda's on-demand
   // 40GB A100 rate, checked August 2026.
@@ -91,6 +102,80 @@ export function evaluate(d: Design, marginDelta: number, pairedSd: number): Verd
     cost: cost(d),
     powered: pairedCells(d) >= need,
   };
+}
+
+/* ---------------------------------------------------------------------------
+ * What happens to the budget when the variance moves.
+ *
+ * The proposal promises a fixed envelope and an ORDERED descope: if Phase 0
+ * measures worse variance than the pilot, named things get dropped in a stated
+ * sequence rather than the ask going up. That promise is cheap to write and
+ * hard to believe, so the arithmetic behind it lives here and the page runs it.
+ *
+ * The requirement grows with the SQUARE of the SD-to-margin ratio, so this is
+ * not a gentle slope. It is the reason Phase 0 comes before the powered spend.
+ * ------------------------------------------------------------------------- */
+
+/** Core cells added per extra seed: families x strata x fractions x salt x arms. */
+export const CORE_CELLS_PER_SEED = 2 * 4 * 6 * 2 * 2;
+
+/** Seeds in the reference core, and the paired cells per contrast they buy. */
+export const CORE_SEEDS = REFERENCE_DESIGN.seeds;
+
+export interface DescopeLine {
+  name: string;
+  hours: number;
+  why: string;
+}
+
+/**
+ * Dropped in this order, declared in advance so the choice is not made later
+ * by whoever is holding the budget.
+ */
+export const DESCOPE_ORDER: readonly DescopeLine[] = [
+  { name: "Contingency reserve", hours: 2709, why: "Held for exactly this. Spent before anything scientific is cut." },
+  { name: "N = 50 replication", hours: 1500, why: "The largest population check. Costs the most per answer and N = 20 still tests whether f* moves with size." },
+  { name: "Unwinnable-regime control", hours: 480, why: "The impossible-regime arm. Valuable, but the closed form already tells us no policy survives there." },
+  { name: "Two non-informative fraction points", hours: 2240, why: "Sweep resolution, not sweep range. The curve keeps its endpoints and loses detail in the middle." },
+] as const;
+
+export const descopeBudget = (): number =>
+  DESCOPE_ORDER.reduce((total, line) => total + line.hours, 0);
+
+export interface DescopePlan {
+  /** Paired cells per contrast the margin now demands. */
+  need: number;
+  /** Seeds required to reach it, given two salt levels. */
+  seeds: number;
+  /** Extra GPU-hours the core needs beyond the reference design. */
+  extraHours: number;
+  /** Lines given up, in the declared order, until the extra is paid for. */
+  dropped: DescopeLine[];
+  /** Hours still missing after everything droppable is gone. */
+  shortfall: number;
+  /** False means the campaign must be redesigned, not squeezed. */
+  fits: boolean;
+}
+
+export function descopePlan(marginDelta: number, pairedSd: number): DescopePlan {
+  const need = requiredN(marginDelta, pairedSd);
+  if (!Number.isFinite(need)) {
+    return { need, seeds: Infinity, extraHours: Infinity, dropped: [...DESCOPE_ORDER],
+             shortfall: Infinity, fits: false };
+  }
+  const seeds = Math.ceil(need / REFERENCE_DESIGN.salt);
+  const extraHours = Math.max(0, (seeds - CORE_SEEDS) * CORE_CELLS_PER_SEED *
+    REFERENCE_DESIGN.hoursPerCell);
+
+  const dropped: DescopeLine[] = [];
+  let remaining = extraHours;
+  for (const line of DESCOPE_ORDER) {
+    if (remaining <= 0) break;
+    dropped.push(line);
+    remaining -= line.hours;
+  }
+  return { need, seeds, extraHours, dropped, shortfall: Math.max(0, remaining),
+           fits: remaining <= 0 };
 }
 
 /**

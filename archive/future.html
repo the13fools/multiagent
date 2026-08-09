@@ -9,7 +9,8 @@
 </head>
 <body>
 <nav><div class="wrap">
-  <a class="brand" href="./index.html">multiagent</a>
+  <a class="brand" href="../index.html">foolzone / multiagent</a>
+  <a href="./index.html">Archive home</a>
   <a href="./shared-resource.html">The game</a>
   <a href="./entrainment.html">Steering</a>
   <a href="./stage-zero.html">What is built</a>
@@ -33,7 +34,7 @@ assumption every line of it shares, which nobody has tested and which is false i
     <li><a href="#self-distillation">Why the population has to be trained, not prompted</a></li>
     <li><a href="#what-breaks">Three things that break, and are worth breaking</a></li>
     <li><a href="#port-list">The port list, in order</a></li>
-    <li><a href="#cost">What a population costs, and how big to go</a></li>
+    <li><a href="#cost">What funding changes</a></li>
     <li><a href="#ladder">The ladder: from an answer key to a real crowd</a></li>
     <li><a href="#mechanisms">Decentralised mechanism design, and what "flourishing" would mean</a></li>
     <li><a href="#requirements">What would have to be true</a></li>
@@ -144,10 +145,27 @@ the law of large numbers — and heterogeneity of bias, the diversity metric thi
 on the list: ultimatum and dictator, where the right answer is a fairness judgement, and anything
 scored by rating free text. The selection is mine and the mapping is a proposal, not a result.</p>
 
-<h2 id="cost">What a population costs, and how big to go</h2>
+<h2 id="cost">What funding changes</h2>
 
-<p>A claim about money, so here is the money. <b>Not a quote — a model, seeded with what one
-setup cost.</b></p>
+<p>Three planning anchors, not a quote. The $200 endpoint includes unpaid research time.</p>
+
+<div class="panel funding-panel">
+  <div id="funding-stats" class="stats"></div>
+  <div class="funding-anchors" aria-hidden="true">
+    <span><b>$200</b><small>few weeks</small></span>
+    <span><b>$300k</b><small>1 year</small></span>
+    <span><b>$1m</b><small>2 years · small team</small></span>
+  </div>
+  <div class="dials funding-dials">
+    <label class="dial"><span class="funding-dial-head"><span class="dial-k">Funding level</span>
+        <b class="dial-v" data-out="funding">$300k</b></span>
+      <span class="dial-row"><input id="funding" type="range" min="0" max="100" value="50"
+        data-dial aria-describedby="funding-note"></span></label>
+  </div>
+  <p class="legend" id="funding-note"></p>
+</div>
+
+<h3>What a population costs inside the programme</h3>
 
 <div class="panel">
   <div id="cost-stats" class="stats"></div>

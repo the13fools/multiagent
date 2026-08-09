@@ -63,6 +63,34 @@ body > nav a { color: var(--muted); text-decoration: none; transition: color 0.2
 body > nav a:hover, body > nav a[aria-current] { color: var(--ink); }
 body > nav .brand { font-weight: 700; color: var(--ink); letter-spacing: -0.01em; font-size: 15px; }
 
+/* Current-study context for the few archive labs linked from the short grant
+ * path. They remain technical appendices, but no longer pretend the archived
+ * site's old chapter order is the reader's current route. */
+.appendix-context {
+  max-width: 48rem !important;
+  margin: 0 0 28px !important;
+  padding: 13px 16px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  background: var(--panel);
+  color: var(--muted) !important;
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+}
+.appendix-context b { color: var(--ink); }
+
+.appendix-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 58px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+}
+.appendix-footer a:last-child { text-align: right; }
+
 h1 { font-size: 32px; letter-spacing: -0.03em; margin: 0 0 8px; font-weight: 700; }
 h2 { font-size: 20px; letter-spacing: -0.02em; margin: 40px 0 12px; font-weight: 600; }
 h3 { font-size: 16px; margin: 24px 0 8px; font-weight: 600; }
@@ -316,6 +344,8 @@ hr { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
 @media (max-width: 640px) {
   .arc { flex-direction: column; align-items: flex-start; }
   .arc-next { text-align: left; max-width: 100%; }
+  .appendix-footer { align-items: flex-start; flex-direction: column; }
+  .appendix-footer a:last-child { text-align: left; }
   /* Prose tables are essential evidence on the long pages.  Keep their columns
      legible on a narrow screen rather than forcing the entire document wider
      than the viewport. */
@@ -364,6 +394,23 @@ hr { border: none; border-top: 1px solid var(--line); margin: 48px 0; }
 .dial-of { font-size: 12px; color: var(--muted); }
 .dials button { align-self: flex-end; }
 .dials .verdict { align-self: flex-end; padding-bottom: 6px; }
+
+.funding-anchors {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 8px 0 4px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+}
+.funding-anchors span:nth-child(2) { text-align: center; }
+.funding-anchors span:last-child { text-align: right; }
+.funding-anchors small { display: block; color: var(--muted); }
+.funding-dials { border-top: 0; padding-top: 4px; }
+.funding-dials .dial, .funding-dials .dial-row { width: 100%; }
+.funding-dial-head { display: flex; justify-content: space-between; align-items: baseline; width: 100%; }
+.funding-dials input[type="range"] { flex: 1; width: auto; min-width: 0; }
 
 /* A definition, set apart. Used where a page first asks the reader to accept a
  * piece of vocabulary -- the term goes here rather than in a parenthesis
@@ -492,6 +539,14 @@ td .muted { display: block; margin-top: 3px; }
  * under it, and the caveat attached rather than filed somewhere else — on this
  * site a result without its caveat is a result somebody forgot to check. */
 .results { display: grid; gap: 14px; margin: 22px 0; }
+.stage-figure {
+  margin: 24px 0 18px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.stage-figure svg { min-width: 520px; }
+h2[id], h3[id] { scroll-margin-top: 72px; }
+@media (max-width: 620px) { h2[id], h3[id] { scroll-margin-top: 168px; } }
 @media (min-width: 720px) { .results { grid-template-columns: 1fr 1fr; } }
 .result {
   border: 1px solid var(--line);
@@ -511,3 +566,78 @@ td .muted { display: block; margin-top: 3px; }
 .result-c { font-size: 14.5px; line-height: 1.55; margin: 12px 0 10px; }
 .result-k { font-size: 13px; line-height: 1.5; color: var(--muted); margin: 0; }
 .result-k .st { margin-right: 6px; }
+
+/* Archived variance/descope instrument. The current Delivery page links here so
+ * the reviewer path keeps the commitment without carrying the full apparatus. */
+.archive-power { max-width: 900px; }
+.archive-power > h3 { margin-top: 0; font-size: 18px; }
+.archive-power > p { max-width: 42rem; }
+.archive-power-controls {
+  display: grid;
+  grid-template-columns: minmax(180px, 250px) minmax(220px, 1fr);
+  gap: 12px 20px;
+  align-items: center;
+  margin: 22px 0;
+}
+.archive-power-controls label { display: flex; justify-content: space-between; gap: 12px; }
+.archive-power-controls output {
+  color: var(--accent);
+  font: 650 13px/1.4 ui-monospace, "SF Mono", Menlo, monospace;
+}
+.archive-power-controls input[type="range"] { width: 100%; accent-color: var(--accent); }
+.archive-power-readout {
+  display: grid;
+  gap: 4px;
+  padding: 12px 0;
+  border-block: 1px solid var(--line);
+}
+.archive-power-readout strong { font-size: 15px; }
+.archive-power-readout strong[data-outcome="survives"] { color: var(--restore); }
+.archive-power-readout strong[data-outcome="collapses"] { color: var(--take); }
+.archive-power-readout span { color: var(--muted); font-size: 13px; }
+.power-figure { margin: 24px 0 6px; }
+.power-figure svg { display: block; width: 100%; height: auto; }
+.power-figure figcaption { max-width: 640px; margin: 10px 0 0 46px; color: var(--muted); font-size: 12px; }
+.power-bought { stroke: var(--restore); stroke-width: 1.5; stroke-dasharray: 4 3; vector-effect: non-scaling-stroke; }
+.power-line { fill: none; stroke: var(--accent); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.power-cursor { stroke: var(--ink); stroke-width: 1; opacity: 0.25; vector-effect: non-scaling-stroke; }
+.power-dot.is-ok { fill: var(--restore); }
+.power-dot.is-tight { fill: #a36a00; }
+.power-dot.is-broken { fill: var(--take); }
+.power-tick, .power-axis {
+  fill: var(--muted);
+  font-size: 10px;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+}
+.power-axis { font-family: inherit; font-size: 11px; }
+.descope-ladder { display: grid; gap: 8px; margin: 20px 0 0; padding: 0; list-style: none; }
+.descope {
+  display: grid;
+  grid-template-columns: 18px minmax(140px, 240px) 74px 72px 1fr;
+  gap: 12px;
+  align-items: baseline;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+  font-size: 12.5px;
+}
+.descope-rank { color: var(--muted); font: 650 11px/1.4 ui-monospace, "SF Mono", Menlo, monospace; }
+.descope-name { color: var(--ink); font-weight: 650; }
+.descope-hours { text-align: right; font: 600 12px/1.4 ui-monospace, "SF Mono", Menlo, monospace; }
+.descope-state { font-size: 11px; font-weight: 650; text-transform: uppercase; letter-spacing: 0.04em; }
+.descope-why { color: var(--muted); }
+.descope.is-kept .descope-state { color: var(--restore); }
+.descope.is-dropped .descope-state { color: var(--take); }
+.descope.is-dropped .descope-name { text-decoration: line-through; opacity: 0.6; }
+.descope.is-dropped .descope-why { opacity: 0.55; }
+.descope.is-total { border-top-color: var(--ink); }
+.descope.is-total .descope-state { color: var(--muted); text-transform: none; letter-spacing: 0; }
+.archive-power-note { margin: 20px 0 0 !important; color: var(--muted); font-size: 14px !important; }
+
+@media (max-width: 700px) {
+  .archive-power-controls { grid-template-columns: 1fr; gap: 8px; }
+  .archive-power-controls input { margin-bottom: 10px; }
+  .power-figure figcaption { margin-left: 0; }
+  .descope { grid-template-columns: 18px 1fr auto; }
+  .descope-state { grid-column: 2; }
+  .descope-why { grid-column: 2 / -1; }
+}

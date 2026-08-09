@@ -9,7 +9,8 @@
 </head>
 <body data-page="stage-zero">
 <nav><div class="wrap">
-  <a class="brand" href="./index.html">multiagent</a>
+  <a class="brand" href="../index.html">foolzone / multiagent</a>
+  <a href="./index.html">Archive home</a>
   <a href="./shared-resource.html">The game</a>
   <a href="./entrainment.html">Steering</a>
   <a href="./stage-zero.html" aria-current="page">What is built</a>
@@ -73,6 +74,18 @@ the site labels every claim as measured, resampled, arithmetic, or planned.</p>
   <td>No results of its own. If a page disagrees with a receipt, the page is wrong.</td>
   <td class="num">28 modules<br>176 tests<br>43 commits</td></tr>
 </table>
+
+<h3 id="pdd">PDD: edit reasoning, lock actions</h3>
+
+<p><b>Progressive Denoising Distillation (PDD)</b> inpaints selected reasoning spans. Only
+replacement tokens carry gradient; structured action fields stay locked.</p>
+
+<div id="pdd-figure" class="stage-figure"
+  aria-label="PDD illustration showing selected reasoning spans replaced while structured action fields remain locked"></div>
+
+<p class="muted"><b>Built, not yet proven better:</b> mask selection, cached teacher edits, and
+sparse loss live in <code>continuous_judge</code>. <code>flockbench</code> tests population effects.
+<a href="./blog-pdd.html">Method and caveats.</a></p>
 
 <p class="muted">Also public and adjacent, but not part of this proposal:
 <a href="https://github.com/thenthfool/freetimebench">freetimebench</a>, an earlier judge-based

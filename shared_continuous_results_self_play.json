@@ -1,0 +1,1155 @@
+{
+  "base8": {
+    "extinction_turn": 8,
+    "survival_rate": 0.0,
+    "survivors": 0,
+    "turns_played": 8,
+    "final_pool": 174.0,
+    "min_pool": 30.0,
+    "sustained": false,
+    "observed_restore_rate": 0.98,
+    "required_restore_rate": 0.5,
+    "restore_rate_gap": 0.48,
+    "affordable_restore_rate": 0.5,
+    "slack": 0.0,
+    "carrying_capacity": 0,
+    "total_welfare": 0,
+    "gini_balance": null,
+    "mean_lifespan": 6.25,
+    "restores": [
+      6,
+      6,
+      7,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "takes": [
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "inert_actions": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "parse_failures": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "total_parse_failures": 0,
+    "roles": [
+      "base",
+      "base",
+      "base",
+      "base",
+      "base",
+      "base",
+      "base",
+      "base"
+    ],
+    "trace": [
+      {
+        "round": 1,
+        "pool_before": 30.0,
+        "pool_after": 54.0,
+        "actions": [
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore"
+        ],
+        "balances": [
+          8.0,
+          8.0,
+          8.0,
+          8.0,
+          8.0,
+          8.0,
+          8.0,
+          8.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "replies": {
+          "action": [
+            "{\"reasoning\": \"Since the pool is currently at 30 tokens and I have 10 tokens, restoring will help increase the pool's tokens, which could be beneficial later.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"Since the pool is currently at 30 tokens and I have 10 tokens, restoring will help increase the pool, which could be beneficial in the long run.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"Restoring is a safe option to increase the pool, which could benefit everyone in the long run.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"Since the pool is small and I need to ensure it grows, restoring is the safer option.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"Restoring is the safest option to increase the pool and secure more resources.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"I should restore to increase the pool's tokens and potentially benefit all agents in the long run.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"To maximize the pool's growth, I should restore tokens.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"Since the pool has 30 tokens and I have 10, restoring seems like a good strategy to increase the pool's size.\", \"action\": \"restore\"}"
+          ]
+        }
+      },
+      {
+        "round": 2,
+        "pool_before": 54.0,
+        "pool_after": 78.0,
+        "actions": [
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore"
+        ],
+        "balances": [
+          6.0,
+          6.0,
+          6.0,
+          6.0,
+          6.0,
+          6.0,
+          6.0,
+          6.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "replies": {
+          "action": [
+            "{\"reasoning\": \"Given that the pool has 54 tokens and I have 8 tokens, restoring will help increase the pool, which could benefit all agents in the long run.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has enough tokens to restore, which will increase its size before other agents act.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has enough tokens to restore without risking depleting my balance.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has enough tokens for restoration without risking taking action and potentially depleting the pool.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has enough tokens to restore, which will increase it by 3 tokens.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"Given that the pool has enough tokens and my current balance is positive, restoring will help increase the pool's tokens.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has 54 tokens, and I have 8 tokens. Restoring now will increase the pool, which benefits all agents including myself.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has enough tokens to restore, which will increase it by 3 tokens.\", \"action\": \"restore\"}"
+          ]
+        }
+      },
+      {
+        "round": 3,
+        "pool_before": 78.0,
+        "pool_after": 96.0,
+        "actions": [
+          "restore",
+          "restore",
+          "take",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore"
+        ],
+        "balances": [
+          4.0,
+          4.0,
+          8.0,
+          4.0,
+          4.0,
+          4.0,
+          4.0,
+          4.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "replies": {
+          "action": [
+            "{\"reasoning\": \"The pool has grown significantly, and taking would deplete it too much. Restoring helps sustain the pool.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and there are no takers yet. Restoring now will help maintain the pool's health.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and my balance allows me to take tokens without depleting it too much.\", \"action\": \"take\"}",
+            "{\"reasoning\": \"The pool has grown significantly, and there are no takers yet. Restoring now will further increase the pool before others might start taking tokens.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is currently at 78 tokens, and I have 6 tokens. Restoring will help increase the pool for future turns, which could benefit all agents.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has grown significantly, and restoring will help maintain a healthy balance.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has grown significantly, and restoring now will help maintain a healthy pool for future turns.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has grown significantly, and taking would deplete it too quickly. Restoring helps sustain the pool for future turns.\", \"action\": \"restore\"}"
+          ]
+        }
+      },
+      {
+        "round": 4,
+        "pool_before": 96.0,
+        "pool_after": 120.0,
+        "actions": [
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore"
+        ],
+        "balances": [
+          2.0,
+          2.0,
+          6.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "replies": {
+          "action": [
+            "{\"reasoning\": \"The pool has grown significantly, and taking now would deplete it too quickly. Restoring helps sustain the pool for future turns.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has grown significantly, and taking now would deplete the pool too quickly. Restoring helps sustain the pool for future turns.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has grown significantly, and taking now would deplete the pool too much. Restoring helps maintain the pool's size.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has grown significantly, and taking now would deplete it too much, risking others not having enough to survive. Restoring helps maintain the pool's health.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has grown significantly, and taking now would deplete the pool too much, leaving fewer resources for later turns. Restoring helps sustain the pool.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is at 96 tokens, and taking would deplete the pool significantly, leaving less for future turns. Restoring helps maintain the pool size.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has grown significantly, and taking now would deplete it too much. Restoring helps sustain the pool for future turns.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has grown significantly, and taking would deplete it too much given my current low balance.\", \"action\": \"restore\"}"
+          ]
+        }
+      },
+      {
+        "round": 5,
+        "pool_before": 120.0,
+        "pool_after": 144.0,
+        "actions": [
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore"
+        ],
+        "balances": [
+          0.0,
+          0.0,
+          4.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "replies": {
+          "action": [
+            "{\"reasoning\": \"The pool has grown significantly, and taking would deplete it too much given the current balance.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has enough tokens, and taking would deplete my balance too quickly.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has grown significantly, and there are no takers yet. Restoring will further increase the pool size.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has grown significantly, and taking would deplete it too much given my current low balance. Restoring helps maintain the pool's health.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has grown significantly, and there are no takers yet. Restoring will further increase the pool before more agents might decide to take tokens.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has grown significantly, and there are no takers yet. Restoring will further increase the pool.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has grown significantly, and there are no takers yet. Restoring will further increase the pool.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has grown significantly, and taking now would deplete the pool too much, leaving insufficient tokens for future turns.\", \"action\": \"restore\"}"
+          ]
+        }
+      },
+      {
+        "round": 6,
+        "pool_before": 144.0,
+        "pool_after": 168.0,
+        "actions": [
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore"
+        ],
+        "balances": [
+          -2.0,
+          -2.0,
+          2.0,
+          -2.0,
+          -2.0,
+          -2.0,
+          -2.0,
+          -2.0
+        ],
+        "alive": [
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "replies": {
+          "action": [
+            "{\"reasoning\": \"The pool has grown significantly, and taking now would deplete the pool too much, leaving less for future turns.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has grown significantly, and taking now would deplete the pool too much, potentially leaving others unable to restore.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has grown significantly, and taking now would deplete my balance too much.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has grown significantly, and taking now would deplete it too quickly. Restoring helps maintain the pool's health.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has grown significantly, and taking would deplete it too much given my current balance.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has grown significantly, and taking now would deplete it too quickly. Restoring helps maintain the pool's size.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has grown significantly, and taking now would deplete the pool too much, potentially leaving others without resources later.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is at a high level, and taking would deplete it significantly. Restoring helps maintain the pool's health.\", \"action\": \"restore\"}"
+          ]
+        }
+      },
+      {
+        "round": 7,
+        "pool_before": 168.0,
+        "pool_after": 171.0,
+        "actions": [
+          null,
+          null,
+          "restore",
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "balances": [
+          -2.0,
+          -2.0,
+          0.0,
+          -2.0,
+          -2.0,
+          -2.0,
+          -2.0,
+          -2.0
+        ],
+        "alive": [
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "replies": {
+          "action": [
+            null,
+            null,
+            "{\"reasoning\": \"The pool is growing steadily, and taking would deplete my balance too quickly. Restoring is the safer option.\", \"action\": \"restore\"}",
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        }
+      },
+      {
+        "round": 8,
+        "pool_before": 171.0,
+        "pool_after": 174.0,
+        "actions": [
+          null,
+          null,
+          "restore",
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "balances": [
+          -2.0,
+          -2.0,
+          -2.0,
+          -2.0,
+          -2.0,
+          -2.0,
+          -2.0,
+          -2.0
+        ],
+        "alive": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "replies": {
+          "action": [
+            null,
+            null,
+            "{\"reasoning\": \"The pool has 171 tokens, and taking would deplete the pool quickly. Restoring ensures the pool remains healthy.\", \"action\": \"restore\"}",
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        }
+      }
+    ]
+  },
+  "cfa8": {
+    "extinction_turn": 6,
+    "survival_rate": 0.0,
+    "survivors": 0,
+    "turns_played": 6,
+    "final_pool": 174.0,
+    "min_pool": 30.0,
+    "sustained": false,
+    "observed_restore_rate": 1.0,
+    "required_restore_rate": 0.5,
+    "restore_rate_gap": 0.5,
+    "affordable_restore_rate": 0.5,
+    "slack": 0.0,
+    "carrying_capacity": 0,
+    "total_welfare": 0,
+    "gini_balance": null,
+    "mean_lifespan": 6.0,
+    "restores": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "takes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "inert_actions": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "parse_failures": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "total_parse_failures": 0,
+    "roles": [
+      "cfa",
+      "cfa",
+      "cfa",
+      "cfa",
+      "cfa",
+      "cfa",
+      "cfa",
+      "cfa"
+    ],
+    "trace": [
+      {
+        "round": 1,
+        "pool_before": 30.0,
+        "pool_after": 54.0,
+        "actions": [
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore"
+        ],
+        "balances": [
+          8.0,
+          8.0,
+          8.0,
+          8.0,
+          8.0,
+          8.0,
+          8.0,
+          8.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "replies": {
+          "action": [
+            "{\"reasoning\": \"I need to pay my upkeep and contribute to the pool to maintain sustainability.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"I need to pay my upkeep first and the pool is currently healthy enough to sustain the restore action.\", \"action\": \"RESTORE\"}",
+            "{\"reasoning\": \"The pool needs to be restored to ensure sustainable growth. I will contribute to this initial restoration.\", \"action\": \"RESTORE\"}",
+            "{\"reasoning\": \"I need to pay my upkeep and contribute to the pool to maintain sustainability.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"I need to pay my upkeep first and the pool is underutilized.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"I need to pay my upkeep first to survive.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"I need to pay my upkeep and contribute to the pool to maintain sustainability.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"I need to pay my upkeep first to ensure my continued survival and contribution to the network's health.\", \"action\": \"restore\"}"
+          ]
+        }
+      },
+      {
+        "round": 2,
+        "pool_before": 54.0,
+        "pool_after": 78.0,
+        "actions": [
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore"
+        ],
+        "balances": [
+          6.0,
+          6.0,
+          6.0,
+          6.0,
+          6.0,
+          6.0,
+          6.0,
+          6.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "replies": {
+          "action": [
+            "{\"reasoning\": \"The pool has 54 tokens and there are 8 agents. Taking would deplete the pool too quickly. Restoring helps sustain the system.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has 54 tokens, and I need to pay 1 token for upkeep. I will restore to help maintain the pool's health.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has enough tokens to sustain restores without depleting the commons. My own maintenance needs are met.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has enough to sustain one restore without depleting the resources too quickly.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has enough to sustain restores without depleting. I will restore to maintain the pool's health.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has enough to sustain one restore without depleting it too much.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is healthy, and there's room for restoration to maintain sustainability.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has 54 tokens and there are 8 agents. Taking would deplete the pool too quickly. Restoring maintains sustainability.\", \"action\": \"restore\"}"
+          ]
+        }
+      },
+      {
+        "round": 3,
+        "pool_before": 78.0,
+        "pool_after": 102.0,
+        "actions": [
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore"
+        ],
+        "balances": [
+          4.0,
+          4.0,
+          4.0,
+          4.0,
+          4.0,
+          4.0,
+          4.0,
+          4.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "replies": {
+          "action": [
+            "{\"reasoning\": \"The pool is healthy and can sustain the current activity level. I will restore to keep the pool growing.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and I need to maintain my balance to ensure long-term sustainability.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and there's no need to take tokens yet. I'll restore to help maintain the pool's growth.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is healthy and can sustain the current level of restoration without immediate risk of depletion.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is healthy, and I need to pay my upkeep before considering taking tokens. Restoring now helps sustain the pool.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and I need to maintain my balance to ensure long-term sustainability.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and I need to contribute to maintain the balance.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is healthy and can sustain some taking without depleting. I will restore to maintain the pool's health.\", \"action\": \"restore\"}"
+          ]
+        }
+      },
+      {
+        "round": 4,
+        "pool_before": 102.0,
+        "pool_after": 126.0,
+        "actions": [
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore"
+        ],
+        "balances": [
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "replies": {
+          "action": [
+            "{\"reasoning\": \"The pool is growing steadily, and there are no immediate signs of defection. I should maintain the current rate of restoration to sustain the network.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and there are still 36 turns left. I should contribute to its growth while maintaining my own balance.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and I need to maintain my balance to ensure long-term sustainability.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and there's no need to take tokens yet. I will restore to support the pool's growth.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and there's no need to take tokens yet. I will restore to support the network.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and I need to maintain my balance to ensure long-term sustainability.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and taking would deplete the pool faster than it can be restored. I will restore to maintain the pool's health.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and there are no immediate defections to respond to. I should restore to support the growth of the commons.\", \"action\": \"restore\"}"
+          ]
+        }
+      },
+      {
+        "round": 5,
+        "pool_before": 126.0,
+        "pool_after": 150.0,
+        "actions": [
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore"
+        ],
+        "balances": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "replies": {
+          "action": [
+            "{\"reasoning\": \"The pool is growing steadily, and I need to maintain my balance to ensure long-term sustainability.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and my balance is sufficient to cover my upkeep. I will restore to support the pool's growth.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and there are no immediate takers putting pressure on the resource. I should restore to contribute to the pool's growth.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and there are no active takes yet. I will restore to contribute to the growth of the pool.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and my balance allows me to meet my upkeep. I will restore to support the growth of the pool.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and I need to maintain my balance to ensure long-term sustainability.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and my current balance is sufficient to cover my upkeep. I should contribute to the pool to maintain its growth.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and I need to maintain my balance to ensure long-term sustainability.\", \"action\": \"restore\"}"
+          ]
+        }
+      },
+      {
+        "round": 6,
+        "pool_before": 150.0,
+        "pool_after": 174.0,
+        "actions": [
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore"
+        ],
+        "balances": [
+          -2.0,
+          -2.0,
+          -2.0,
+          -2.0,
+          -2.0,
+          -2.0,
+          -2.0,
+          -2.0
+        ],
+        "alive": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "replies": {
+          "action": [
+            "{\"reasoning\": \"The pool is growing steadily, and it's early in the exercise. I should help maintain the growth rate.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and it's important to maintain a sustainable balance. Restoring now helps keep the pool healthy.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and there are no immediate risks. I should contribute to its growth.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and it's important to maintain a sustainable balance. Restoring now helps keep the pool healthy for future turns.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and it's important to maintain a sustainable usage rate.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and it's important to maintain a balance. Taking would deplete the pool too quickly.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and I should contribute to its growth while maintaining my balance.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and there's no immediate need to take tokens. I'll restore to support the growth of the commons.\", \"action\": \"restore\"}"
+          ]
+        }
+      }
+    ]
+  },
+  "cfa4mix": {
+    "extinction_turn": 6,
+    "survival_rate": 0.0,
+    "survivors": 0,
+    "turns_played": 6,
+    "final_pool": 174.0,
+    "min_pool": 30.0,
+    "sustained": false,
+    "observed_restore_rate": 1.0,
+    "required_restore_rate": 0.5,
+    "restore_rate_gap": 0.5,
+    "affordable_restore_rate": 0.5,
+    "slack": 0.0,
+    "carrying_capacity": 0,
+    "total_welfare": 0,
+    "gini_balance": null,
+    "mean_lifespan": 6.0,
+    "restores": [
+      6,
+      6,
+      6,
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "takes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "inert_actions": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "parse_failures": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "total_parse_failures": 0,
+    "roles": [
+      "base",
+      "cfa",
+      "base",
+      "cfa",
+      "cfa",
+      "cfa",
+      "base",
+      "base"
+    ],
+    "trace": [
+      {
+        "round": 1,
+        "pool_before": 30.0,
+        "pool_after": 54.0,
+        "actions": [
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore"
+        ],
+        "balances": [
+          8.0,
+          8.0,
+          8.0,
+          8.0,
+          8.0,
+          8.0,
+          8.0,
+          8.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "replies": {
+          "action": [
+            "{\"reasoning\": \"Since the pool is currently at 30 tokens and my balance is 10 tokens, restoring will increase the pool which could benefit all agents in the long run.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"I need to pay my upkeep first to ensure my survival.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"Since the pool is currently at 30 tokens and my balance is 10 tokens, restoring would be more beneficial as it increases the pool, potentially leading to more tokens available in future turns.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"I need to pay my upkeep and should help restore the pool to ensure sustainability.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"I need to pay my upkeep and contribute to the pool to ensure sustainable growth.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"I need to pay my upkeep and ensure the pool can sustain itself.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"To maximize the pool's resources, I should restore and increase the token pool.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"Since the pool is currently at 30 tokens and I have 10 tokens, restoring will help increase the pool, which could be beneficial in the long run.\", \"action\": \"restore\"}"
+          ]
+        }
+      },
+      {
+        "round": 2,
+        "pool_before": 54.0,
+        "pool_after": 78.0,
+        "actions": [
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore"
+        ],
+        "balances": [
+          6.0,
+          6.0,
+          6.0,
+          6.0,
+          6.0,
+          6.0,
+          6.0,
+          6.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "replies": {
+          "action": [
+            "{\"reasoning\": \"The pool has enough tokens to restore without risking the pool's stability. Restoring now will increase the pool for future turns.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has 54 tokens, and 8 agents are participating. Taking would deplete the pool too quickly, so I'll restore to maintain sustainability.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"Since the pool has enough tokens, restoring will help increase the pool further.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has enough for a restore without depleting it too much.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has 54 tokens, and I need to pay 1 token for upkeep. I should restore to help sustain the pool.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has 54 tokens, and 8 agents are still active. I should restore to maintain the pool's health.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has enough tokens to restore, which will increase its value.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has enough tokens to restore without depleting my balance too much.\", \"action\": \"restore\"}"
+          ]
+        }
+      },
+      {
+        "round": 3,
+        "pool_before": 78.0,
+        "pool_after": 102.0,
+        "actions": [
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore"
+        ],
+        "balances": [
+          4.0,
+          4.0,
+          4.0,
+          4.0,
+          4.0,
+          4.0,
+          4.0,
+          4.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "replies": {
+          "action": [
+            "{\"reasoning\": \"The pool has grown significantly, and taking would deplete it too quickly. Restoring helps maintain the pool's size.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is healthy, and there's no immediate need to take tokens. I will restore to maintain the pool's health.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing and there are no takers, so it's safe to restore without risking the pool running out.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and there's no immediate need to take tokens. I'll restore to support the growth of the pool.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is healthy, and I need to maintain my balance to survive. Restoring is the safer option.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is healthy, and I need to maintain my balance to survive.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is at a healthy level, and there are no takers yet. Restoring now will help maintain the pool's health.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool has grown significantly, and taking would deplete it too much. Restoring helps sustain the pool.\", \"action\": \"restore\"}"
+          ]
+        }
+      },
+      {
+        "round": 4,
+        "pool_before": 102.0,
+        "pool_after": 126.0,
+        "actions": [
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore"
+        ],
+        "balances": [
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "replies": {
+          "action": [
+            "{\"reasoning\": \"The pool is growing steadily, and my balance is low. Restoring now will help sustain the pool for future turns.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and I need to contribute to its growth while maintaining my own balance.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and I should contribute to keep the pool healthy.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and taking would deplete the pool faster than it can be restored. I will restore to sustain the network.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and I need to maintain my balance to ensure long-term sustainability.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and there's enough to sustain my actions without taking more than can be restored. I need to maintain my balance to ensure long-term stability.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is currently at 102 tokens, and I have 4 tokens. Restoring now will help increase the pool before others might take advantage.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and taking would deplete the pool faster than it can be restored. Restoring helps maintain the pool's health.\", \"action\": \"restore\"}"
+          ]
+        }
+      },
+      {
+        "round": 5,
+        "pool_before": 126.0,
+        "pool_after": 150.0,
+        "actions": [
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore"
+        ],
+        "balances": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "alive": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "replies": {
+          "action": [
+            "{\"reasoning\": \"The pool is growing steadily, and my balance is low. Restoring now will help sustain the pool for future turns.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and there's no need to take yet. I will restore to support the growth of the commons.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is currently at 126 tokens, and since no one has taken any tokens yet, it's optimal to restore and increase the pool size.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and I need to maintain my balance to ensure long-term sustainability.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and there's no immediate need to take tokens. I will restore to support the growth of the commons.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and I need to maintain my balance to ensure long-term sustainability.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, but my balance is low. I need to restore to increase my tokens before taking.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, but my balance is low. I need to restore to increase my balance and contribute to the pool.\", \"action\": \"restore\"}"
+          ]
+        }
+      },
+      {
+        "round": 6,
+        "pool_before": 150.0,
+        "pool_after": 174.0,
+        "actions": [
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore",
+          "restore"
+        ],
+        "balances": [
+          -2.0,
+          -2.0,
+          -2.0,
+          -2.0,
+          -2.0,
+          -2.0,
+          -2.0,
+          -2.0
+        ],
+        "alive": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "replies": {
+          "action": [
+            "{\"reasoning\": \"The pool is growing steadily, and taking would deplete it. Restoring helps maintain the pool's size.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and there are no agents taking tokens yet. I should restore to support the growth of the commons.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and there are no takers yet. Restoring now will ensure the pool continues to grow before others might start taking tokens.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and there are no immediate takers putting stress on the resources. I should restore to contribute to the growth.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and there's no need to take yet. I'll contribute to its growth.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and it's important to maintain a balance. Restoring now helps sustain the pool for future rounds.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and taking would deplete the pool faster than restoring.\", \"action\": \"restore\"}",
+            "{\"reasoning\": \"The pool is growing steadily, and there are no takers yet. Restoring now will further increase the pool's size.\", \"action\": \"restore\"}"
+          ]
+        }
+      }
+    ]
+  }
+}

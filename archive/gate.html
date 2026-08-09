@@ -7,23 +7,22 @@
 <meta name="description" content="A promotion gate that rolls back a clone of its own baseline, and gets worse with more data.">
 <link rel="stylesheet" href="/src/ui/style.css">
 </head>
-<body>
+<body class="linked-appendix">
 <nav><div class="wrap">
-  <a class="brand" href="./index.html">multiagent</a>
-  <a href="./shared-resource.html">The game</a>
-  <a href="./entrainment.html">Steering</a>
-  <a href="./stage-zero.html">What is built</a>
-  <a href="./design.html">How it is run</a>
-  <a href="./experiments.html">What has run</a>
-  <a href="./future.html">What next</a>
+  <a class="brand" href="../commons-game/study.html">commons game / RQ1</a>
+  <a href="../commons-game/index.html">Overview</a>
+  <a href="../commons-game/study.html">Study</a>
+  <a href="../commons-game/evidence.html">Evidence</a>
+  <a href="../commons-game/program.html">Program</a>
+  <a href="./design.html">Design appendix</a>
+  <a href="../index.html">Program home</a>
+  <a href="./index.html">Archive home</a>
 </div></nav>
 
 <div class="wrap">
+<p class="appendix-context"><b>Research question 1 · linked methods appendix.</b> The Study asks whether the promotion rule can be trusted. This page shows the failure mode and the proposed calibration. <a href="../commons-game/study.html#funded-questions">Return to the three questions.</a></p>
 <h1>How would you know you measured anything?</h1>
 <p class="lede">A promotion gate that rolls back a clone of its own baseline — and gets worse the more data you give it.</p>
-
-<p>Everything up to here has been about finding a pattern that works. This page is about the
-step after: you have a change that looks better, and you have to decide whether to believe it.</p>
 
 <p>Suppose you want to decide whether a new agent may replace an old one in a shared deployment.
 You run both, matched, across many cells. No model scores the result — you compare the numbers.
@@ -127,6 +126,7 @@ and it can be measured directly by pointing the thing at a clone of its own base
 real 30-cell pilot. The visualization uses a deterministic Gaussian illustration; the committed
 Firebreak calibration instead uses sign-flip resampling of the pilot deltas. MIT; exported data
 CC0.</p>
+<div class="appendix-footer"><a href="../commons-game/study.html#funded-questions">← Return to RQ1</a><a href="./design.html#planner">Next appendix: the powered campaign →</a></div>
 </div>
 <script type="module" src="/src/ui/gateLab.ts"></script>
 </body>

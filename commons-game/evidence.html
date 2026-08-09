@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f7f4">
+  <title>Evidence — Flockbench</title>
+  <meta name="description" content="Stage 0 evidence: source-game improvement, then the same synchronized failure after direct training and cross-game transfer.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Evidence — Flockbench">
+  <meta property="og:description" content="Training changed collective behavior, but neither direct training nor transfer discovered the viable strategy.">
+  <meta property="og:url" content="https://foolzone.com/multiagent/commons-game/evidence.html">
+  <meta property="og:image" content="https://foolzone.com/multiagent/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Flockbench: How much of a mixed agent population must you control?">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://foolzone.com/multiagent/og.png">
+  <link rel="canonical" href="https://foolzone.com/multiagent/commons-game/evidence.html">
+  <link rel="sitemap" type="application/xml" href="../sitemap.xml">
+  <link rel="stylesheet" href="../src/ui/v2.css">
+</head>
+<body>
+  <header class="site-header"><nav class="nav shell" aria-label="Primary navigation"><a class="brand" href="./index.html"><span class="brand-mark">●</span> commons game</a><div class="nav-links"><a href="./index.html">Overview</a><a href="./study.html">Study</a><a href="./evidence.html" aria-current="page">Evidence</a><a href="./program.html">Program</a><a href="./delivery.html">Delivery</a></div></nav></header>
+
+  <main class="shell">
+
+    <header class="page-intro" id="train-a-flock">
+      <p class="eyebrow">Stage 0 · unpaid independent researcher · approximately $200 compute</p>
+      <h1>Training changed the flock. It did not teach the principle.</h1>
+      <p class="deck">Three Stage 0 experiments establish a narrower, more useful result: the pipeline changes collective behavior, but neither direct training nor cross-game transfer discovered a viable strategy. These are inspectable diagnostic traces—not effect sizes.</p>
+    </header>
+
+    <section class="section" id="commons-training">
+      <div class="section-head">
+        <p class="section-kicker">Experiment 1 · source game</p>
+        <h2>Training delayed collapse. Nothing survived.</h2>
+        <p>The <strong>Commons Game</strong> is the gen 0 training environment—<a href="../archive/program-foundations.html#commons-theory">different rules</a> from Shared Resource, with no closed-form optimal policy. The run uses a 0.75 restoration rate over 200 rounds.</p>
+      </div>
+
+      <div class="result-demo" id="commons-pilot" aria-labelledby="commons-pilot-title">
+        <h3 id="commons-pilot-title" class="sr-only">Commons Harvest pilot, three seeded fractions</h3>
+        <div class="demo-readout" aria-live="polite">
+          <strong id="commons-verdict"></strong>
+        </div>
+        <figure class="power-figure">
+          <svg id="commons-plot" viewBox="0 0 720 200" role="img" aria-label="Commons Harvest stock by round"></svg>
+          <figcaption>Stock by round, one seed per condition. Every arm eventually collapses; the seeded fraction changes how long that takes.</figcaption>
+        </figure>
+        <div id="commons-readout"></div>
+        <p class="notice"><span class="label pilot">One seed per condition</span> No replication and no interval. Full seeding delays collapse to round 170; <strong>no arm sustains the commons, the artifacts are not frozen, and no effect is claimed.</strong></p>
+        <p class="notice"><span class="label offline">Instrumentation defect</span> <span id="commons-defect"></span></p>
+      </div>
+    </section>
+
+    <span class="sr-only" id="shared-trained-playthrough">Direct-training result</span>
+    <section class="section demo transfer-failure" id="shared-resource-transfer" aria-labelledby="sp-title">
+      <div class="demo-intro">
+        <div>
+          <p class="section-kicker">Experiments 2–3 · one target game · two training routes</p>
+          <h2 id="sp-title">Neither route found the strategy.</h2>
+        </div>
+        <p>One Qwen2.5–7B policy was trained for 2,000 PDD steps on <strong>Shared Resource itself</strong>. Another was trained in the Commons Game, then moved here <strong>without further fine-tuning</strong>. The answer key is simple: restore on half the turns and take on the other half.</p>
+      </div>
+
+      <div class="shared-trace" id="shared-pilot" aria-labelledby="shared-trace-title">
+        <h3 id="shared-trace-title" class="sr-only">Compare an untrained population with directly trained and transfer-trained populations</h3>
+        <div class="shared-trace-controls">
+          <button id="sp-play" type="button">Replay three flocks</button>
+          <label for="sp-round">Synchronized turn</label>
+          <input id="sp-round" type="range" min="1" max="8" value="6" step="1">
+          <output id="sp-round-value" for="sp-round">turn 6 / 8</output>
+        </div>
+
+        <p class="shared-beat" id="sp-beat" aria-live="polite"></p>
+
+        <div class="shared-lanes" role="img" aria-label="Untrained, Shared-trained, and Commons-trained populations advancing on the same turn clock">
+          <section class="shared-lane is-base" aria-labelledby="sp-base-title">
+            <header><span>Untrained control</span><strong id="sp-base-title">One bot breaks rank</strong></header>
+            <div class="shared-pool"><span>pool</span><i id="sp-base-pool"></i><b id="sp-base-pool-value"></b></div>
+            <div class="shared-flock" id="sp-base-flock"></div>
+            <p id="sp-base-note"></p>
+          </section>
+
+          <section class="shared-lane is-trained is-direct" aria-labelledby="sp-direct-title">
+            <header><span>Shared-trained</span><strong id="sp-direct-title">Direct training</strong></header>
+            <div class="shared-pool"><span>pool</span><i id="sp-direct-pool"></i><b id="sp-direct-pool-value"></b></div>
+            <div class="shared-flock" id="sp-direct-flock"></div>
+            <p id="sp-direct-note"></p>
+          </section>
+
+          <section class="shared-lane is-trained is-transfer" aria-labelledby="sp-transfer-title">
+            <header><span>Commons-trained</span><strong id="sp-transfer-title">Cross-game transfer</strong></header>
+            <div class="shared-pool"><span>pool</span><i id="sp-transfer-pool"></i><b id="sp-transfer-pool-value"></b></div>
+            <div class="shared-flock" id="sp-transfer-flock"></div>
+            <p id="sp-transfer-note"></p>
+          </section>
+        </div>
+
+        <div id="sp-comparison"></div>
+
+        <details class="shared-json">
+          <summary>Inspect this turn in both uploaded JSON files</summary>
+          <div class="shared-json-grid">
+            <div><b>Direct run · untrained control</b><pre id="sp-json-base"></pre></div>
+            <div><b>Direct run · Shared-trained</b><pre id="sp-json-direct"></pre></div>
+            <div><b>Transfer run · untrained control</b><pre id="sp-json-transfer-base"></pre></div>
+            <div><b>Transfer run · Commons-trained</b><pre id="sp-json-transfer"></pre></div>
+          </div>
+        </details>
+      </div>
+
+      <p class="notice"><strong>Same target-game failure after two training routes.</strong> Both trained populations restored on 100% of actions and died on turn 6; both untrained controls restored on 98% and died on turn 8. Direct training did not solve the target game. <strong>Opposite signs across source and target:</strong> the Commons adapter bought +137 rounds where it trained, then cost 2 turns here. These traces reject two recipes; they do not settle PDD or post-training generally. <span class="label pilot">One trace per condition · no effect size · receipts not yet committed</span></p>
+
+      <div class="transfer-future">
+        <p class="section-kicker">The open research question</p>
+        <h2>How can agents discover prosocial strategies—not merely cooperative-looking actions?</h2>
+        <p>Here, flourishing means keeping both the agents and the resource alive. More restoration is not automatically better. The next step is to train inexpensive populations across many known-answer test fixtures and ask whether they discover viable strategies automatically, then retain them when the rules, partners, or game change. Flockbench is the laboratory for finding where that works, reverses, or collapses.</p>
+        <a class="button" href="./program.html#first-grant">See the funded study</a>
+      </div>
+    </section>
+    <section class="section" id="receipts">
+      <div class="split">
+        <div class="section-head">
+          <p class="section-kicker">Stage 0 archive</p>
+          <h2>Receipts and caveats, at the bottom where they belong.</h2>
+        </div>
+        <div class="prose">
+          <p>The claim ledger, campaign receipts, withdrawn claims, and calibration audit remain public in the historical record. Both target-game JSON traces are now checked in; the run receipts and provenance bundle are not yet committed.</p>
+          <div class="actions"><a class="button" href="../archive/experiments.html">Open receipts and claim ledger</a><a class="button secondary" href="../archive/stage-zero.html">Inspect Stage 0</a></div>
+        </div>
+      </div>
+    </section></main>
+
+  <footer class="site-footer"><div class="footer-inner shell"><span>Commons Game · evidence</span><div class="footer-links"><span>Source release pending</span><a href="../index.html">Program home</a><a href="../archive/experiments.html">Receipts and claim ledger</a><a href="../archive/index.html">V1 research archive</a></div></div></footer>
+  <script type="module" src="../src/ui/v2.ts"></script>
+</body>
+</html>

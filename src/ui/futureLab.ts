@@ -63,6 +63,7 @@ mountArc("future");
  * the size dial.
  */
 import { REFERENCE_PLAN, SIZES, budgetCurve, seedingCost, type SeedingPlan } from "../core/seeding";
+import { FUNDING_ANCHORS, interpolateFunding } from "../core/funding";
 
 const dial = (id: string) => Number((el(id) as HTMLInputElement).value);
 
@@ -77,7 +78,36 @@ const plan = (): SeedingPlan => ({
 });
 
 const usd = (v: number) =>
-  v >= 10000 ? `$${(v / 1000).toFixed(0)}k` : v >= 1000 ? `$${(v / 1000).toFixed(1)}k` : `$${v.toFixed(0)}`;
+  v >= 1_000_000 ? `$${(v / 1_000_000).toFixed(v % 1_000_000 === 0 ? 0 : 1)}m`
+    : v >= 100_000 ? `$${(v / 1000).toFixed(0)}k`
+      : v >= 1000 ? `$${(v / 1000).toFixed(1)}k`
+        : `$${v.toFixed(0)}`;
+
+const runway = (months: number) => {
+  if (months <= 1.01) return "a few weeks";
+  if (Math.abs(months - 12) < 0.01) return "1 year";
+  if (Math.abs(months - 24) < 0.01) return "2 years";
+  return `${Math.round(months)} months`;
+};
+
+function renderFunding() {
+  const position = dial("funding");
+  const s = interpolateFunding(position);
+  const exact = FUNDING_ANCHORS.find((a) => a.position === s.position);
+  const scale = exact?.scale ?? `${s.lower.scale} → ${s.upper.scale}`;
+
+  renderStats("funding-stats", [
+    { key: "Budget", value: usd(s.budget) },
+    { key: "Calendar", value: runway(s.months) },
+    { key: "Operating scale", value: scale },
+  ]);
+
+  const input = el("funding") as HTMLInputElement;
+  input.setAttribute("aria-valuetext", `${usd(s.budget)}, ${runway(s.months)}, ${scale}`);
+  el("funding-note").textContent = exact
+    ? `${exact.scale}: ${runway(s.months)} at ${usd(s.budget)}. Planning scope, not burn rate; the $200 anchor includes unpaid work.`
+    : `Between the ${s.lower.scale} and ${s.upper.scale} anchors. Planning scope, not burn rate; the $200 anchor includes unpaid work.`;
+}
 
 function drawCostCurve() {
   const p = plan();
@@ -157,5 +187,8 @@ function renderCost() {
 (el("size") as HTMLSelectElement).innerHTML = SIZES
   .map((s, i) => `<option value="${i}"${s.label === "7B" ? " selected" : ""}>${s.label}</option>`)
   .join("");
-bindDials(renderCost);
+bindDials((id) => id === "funding" ? renderFunding() : renderCost(), {
+  funding: (position) => usd(interpolateFunding(position).budget),
+});
+renderFunding();
 renderCost();

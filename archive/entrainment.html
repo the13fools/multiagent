@@ -7,18 +7,20 @@
 <meta name="description" content="Given agents pinned to the right phase, do the others lock on?">
 <link rel="stylesheet" href="/src/ui/style.css">
 </head>
-<body>
+<body class="linked-appendix">
 <nav><div class="wrap">
-  <a class="brand" href="./index.html">multiagent</a>
-  <a href="./shared-resource.html">The game</a>
-  <a href="./entrainment.html" aria-current="page">Steering</a>
-  <a href="./stage-zero.html">What is built</a>
-  <a href="./design.html">How it is run</a>
-  <a href="./experiments.html">What has run</a>
-  <a href="./future.html">What next</a>
+  <a class="brand" href="../commons-game/study.html">commons game / RQ3</a>
+  <a href="../commons-game/index.html">Overview</a>
+  <a href="../commons-game/study.html">Study</a>
+  <a href="../commons-game/evidence.html">Evidence</a>
+  <a href="../commons-game/program.html">Program</a>
+  <a href="./design.html">Design appendix</a>
+  <a href="../index.html">Program home</a>
+  <a href="./index.html">Archive home</a>
 </div></nav>
 
 <div class="wrap">
+<p class="appendix-context"><b>Research question 3 · linked theory lab.</b> The Study asks what the uncontrolled majority does with a minority signal. This scripted model makes four possible follower rules visible before language models are measured. <a href="../commons-game/study.html#funded-questions">Return to the three questions.</a></p>
 <h1>Do the others lock on?</h1>
 <p class="lede">A different question from whether the commons survives.</p>
 
@@ -29,10 +31,9 @@ phase. <b>Do the rest fall into step?</b></p>
 <p>Those come apart. A flock can sit at the right average rate and still die, because the phases
 are wrong. A follower rule can be individually sensible and collectively unentrainable.</p>
 
-<p>This is the page the whole site is for. <b>Steering a flock you do not own</b> means holding a
-population on a pattern using only the seats you control, and the number that matters is how few
-of those you need. Here it is computable, so a measurement of a real model has something to
-disagree with.</p>
+<p><b>Steering a flock you do not own</b> means holding a population on a pattern using only the
+seats you control. Here the minimum controlled fraction is computable, giving the funded study a
+theoretical baseline that real model behavior can confirm, move, or invalidate.</p>
 
 <h2>One run</h2>
 
@@ -92,13 +93,14 @@ that helps.</p>
 Copying the majority does the opposite. It pulls the flock into lockstep, which is precisely the
 state that starves it.</p>
 
-<p>That matters beyond this game, because imitation is the social heuristic language-model agents
-most reliably exhibit. <b>Controllability is a property of the agents you do not control.</b> How
-many seats you hold barely matters by comparison.</p>
+<p>Imitation is a plausible and deliberately difficult follower rule here, not a claim about how
+language-model populations generally behave. The funded study compares it with tit-for-tat,
+myopic-greedy, and random majorities. <b>Controllability depends on the agents you do not control.</b></p>
 
-<p class="muted">Which rule real models implement is the measurement worth making, and nobody has
-made it. See the <a href="./experiments.html">status page</a>. Same arithmetic as
+<p class="muted">Which rule best predicts real model behavior remains an open measurement. See the
+<a href="./experiments.html">status page</a>. Same arithmetic as
 <code>flockbench-shared</code>, pinned by test. MIT; data CC0.</p>
+<div class="appendix-footer"><a href="../commons-game/study.html#funded-questions">← Return to RQ3</a><a href="../commons-game/evidence.html">Continue to Stage 0 evidence →</a></div>
 </div>
 <script type="module" src="/src/ui/entrainmentLab.ts"></script>
 </body>
