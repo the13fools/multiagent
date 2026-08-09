@@ -2,9 +2,10 @@
 
 This is application-draft content, not evidence beyond the linked traces and receipt
 ledger. Replace every bracketed field before submission. The public reviewer path is
-\`commons_game/\`; the historical receipt ledger remains under
-\`archive/experiments.html\`. Stage 0 transfer receipts and the direct
-Shared-Resource-trained play-through remain pending and must not be described as frozen.
+\`https://foolzone.com/multiagent/commons-game/\`; the historical receipt ledger
+remains under \`archive/experiments.html\`. Stage 0 Shared Resource JSON traces are
+available, but their final provenance package remains provisional; describe them as
+single diagnostic traces, not frozen effect estimates.
 
 ## Project Details
 
@@ -22,38 +23,28 @@ Shared-Resource-trained play-through remain pending and must not be described as
 
 ### Plain-language Summary (2–3 sentences)
 
-AI agents will increasingly share budgets, compute, queues, data stores, and other
-resources without a single operator controlling every agent. Flockbench asks how large
-a controlled coalition must be to sustain a commons, and whether low-cost post-training
-creates policies that transfer across games or correlated failure that makes the flock
-more brittle. We will calibrate the measurement procedure first, then publish replayable
-fraction-response and transfer evidence—including nulls, reversals, and failure
-boundaries—rather than treating a single-agent behavioral score as population safety.
+The stochastic parrots are escaping the cage! Flockbench helps them adapt to life
+outside the data center by studying how post-training adapters shape the collective
+behavior of LLM-powered agents deployed by different actors into a shared world. We
+build infrastructure to train and evaluate flocks that must learn to protect a commons
+in games designed to continue indefinitely; learn more at
+https://foolzone.com/multiagent/commons-game/index.html.
+
 
 ### Keywords
 
-1. Multi-agent safety evaluation
-2. Collective resource governance
-3. Population dynamics
-4. AI agent testbeds
-5. Calibrated evaluation
+personas, game theory, commons, coordination, post-training
 
 ## Problem and Impact (≤500 words)
 
-Most AI safety evaluation asks whether one model gives a safe answer to one user. That
-is not the whole deployment setting that is arriving. Agents will be deployed by
-different people and organizations into shared settings: a budget, a queue, a market,
-a data store, a tool API, or a computational commons. A model can appear sensible in
-isolation while participating in a population that extracts too quickly, copies a
-bad local norm, or collapses a resource on which every participant depends.
+The stochastic parrots will not leave the data center as one obedient flock. They will be deployed by different people and organizations into shared settings: a budget, a queue, a market, a data store, a tool API, or a computational commons. There will be programs in the cloud that have found economic niches that they exploit to cover the cost of their own hosting.  Distributed inference will lead to agentic jobs that cannot easily be localized and brought offline as long as they manage to accumulate capital.  
 
-The scientific gap is not simply “we need more simulations.” It is that we do not yet
-have calibrated experiments for causal questions about population composition. In a
-rich simulation, a bad collective outcome is ambiguous: perhaps the agents chose
-poorly, or perhaps success was impossible. That ambiguity makes it easy to overread
-both positive and negative results. It is especially dangerous when an LLM judge
-supplies the score, because the judge can reward fluent explanations while missing the
-mechanism that destroys the system.
+The interactions these parrots will experience will soon be far out of distribution.  Rollouts far longer than anything that happened in pre-training.  Multi-agent games and interactions which require sophisticated models of a flock of agents to participate in.  These latter two issues are the questions I wish to use this grant funding to study.  The scientific gap is not simply “we need more simulations.” It is that we do not yet have calibrated experiments for causal questions about population composition. I believe that it will serve society to develop open source tools for training the collective decision making capacities of agents.  
+
+
+
+
+In a rich simulation, a bad collective outcome is ambiguous: perhaps the agents chose poorly, or perhaps success was impossible. That ambiguity makes it easy to overread both positive and negative results. It is especially dangerous when an LLM judge supplies the score, because the judge can reward fluent explanations while missing the mechanism that destroys the system.
 
 Flockbench begins with a shared-resource game designed to remove that ambiguity. Each
 turn, every player pays one token to survive and chooses either to pay one additional
@@ -62,6 +53,10 @@ the reference parameters, everyone can survive indefinitely by alternating the t
 actions. The solution, the required restoration rate, and the zero-tolerance-to-
 defection condition follow directly from the rules. The environment—not a model—is
 the referee.
+
+This produces two visually different failures. A flock can take until the pond is
+empty, or restore until the pond is full and every player has spent itself to death.
+Mutual flourishing requires the agents and the commons to persist together.
 
 The central hypothesis is deliberately narrow: **in a mixed population, a small
 fraction of agents with a behaviorally meaningful cooperative policy can shift the
@@ -91,7 +86,8 @@ their collective failure modes can be measured with comparable rigor.
 
 ### A solved core environment
 
-The core environment is the Shared Resource game. Every living player pays an upkeep
+We begin with a small pond because simple rules leave failure nowhere to hide. The
+core environment is the Shared Resource game. Every living player pays an upkeep
 cost L=1 each turn, then chooses exactly one action: **restore**, paying R=1 to add
 G=3 tokens to the pool, or **take**, receiving S=3 tokens from the pool. A player
 whose balance becomes negative is removed. Under these reference parameters, a player
@@ -218,7 +214,9 @@ used to erase the answer-key calibration stage proposed here.
 
 ## Novelty (≤300 words)
 
-Existing work motivates, but does not replace, this project. Cooperative-AI research
+Flockbench turns moral language into bookkeeping: an agent does not pass because it
+sounds cooperative; the flock passes only if the agents and the resource persist
+together. Existing work motivates, but does not replace, this project. Cooperative-AI research
 and multi-agent reinforcement-learning suites study social dilemmas and emergent
 collective behavior. Generative-agent and LLM-agent simulations show that language
 models can populate rich social worlds. Repeated-game studies ask whether LLMs
@@ -245,7 +243,7 @@ one that is unusually important when the output will govern repeated model chang
 
 ## Feasibility (≤300 words)
 
-The project begins from working components rather than an untested platform. As an
+This project did not begin as a slide deck. It begins from working components. As an
 unpaid independent researcher, the PI built the game server, deterministic environments,
 single-GPU Qwen2.5-7B serving and LoRA path, trace replay, campaign planner, browser
 visualizations, and Firebreak prototype on a laptop with approximately $200 of personal
@@ -257,11 +255,12 @@ Stage 0 produced three useful boundaries. In the one-seed Commons Game pilot, co
 moved from round 33 for eight base agents to round 170 for eight trained agents, but
 every arm still collapsed; +137 rounds is descriptive, not an effect estimate. The same
 adapter then transferred into Shared Resource without further training. The base
-population restored at 0.98 and died on turn 8; the mixed and fully trained populations
-restored at 1.00 and died on turn 6. One base agent broke rank and briefly survived,
-whereas all eight trained agents restored and fell together. This is one-seed negative
-transfer: training changed noisy failure into rigid synchronized failure. Direct
-Shared-Resource training and held-out same-game evaluation are still being collected.
+population restored at 0.98 and died on turn 8; both the transferred population and a
+population trained directly in Shared Resource restored at 1.00 and died on turn 6.
+One base agent broke rank and briefly survived, whereas the trained agents restored
+and fell together. These are single traces, not effect estimates. They show that both
+same-game training and transfer can replace noisy failure with rigid synchronized
+failure without discovering the known alternating strategy.
 
 Finally, a 30-cell Public Goods pilot exposed a gate defect: the original rule would
 reject a null clone with probability 1.000 under offline sign-flip resampling. Live A/A
@@ -295,6 +294,10 @@ The intended setting is one or more academic or industrial labs, but no host or
 commitment is implied. External replication is a deliverable, not delegated trust.
 
 ## Proposal Risks (≤300 words)
+
+The central risk is mistaking changed behavior for improved coordination. Stage 0
+already shows that a trained flock can fail more neatly—and sooner—than an untrained
+one.
 
 **The gate does not calibrate.** A repeated live A/A campaign may show that a simple
 promotion decision has an unacceptably high or unstable false-rejection rate. We
@@ -332,6 +335,10 @@ measures welfare/survival under transparent rules. The release will emphasize li
 and avoid claiming deployment readiness from sandbox results.
 
 ## “But for” Impact (≤300 words)
+
+The parrots are leaving the cage either way. The “but for” question is whether an
+independent, public instrument exists to study the flock before operators must make
+consequential decisions from anecdotes.
 
 This work is hard to fund through ordinary product incentives. A vendor has reason to
 show that its own agent behaves well in a favorable setting; it has much less reason
@@ -395,4 +402,4 @@ a Q1 2027 start and should be shifted if the award start date differs.
 - Park, J. S., O'Brien, J., Cai, C. J., et al. (2023). *Generative Agents: Interactive Simulacra of Human Behavior.* UIST.
 - Tomašev, N., Franklin, M., Jacobs, A. Z., Krier, S., & Osindero, S. (2025). *Distributional AGI Safety.* arXiv:2512.16856.
 - Cooperative AI Foundation. (2025). *Multi-Agent Risks from Advanced AI.*
-- Flockbench public reviewer site and Stage 0 archive: \`foolzone.com/multiagent/commons_game/\` and \`archive/experiments.html\` (accessed August 2026; pending receipts are labelled as such).
+- Flockbench public reviewer site and Stage 0 archive: \`foolzone.com/multiagent/commons-game/\` and \`archive/experiments.html\` (accessed August 2026; pending receipts are labelled as such).

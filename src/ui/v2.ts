@@ -81,3 +81,8 @@ const powerDemo = document.querySelector<HTMLElement>("#power-demo");
 if (powerDemo) {
   void import("./v2PowerDemo").then(({ mountPowerDemo }) => mountPowerDemo(powerDemo));
 }
+
+const stableFlocks = document.querySelector<HTMLElement>("#stable-flocks-demo");
+if (stableFlocks) {
+  void import("./v2StableFlocks").then(({ mountStableFlocks }) => mountStableFlocks(stableFlocks));
+}

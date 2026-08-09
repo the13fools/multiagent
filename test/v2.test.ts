@@ -180,6 +180,13 @@ describe("Commons Game reviewer path", () => {
     expect(html).toMatch(/Agent institutions/i);
     expect(html).toMatch(/A trustworthy laboratory before an agent society/i);
     expect(html).toMatch(/Coordination is not the same as consensus/i);
+    expect(html).toContain('id="stable-flocks-demo"');
+    expect(html).toMatch(/Stability is a shape, not a stop/i);
+    expect(html).toMatch(/Protect the commons/i);
+    expect(html).toMatch(/Bound the chase/i);
+    expect(html).toMatch(/Keep the pattern alive/i);
+    expect(html).toContain('href="../archive/boardwalk.html"');
+    expect(html).toContain('href="../archive/juggling.html"');
     expect(html).toContain('href="../archive/program-foundations.html"');
     expect(html).toContain('href="./delivery.html"');
     expect(html).not.toContain('id="commons-theory"');
@@ -189,6 +196,14 @@ describe("Commons Game reviewer path", () => {
     expect(archive).toMatch(/Boardwalk/i);
     expect(read("study")).not.toContain('id="commons-theory"');
     expect(read("evidence")).not.toMatch(/<p class="section-kicker">What I built<\/p>/i);
+  });
+
+  it("defines three explicit forms of stable collective motion", async () => {
+    const { STABILITY_MODES } = await import("../src/ui/v2StableFlocks");
+    expect(Object.keys(STABILITY_MODES)).toEqual(["commons", "boardwalk", "juggling"]);
+    expect(STABILITY_MODES.commons.title).toMatch(/commons stays level/i);
+    expect(STABILITY_MODES.boardwalk.description).toMatch(/no pure-strategy equilibrium/i);
+    expect(STABILITY_MODES.juggling.title).toMatch(/stable pattern.*motion/i);
   });
 
   it("makes the three shared-resource outcomes explicit on the Overview", () => {
