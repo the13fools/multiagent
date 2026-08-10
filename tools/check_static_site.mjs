@@ -59,7 +59,7 @@ for (const page of pages) {
   if (/\b(?:src|href)=["']\/(?:assets|src)\//.test(source)) {
     failures.push(`${page} contains a root-relative asset and will break on a repository subpath`);
   }
-  if (/\b(?:src|href)=["'][^"']*\/src\//.test(source)) {
+  if (/\b(?:src|href)=["'](?!https?:)[^"']*\/src\//.test(source)) {
     failures.push(`${page} still points at unbuilt source code`);
   }
 

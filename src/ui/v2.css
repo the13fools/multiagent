@@ -493,6 +493,18 @@ p { margin-bottom: 16px; }
 }
 .stable-principles p { margin: 0; color: var(--muted); font-size: 0.78rem; }
 
+.game-code-link {
+  display: inline-block;
+  margin-top: 18px;
+  color: var(--ink);
+  font: 700 0.67rem/1.35 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 4px;
+}
+
+.game-code-link:hover { color: var(--accent); }
+.game-code-link code { color: inherit; background: transparent; }
+
 .stable-flocks-lab {
   width: min(1480px, calc(100vw - 28px));
   margin-top: 10px;

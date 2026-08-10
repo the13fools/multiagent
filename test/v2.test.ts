@@ -203,6 +203,8 @@ describe("Commons Game reviewer path", () => {
     expect(html).toMatch(/Shared Resource/i);
     expect(html).toMatch(/Common Harvest/i);
     expect(html).toMatch(/33 to 90 to 170/i);
+    expect(html).toContain('href="https://github.com/thenthfool/flockbench/blob/main/src/flockbench/commons.py"');
+    expect(html).toContain('href="https://github.com/thenthfool/flockbench/blob/main/src/flockbench/sharedresource.py"');
     expect(html.indexOf('id="stable-flocks"')).toBeLessThan(html.indexOf('id="longer-program"'));
     expect(html).not.toMatch(/Boardwalk/i);
     expect(html).not.toMatch(/Juggling/i);
@@ -411,6 +413,8 @@ describe("Commons Game reviewer path", () => {
     expect(html.indexOf('class="game-field-guide-grid"'))
       .toBeLessThan(html.indexOf('class="game-field-guide-visual"'));
     expect(html).toMatch(/Commons Game[\s\S]*Shared Resource/i);
+    expect(html).toContain('href="https://github.com/thenthfool/flockbench/blob/main/src/flockbench/commons.py"');
+    expect(html).toContain('href="https://github.com/thenthfool/flockbench/blob/main/src/flockbench/sharedresource.py"');
     expect(html).toMatch(/Selective scale check[\s\S]*at least one 70B\+ open-weight model/i);
     expect(html).not.toContain('href="../archive/boardwalk.html"');
     expect(read("program")).not.toContain('href="../archive/program-foundations.html"');
@@ -495,8 +499,16 @@ describe("Commons Game reviewer path", () => {
     expect(css).not.toMatch(/Georgia|Times New Roman|linear-gradient|box-shadow|backdrop-filter/i);
   });
 
-  it("does not publish links to repositories that are not public yet", () => {
-    for (const page of PAGES) expect(read(page)).not.toMatch(/github\.com\/thenthfool/i);
+  it("publishes only the two requested public implementation links on the reviewer path", () => {
+    const allowed = new Set([
+      "https://github.com/thenthfool/flockbench/blob/main/src/flockbench/commons.py",
+      "https://github.com/thenthfool/flockbench/blob/main/src/flockbench/sharedresource.py",
+    ]);
+    for (const page of PAGES) {
+      const links = [...read(page).matchAll(/href="(https:\/\/github\.com\/thenthfool\/[^"]+)"/g)]
+        .map((match) => match[1]!);
+      for (const link of links) expect(allowed.has(link), `${page} exposes an unapproved repository link`).toBe(true);
+    }
   });
 });
 
