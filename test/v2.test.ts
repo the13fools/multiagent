@@ -222,6 +222,17 @@ describe("Commons Game reviewer path", () => {
     expect(html).not.toContain('href="../archive/boardwalk.html"');
     expect(html).not.toContain('href="../archive/juggling.html"');
     expect(html).not.toContain('href="../archive/program-foundations.html"');
+    expect(html).toContain('id="related-work"');
+    expect(html).toMatch(/Closest prior benchmark[\s\S]*GovSim/i);
+    expect(html).toMatch(/Concordia/i);
+    expect(html).toMatch(/Repeated games with LLMs/i);
+    expect(html).toMatch(/Melting Pot/i);
+    expect(html).toMatch(/commons is not new. The intervention is the question/i);
+    expect(html).toMatch(/post-training method → strategy pool → population mix → long-horizon outcome → held-out answer key/i);
+    expect(html).toContain('href="https://papers.nips.cc/paper_files/paper/2024/hash/ca9567d8ef6b2ea2da0d7eed57b933ee-Abstract-Conference.html"');
+    expect(html).toContain('href="https://arxiv.org/abs/2312.03664"');
+    expect(html).toContain('href="https://www.nature.com/articles/s41562-025-02172-y"');
+    expect(html).toContain('href="https://proceedings.mlr.press/v139/leibo21a.html"');
     expect(html).toContain('href="./delivery.html"');
     expect(html).not.toContain('id="first-grant"');
     expect(html).not.toMatch(/Why begin with games/i);

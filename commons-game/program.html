@@ -91,6 +91,42 @@
       <div class="actions"><a class="button" href="./delivery.html#first-grant">See the funded scaffold</a></div>
     </section>
 
+    <section class="section related-work" id="related-work">
+      <div class="section-head">
+        <p class="section-kicker">Related work</p>
+        <h2>The commons is not new. The intervention is the question.</h2>
+        <p>Flockbench sits between LLM commons simulations, generative-agent infrastructure, behavioral game theory, and population-based multi-agent evaluation. It does not claim those settings as inventions. It asks how inexpensive post-training changes a deliberately mixed population—and whether the change survives a known-answer transfer test.</p>
+      </div>
+
+      <div class="related-work-list" aria-label="Comparison with four neighboring research projects">
+        <article class="related-work-item">
+          <div class="related-work-cite"><span>Closest prior benchmark</span><h3><a href="https://papers.nips.cc/paper_files/paper/2024/hash/ca9567d8ef6b2ea2da0d7eed57b933ee-Abstract-Conference.html">GovSim</a></h3><small>Piatti et al. · NeurIPS 2024</small></div>
+          <p><strong>What it establishes.</strong> LLM societies can be studied in a common-pool dilemma, including communication, strategic reasoning, and interventions that improve sustainability.</p>
+          <p><strong>Where Flockbench differs.</strong> The controlled variable is population composition: cheap post-training adapters occupy some seats, then face replication, long rollouts, and transfer to a game with a mechanical answer key.</p>
+        </article>
+
+        <article class="related-work-item">
+          <div class="related-work-cite"><span>Generative-agent infrastructure</span><h3><a href="https://arxiv.org/abs/2312.03664">Concordia</a></h3><small>Vezhnevets et al. · 2023</small></div>
+          <p><strong>What it establishes.</strong> A flexible Game Master can ground natural-language agents in physical, social, and digital simulations with memory and explicit world state.</p>
+          <p><strong>Where Flockbench differs.</strong> It is a narrower training-and-evaluation harness: mechanically scored games, vLLM-served open models, many low-rank policy variants, and population-level traces.</p>
+        </article>
+
+        <article class="related-work-item">
+          <div class="related-work-cite"><span>Behavioral game theory</span><h3><a href="https://www.nature.com/articles/s41562-025-02172-y">Repeated games with LLMs</a></h3><small>Akata et al. · Nature Human Behaviour 2025</small></div>
+          <p><strong>What it establishes.</strong> LLM behavior can be compared across repeated two-player games, model families, human-like strategies, and interactions with people.</p>
+          <p><strong>Where Flockbench differs.</strong> It studies many-player resource dynamics and asks whether post-training creates viable heterogeneous flocks, rather than only characterizing an existing model’s play.</p>
+        </article>
+
+        <article class="related-work-item">
+          <div class="related-work-cite"><span>Population evaluation</span><h3><a href="https://proceedings.mlr.press/v139/leibo21a.html">Melting Pot</a></h3><small>Leibo et al. · ICML 2021</small></div>
+          <p><strong>What it establishes.</strong> Multi-agent policies should be tested across social situations and with unfamiliar partners, not only against the population seen during training.</p>
+          <p><strong>Where Flockbench differs.</strong> It carries that population view into language agents, low-cost adapter pools, long text rollouts, and public traces designed to expose why collective behavior failed.</p>
+        </article>
+      </div>
+
+      <p class="notice"><strong>The narrow contribution:</strong> connect post-training method → strategy pool → population mix → long-horizon outcome → held-out answer key. Stage 0 demonstrates that this chain can catch a changed-but-still-failing policy; the funded study would test it with replication.</p>
+    </section>
+
     <section class="section">
       <div class="split">
         <div class="section-head">

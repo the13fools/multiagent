@@ -675,6 +675,36 @@ p { margin-bottom: 16px; }
 .demo-room-rule h2 { max-width: 690px; }
 .demo-room-rule p:last-child { max-width: 620px; color: var(--muted); }
 
+.related-work-list {
+  margin-top: 34px;
+  border-block: 1px solid var(--ink);
+}
+
+.related-work-item {
+  display: grid;
+  grid-template-columns: minmax(190px, 0.65fr) repeat(2, minmax(0, 1fr));
+  gap: clamp(24px, 4vw, 52px);
+  padding: 25px 0 27px;
+}
+
+.related-work-item + .related-work-item { border-top: 1px solid var(--line); }
+.related-work-item p { margin: 0; color: var(--muted); font-size: 0.78rem; }
+.related-work-item p strong { color: var(--ink); }
+
+.related-work-cite span {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--accent);
+  font: 700 0.61rem/1.2 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.related-work-cite h3 { margin-bottom: 6px; font-size: 1rem; }
+.related-work-cite h3 a { color: inherit; text-decoration-color: var(--accent); text-underline-offset: 4px; }
+.related-work-cite h3 a:hover { color: var(--accent); }
+.related-work-cite small { color: var(--muted); font: 600 0.63rem/1.35 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
 @media (max-width: 900px) {
   .stable-flocks-heading { grid-template-columns: 1fr; gap: 20px; }
   .stable-flocks-heading .section-kicker { grid-column: auto; margin-bottom: 0; }
@@ -703,6 +733,8 @@ p { margin-bottom: 16px; }
   .demo-cabinet-card + .demo-cabinet-card { padding-left: 0; border-top: 1px solid var(--line); border-left: 0; }
   .demo-cabinet-card span { margin-bottom: 18px; }
   .demo-room-rule { grid-template-columns: 1fr; gap: 18px; }
+  .related-work-item { grid-template-columns: 1fr; gap: 14px; }
+  .related-work-cite { margin-bottom: 5px; }
 }
 
 /* The executable overview. The chart is the decoration. */

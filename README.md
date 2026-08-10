@@ -15,7 +15,7 @@ room, is published under `commons-game/`:
 - `commons-game/index.html` — overview and executable answer-key model
 - `commons-game/study.html` — pilot replay, PDD population-generation method, and open scaling question
 - `commons-game/evidence.html` — source-game and transfer evidence, receipts, and caveats
-- `commons-game/program.html` — the longer research arc from answer-key games to agent institutions
+- `commons-game/program.html` — related work and the longer arc from answer-key games to agent institutions
 - `commons-game/delivery.html` — milestones, team, budget, and award boundary
 - `commons-game/demos.html` — Boardwalk, Juggling, and links to neighboring mathematical sketches
 
