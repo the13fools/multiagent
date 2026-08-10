@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f7f7f4">
-  <title>Playful Demos — Flockbench</title>
-  <meta name="description" content="A side room for live mathematical sketches: Boardwalk dynamics, collective juggling, Clebsch fields, and other systems worth getting lost in.">
+  <title>The Playroom — Flockbench</title>
+  <meta name="description" content="Perturb tiny worlds: Boardwalk dynamics, collective juggling, Clebsch fields, and other interactive sketches about stability in motion.">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Playful Demos — Flockbench">
-  <meta property="og:description" content="Boardwalk chases, phase-locked juggling, Clebsch fields, and other live sketches adjacent to Flockbench.">
+  <meta property="og:title" content="The Playroom — Flockbench">
+  <meta property="og:description" content="Tiny worlds and strange equilibria: Boardwalk chases, phase-locked juggling, and Clebsch fields.">
   <meta property="og:url" content="https://foolzone.com/multiagent/commons-game/demos.html">
   <meta property="og:image" content="https://foolzone.com/multiagent/og.png">
   <meta property="og:image:width" content="1200">
@@ -20,7 +20,7 @@
   <link rel="sitemap" type="application/xml" href="../sitemap.xml">
   <link rel="stylesheet" href="../src/ui/v2.css">
 </head>
-<body>
+<body class="demos-page">
   <header class="site-header">
     <nav class="nav shell" aria-label="Primary navigation">
       <a class="brand" href="./index.html"><span class="brand-mark">●</span> flockbench</a>
@@ -31,9 +31,15 @@
   <main class="shell">
     <section class="section stable-flocks-section stable-flocks-lead" id="playful-dynamics">
       <div class="stable-flocks-heading">
-        <p class="section-kicker">Field notes · not grant evidence</p>
-        <h1>Small systems worth getting lost in.</h1>
-        <p>Boardwalk and Juggling are live sketches for thinking about collective motion when “everyone settles down” is the wrong success criterion. They now live here so the Program page can stay focused on its two resource games.</p>
+        <p class="section-kicker">The playroom</p>
+        <h1>Tiny worlds. Strange equilibria.</h1>
+        <p>The core study asks how agents protect a shared resource. These side experiments loosen one assumption at a time: must stability mean stillness? Must coordination converge? What kinds of motion can a field organize?</p>
+      </div>
+
+      <div class="demo-scope-strip" aria-label="Contents of the demos page">
+        <span><strong>02</strong> live applets</span>
+        <span><strong>02</strong> neighboring labs</span>
+        <span><strong>01</strong> next sketch</span>
       </div>
 
       <div class="stable-flocks-lab">
@@ -43,34 +49,39 @@
       </div>
 
       <div class="stable-principles is-two" aria-label="Two playful collective-motion demos">
-        <article><span>01 · no rest point</span><h3>Boardwalk</h3><p>Two vendors settle, three keep chasing, and four form pairs. The useful question is not always how to stop motion, but how to recognize when motion is the structure.</p></article>
-        <article><span>02 · phase lock</span><h3>Juggling</h3><p>The pattern exists only while objects keep moving. Adjust timing error, listening, and the number of players you control to see when a small coordinated minority holds the rhythm together.</p></article>
+        <article><span>Live model 01 · no rest point</span><h3>Boardwalk</h3><p>Try two, three, then four vendors. Two settle; three chase; four form pairs. The trail makes the odd-population failure visible.</p></article>
+        <article><span>Live model 02 · phase lock</span><h3>Juggling</h3><p>Start at 1% timing error, 0.20 listening, and one controlled player. Raise the error, then add control back until the pattern recovers.</p></article>
       </div>
 
       <div class="stable-flocks-notes">
-        <p><strong>Why keep these?</strong> They are conceptual probes, not evidence for the grant. Boardwalk asks what stability means without a pure equilibrium; Juggling asks how coordination propagates through timing and shared objects.</p>
-        <p><strong>Why move them?</strong> The scientific reviewer path now uses only Shared Resource and Common Harvest. This page can remain curious, visual, and a little less disciplined.</p>
-        <div class="actions"><a class="button" href="./program.html">Return to the two core games</a></div>
+        <p><strong>Watch the history, not just the snapshot.</strong> A configuration can look orderly for one instant while remaining unstable. Both applets expose the trajectory so recurring motion is not mistaken for convergence.</p>
+        <p><strong>Conceptual demos, not grant evidence.</strong> They develop intuition and suggest future test fixtures. The reviewer path uses only Shared Resource and Common Harvest as its core examples.</p>
+        <div class="actions"><a class="button" href="#field-labs">Keep exploring</a><a class="button secondary" href="./program.html">Return to the core games</a></div>
       </div>
     </section>
 
-    <section class="section demo-cabinet" aria-labelledby="elsewhere-title">
+    <section class="section demo-cabinet" id="field-labs" aria-labelledby="elsewhere-title">
       <div class="section-head">
-        <p class="section-kicker">Elsewhere in the cabinet</p>
-        <h2 id="elsewhere-title">Fields, fluids, and future interludes.</h2>
-        <p>These are neighboring experiments rather than parts of the Flockbench evidence chain.</p>
+        <p class="section-kicker">Follow the vector field</p>
+        <h2 id="elsewhere-title">Two mature labs, then an empty slot.</h2>
+        <p>The first two links open finished experiments in Direction Field Lab. The third is a candidate for the next short interlude.</p>
       </div>
       <div class="demo-cabinet-grid">
         <a class="demo-cabinet-card" href="https://foolzone.com/direction-field-lab/random-fluids.html">
-          <span>Direction Field Lab</span><h3>Clebsch fields and random surface fluids</h3><p>Build vorticity from scalar fields, project the flow, and release particles across a curved surface.</p><b>Open the fluid lab →</b>
+          <span>Live · Direction Field Lab</span><h3>Clebsch fields and random surface fluids</h3><p>Build vorticity from scalar fields, project the flow, and release particles across a curved surface. The particles make an invisible field legible.</p><b>Open the fluid lab →</b>
         </a>
         <a class="demo-cabinet-card" href="https://foolzone.com/direction-field-lab/">
-          <span>Geometry processing</span><h3>Direction fields</h3><p>Explore Hodge decomposition, integrable projection, and the discrete operators underneath the moving pictures.</p><b>Visit Direction Field Lab →</b>
+          <span>Live · geometry processing</span><h3>Direction fields</h3><p>Draw, decompose, and regularize fields on surfaces. This is the mathematical workbench underneath the moving pictures.</p><b>Visit Direction Field Lab →</b>
         </a>
         <article class="demo-cabinet-card is-coming">
-          <span>Possible next interlude</span><h3>Icosahedron ants</h3><p>Agents swap targets on a sphere, bump into one another, nearly converge, and then receive a new assignment.</p><b>Sketch in progress</b>
+          <span>Next slot · sketch</span><h3>Icosahedron ants</h3><p>Agents receive vertices on a sphere, collide while changing places, nearly converge, and then have their targets shuffled again.</p><b>Not built yet</b>
         </article>
       </div>
+    </section>
+
+    <section class="section demo-room-rule" aria-labelledby="room-rule-title">
+      <p class="section-kicker">The rule of the room</p>
+      <div><h2 id="room-rule-title">A question should become something you can perturb.</h2><p>A demo earns its place here when changing one parameter reveals a qualitative change: settling becomes chasing, rhythm becomes collapse, or a hidden field becomes visible as motion.</p></div>
     </section>
   </main>
 

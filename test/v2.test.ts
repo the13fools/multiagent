@@ -207,13 +207,15 @@ describe("Commons Game reviewer path", () => {
     expect(html).not.toMatch(/Boardwalk/i);
     expect(html).not.toMatch(/Juggling/i);
     expect(html).toContain('href="./demos.html"');
-    expect(demos).toMatch(/Small systems worth getting lost in/i);
+    expect(demos).toMatch(/Tiny worlds. Strange equilibria/i);
     expect(demos).toContain('data-stable-modes="boardwalk,juggling"');
     expect(demos).toMatch(/Boardwalk/i);
     expect(demos).toMatch(/Juggling/i);
     expect(demos).toMatch(/Clebsch fields/i);
     expect(demos).toMatch(/Direction Field Lab/i);
     expect(demos).toMatch(/Icosahedron ants/i);
+    expect(demos).toMatch(/Conceptual demos, not grant evidence/i);
+    expect(demos).toMatch(/A question should become something you can perturb/i);
     expect(demos).toContain('href="./program.html"');
     expect(html).not.toContain('href="../archive/boardwalk.html"');
     expect(html).not.toContain('href="../archive/juggling.html"');

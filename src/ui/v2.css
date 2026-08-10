@@ -600,6 +600,24 @@ p { margin-bottom: 16px; }
 .stable-flocks-notes > p strong { color: var(--ink); }
 .stable-flocks-notes .actions { grid-column: 1 / -1; margin-top: 4px; }
 
+.demo-scope-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: -4px 0 10px;
+  border-block: 1px solid var(--line);
+}
+
+.demo-scope-strip span {
+  padding: 13px 18px 13px 0;
+  color: var(--muted);
+  font: 650 0.66rem/1.2 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.demo-scope-strip span + span { padding-left: 18px; border-left: 1px solid var(--line); }
+.demo-scope-strip strong { margin-right: 7px; color: var(--ink); font-size: 0.82rem; }
+
 .demo-cabinet-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -634,6 +652,17 @@ p { margin-bottom: 16px; }
 .demo-cabinet-card:not(.is-coming):hover h3 { color: var(--accent); }
 .demo-cabinet-card.is-coming { opacity: 0.64; }
 
+.demo-room-rule {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.65fr) minmax(0, 1.35fr);
+  gap: clamp(32px, 8vw, 100px);
+  align-items: start;
+}
+
+.demo-room-rule .section-kicker { margin-top: 9px; }
+.demo-room-rule h2 { max-width: 690px; }
+.demo-room-rule p:last-child { max-width: 620px; color: var(--muted); }
+
 @media (max-width: 900px) {
   .stable-flocks-heading { grid-template-columns: 1fr; gap: 20px; }
   .stable-flocks-heading .section-kicker { grid-column: auto; margin-bottom: 0; }
@@ -654,10 +683,14 @@ p { margin-bottom: 16px; }
   .stable-panel { padding-inline: 18px; }
   .stable-flocks-notes { grid-template-columns: 1fr; }
   .stable-flocks-notes .actions { grid-column: auto; }
+  .demo-scope-strip { grid-template-columns: 1fr; }
+  .demo-scope-strip span { padding: 11px 0; }
+  .demo-scope-strip span + span { padding-left: 0; border-top: 1px solid var(--line); border-left: 0; }
   .demo-cabinet-grid { grid-template-columns: 1fr; }
   .demo-cabinet-card { min-height: 0; padding: 22px 0; }
   .demo-cabinet-card + .demo-cabinet-card { padding-left: 0; border-top: 1px solid var(--line); border-left: 0; }
   .demo-cabinet-card span { margin-bottom: 18px; }
+  .demo-room-rule { grid-template-columns: 1fr; gap: 18px; }
 }
 
 /* The executable overview. The chart is the decoration. */
