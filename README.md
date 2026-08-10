@@ -9,14 +9,15 @@ The root is a program-level landing page for the linked research projects:
 - **Continuous Judge** — unreleased fine-tuning research
 - **Commons Game** — the current theory-led grant study
 
-The five-page Commons Game reviewer narrative is published under
-`commons-game/`:
+The five-page Commons Game reviewer narrative, plus a separate playful demos
+room, is published under `commons-game/`:
 
 - `commons-game/index.html` — overview and executable answer-key model
 - `commons-game/study.html` — funded questions, pilot replay, and population-generation method
 - `commons-game/evidence.html` — source-game and transfer evidence, receipts, and caveats
 - `commons-game/program.html` — the longer research arc from answer-key games to agent institutions
 - `commons-game/delivery.html` — milestones, team, budget, and award boundary
+- `commons-game/demos.html` — Boardwalk, Juggling, and links to neighboring mathematical sketches
 
 The previous multi-page research site and detailed program foundations remain available under
 [`archive/`](archive/README.md). Its labs are still built, tested, and deployed;
@@ -80,7 +81,7 @@ and repository-subpath-safe assets.
 
 ```text
 index.html                program landing page
-commons-game/             current five-page grant narrative
+commons-game/             five-page grant narrative plus playful demos
 commons_game/             redirects from the former underscore route
 *.html                    compatibility redirects for old detail URLs
 archive/                  preserved v1 site and labs

@@ -19,6 +19,7 @@ export default defineConfig({
         rootDeliveryRedirect: "delivery.html",
         commonsMain: "commons-game/index.html",
         commonsProgram: "commons-game/program.html",
+        commonsDemos: "commons-game/demos.html",
         commonsStudy: "commons-game/study.html",
         commonsEvidence: "commons-game/evidence.html",
         commonsDelivery: "commons-game/delivery.html",

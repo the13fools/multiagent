@@ -39,6 +39,7 @@ const ROOT = resolve(__dirname, "..");
 const PAGES = ["index", "study", "evidence", "program", "delivery"] as const;
 const read = (page: typeof PAGES[number]) =>
   readFileSync(resolve(ROOT, `commons-game/${page}.html`), "utf8");
+const readDemos = () => readFileSync(resolve(ROOT, "commons-game/demos.html"), "utf8");
 
 const visibleWords = (html: string): string[] => html
   .replace(/<script[\s\S]*?<\/script>/gi, " ")
@@ -82,13 +83,15 @@ describe("the published facts are the planner's facts", () => {
 });
 
 describe("Commons Game reviewer path", () => {
-  it("ships five complete Vite entries under commons-game", () => {
+  it("ships five reviewer entries and one demos entry under commons-game", () => {
     const config = readFileSync(resolve(ROOT, "vite.config.ts"), "utf8");
     for (const page of PAGES) {
       const inputName = page === "index" ? "commonsMain" : `commons${page[0]!.toUpperCase()}${page.slice(1)}`;
       expect(config).toContain(`${inputName}: "commons-game/${page}.html"`);
       expect(existsSync(resolve(ROOT, `commons-game/${page}.html`))).toBe(true);
     }
+    expect(config).toContain('commonsDemos: "commons-game/demos.html"');
+    expect(existsSync(resolve(ROOT, "commons-game/demos.html"))).toBe(true);
   });
 
   it("keeps archive material off the skim path except for the technical receipt ledger", () => {
@@ -113,6 +116,10 @@ describe("Commons Game reviewer path", () => {
       expect(html).toContain('content="https://foolzone.com/multiagent/og.png"');
       expect(html).toContain('rel="sitemap"');
     }
+    const demos = readDemos();
+    expect(demos).toContain('rel="canonical" href="https://foolzone.com/multiagent/commons-game/demos.html"');
+    expect(demos).toContain('content="https://foolzone.com/multiagent/og.png"');
+    expect(demos).toContain('rel="sitemap"');
   });
 
   it("uses the root as a program landing page", () => {
@@ -180,6 +187,7 @@ describe("Commons Game reviewer path", () => {
 
   it("gives the longer research programme one page without sending reviewers into the archive", () => {
     const html = read("program");
+    const demos = readDemos();
     const delivery = read("delivery");
     const archive = readFileSync(resolve(ROOT, "archive/program-foundations.html"), "utf8");
     expect(html).toMatch(/From answer-key games to institutions for a world of agents/i);
@@ -190,11 +198,23 @@ describe("Commons Game reviewer path", () => {
     expect(html).toMatch(/Agent institutions/i);
     expect(html).toMatch(/Coordination is not the same as consensus/i);
     expect(html).toContain('id="stable-flocks-demo"');
-    expect(html).toMatch(/Stability is a shape, not a stop/i);
+    expect(html).toMatch(/One answer key. One source experiment/i);
+    expect(html).toContain('data-stable-modes="commons,harvest"');
+    expect(html).toMatch(/Shared Resource/i);
+    expect(html).toMatch(/Common Harvest/i);
+    expect(html).toMatch(/33 to 90 to 170/i);
     expect(html.indexOf('id="stable-flocks"')).toBeLessThan(html.indexOf('id="longer-program"'));
-    expect(html).toMatch(/Protect the pool/i);
-    expect(html).toMatch(/Bound the chase/i);
-    expect(html).toMatch(/Keep the pattern alive/i);
+    expect(html).not.toMatch(/Boardwalk/i);
+    expect(html).not.toMatch(/Juggling/i);
+    expect(html).toContain('href="./demos.html"');
+    expect(demos).toMatch(/Small systems worth getting lost in/i);
+    expect(demos).toContain('data-stable-modes="boardwalk,juggling"');
+    expect(demos).toMatch(/Boardwalk/i);
+    expect(demos).toMatch(/Juggling/i);
+    expect(demos).toMatch(/Clebsch fields/i);
+    expect(demos).toMatch(/Direction Field Lab/i);
+    expect(demos).toMatch(/Icosahedron ants/i);
+    expect(demos).toContain('href="./program.html"');
     expect(html).not.toContain('href="../archive/boardwalk.html"');
     expect(html).not.toContain('href="../archive/juggling.html"');
     expect(html).not.toContain('href="../archive/program-foundations.html"');
@@ -214,7 +234,7 @@ describe("Commons Game reviewer path", () => {
     expect(read("evidence")).not.toMatch(/<p class="section-kicker">What I built<\/p>/i);
   });
 
-  it("defines three explicit forms of stable collective motion", async () => {
+  it("defines two core games and two playful collective-motion demos", async () => {
     const {
       COMMONS_COLLAPSE_HOLD_MS,
       COMMONS_FRAME_MS,
@@ -222,10 +242,18 @@ describe("Commons Game reviewer path", () => {
       STABLE_DEFAULTS,
       commonsFrameDelay,
     } = await import("../src/ui/v2StableFlocks");
-    expect(Object.keys(STABILITY_MODES)).toEqual(["commons", "boardwalk", "juggling"]);
+    expect(Object.keys(STABILITY_MODES)).toEqual(["commons", "harvest", "boardwalk", "juggling"]);
     expect(STABILITY_MODES.commons.title).toMatch(/shared pool stays level/i);
+    expect(STABILITY_MODES.harvest.description).toMatch(/33 to 90 to 170/i);
     expect(STABILITY_MODES.boardwalk.description).toMatch(/no pure-strategy equilibrium/i);
     expect(STABILITY_MODES.juggling.title).toMatch(/stable pattern.*motion/i);
+    const harvestRuns = byDose();
+    expect(harvestRuns.map((condition) => condition.collapseRound)).toEqual([33, 90, 170]);
+    for (const condition of harvestRuns) {
+      expect(condition.trace).toHaveLength(condition.stock.length - 1);
+      expect(condition.roles.filter((role) => role === "cfa")).toHaveLength(condition.seeded);
+      expect(condition.trace.every((round) => round.harvests.length === 8)).toBe(true);
+    }
     expect(STABLE_DEFAULTS).toEqual({
       jugglingTimingErrorPercent: 1,
       jugglingListening: 0.2,

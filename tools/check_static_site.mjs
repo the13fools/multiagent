@@ -2,7 +2,7 @@ import { existsSync, readFileSync, statSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 
 const landingPages = ["index.html"];
-const commonsPages = ["index.html", "program.html", "study.html", "evidence.html", "delivery.html"]
+const commonsPages = ["index.html", "program.html", "study.html", "evidence.html", "delivery.html", "demos.html"]
   .map((page) => `commons-game/${page}`);
 const rootRedirectPages = ["program.html", "study.html", "evidence.html", "delivery.html"];
 const legacyUnderscorePages = ["index.html", "program.html", "study.html", "evidence.html", "delivery.html"]

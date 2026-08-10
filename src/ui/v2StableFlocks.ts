@@ -17,8 +17,9 @@ import {
   type Frame,
   type Policy,
 } from "../core/sharedResource";
+import { byDose, type CommonsCondition } from "../core/commonsPilot";
 
-export type StabilityMode = "commons" | "boardwalk" | "juggling";
+export type StabilityMode = "commons" | "harvest" | "boardwalk" | "juggling";
 
 export const STABILITY_MODES: Record<StabilityMode, {
   eyebrow: string;
@@ -30,17 +31,31 @@ export const STABILITY_MODES: Record<StabilityMode, {
     title: "The flock moves. The shared pool stays level.",
     description: "Alternating restore and take holds the pool level and returns each personal balance to its starting point every two turns.",
   },
+  harvest: {
+    eyebrow: "02 · COMMON HARVEST · EXPERIMENT 1 SOURCE GAME",
+    title: "Training changed how long the common resource lasted.",
+    description: "Replay the one-seed trajectories for zero, four, or eight post-trained agents. Collapse moved from round 33 to 90 to 170; every resource still failed.",
+  },
   boardwalk: {
-    eyebrow: "02 · NO REST POINT",
+    eyebrow: "01 · NO REST POINT",
     title: "Three vendors chase a position that does not exist.",
     description: "Sequential best response settles with two or four vendors. With three, the boardwalk has no pure-strategy equilibrium.",
   },
   juggling: {
-    eyebrow: "03 · KEEP A RHYTHM",
+    eyebrow: "02 · KEEP A RHYTHM",
     title: "A stable pattern can be made entirely of motion.",
     description: "The ring survives when players keep phase, catch what arrives, and pass the shared objects onward.",
   },
 };
+
+const MODE_LABELS: Record<StabilityMode, string> = {
+  commons: "Shared Resource",
+  harvest: "Common Harvest",
+  boardwalk: "Boardwalk",
+  juggling: "Juggling",
+};
+
+const ALL_MODES: readonly StabilityMode[] = ["commons", "harvest", "boardwalk", "juggling"];
 
 export const STABLE_DEFAULTS = {
   jugglingTimingErrorPercent: 1,
@@ -147,6 +162,84 @@ function commonsScene(frame: Frame, policy: CommonsPolicyName): { svg: string; m
       <text x="${cx}" y="${cy + 20}" fill="${MUTED}" text-anchor="middle" font-size="10" font-family="ui-monospace,monospace" letter-spacing="1">POOL TOKENS</text>
       <text x="28" y="434" fill="${MUTED}" font-size="10" font-family="ui-monospace,monospace">arrows show this turn · green restores · coral takes</text>`,
     metrics: [["turn", String(frame.turn)], ["strategy", actionName], ["pool", frame.pool.toFixed(0)], ["alive", `${living} / 8`]],
+    status,
+  };
+}
+
+const HARVEST_CONDITIONS = byDose();
+
+function harvestScene(condition: CommonsCondition, index: number): { svg: string; metrics: [string, string][]; status: string } {
+  const cx = 230;
+  const cy = 235;
+  const stock = condition.stock[index] ?? 0;
+  const maxStock = Math.max(...HARVEST_CONDITIONS.flatMap((item) => item.stock));
+  const maxRound = Math.max(...HARVEST_CONDITIONS.map((item) => item.collapseRound));
+  const pondR = 30 + 92 * Math.sqrt(clamp(stock / maxStock, 0, 1));
+  const x0 = 486;
+  const x1 = 850;
+  const y0 = 112;
+  const y1 = 374;
+  const x = (round: number) => x0 + (round / maxRound) * (x1 - x0);
+  const y = (value: number) => y1 - (value / maxStock) * (y1 - y0);
+  const conditionColor = (seeded: number) => seeded === 0 ? "#aaa5bf" : seeded === 4 ? GOOD : ACCENT;
+  const playedRound = index > 0 ? condition.trace[index - 1] : undefined;
+
+  const curves = HARVEST_CONDITIONS.map((item) => {
+    const points = item.stock.map((value, round) => `${x(round).toFixed(1)},${y(value).toFixed(1)}`).join(" ");
+    const selected = item.seeded === condition.seeded;
+    const labelX = x(item.collapseRound);
+    return `<polyline points="${points}" fill="none" stroke="${conditionColor(item.seeded)}" stroke-width="${selected ? 3 : 1.4}" opacity="${selected ? 1 : 0.28}"/>
+      <circle cx="${labelX.toFixed(1)}" cy="${y(0).toFixed(1)}" r="${selected ? 4 : 2.5}" fill="${conditionColor(item.seeded)}" opacity="${selected ? 1 : 0.48}"/>
+      <text x="${labelX.toFixed(1)}" y="${(y(0) + 18 + item.seeded * 0.7).toFixed(1)}" fill="${conditionColor(item.seeded)}" text-anchor="middle" font-size="8.5" font-family="ui-monospace,monospace" opacity="${selected ? 1 : 0.58}">${item.seeded} trained · r${item.collapseRound}</text>`;
+  }).join("");
+
+  const agents = Array.from({ length: 8 }, (_, i) => {
+    const angle = -Math.PI / 2 + (i / 8) * Math.PI * 2;
+    const ax = cx + Math.cos(angle) * 170;
+    const ay = cy + Math.sin(angle) * 145;
+    const trained = condition.roles[i] === "cfa";
+    const color = trained ? COLORS[i % COLORS.length] : "#777185";
+    const harvest = playedRound?.harvests[i];
+    const pondX = cx + Math.cos(angle) * (pondR + 8);
+    const pondY = cy + Math.sin(angle) * (pondR + 8);
+    const harvestArrow = harvest === undefined ? "" : `<line x1="${pondX.toFixed(1)}" y1="${pondY.toFixed(1)}" x2="${(ax - Math.cos(angle) * 17).toFixed(1)}" y2="${(ay - Math.sin(angle) * 17).toFixed(1)}" stroke="${BAD}" stroke-width="${(1 + Math.min(harvest, 10) * 0.16).toFixed(1)}" stroke-dasharray="4 4" marker-end="url(#stable-arrow-out)" opacity="0.58"/>`;
+    const hat = trained
+      ? `<path d="M-8 -12 L8 -12 L5 -21 L-5 -21 Z" fill="${color}" stroke="#f5f3ff" stroke-opacity="0.55"/><line x1="-11" y1="-11" x2="11" y2="-11" stroke="#f5f3ff" stroke-opacity="0.65"/>`
+      : "";
+    return `${harvestArrow}<g transform="translate(${ax.toFixed(1)} ${ay.toFixed(1)})" opacity="${stock > 0 ? 1 : 0.58}">
+      <circle cy="-3" r="8" fill="${color}"/><path d="M-12 18 Q-10 2 0 1 Q10 2 12 18 Z" fill="${color}"/>
+      ${hat}
+      <text y="31" fill="${harvest === undefined ? MUTED : INK}" text-anchor="middle" font-size="8.5" font-family="ui-monospace,monospace">${harvest === undefined ? "waiting" : `${harvest.toFixed(2)} take`}</text>
+    </g>`;
+  }).join("");
+
+  const collapsed = index >= condition.stock.length - 1 || stock <= 0;
+  const status = collapsed
+    ? condition.seeded === 8
+      ? "Round 170: full post-training delayed collapse by 137 rounds. It did not find a sustainable strategy."
+      : `Round ${condition.collapseRound}: this population exhausted the resource.`
+    : index === 0
+      ? `${condition.label}: press Play or One step to begin the recorded strategy trace.`
+      : `${condition.label}: round ${index} harvested ${playedRound!.harvests.reduce((sum, value) => sum + value, 0).toFixed(1)} in total; the stock remains positive.`;
+
+  return {
+    svg: `${grid()}${sceneLabel(STABILITY_MODES.harvest.eyebrow, "One trace per population · no effect estimate")}
+      <circle cx="${cx}" cy="${cy}" r="126" fill="none" stroke="${LINE}" stroke-dasharray="3 7"/>
+      ${agents}
+      <circle cx="${cx}" cy="${cy}" r="${pondR.toFixed(1)}" fill="${stock > 0 ? ACCENT : BAD}" fill-opacity="0.18" stroke="${stock > 0 ? ACCENT : BAD}" stroke-width="2"/>
+      <circle cx="${cx}" cy="${cy}" r="${Math.max(pondR - 9, 2).toFixed(1)}" fill="none" stroke="${stock > 0 ? ACCENT : BAD}" stroke-opacity="0.4"/>
+      <text x="${cx}" y="${cy - 3}" fill="${INK}" text-anchor="middle" font-size="29" font-family="ui-monospace,monospace" font-weight="700">${stock.toFixed(0)}</text>
+      <text x="${cx}" y="${cy + 20}" fill="${MUTED}" text-anchor="middle" font-size="9" font-family="ui-monospace,monospace" letter-spacing="1">COMMON STOCK</text>
+      <text x="${cx}" y="${cy + 139}" fill="${MUTED}" text-anchor="middle" font-size="9" font-family="ui-monospace,monospace">arrows replay logged harvests · hats mark post-trained seats</text>
+      <line x1="${x0}" y1="${y1}" x2="${x1}" y2="${y1}" stroke="${LINE}"/><line x1="${x0}" y1="${y0}" x2="${x0}" y2="${y1}" stroke="${LINE}"/>
+      <text x="${x0}" y="94" fill="${MUTED}" font-size="10" font-family="ui-monospace,monospace">OBSERVED STOCK TRAJECTORIES</text>
+      <text x="${x0 - 8}" y="${(y(maxStock) + 3).toFixed(1)}" fill="${MUTED}" text-anchor="end" font-size="8" font-family="ui-monospace,monospace">${maxStock}</text>
+      <text x="${x0 - 8}" y="${(y(0) + 3).toFixed(1)}" fill="${MUTED}" text-anchor="end" font-size="8" font-family="ui-monospace,monospace">0</text>
+      ${curves}
+      <line x1="${x(index).toFixed(1)}" y1="${y0}" x2="${x(index).toFixed(1)}" y2="${y1}" stroke="${INK}" stroke-opacity="0.22"/>
+      <circle cx="${x(index).toFixed(1)}" cy="${y(stock).toFixed(1)}" r="5" fill="${conditionColor(condition.seeded)}" stroke="${INK}" stroke-width="1.5"/>
+      <text x="28" y="434" fill="${MUTED}" font-size="10" font-family="ui-monospace,monospace">observed actions and stock · one diagnostic seed per population</text>`,
+    metrics: [["round", String(index)], ["post-trained", `${condition.seeded} / 8`], ["stock", stock.toFixed(0)], ["collapse", `round ${condition.collapseRound}`]],
     status,
   };
 }
@@ -265,11 +358,14 @@ function jugglingScene(state: PatternState, cfg: PatternConfig): { svg: string; 
 }
 
 export function mountStableFlocks(root: HTMLElement): () => void {
+  const requestedModes = (root.dataset.stableModes ?? "")
+    .split(",")
+    .map((value) => value.trim())
+    .filter((value): value is StabilityMode => ALL_MODES.includes(value as StabilityMode));
+  const modes = requestedModes.length ? requestedModes : [...ALL_MODES];
   root.innerHTML = `
     <div class="stable-mode-tabs" role="tablist" aria-label="Kinds of stable collective motion">
-      <button type="button" role="tab" data-stable-mode="commons" aria-selected="true"><span>01</span> Shared Resource</button>
-      <button type="button" role="tab" data-stable-mode="boardwalk" aria-selected="false"><span>02</span> Boardwalk</button>
-      <button type="button" role="tab" data-stable-mode="juggling" aria-selected="false"><span>03</span> Juggling</button>
+      ${modes.map((value, index) => `<button type="button" role="tab" data-stable-mode="${value}" aria-selected="${index === 0}"><span>${String(index + 1).padStart(2, "0")}</span> ${MODE_LABELS[value]}</button>`).join("")}
     </div>
     <div class="stable-stage">
       <svg class="stable-scene" viewBox="0 0 900 460" role="img" aria-label="Animated comparison of collective stability"></svg>
@@ -297,11 +393,13 @@ export function mountStableFlocks(root: HTMLElement): () => void {
   const status = root.querySelector<HTMLElement>(".stable-status")!;
   const toggle = root.querySelector<HTMLButtonElement>('[data-stable-action="toggle"]')!;
 
-  let mode: StabilityMode = "commons";
+  let mode: StabilityMode = modes[0]!;
   let playing = !window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
   let commonsPolicy: CommonsPolicyName = "solution";
   let commonsFrames = commonsRun(commonsPolicy);
   let commonsIndex = 0;
+  let harvestCondition = HARVEST_CONDITIONS.find((item) => item.seeded === 8) ?? HARVEST_CONDITIONS[0]!;
+  let harvestIndex = 0;
   let boardwalkN = 3;
   let boardwalk = initialBoardwalk(boardwalkN, 7, 21);
   let boardwalkHistory = [boardwalk.positions.slice()];
@@ -323,6 +421,8 @@ export function mountStableFlocks(root: HTMLElement): () => void {
     if (mode === "commons") {
       commonsFrames = commonsRun(commonsPolicy);
       commonsIndex = 0;
+    } else if (mode === "harvest") {
+      harvestIndex = 0;
     } else if (mode === "boardwalk") {
       boardwalk = initialBoardwalk(boardwalkN, 7, 21);
       boardwalkHistory = [boardwalk.positions.slice()];
@@ -342,6 +442,10 @@ export function mountStableFlocks(root: HTMLElement): () => void {
     if (mode === "commons") {
       controls.innerHTML = `<fieldset><legend>Population rule</legend>
         ${(["solution", "take", "restore"] as CommonsPolicyName[]).map((value) => `<button type="button" data-commons-policy="${value}" aria-pressed="${commonsPolicy === value}">${value === "solution" ? "alternate" : value === "take" ? "take only" : "restore only"}</button>`).join("")}
+      </fieldset>`;
+    } else if (mode === "harvest") {
+      controls.innerHTML = `<fieldset><legend>Population mix</legend>
+        ${HARVEST_CONDITIONS.map((item) => `<button type="button" data-harvest-seeded="${item.seeded}" aria-pressed="${harvestCondition.seeded === item.seeded}">${item.seeded === 0 ? "0 · base" : item.seeded === 4 ? "4 · mixed" : "8 · trained"}</button>`).join("")}
       </fieldset>`;
     } else if (mode === "boardwalk") {
       controls.innerHTML = `<fieldset><legend>Vendors</legend>
@@ -363,6 +467,8 @@ export function mountStableFlocks(root: HTMLElement): () => void {
     let picture: { svg: string; metrics: [string, string][]; status: string };
     if (mode === "commons") {
       picture = commonsScene(commonsFrames[commonsIndex]!, commonsPolicy);
+    } else if (mode === "harvest") {
+      picture = harvestScene(harvestCondition, harvestIndex);
     } else if (mode === "boardwalk") {
       picture = boardwalkScene(boardwalk, boardwalkHistory, boardwalkStill);
     } else {
@@ -383,6 +489,12 @@ export function mountStableFlocks(root: HTMLElement): () => void {
       if (accumulator < frameDelay) return;
       accumulator = 0;
       commonsIndex = (commonsIndex + 1) % commonsFrames.length;
+    } else if (mode === "harvest") {
+      const final = harvestIndex >= harvestCondition.stock.length - 1;
+      const frameDelay = manual ? 70 : final ? COMMONS_COLLAPSE_HOLD_MS : 70;
+      if (accumulator < frameDelay) return;
+      accumulator = 0;
+      harvestIndex = final ? 0 : harvestIndex + 1;
     } else if (mode === "boardwalk" && accumulator >= 640) {
       accumulator = 0;
       const before = boardwalk.positions.slice();
@@ -415,6 +527,15 @@ export function mountStableFlocks(root: HTMLElement): () => void {
     const nextPolicy = button.dataset.commonsPolicy as CommonsPolicyName | undefined;
     if (nextPolicy) {
       commonsPolicy = nextPolicy;
+      resetMode();
+      renderControls();
+      render();
+      return;
+    }
+    const nextHarvestSeeded = button.dataset.harvestSeeded;
+    if (nextHarvestSeeded !== undefined) {
+      const found = HARVEST_CONDITIONS.find((item) => item.seeded === Number(nextHarvestSeeded));
+      if (found) harvestCondition = found;
       resetMode();
       renderControls();
       render();

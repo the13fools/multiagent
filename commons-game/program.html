@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f7f7f4">
-  <title>Stable Flocks — Flockbench</title>
-  <meta name="description" content="A live field guide to stable flocks: explore commons protection, bounded strategic motion, and phase-locked coordination, then follow the longer Flockbench research program.">
+  <title>Two Resource Games — Flockbench</title>
+  <meta name="description" content="Explore the two core Flockbench games: the Shared Resource answer key and the Common Harvest source-game experiment.">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Stable Flocks — Flockbench">
-  <meta property="og:description" content="Explore three forms of collective stability, from protecting a commons to coordinating a flock in motion.">
+  <meta property="og:title" content="Two Resource Games — Flockbench">
+  <meta property="og:description" content="Replay the Shared Resource strategies and the Common Harvest Experiment 1 trajectories.">
   <meta property="og:url" content="https://foolzone.com/multiagent/commons-game/program.html">
   <meta property="og:image" content="https://foolzone.com/multiagent/og.png">
   <meta property="og:image:width" content="1200">
@@ -31,27 +31,26 @@
   <main class="shell">
     <section class="section stable-flocks-section stable-flocks-lead" id="stable-flocks">
       <div class="stable-flocks-heading">
-        <p class="section-kicker">Interactive stable flocks lab</p>
-        <h1>Stability is a shape, not a stop.</h1>
-        <p>A useful flock need not agree, converge, or become still. Explore three small worlds where success means preserving a different invariant: a shared resource, a bounded strategic chase, or a rhythm made entirely of motion.</p>
+        <p class="section-kicker">The two core games</p>
+        <h1>One answer key. One source experiment.</h1>
+        <p><strong>Shared Resource</strong> is discrete enough to solve: survival requires alternating restore and take. <strong>Common Harvest</strong> is the smoother source game used in Experiment 1: a shared stock regenerates logistically while agents choose how much to harvest.</p>
       </div>
 
       <div class="stable-flocks-lab">
-        <div id="stable-flocks-demo" aria-label="Interactive laboratory comparing three forms of collective stability">
-          <p class="notice"><strong>Loading the live field…</strong> The same deterministic models used in the archived labs run here in one comparison.</p>
+        <div id="stable-flocks-demo" data-stable-modes="commons,harvest" aria-label="Interactive comparison of Shared Resource and Common Harvest">
+          <p class="notice"><strong>Loading the two games…</strong> The answer-key strategies and the Experiment 1 source trajectories run in one comparison.</p>
         </div>
       </div>
 
-      <div class="stable-principles" aria-label="Three forms of collective stability">
-        <article><span>01 · Shared Resource</span><h3>Protect the pool</h3><p>Restore and take alternate. Individual actions change; the pool stays level and personal balances remain bounded.</p></article>
-        <article><span>02 · no rest point</span><h3>Bound the chase</h3><p>Three Boardwalk vendors have no pure equilibrium. A useful policy may need to manage motion rather than end it.</p></article>
-        <article><span>03 · phase lock</span><h3>Keep the pattern alive</h3><p>Jugglers never become still. Stability is the continuing relationship among their throws, catches, and shared clubs.</p></article>
+      <div class="stable-principles is-two" aria-label="Two core resource games">
+        <article><span>01 · target / answer key</span><h3>Shared Resource</h3><p>Restore and take must alternate across the population. Take-only empties the pool; restore-only bankrupts the agents; phase-shifted alternation sustains both.</p></article>
+        <article><span>02 · Experiment 1 / source game</span><h3>Common Harvest</h3><p>Eight agents bid for a regenerating stock while paying upkeep. In one diagnostic seed, increasing the trained fraction delayed collapse from round 33 to 90 to 170. Every arm still failed.</p></article>
       </div>
 
       <div class="stable-flocks-notes">
-        <p><strong>How to read it.</strong> Hold the initial condition fixed, then switch the dynamics. In Shared Resource, compare sustainable alternation with take-only and restore-only failure. On the Boardwalk, change only the number of vendors: two settle, three chase, four pair. In Juggling, add timing error, listening, and a few players you control.</p>
-        <p><strong>What this opens.</strong> Boardwalk and Juggling expose two questions Shared Resource cannot: what counts as success when no fixed point exists, and how can a controlled minority entrain a population whose survival depends on timing?</p>
-        <div class="actions"><a class="button" href="#longer-program">Follow the research program</a></div>
+        <p><strong>Play the strategies.</strong> In Shared Resource, switch among the sustainable alternating rule and the two simple failure modes. In Common Harvest, replay every logged harvest from Experiment 1 for zero, four, or eight post-trained seats. Arrows show how much each agent took; hats identify the post-trained seats.</p>
+        <p><strong>Why both.</strong> Common Harvest asks whether training moves a difficult source trajectory. Shared Resource asks whether the learned behavior transfers to a mechanically viable principle. Stage 0 changed behavior in both games and solved neither.</p>
+        <div class="actions"><a class="button" href="./evidence.html#commons-training">Read Experiment 1</a><a class="button secondary" href="./demos.html">Open the playful demos</a></div>
       </div>
     </section>
 
@@ -108,7 +107,7 @@
     </section>
   </main>
 
-  <footer class="site-footer"><div class="footer-inner shell"><span>Flockbench · longer research program</span><div class="footer-links"><a href="./study.html">Study design</a><a href="./evidence.html">Stage 0 evidence</a><a href="./delivery.html">Delivery plan</a></div></div></footer>
+  <footer class="site-footer"><div class="footer-inner shell"><span>Flockbench · longer research program</span><div class="footer-links"><a href="./study.html">Study design</a><a href="./demos.html">Playful demos</a><a href="./delivery.html">Delivery plan</a></div></div></footer>
   <script type="module" src="../src/ui/v2.ts"></script>
 </body>
 </html>

@@ -22,6 +22,12 @@ import raw from "../ui/data/commons_pilot.json";
 interface RawCondition {
   rounds: number;
   stock_by_round: number[];
+  roles: string[];
+  trace: Array<{
+    round: number;
+    harvests: number[];
+    alive: boolean[];
+  }>;
   total_welfare: number;
   restraint_under_scarcity: number;
   total_parse_failures: number;
@@ -44,6 +50,12 @@ export interface CommonsCondition {
   label: string;
   seeded: number;
   stock: number[];
+  roles: string[];
+  trace: Array<{
+    round: number;
+    harvests: number[];
+    alive: boolean[];
+  }>;
   /** Read from the stock series, not from `time_to_collapse` -- see KNOWN_DEFECT. */
   collapseRound: number;
   totalWelfare: number;
@@ -69,6 +81,8 @@ export const COMMONS_PILOT: readonly CommonsCondition[] =
         label: LABEL[key] ?? key,
         seeded: SEEDED[key]!,
         stock: c.stock_by_round,
+        roles: c.roles,
+        trace: c.trace,
         collapseRound: collapseFromStock(c.stock_by_round),
         totalWelfare: c.total_welfare,
         restraintUnderScarcity: c.restraint_under_scarcity,
