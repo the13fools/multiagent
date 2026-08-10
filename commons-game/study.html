@@ -221,10 +221,10 @@
               <div><span>training attempts</span><strong data-pdd-result="trainingRuns">120</strong></div>
               <div><span>cost / attempt</span><strong data-pdd-result="costPerRun">$7</strong></div>
               <div><span>80 GB GPU-hours</span><strong data-pdd-result="gpuHours">420</strong></div>
-              <div><span>planned compute share</span><strong data-pdd-result="budgetShare">2.0% of the planned compute line</strong></div>
+              <div><span>planned compute share</span><strong data-pdd-result="budgetShare">2.1% of the planned compute line</strong></div>
             </div>
-            <div class="pdd-budget-meter"><span>Planned compute</span><strong><span data-pdd-result="computeCost">$840</span> of $41,330</strong><progress data-pdd-budget max="41330" value="840">$840 of $41,330</progress></div>
-            <p class="pdd-capacity-note" data-pdd-capacity><strong>5,904 training attempts</strong> is the theoretical maximum if the entire $41,330 compute line were spent at this rate—equivalent to 1,476 personas at four attempts each. $40,490 remains for evaluation rollouts and other compute.</p>
+            <div class="pdd-budget-meter"><span>Planned compute</span><strong><span data-pdd-result="computeCost">$840</span> of $40,000</strong><progress data-pdd-budget max="40000" value="840">$840 of $40,000</progress></div>
+            <p class="pdd-capacity-note" data-pdd-capacity><strong>5,714 training attempts</strong> is the theoretical maximum if the entire $40,000 compute line were spent at this rate—equivalent to 1,428 personas at four attempts each. $39,160 remains for evaluation rollouts and other compute.</p>
             <p class="pdd-scale-caveat"><strong>What this includes:</strong> adapter-training compute only. The 3–4-hour timing is observed; four attempts per persona is a visible planning assumption, not a measured convergence rate. The cost of a usable adapter is therefore attempts-to-convergence multiplied by cost per attempt. Multi-agent evaluation rollouts, commercial APIs, storage, and labor are separate—and long population rollouts are expected to dominate the compute campaign. Below an unknown training floor, the “personas” may also be indistinguishable copies with different accents. Measuring both frontiers is part of the research.</p>
           </div>
           <p><strong>The calculator turns an observed runtime into a planning range; it does not claim a cost per converged adapter.</strong> The proposed work measures which quantities—PDD steps, sequence construction, model size, LoRA configuration, and failed attempts—actually move that cost, then tests whether cheaper adapters remain behaviorally distinct at population scale.</p>

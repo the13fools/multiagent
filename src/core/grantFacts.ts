@@ -4,9 +4,9 @@ export const GRANT_FACTS = {
   durationMonths: 18,
   /** Funded full-time build; the remaining 6 months are analysis at 0.4 FTE. */
   buildMonths: 12,
-  totalRequest: 275_000,
-  directCosts: 250_000,
-  indirectCosts: 25_000,
+  totalRequest: 290_000,
+  directCosts: 263_636,
+  indirectCosts: 26_364,
   aaCampaigns: 30,
   pairsPerCampaign: 60,
   aaStrata: 4,

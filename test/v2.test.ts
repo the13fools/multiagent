@@ -604,16 +604,16 @@ describe("v2 page script", () => {
       gpuHoursPerAdapter7B: 3.5,
       modelMultiplier: 1,
       gpuPricePerHour: 2,
-      computeBudgetUsd: 41_330,
+      computeBudgetUsd: 40_000,
     });
     expect(estimate.trainingRuns).toBe(120);
     expect(estimate.gpuHoursPerRun).toBe(3.5);
     expect(estimate.gpuHours).toBe(420);
     expect(estimate.costPerRunUsd).toBe(7);
     expect(estimate.computeCostUsd).toBe(840);
-    expect(estimate.budgetShare).toBeCloseTo(0.020324, 5);
-    expect(estimate.maxTrainingRuns).toBe(5_904);
-    expect(estimate.maxPersonasAtBudget).toBe(1_476);
+    expect(estimate.budgetShare).toBeCloseTo(0.021, 5);
+    expect(estimate.maxTrainingRuns).toBe(5_714);
+    expect(estimate.maxPersonasAtBudget).toBe(1_428);
 
     const html = read("study");
     expect(html).toContain('id="pdd-scale-calculator"');
@@ -654,7 +654,7 @@ describe("v2 page script", () => {
         <strong data-pdd-result="costPerRun"></strong>
         <strong data-pdd-result="computeCost"></strong>
         <strong data-pdd-result="budgetShare"></strong>
-        <progress data-pdd-budget max="41330"></progress>
+        <progress data-pdd-budget max="40000"></progress>
         <p data-pdd-capacity></p>
       </section>`;
     const root = document.getElementById("pdd-scale-calculator")!;
@@ -664,7 +664,7 @@ describe("v2 page script", () => {
     expect(root.querySelector('[data-pdd-result="gpuHours"]')?.textContent).toBe("420");
     expect(root.querySelector('[data-pdd-result="costPerRun"]')?.textContent).toBe("$7");
     expect(root.querySelector('[data-pdd-result="computeCost"]')?.textContent).toBe("$840");
-    expect(root.querySelector("[data-pdd-capacity]")?.textContent).toContain("5,904 training attempts");
+    expect(root.querySelector("[data-pdd-capacity]")?.textContent).toContain("5,714 training attempts");
 
     const personas = root.querySelector<HTMLInputElement>('[data-pdd-input="personas"]')!;
     personas.value = "60";
@@ -677,7 +677,7 @@ describe("v2 page script", () => {
     model.dispatchEvent(new Event("input"));
     expect(root.querySelector('[data-pdd-result="costPerRun"]')?.textContent).toBe("$14");
     expect(root.querySelector('[data-pdd-result="computeCost"]')?.textContent).toBe("$3,360");
-    expect(root.querySelector("[data-pdd-capacity]")?.textContent).toContain("2,952 training attempts");
+    expect(root.querySelector("[data-pdd-capacity]")?.textContent).toContain("2,857 training attempts");
   });
 
   /**

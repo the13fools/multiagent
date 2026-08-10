@@ -19,7 +19,7 @@ export interface AdapterPoolEstimate {
 }
 
 export const GPU_HOURLY_USD = 2;
-export const PLANNED_COMPUTE_USD = 41_330;
+export const PLANNED_COMPUTE_USD = 40_000;
 
 /**
  * A receipt-anchored planning calculation.
