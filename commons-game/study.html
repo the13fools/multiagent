@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f7f7f4">
   <title>Study design — Flockbench</title>
-  <meta name="description" content="Three predeclared questions, a concrete pilot, and a low-cost population-generation method for estimating how much of a population must be controlled.">
+  <meta name="description" content="A concrete Common Harvest pilot, the PDD population-training method, and the open scaling question for diverse low-cost agent strategies.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Study design — Flockbench">
-  <meta property="og:description" content="Three predeclared questions and a low-cost method for measuring mixed agent populations.">
+  <meta property="og:description" content="What one Common Harvest pilot changed, how PDD creates strategy pools, and what remains open.">
   <meta property="og:url" content="https://foolzone.com/multiagent/commons-game/study.html">
   <meta property="og:image" content="https://foolzone.com/multiagent/og.png">
   <meta property="og:image:width" content="1200">
@@ -32,14 +32,14 @@
 
   <main class="shell">
     <header class="page-intro">
-      <p class="eyebrow">One pilot · one population method · three questions</p>
-      <h1>What it takes to turn that question into a number.</h1>
-      <p class="deck">The overview establishes Shared Resource as the answer key. This page begins with the Commons Game source result, then turns its failure into three funded questions and a practical method for building diverse policy populations.</p>
+      <p class="eyebrow">One pilot · one population method · one open scaling question</p>
+      <h1>What training changed—and what it did not solve.</h1>
+      <p class="deck">Experiment 1 shows one Common Harvest trace lasting longer as more post-trained agents enter the population, without finding a sustainable strategy. This page replays that result, explains the PDD method used to create the adapters, and makes the remaining scaling uncertainty explicit.</p>
       <div class="study-glance">
-        <div class="glance"><b>Survival</b><span>the one primary outcome, at T = <span data-grant-fact="horizon">200</span></span></div>
-        <div class="glance"><b>f*</b><span>smallest controlled fraction reaching the margin</span></div>
-        <div class="glance"><b data-grant-fact="cells">6,720</b><span>cells in the minimum core design</span></div>
-        <div class="glance"><b data-grant-fact="pairsPerContrast">70</b><span>matched pairs per contrast; 69 needed</span></div>
+        <div class="glance"><b>33</b><span>rounds before resource collapse · base population</span></div>
+        <div class="glance"><b>90</b><span>rounds · four post-trained seats</span></div>
+        <div class="glance"><b>170</b><span>rounds · eight post-trained seats</span></div>
+        <div class="glance"><b>1 seed</b><span>per population · diagnostic, not an estimate</span></div>
       </div>
     </header>
 
@@ -47,7 +47,7 @@
     <section class="section">
       <div class="section-head">
         <p class="section-kicker">Concrete pilot · why replication matters</p>
-        <h2>Three trajectories. No survivors. No effect estimate.</h2>
+        <h2>Three trajectories. Resource collapse in every arm. No effect estimate.</h2>
         <p>Replay the three <a href="./evidence.html#commons-pilot">Commons Game runs</a> on one time axis. Seeding changed the path to collapse, but one seed per arm cannot tell us whether the ordering is real, reproducible, or a consequence of that particular rollout.</p>
       </div>
       <div class="result-demo" id="pilot-replay" aria-labelledby="pilot-replay-title">
@@ -68,50 +68,7 @@
       <p class="notice"><span class="label pilot">Pilot · one seed per arm</span> No interval and no effect estimate. The replay reads the checked-in trace directly. <strong>Receipt not yet committed.</strong></p>
     </section>
 
-    <!-- 2. the funded questions raised by that trace -->
-    <section class="section" id="funded-questions">
-      <div class="section-head">
-        <p class="section-kicker">The funded questions</p>
-        <h2>Three questions, in scientific order.</h2>
-        <p>The pilot supplies a failure worth explaining, not a treatment effect. The funded study first validates its decision rule, then estimates the population response, then asks which behaviors in the uncontrolled majority transmit or resist a trained minority.</p>
-      </div>
-      <div class="question-list">
-        <details class="question">
-          <summary><span class="rq">RQ1 · VALIDITY</span><h3>Can we distinguish a safe replacement from noise?</h3></summary>
-          <div class="question-copy">
-            <p><strong>Why it comes first.</strong> A deployment gate can look conservative while rejecting harmless changes almost every time. Before evaluating a trained policy, compare two arms sampled from the <em>same</em> population at f = 0. In this clone condition there is no treatment, so every rollback is a false alarm by construction.</p>
-            <table class="comparison">
-              <thead><tr><th>Candidate rule</th><th>10 pairs</th><th>200 pairs</th></tr></thead>
-              <tbody>
-                <tr><td><strong>Most cells must not regress</strong></td><td>95% false rollback</td><td>100%</td></tr>
-                <tr><td><strong>Candidate must significantly win</strong></td><td>99% false rollback</td><td>96%</td></tr>
-                <tr><td><strong>Paired tolerated-harm bound</strong></td><td>16% false rollback</td><td>0%</td></tr>
-              </tbody>
-            </table>
-            <p><strong>What is measured.</strong> Thirty live clone campaigns of 60 matched pairs estimate the gate's false-rollback rate under the same serving stack used later. The gate asks whether a swap is acceptably safe, not whether a candidate is guaranteed to be better.</p>
-            <p><strong>Failure condition.</strong> An upper confidence bound above 10% retires the gate before any candidate claim. This prevents a broken safety rule from manufacturing a negative result.</p>
-          </div>
-        </details>
-        <details class="question">
-          <summary><span class="rq">RQ2 · THRESHOLD</span><h3>When does a controlled minority change survival?</h3></summary>
-          <div class="question-copy">
-            <p><strong>The quantity.</strong> <strong>f* = inf{ f : &Delta;(f) &ge; &delta; }</strong> is the smallest controlled fraction whose paired survival gain clears a predeclared practical margin. The margin is tied to the harm caused by adding one permanent defector to an eight-agent game, rather than chosen after seeing the curve.</p>
-            <p><strong>How it is measured.</strong> Sweep the controlled fraction with matched seeds and estimate the dose-response curve. The power calculation requires 69 paired cells per contrast; the design buys 70. Isotonic regression estimates f* and a cluster bootstrap carries uncertainty from whole rollouts rather than treating turns as independent observations.</p>
-            <p><strong>Failure condition.</strong> Test monotonicity first. If survival rises and then falls as control increases, f* is undefined and the raw nonmonotone curve is the result. Estimates remain separate by game, model family, and resource slack. N = 8, 20, and 50 test whether the threshold moves with population size; that comparison does not claim a scaling law.</p>
-          </div>
-        </details>
-        <details class="question">
-          <summary><span class="rq">RQ3 · MECHANISM</span><h3>Which majorities transmit—or resist—the minority?</h3></summary>
-          <div class="question-copy">
-            <p><strong>Why the threshold is contextual.</strong> The agents outside the controlled set are part of the treatment environment. In the <a href="./index.html#population-demo">overview model</a>, changing only their response rule moves the required coalition from none to all eight seats. Reporting one population-wide f* would hide the mechanism.</p>
-            <p><strong>The answer key.</strong> Start with scripted majorities whose rules are known by construction: imitate-best-neighbour, tit-for-tat, myopic-greedy, and random. Those labelled runs validate the behavioral classifier before it is applied to LLM populations; classification error is then propagated into the threshold estimate.</p>
-            <p><strong>Pre-registered mechanism claim.</strong> f* will be lowest under imitate-best-neighbour majorities and highest under myopic-greedy majorities, because imitation can amplify a minority while greed does not. If the ordering fails, the study reports the observed mechanism instead of preserving the story.</p>
-          </div>
-        </details>
-      </div>
-    </section>
-
-    <!-- 3. how the seeded policies are produced -->
+    <!-- 2. how the seeded policies are produced -->
     <section class="section" id="post-training">
       <div class="section-head">
         <p class="section-kicker">Progressive Denoising Distillation (PDD)</p>

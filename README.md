@@ -13,7 +13,7 @@ The five-page Commons Game reviewer narrative, plus a separate playful demos
 room, is published under `commons-game/`:
 
 - `commons-game/index.html` — overview and executable answer-key model
-- `commons-game/study.html` — funded questions, pilot replay, and population-generation method
+- `commons-game/study.html` — pilot replay, PDD population-generation method, and open scaling question
 - `commons-game/evidence.html` — source-game and transfer evidence, receipts, and caveats
 - `commons-game/program.html` — the longer research arc from answer-key games to agent institutions
 - `commons-game/delivery.html` — milestones, team, budget, and award boundary

@@ -18,6 +18,7 @@ const archivePages = [
   "experiments.html",
   "future.html",
   "gate.html",
+  "funded-questions.html",
   "blog-pdd.html",
   "figure.html",
   "boardwalk.html",

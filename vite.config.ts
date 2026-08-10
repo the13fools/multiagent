@@ -41,6 +41,7 @@ export default defineConfig({
         archiveExperiments: "archive/experiments.html",
         archiveFuture: "archive/future.html",
         archiveGate: "archive/gate.html",
+        archiveFundedQuestions: "archive/funded-questions.html",
         archiveBlog: "archive/blog-pdd.html",
         archiveFigure: "archive/figure.html",
         archiveBoardwalk: "archive/boardwalk.html",

@@ -870,8 +870,9 @@ describe("the archive points back to the current site", () => {
 
   it("labels the gate as an appendix rather than a second overview", () => {
     const gate = readFileSync(resolve(__dirname, "../archive/gate.html"), "utf8");
-    expect(gate).toMatch(/Research question 1 · linked methods appendix/i);
-    expect(gate).toContain('../commons-game/study.html#funded-questions');
+    expect(gate).toMatch(/Archived research question 1 · linked methods appendix/i);
+    expect(gate).toContain('./funded-questions.html');
+    expect(gate).toContain('../commons-game/study.html');
   });
 });
 
@@ -1429,6 +1430,7 @@ describe("no page outgrows its argument", () => {
     "blog-pdd.html": 1400,
     "lineage.html": 1620,
     "gate.html": 800,
+    "funded-questions.html": 750,
     "boardwalk.html": 500,
     "cards.html": 650,
     "juggling.html": 700,

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Three funded questions — archived framing</title>
+<meta name="description" content="Superseded proposal framing that organized the study as validity, threshold, and mechanism questions.">
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="/src/ui/style.css">
+</head>
+<body class="linked-appendix">
+<nav><div class="wrap">
+  <a class="brand" href="../commons-game/study.html">commons game / current study</a>
+  <a href="../commons-game/index.html">Overview</a>
+  <a href="../commons-game/study.html">Study</a>
+  <a href="../commons-game/evidence.html">Evidence</a>
+  <a href="../commons-game/program.html">Program</a>
+  <a href="./design.html">Design appendix</a>
+  <a href="../index.html">Program home</a>
+  <a href="./index.html">Archive home</a>
+</div></nav>
+
+<main class="wrap">
+  <p class="appendix-context"><b>Superseded proposal framing · archived August 2026.</b> This section was removed from the reviewer path because it compressed three different layers—measurement validity, population response, and behavioral mechanism—into a sequence whose apparent “answers” were hard to interpret. It is preserved for traceability, not presented as the current study narrative.</p>
+  <h1>Three questions, in scientific order.</h1>
+  <p class="lede">An archived attempt to turn one diagnostic pilot into a validity test, a population threshold, and a mechanism claim.</p>
+
+  <h2>RQ1 · Can we distinguish a safe replacement from noise?</h2>
+  <p><b>Why it came first.</b> A deployment gate can look conservative while rejecting harmless changes almost every time. The proposed clone condition compared two arms sampled from the same population at <code>f = 0</code>. With no treatment difference, every rollback is a false alarm by construction.</p>
+  <table>
+    <thead><tr><th>Candidate rule</th><th>10 pairs</th><th>200 pairs</th></tr></thead>
+    <tbody>
+      <tr><td><b>Most cells must not regress</b></td><td>95% false rollback</td><td>100%</td></tr>
+      <tr><td><b>Candidate must significantly win</b></td><td>99% false rollback</td><td>96%</td></tr>
+      <tr><td><b>Paired tolerated-harm bound</b></td><td>16% false rollback</td><td>0%</td></tr>
+    </tbody>
+  </table>
+  <p><b>Proposed measurement.</b> Thirty clone campaigns of 60 matched pairs would estimate the gate’s false-rollback rate under the serving stack used later. An upper confidence bound above 10% would retire the gate before any candidate claim.</p>
+  <p>Related archived lab: <a href="./gate.html">the clone-test gate</a>.</p>
+
+  <h2>RQ2 · When does a controlled minority change survival?</h2>
+  <p><b>The proposed quantity.</b> <code>f*</code> was defined as the smallest controlled fraction whose paired survival gain cleared a predeclared practical margin. The design swept the controlled fraction with matched seeds, estimated a dose-response curve, and left <code>f*</code> undefined when that curve was nonmonotone.</p>
+  <p>The proposed estimates remained separate by game, model family, and resource slack. Comparisons at N = 8, 20, and 50 asked whether the threshold moved with population size; that comparison does not claim a scaling law.</p>
+  <p>Related archived appendix: <a href="./design.html#estimand">the former estimand and power design</a>.</p>
+
+  <h2>RQ3 · Which majorities transmit—or resist—the minority?</h2>
+  <p><b>Why the threshold was contextual.</b> Agents outside the controlled set are part of the treatment environment. Changing only their response rule can move the required coalition from none to all eight seats, so one population-wide threshold can hide the mechanism.</p>
+  <p>The former plan began with scripted majorities—imitate-best-neighbour, tit-for-tat, myopic-greedy, and random—before applying a behavioral classifier to LLM populations. It pre-registered the hypothesis that imitation would amplify a minority more readily than greed.</p>
+  <p>Related archived lab: <a href="./entrainment.html">minority entrainment</a>.</p>
+
+  <hr>
+  <p class="muted"><b>Current status:</b> archived, not part of the reviewer path. Return to the <a href="../commons-game/study.html">current Study page</a> or the <a href="../commons-game/program.html">longer research program</a>.</p>
+</main>
+</body>
+</html>

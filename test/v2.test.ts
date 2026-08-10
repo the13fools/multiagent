@@ -327,25 +327,31 @@ describe("Commons Game reviewer path", () => {
     }
   });
 
-  it("states the hypothesis and refuses a scaling-law claim", () => {
+  it("keeps the current Study focused and archives the former three-question framing", () => {
     const html = read("study");
-    expect(html).toMatch(/f\* will be lowest under imitate-best-neighbour/i);
-    expect(html).toMatch(/does not claim a scaling law/i);
-    expect(html).toMatch(/upper confidence bound above 10% retires the gate/i);
-    expect(html.match(/<details class="question">/g)).toHaveLength(3);
-    expect(html).not.toMatch(/<details class="question" open/);
+    expect(html).toMatch(/What training changed—and what it did not solve/i);
+    expect(html).toMatch(/Resource collapse in every arm. No effect estimate/i);
+    expect(html).not.toContain('id="funded-questions"');
+    expect(html).not.toMatch(/<details class="question">/g);
+    expect(html).not.toMatch(/\bf\*\b/);
     expect(html).not.toContain('id="gate-demo"');
     expect(html).not.toMatch(/Controls, boundaries, and stopping/i);
     expect(html).toContain('id="pilot-replay"');
     expect(html).toContain('id="pdd-demo"');
     expect(html).not.toContain('id="commons-theory"');
     expect(html).not.toMatch(/<p class="section-kicker">The estimand<\/p>/i);
-    expect(html.indexOf('id="pilot-replay"')).toBeLessThan(html.indexOf('class="question-list"'));
-    expect(html.indexOf('class="question-list"')).toBeLessThan(html.indexOf('id="pdd-demo"'));
+    expect(html.indexOf('id="pilot-replay"')).toBeLessThan(html.indexOf('id="pdd-demo"'));
 
     const archive = readFileSync(resolve(ROOT, "archive/design.html"), "utf8");
     expect(archive).toContain('id="estimand"');
     expect(archive).toMatch(/smallest fraction that improves survival/i);
+    const questions = readFileSync(resolve(ROOT, "archive/funded-questions.html"), "utf8");
+    expect(questions).toMatch(/Superseded proposal framing/i);
+    expect(questions).toMatch(/Can we distinguish a safe replacement from noise/i);
+    expect(questions).toMatch(/When does a controlled minority change survival/i);
+    expect(questions).toMatch(/Which majorities transmit—or resist—the minority/i);
+    expect(questions).toMatch(/does not claim a scaling law/i);
+    expect(questions).toMatch(/upper confidence bound above 10%/i);
   });
 
   it("separates evidence status and does not claim the funded effect", () => {
@@ -451,7 +457,8 @@ describe("Commons Game reviewer path", () => {
     expect(html).toContain("../parrots-escaping-cage.jpg");
     expect(html).toMatch(/guiding flocks toward mutual flourishing/i);
     expect(html).toMatch(/Build an interpretable intervention/i);
-    expect(html).toMatch(/Estimate f\* or declare it undefined/i);
+    expect(html).toMatch(/Map what changes as more agents are trained/i);
+    expect(html).toMatch(/nonmonotone result is reported directly/i);
     expect(html).toMatch(/Team and readiness/i);
     expect(html).toMatch(/Why this work/i);
     expect(html).toMatch(/visitors on a living planet/i);
@@ -469,13 +476,13 @@ describe("Commons Game reviewer path", () => {
   it("pins the fallback copy to the canonical grant facts", () => {
     const overview = read("index");
     const delivery = read("delivery");
-    const study = read("study");
+    const archivedDesign = readFileSync(resolve(ROOT, "archive/design.html"), "utf8");
     expect(overview).toContain(`>${formatUsd(GRANT_FACTS.totalRequest)}<`);
     expect(delivery).toContain(`>${formatUsd(GRANT_FACTS.directCosts)}<`);
     expect(delivery).toContain(`>${formatUsd(GRANT_FACTS.indirectCosts)}<`);
     expect(delivery).toContain(`>${formatInteger(GRANT_FACTS.aaCampaigns)}<`);
     expect(delivery).toContain(`>${formatInteger(GRANT_FACTS.pairsPerCampaign)}<`);
-    expect(study).toContain(`>${formatInteger(GRANT_FACTS.cells)}<`);
+    expect(archivedDesign).toContain(formatInteger(GRANT_FACTS.cells));
     expect(formatPercent(GRANT_FACTS.aaUpperBound)).toBe("9.5%");
   });
 

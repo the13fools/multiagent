@@ -30,6 +30,10 @@ Five pages, and they are one argument in order rather than a menu.
 | [`gate.html`](gate.html) | How would you know you measured any of this? A judge-free promotion gate that rolls back a clone of its own baseline, and gets worse with more data. |
 | [`figure.html`](figure.html) | Composes the three headline results into one page and exports print-resolution vector SVG. |
 
+Superseded proposal framing is preserved separately in
+[`funded-questions.html`](funded-questions.html). It is archival context, not a
+current claim or part of the reviewer path.
+
 ### Shared Resource
 
 Every turn each living agent pays `L` upkeep, then either pays `R` to add `G` to
