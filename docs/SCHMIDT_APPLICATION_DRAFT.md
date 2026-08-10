@@ -23,12 +23,7 @@ single diagnostic traces, not frozen effect estimates.
 
 ### Plain-language Summary (2–3 sentences)
 
-The stochastic parrots are escaping the cage. Flockbench studies how post-training
-changes the collective behavior of LLM-powered agents deployed by different actors
-into the same long-lived environment. We build open tools to train heterogeneous
-populations and test, in shared-resource games with known solutions, whether they
-preserve both the commons and themselves; explore the project at
-https://foolzone.com/multiagent/commons-game/index.html.
+The stochastic parrots are escaping the cage. Flockbench studies how post-training changes the collective behavior of LLM-powered agents deployed by different actors into the same long-lived environment. We build open tools to train heterogeneous populations and begin by testing, in shared-resource games with known solutions, whether they preserve both the commons and themselves. Explore the project at https://foolzone.com/multiagent/commons-game/index.html.
 
 
 ### Keywords
@@ -38,48 +33,20 @@ long-horizon coordination
 
 ## Problem and Impact (≤500 words)
 
-The stochastic parrots will not leave the data center as one obedient flock. Language
-agents are increasingly deployed by different people and organizations, with different
-models, memories, tools, and objectives. One actor may control many agents without
-controlling the population. Those agents will nevertheless meet in shared environments:
-markets, roads, networks, forums, collaborations, and finite physical resources.
+The stochastic parrots will not leave the data center as one obedient flock. Language agents are increasingly deployed by different people and organizations, with different models, memories, tools, and objectives. One actor may control many agents without controlling the population. Those agents will nevertheless meet in shared environments: markets, roads, networks, forums, collaborations, and in thier consumption of finite physical resources like metals, water, and energy.  
 
-This creates a safety problem that single-agent alignment does not resolve. A policy can
-look helpful in isolation yet degrade a common resource when copied across a population.
-Conversely, the Shared Resource pilot in this application shows that unanimous
-“cooperation” can also be fatal: trained agents restored the commons on every turn,
-bankrupted themselves, and died together. A healthy multi-agent system may require a
-dynamic equilibrium in which agents take different actions at different times rather
-than converge on one approved behavior.
+This creates a safety problem that single-agent alignment does not resolve. A policy can look helpful in isolation yet degrade a common resource when copied across a population.  Conversely, the Shared Resource pilot in this application shows that unanimous “cooperation” can also be fatal: trained agents restored the commons on every turn, bankrupted themselves, and died together. A healthy multi-agent system may require a dynamic equilibrium in which agents take different actions at different times rather than converge on one approved behavior that collectively leads to ruin (think lemmings running off a cliff).
 
-Long rollouts make this harder. Small per-turn biases compound; agents encounter states,
-partners, and institutional settings poorly represented in pre-training; and success may
-mean preserving a moving relationship rather than reaching a fixed point. We currently
-lack calibrated, open experiments that can separate four possibilities: the task was
-impossible, the intervention was not installed, the trained behavior changed but did not
-improve collective welfare, or a viable strategy failed to transfer.
+Long rollouts make this harder. Small per-turn biases compound; agents encounter states, partners, and institutional settings poorly represented in pre-training; and success may mean preserving a moving relationship rather than reaching a fixed point. We currently lack calibrated, open experiments that can separate four possibilities: the task was impossible, the intervention failed to change model behavior, behavior changed but did not improve collective welfare (e.g. training didn't offer the correct solution), or a viable strategy failed to transfer.
 
-Flockbench addresses that measurement gap. It asks a concrete population-level question:
-when no one controls every agent, what fraction of a mixed population must adopt a tested
-strategy before both the agents and a shared resource survive? It begins with
-behavioral-economics games whose feasible regions and failure conditions can be derived,
-then uses those answer keys to evaluate prompts and post-training adapters over long
-rollouts. Outcomes are determined by arithmetic and replayable traces, not by whether a
-model sounds prosocial.
+Flockbench addresses that measurement gap. It asks a concrete population-level question: when no one controls every agent, what fraction of a mixed population must adopt a tested strategy before both the agents and a shared resource survive? It begins by considering behavioral-economics games whose feasible regions and failure conditions can be derived, then uses those answer keys to evaluate prompts and post-training adapters over long rollouts. Outcomes are determined by arithmetic and replayable traces, not by whether a model sounds prosocial.
 
-I recently completed a PhD in computer graphics and built the Stage 0 testbed as an unpaid
-independent researcher. The proposed grant would let me turn that prototype into public,
-negative-capable infrastructure: tools that can train heterogeneous flocks, reject methods
-that fail, and establish which coordination claims survive replication. The near-term
-impact is a reusable multi-agent laboratory. The longer-term aim is to help decentralized
-agent ecosystems preserve shared conditions for human, ecological, and collective
-flourishing without requiring one actor to control every participant.
+I recently completed a PhD in computer graphics and built the Stage 0 testbed as an unpaid independent researcher. The proposed grant would let me turn that prototype into public infrastructure: tools that can train heterogeneous flocks, reject methods that fail, and establish which coordination claims survive replication. The near-term impact is a reusable multi-agent laboratory. The longer-term aim is to help decentralized agent ecosystems preserve shared conditions for human, ecological, and collective flourishing without requiring one actor to control every participant.  I hope to offer my energy towards charting a course forward to an abundant future full of prosocial agents that coordinate and contribute towards ecological and social flourishing without a centralized locus of control.  
 
 ## Approach (≤1,000 words)
 
-Flockbench combines analytic games, controlled post-training, and population experiments.
-The governing principle is simple: begin where the answer can be checked mechanically,
-then relax structure only after the instrument works.
+My approach, rooted deeply in my experience in developing high accuracy solvers for challenging problems geometry processing, involves mixing principled theoretical analysis with large scale emperical experiments, with an focus on ensuring correctness on unit tests which admit careful analysis.  To this end, the nacent software library, flockbench, serves as the orchestration layer for these experiments.  
+
 
 **Stage 0: two games, two different roles.** The Commons Game is a continuous-harvest
 environment with logistic resource regrowth. Each agent pays upkeep and bids how much to
@@ -176,7 +143,7 @@ contribution.
 This project begins from working components, not a proposed software architecture. As an
 unpaid independent researcher, the PI built the game server, deterministic environments,
 single-GPU Qwen2.5–7B serving and LoRA path, trace replay, campaign planner, and browser
-visualizations on a laptop with approximately $200 of personal RunPod credits. Shared
+visualizations on a laptop with approximately $200 of RunPod credits. Shared
 Resource is implemented independently in Python and TypeScript, with tests pinning the
 same analytic invariants. The public site distinguishes built components, provisional
 traces, planned experiments, and receipts that are not yet frozen.
