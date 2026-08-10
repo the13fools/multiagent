@@ -351,6 +351,8 @@ describe("Commons Game reviewer path", () => {
     expect(html).toContain('href="./delivery.html#first-grant"');
     expect(html).toContain('href="./index.html#population-demo"');
     expect(html).toContain('id="two-game-field-guide"');
+    expect(html).toContain('src="../two-game-field-guide.webp"');
+    expect(existsSync(resolve(ROOT, "public/two-game-field-guide.webp"))).toBe(true);
     expect(html).toMatch(/Commons Game[\s\S]*Shared Resource/i);
     expect(html).toMatch(/Selective scale check[\s\S]*at least one 70B\+ open-weight model/i);
     expect(html).not.toContain('href="../archive/boardwalk.html"');
