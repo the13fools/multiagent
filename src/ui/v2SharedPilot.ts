@@ -38,7 +38,7 @@ const ORDER: ReplayKey[] = ["base", "direct", "transfer"];
 const LABELS: Record<ReplayKey, string> = {
   base: "Untrained control",
   direct: "Shared-trained",
-  transfer: "Commons-trained",
+  transfer: "Commons Game–trained",
 };
 const LAST_TURN = Math.max(...ORDER.map((key) => DATA[key].trace.length));
 

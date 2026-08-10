@@ -853,14 +853,14 @@ p { margin-bottom: 16px; }
 .game-field-guide-body { padding: 6px 0 34px 188px; }
 .game-field-guide-intro { max-width: 740px; color: var(--muted); font-size: 0.87rem; }
 
-.game-field-guide-visual { margin: 28px 0 32px; }
+.game-field-guide-visual { width: min(100%, 520px); margin: 30px auto; }
 .game-field-guide-visual img {
   display: block;
   width: 100%;
   height: auto;
   border: 1px solid var(--line);
 }
-.game-field-guide-visual figcaption { display: grid; grid-template-columns: 210px 1fr; gap: 22px; margin-top: 11px; color: var(--muted); font-size: 0.72rem; }
+.game-field-guide-visual figcaption { margin-top: 9px; color: var(--muted); font-size: 0.68rem; }
 .game-field-guide-visual figcaption strong { color: var(--ink); }
 
 .game-field-guide-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-block: 1px solid var(--line); }
@@ -2420,11 +2420,9 @@ summary { cursor: pointer; font-size: 0.84rem; font-weight: 700; }
   .game-field-guide > summary { grid-template-columns: 1fr auto; gap: 8px; }
   .game-field-guide > summary > span { grid-column: 1 / -1; }
   .game-field-guide-body { padding-left: 0; }
-  .game-field-guide-visual figcaption,
   .game-field-guide-grid,
   .game-transfer-lesson,
   .model-scale-note { grid-template-columns: 1fr; }
-  .game-field-guide-visual figcaption,
   .game-transfer-lesson,
   .model-scale-note { gap: 8px; }
   .game-field-card { padding: 22px 0; }

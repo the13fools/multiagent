@@ -184,7 +184,7 @@ describe("Commons Game reviewer path", () => {
     expect(html).toContain('id="stable-flocks-demo"');
     expect(html).toMatch(/Stability is a shape, not a stop/i);
     expect(html.indexOf('id="stable-flocks"')).toBeLessThan(html.indexOf('id="longer-program"'));
-    expect(html).toMatch(/Protect the commons/i);
+    expect(html).toMatch(/Protect the pool/i);
     expect(html).toMatch(/Bound the chase/i);
     expect(html).toMatch(/Keep the pattern alive/i);
     expect(html).not.toContain('href="../archive/boardwalk.html"');
@@ -215,7 +215,7 @@ describe("Commons Game reviewer path", () => {
       commonsFrameDelay,
     } = await import("../src/ui/v2StableFlocks");
     expect(Object.keys(STABILITY_MODES)).toEqual(["commons", "boardwalk", "juggling"]);
-    expect(STABILITY_MODES.commons.title).toMatch(/commons stays level/i);
+    expect(STABILITY_MODES.commons.title).toMatch(/shared pool stays level/i);
     expect(STABILITY_MODES.boardwalk.description).toMatch(/no pure-strategy equilibrium/i);
     expect(STABILITY_MODES.juggling.title).toMatch(/stable pattern.*motion/i);
     expect(STABLE_DEFAULTS).toEqual({
@@ -362,8 +362,10 @@ describe("Commons Game reviewer path", () => {
     expect(html).toContain('href="./delivery.html#first-grant"');
     expect(html).toContain('href="./index.html#population-demo"');
     expect(html).toContain('id="two-game-field-guide"');
-    expect(html).toContain('src="../two-game-field-guide.webp"');
-    expect(existsSync(resolve(ROOT, "public/two-game-field-guide.webp"))).toBe(true);
+    expect(html).toContain('src="../two-game-field-guide-v2.webp"');
+    expect(existsSync(resolve(ROOT, "public/two-game-field-guide-v2.webp"))).toBe(true);
+    expect(html.indexOf('class="game-field-guide-grid"'))
+      .toBeLessThan(html.indexOf('class="game-field-guide-visual"'));
     expect(html).toMatch(/Commons Game[\s\S]*Shared Resource/i);
     expect(html).toMatch(/Selective scale check[\s\S]*at least one 70B\+ open-weight model/i);
     expect(html).not.toContain('href="../archive/boardwalk.html"');

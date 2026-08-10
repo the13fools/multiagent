@@ -26,8 +26,8 @@ export const STABILITY_MODES: Record<StabilityMode, {
   description: string;
 }> = {
   commons: {
-    eyebrow: "01 · HOLD AN INVARIANT",
-    title: "The flock moves. The commons stays level.",
+    eyebrow: "01 · SHARED RESOURCE · HOLD AN INVARIANT",
+    title: "The flock moves. The shared pool stays level.",
     description: "Alternating restore and take holds the pool level and returns each personal balance to its starting point every two turns.",
   },
   boardwalk: {
@@ -267,7 +267,7 @@ function jugglingScene(state: PatternState, cfg: PatternConfig): { svg: string; 
 export function mountStableFlocks(root: HTMLElement): () => void {
   root.innerHTML = `
     <div class="stable-mode-tabs" role="tablist" aria-label="Kinds of stable collective motion">
-      <button type="button" role="tab" data-stable-mode="commons" aria-selected="true"><span>01</span> Commons</button>
+      <button type="button" role="tab" data-stable-mode="commons" aria-selected="true"><span>01</span> Shared Resource</button>
       <button type="button" role="tab" data-stable-mode="boardwalk" aria-selected="false"><span>02</span> Boardwalk</button>
       <button type="button" role="tab" data-stable-mode="juggling" aria-selected="false"><span>03</span> Juggling</button>
     </div>
