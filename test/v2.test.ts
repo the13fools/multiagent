@@ -91,6 +91,14 @@ describe("Commons Game reviewer path", () => {
     }
   });
 
+  it("keeps archive material off the skim path except for the technical receipt ledger", () => {
+    const archiveLinks = PAGES.flatMap((page) =>
+      [...read(page).matchAll(/href="([^"]*archive[^"]*)"/g)]
+        .map((match) => `${page}:${match[1]}`),
+    );
+    expect(archiveLinks).toEqual(["evidence:../archive/experiments.html"]);
+  });
+
   it("publishes canonical metadata for the foolzone route", () => {
     expect(existsSync(resolve(ROOT, "public/og.png"))).toBe(true);
     expect(existsSync(resolve(ROOT, "public/sitemap.xml"))).toBe(true);
@@ -170,7 +178,7 @@ describe("Commons Game reviewer path", () => {
     expect(html).toContain('href="./study.html"');
   });
 
-  it("gives the longer research programme one page and archives its technical foundations", () => {
+  it("gives the longer research programme one page without sending reviewers into the archive", () => {
     const html = read("program");
     const delivery = read("delivery");
     const archive = readFileSync(resolve(ROOT, "archive/program-foundations.html"), "utf8");
@@ -189,7 +197,7 @@ describe("Commons Game reviewer path", () => {
     expect(html).toMatch(/Keep the pattern alive/i);
     expect(html).not.toContain('href="../archive/boardwalk.html"');
     expect(html).not.toContain('href="../archive/juggling.html"');
-    expect(html).toContain('href="../archive/program-foundations.html"');
+    expect(html).not.toContain('href="../archive/program-foundations.html"');
     expect(html).toContain('href="./delivery.html"');
     expect(html).not.toContain('id="first-grant"');
     expect(html).not.toMatch(/Why begin with games/i);
@@ -369,7 +377,7 @@ describe("Commons Game reviewer path", () => {
     expect(html).toMatch(/Commons Game[\s\S]*Shared Resource/i);
     expect(html).toMatch(/Selective scale check[\s\S]*at least one 70B\+ open-weight model/i);
     expect(html).not.toContain('href="../archive/boardwalk.html"');
-    expect(read("program")).toContain('href="../archive/program-foundations.html"');
+    expect(read("program")).not.toContain('href="../archive/program-foundations.html"');
   });
 
   it("merges direct training and zero-shot transfer in one target-game comparison", () => {
@@ -395,31 +403,28 @@ describe("Commons Game reviewer path", () => {
   it("shows growth as an evidence-gated fork, not a funding slider", () => {
     const html = read("delivery");
     const program = read("program");
-    const archive = readFileSync(resolve(ROOT, "archive/experiments.html"), "utf8");
     expect(html).toContain(formatUsd(GRANT_FACTS.totalRequest));
     expect(html).not.toMatch(/Explore general funding scopes/i);
     expect(html).not.toContain("$300,000");
     expect(program).toMatch(/A null result still advances the arc/i);
     expect(program).toMatch(/only when the evidence earns them/i);
     expect(html).not.toContain('id="power-demo"');
-    expect(html).toContain("../archive/experiments.html#variance-risk");
-    expect(archive).toContain('id="power-demo"');
-    expect(archive).toContain('id="variance-risk"');
-    expect(html).toMatch(/No further funding is sought/i);
-    // the dual-use case is named rather than quietly dropped
-    expect(html).toMatch(/most dual-use idea here/i);
-    expect(html).toMatch(/No funds are requested for it/i);
+    expect(html).not.toContain("../archive/experiments.html#variance-risk");
+    expect(html).toMatch(/complete public evaluation and reusable release/i);
+    expect(html).toMatch(/neither to centralize authority.*nor to financialize/i);
+    expect(html).not.toMatch(/most dual-use idea here|manufacture apparent consensus/i);
   });
 
-  it("keeps Delivery focused on milestones, resources, readiness, and the award boundary", () => {
+  it("keeps Delivery focused on milestones, resources, readiness, and the motivation", () => {
     const html = read("delivery");
     expect(existsSync(resolve(ROOT, "public/parrots-escaping-cage.jpg"))).toBe(true);
     expect(html).toContain("../parrots-escaping-cage.jpg");
     expect(html).toMatch(/guiding flocks toward mutual flourishing/i);
-    expect(html).toMatch(/Compare post-training channels/i);
+    expect(html).toMatch(/Build an interpretable intervention/i);
     expect(html).toMatch(/Estimate f\* or declare it undefined/i);
     expect(html).toMatch(/Team and readiness/i);
-    expect(html).toMatch(/Award boundary/i);
+    expect(html).toMatch(/Why this work/i);
+    expect(html).toMatch(/visitors on a living planet/i);
     expect(html).toContain('href="./program.html"');
     expect(html).not.toMatch(/The institutional horizon|Side-channel games/i);
     expect(html).toContain('class="scaffold-stack"');
@@ -553,7 +558,7 @@ describe("v2 page script", () => {
     const html = read("study");
     expect(html).toContain('id="pdd-scale-calculator"');
     expect(html).toMatch(/measured anchor is[\s\S]*one Stage 0 timing/i);
-    expect(html).toContain('href="../archive/blog-pdd.html#adapter-cost"');
+    expect(html).not.toContain('href="../archive/blog-pdd.html#adapter-cost"');
     expect(html).toMatch(/2,000 steps[\s\S]*took about 3–4 hours/i);
     expect(html).toMatch(/roughly \$6–\$8 for one attempt/i);
     expect(html).toMatch(/does not infer runtime from parameter counts or nominal token throughput/i);
