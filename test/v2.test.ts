@@ -7,7 +7,7 @@ import {
   pairedComparisons,
 } from "../src/core/design";
 import { mountPowerDemo } from "../src/ui/v2PowerDemo";
-import { HORIZON, POLICIES, pacemakersNeeded } from "../src/core/sharedResource";
+import { HORIZON, POLICIES, pacemakersNeeded, simulate } from "../src/core/sharedResource";
 import {
   POLICIES as GATE_POLICIES, PILOT_SD, rejectionRate,
 } from "../src/core/gate";
@@ -207,7 +207,13 @@ describe("Commons Game reviewer path", () => {
   });
 
   it("defines three explicit forms of stable collective motion", async () => {
-    const { STABILITY_MODES, STABLE_DEFAULTS } = await import("../src/ui/v2StableFlocks");
+    const {
+      COMMONS_COLLAPSE_HOLD_MS,
+      COMMONS_FRAME_MS,
+      STABILITY_MODES,
+      STABLE_DEFAULTS,
+      commonsFrameDelay,
+    } = await import("../src/ui/v2StableFlocks");
     expect(Object.keys(STABILITY_MODES)).toEqual(["commons", "boardwalk", "juggling"]);
     expect(STABILITY_MODES.commons.title).toMatch(/commons stays level/i);
     expect(STABILITY_MODES.boardwalk.description).toMatch(/no pure-strategy equilibrium/i);
@@ -217,6 +223,11 @@ describe("Commons Game reviewer path", () => {
       jugglingListening: 0.2,
       jugglingControlledPlayers: 1,
     });
+    const collapsed = simulate(() => "take", { turns: 60, pool0: 30, balance0: 10 }).frames;
+    expect(commonsFrameDelay(collapsed[0]!, 0, collapsed.length)).toBe(COMMONS_FRAME_MS);
+    expect(commonsFrameDelay(collapsed.at(-1)!, collapsed.length - 1, collapsed.length))
+      .toBe(COMMONS_COLLAPSE_HOLD_MS);
+    expect(COMMONS_COLLAPSE_HOLD_MS).toBeGreaterThan(COMMONS_FRAME_MS * 7);
   });
 
   it("makes the three shared-resource outcomes explicit on the Overview", () => {

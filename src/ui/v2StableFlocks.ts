@@ -48,6 +48,14 @@ export const STABLE_DEFAULTS = {
   jugglingControlledPlayers: 1,
 } as const;
 
+export const COMMONS_FRAME_MS = 620;
+export const COMMONS_COLLAPSE_HOLD_MS = 4_800;
+
+export function commonsFrameDelay(frame: Frame, index: number, total: number): number {
+  const isCollapsedFinalFrame = index === total - 1 && frame.alive.every((alive) => !alive);
+  return isCollapsedFinalFrame ? COMMONS_COLLAPSE_HOLD_MS : COMMONS_FRAME_MS;
+}
+
 const COLORS = ["#70d7ff", "#ffb45c", "#cf8cff", "#80e0b2", "#ff7b8a", "#f7df73", "#7f9cff", "#f29ee2"];
 const INK = "#f5f3ff";
 const MUTED = "#aaa5bf";
@@ -366,9 +374,13 @@ export function mountStableFlocks(root: HTMLElement): () => void {
     status.textContent = picture.status;
   };
 
-  const advance = (elapsedMs = 50) => {
+  const advance = (elapsedMs = 50, manual = false) => {
     accumulator += elapsedMs;
-    if (mode === "commons" && accumulator >= 620) {
+    if (mode === "commons") {
+      const frameDelay = manual
+        ? COMMONS_FRAME_MS
+        : commonsFrameDelay(commonsFrames[commonsIndex]!, commonsIndex, commonsFrames.length);
+      if (accumulator < frameDelay) return;
       accumulator = 0;
       commonsIndex = (commonsIndex + 1) % commonsFrames.length;
     } else if (mode === "boardwalk" && accumulator >= 640) {
@@ -419,7 +431,7 @@ export function mountStableFlocks(root: HTMLElement): () => void {
     if (button.dataset.stableAction === "toggle") playing = !playing;
     if (button.dataset.stableAction === "step") {
       playing = false;
-      advance(mode === "juggling" ? 50 : 700);
+      advance(mode === "juggling" ? 50 : 700, true);
     }
     if (button.dataset.stableAction === "reset") resetMode();
     render();
