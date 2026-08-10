@@ -36,11 +36,11 @@
         <h2>Every quarter can change what happens next.</h2>
       </div>
       <div class="timeline">
-        <article class="milestone"><div class="month">Month 3</div><div><h3>Calibrate or retire the promotion rule.</h3><p><span data-grant-fact="aaCampaigns">30</span> live f = 0 campaigns of <span data-grant-fact="pairsPerCampaign">60</span> matched pairs, across four strata. A pooled upper bound above 10% stops candidate use.</p></div></article>
-        <article class="milestone"><div class="month">Month 6</div><div><h3>Build an interpretable intervention—or document another failure.</h3><p>Prompts, LoRA and PDD face held-out action checks, an impossible regime, a style control and scripted majorities. A failed channel ships with a localized failure report.</p></div></article>
-        <article class="milestone"><div class="month">Month 9</div><div><h3>Map what changes as more agents are trained.</h3><p>A replicated eight-agent sweep measures survival across population mixes. If improvement is inconsistent or reverses as the trained share rises, the nonmonotone result is reported directly rather than compressed into one threshold.</p></div></article>
-        <article class="milestone"><div class="month">Month 12</div><div><h3>Test transfer across games, tools, providers and scale.</h3><p>The informative range repeats in Shared Resource, the tool-and-memory environment, at N = 20 and 50, across providers, and in a selective replication on at least one 70B+ open-weight model after the recipe is stable. <strong>All experiments complete.</strong></p></div></article>
-        <article class="milestone"><div class="month">Month 18</div><div><h3>Release the laboratory and its conclusion.</h3><p>Code, schemas, permitted traces, replication guide and synthesis cover every planned arm—nulls and voided strata included.</p></div></article>
+        <article class="milestone"><div class="month">Month 3</div><div><h3>Study the games and establish small-model baselines.</h3><p>Select a compact set of behavioral-economics games about shared resources, document their incentives and failure modes, and train diverse LoRA adapters on open-weight models small enough for repeated single-GPU experiments.</p></div></article>
+        <article class="milestone"><div class="month">Month 6</div><div><h3>Run diverse LoRA flocks in a more open-ended world.</h3><p>Compose different adapters into mixed populations and ask them to pursue a shared goal over long rollouts with room to communicate, remember, adapt and fail. Preserve the traces, including coordination strategies that were not scripted in advance.</p></div></article>
+        <article class="milestone"><div class="month">Month 9</div><div><h3>Compare objectives for prosocial post-training.</h3><p>Test a small set of objectives that value both the commons and the agents who depend on it. Retain one or two candidates that improve held-out outcomes without producing mere compliance or synchronized self-sacrifice—or publish the null.</p></div></article>
+        <article class="milestone"><div class="month">Month 12</div><div><h3>Release the training and flock infrastructure.</h3><p>Ship the public path from a game and objective function to LoRA training, vLLM-compatible serving, heterogeneous long rollouts, trace replay and visualization, with two worked examples from the funded research.</p></div></article>
+        <article class="milestone"><div class="month">Month 18</div><div><h3>Publish the paper and documented research record.</h3><p>Write a paper on distributed authority and decentralized coordination in shared-commons games, grounded in the released experiments and explicit about limitations, failures and what toy environments cannot establish.</p></div></article>
       </div>
     </section>
 
@@ -63,9 +63,9 @@
       </figure>
 
       <div class="program-horizon">
-        <article class="program-phase"><span class="label proposed">Train</span><h3>Create strategy pools</h3><p>Low-cost LoRA post-training for many small adapters on open models, so a population contains genuinely different learned policies rather than copies of one prompt.</p></article>
-        <article class="program-phase is-core"><span class="label proposed">Run</span><h3>Scale the laboratory</h3><p>vLLM-compatible serving, campaign orchestration, long-rollout traces, population sweeps, and visualizations that make collective failure inspectable.</p></article>
-        <article class="program-phase"><span class="label proposed">Document</span><h3>Make the work reusable</h3><p>Public fixtures, examples, evaluation recipes, and honest negative results: useful simulation infrastructure the broader community should not have to rebuild.</p></article>
+        <article class="program-phase"><span class="label proposed">Train</span><h3>Create diverse policy adapters</h3><p>Study behavioral-economics games and low-cost post-training objectives for small open-weight models, producing populations with genuinely different learned policies rather than copies of one prompt.</p></article>
+        <article class="program-phase is-core"><span class="label proposed">Run</span><h3>Observe flocks pursuing a shared goal</h3><p>Serve heterogeneous LoRA adapters together, allow communication and memory, preserve long-rollout traces, and distinguish resilient coordination from compliant language and synchronized failure.</p></article>
+        <article class="program-phase"><span class="label proposed">Release</span><h3>Ship the tools and the argument</h3><p>Open training and rollout infrastructure, worked examples, honest negative results, and a paper about distributed authority and decentralized coordination for a commons.</p></article>
       </div>
       <p class="notice"><strong>A null result still produces a useful release.</strong> The laboratory can reject candidate training methods, preserve their failure traces, and identify which assumptions must change before moving to less structured environments.</p>
     </section>
@@ -87,7 +87,7 @@
         <div class="budget-line"><span>Multi-vendor and frontier API</span><div class="budget-bar"><i style="width:4.2%"></i></div><b>$11,030</b></div>
         <div class="budget-line"><span>Operations and dissemination</span><div class="budget-bar"><i style="width:3.4%"></i></div><b>$9,000</b></div>
       </div>
-      <p class="notice"><strong>Compute remains below $50,000.</strong> One observed 2,000-step Qwen2.5–7B training attempt took about 3–4 GPU-hours, but several attempts were needed for convergence. The budget therefore covers repeated attempts and rollout-heavy population campaigns rather than assuming a $50 adapter. Actual spot availability and effective throughput remain execution risks. Experiments finish by month 12; analysis and release follow at reduced effort. If runtime grows, N = 50 and non-informative arms drop first; calibration and the powered core remain protected.</p>
+      <p class="notice"><strong>Compute remains below $50,000.</strong> One observed 2,000-step Qwen2.5–7B training attempt took about 3–4 GPU-hours, but several attempts were needed for convergence. The budget therefore covers repeated attempts and rollout-heavy population campaigns rather than assuming a $50 adapter. Actual spot availability and effective throughput remain execution risks. Experiments finish by month 12; analysis and writing follow at reduced effort. If runtime grows, the largest populations and low-information arms drop first; the six-month exploratory core and public release remain protected.</p>
     </section>
 
     <section class="section">
@@ -100,9 +100,9 @@
           <p><strong>Lead investigator.</strong> 1.0 FTE months 1–12, then 0.4 FTE. Built the current testbed, server, decision path, training pipeline, and visualizations independently with about $200 in compute.</p>
           <p><strong>Paid research assistants.</strong> The budget can support up to two experiment-focused interns or junior research assistants. Their work is to generate and catalogue persona pools, run declared sweeps, inspect traces, reproduce failures, and document the parts of the behavioral space the lead investigator cannot explore sequentially.</p>
           <p><strong>Targeted engineering support.</strong> A smaller contract is reserved for the bounded work that genuinely benefits from specialist help: hardening vLLM serving, campaign orchestration, packaging, and release checks. The scientific bottleneck is experiment throughput, not adding an engineer by default.</p>
-          <p><strong>External review.</strong> The estimand, intervals, multiplicity, and missingness plan are reviewed before the first scored campaign.</p>
+          <p><strong>External review.</strong> Game definitions, objective functions, and analysis plans are reviewed before claims are frozen.</p>
           <p><strong>Host.</strong> Eligible nonprofit sponsorship is pending; no current host commitment is implied.</p>
-          <p class="notice"><span class="label built">Stage Zero</span> The grant pays for calibration, powered persona sweeps, transfer, and a documented release—not a first prototype.</p>
+          <p class="notice"><span class="label built">Stage Zero</span> The grant pays for economics-game study, small-model training, open-ended flock experiments, objective-function comparisons, and a documented public release—not a first prototype.</p>
         </div>
       </div>
     </section>
@@ -114,7 +114,7 @@
           <h2>Coordination should not require one owner—or a price on every relationship.</h2>
         </div>
         <div class="prose">
-          <p>Without this award, the prototype remains small: powered calibration, cross-provider transfer, and N = 20/50 do not happen on this schedule. With it, even a null becomes a complete public evaluation and reusable release.</p>
+          <p>Without this award, the prototype remains small: sustained game study, diverse adapter training, open-ended flock rollouts, and the documentation needed for reuse do not happen on this schedule. With it, even a null becomes a complete public evaluation and reusable release.</p>
           <p><strong>This grant funds coordination tools for a population no single actor owns.</strong> The goal is neither to centralize authority in one corporation nor to financialize every interaction, but to test how diverse agents can protect the shared conditions on which they depend.</p>
           <p class="notice"><strong>We are visitors on a living planet.</strong> I hope these tools help agents—and the people who deploy them—become better guests: capable of mutual flourishing without converging on one approved voice. A safer future should be more plural and colorful, not less.</p>
           <div class="actions"><a class="button" href="./program.html">Return to the research program</a><a class="button secondary" href="./evidence.html">Inspect Stage 0</a></div>

@@ -238,7 +238,7 @@ describe("Commons Game reviewer path", () => {
     expect(html).not.toMatch(/Why begin with games/i);
     expect(delivery).toContain('id="first-grant"');
     expect(delivery).toMatch(/Known-answer games are the scaffold/i);
-    expect(delivery).toMatch(/Create strategy pools[\s\S]*Scale the laboratory[\s\S]*Make the work reusable/i);
+    expect(delivery).toMatch(/Create diverse policy adapters[\s\S]*Observe flocks pursuing a shared goal[\s\S]*Ship the tools and the argument/i);
     expect(html).not.toContain('id="commons-theory"');
     expect(archive).toContain('id="commons-theory"');
     expect(archive).toMatch(/<p class="section-kicker">Two games<\/p>/i);
@@ -471,9 +471,11 @@ describe("Commons Game reviewer path", () => {
     expect(existsSync(resolve(ROOT, "public/parrots-escaping-cage.jpg"))).toBe(true);
     expect(html).toContain("../parrots-escaping-cage.jpg");
     expect(html).toMatch(/guiding flocks toward mutual flourishing/i);
-    expect(html).toMatch(/Build an interpretable intervention/i);
-    expect(html).toMatch(/Map what changes as more agents are trained/i);
-    expect(html).toMatch(/nonmonotone result is reported directly/i);
+    expect(html).toMatch(/Study the games and establish small-model baselines/i);
+    expect(html).toMatch(/Run diverse LoRA flocks in a more open-ended world/i);
+    expect(html).toMatch(/Compare objectives for prosocial post-training/i);
+    expect(html).toMatch(/Release the training and flock infrastructure/i);
+    expect(html).toMatch(/distributed authority and decentralized coordination/i);
     expect(html).toMatch(/Team and readiness/i);
     expect(html).toMatch(/Why this work/i);
     expect(html).toMatch(/visitors on a living planet/i);
@@ -495,8 +497,6 @@ describe("Commons Game reviewer path", () => {
     expect(overview).toContain(`>${formatUsd(GRANT_FACTS.totalRequest)}<`);
     expect(delivery).toContain(`>${formatUsd(GRANT_FACTS.directCosts)}<`);
     expect(delivery).toContain(`>${formatUsd(GRANT_FACTS.indirectCosts)}<`);
-    expect(delivery).toContain(`>${formatInteger(GRANT_FACTS.aaCampaigns)}<`);
-    expect(delivery).toContain(`>${formatInteger(GRANT_FACTS.pairsPerCampaign)}<`);
     expect(archivedDesign).toContain(formatInteger(GRANT_FACTS.cells));
     expect(formatPercent(GRANT_FACTS.aaUpperBound)).toBe("9.5%");
   });
