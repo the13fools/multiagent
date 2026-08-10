@@ -79,15 +79,20 @@ into a methodological one: no arm can receive a more favourable rollout or a fre
 sample after results are known. The comparison is fair because re-rolling is not possible,
 not because we promised not to.
 
-The result is a distinct fine-tuned agent for **about fifty dollars**.
+The longest Stage 0 run we tried—2,000 steps on Qwen2.5–7B—took **about 3–4
+GPU-hours**. At the grant budget's planning rate of $2 per 80 GB GPU-hour, that is
+roughly $6–$8 for one training attempt. It took several attempts to get useful
+convergence, so this is not a measured cost per finished adapter.
 
 ## Why the number is the point
 
-Fifty dollars is not a benchmark result. It is a change in what experiments are thinkable.
+Six to eight dollars per attempt is not a benchmark result. It is one observed timing
+translated at a planning price. The cost per usable persona depends on how many attempts
+convergence takes; measuring and reducing that multiplier is part of the proposed work.
 
-At fifty dollars an agent, a population of thirty distinct policies costs $1,500 — less
-than the compute for a single powered campaign run against them. The population stops
-being the expensive part of the study. It becomes a knob.
+If that multiplier can be made reliable, the population stops being the expensive part
+of the study and becomes a knob. The long population rollouts and repeated evaluation
+campaigns can then receive most of the compute.
 
 That reframes what the method *is*. We are not proposing a better way to align an
 individual agent; that would be out of scope for the work we are doing and, frankly, we

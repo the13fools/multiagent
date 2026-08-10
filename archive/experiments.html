@@ -148,11 +148,12 @@ together is a separate page: <a href="./design.html">how an experiment is run</a
   <td>Under sign-flip resampling of the pilot deltas, the threshold rule rolled back a null candidate
   1.5% of the time at n = 60. It is <b>not</b> a formal non-inferiority test and is not a live A/A
   measurement; both remain Phase 0 work.</td></tr>
-<tr><td>A distinct fine-tuned agent costs about $50</td>
-  <td class="s"><span class="st st-part">one receipt</span></td>
-  <td>A real measurement from one setup — Qwen2.5-7B, LoRA, our hardware, one month's GPU prices.
-  Not a projection and not a law. The question worth answering is not the price but the floor:
-  how little training still leaves agents usefully distinct from each other. Unmeasured.</td></tr>
+<tr><td>A 2,000-step 7B fine-tuning attempt took about 3–4 GPU-hours</td>
+  <td class="s"><span class="st st-part">one timing</span></td>
+  <td>A real observation from one Qwen2.5–7B setup. At the proposal's $2-per-hour planning
+  rate, one attempt is roughly $6–$8. Several attempts were needed for convergence, so the
+  cost per usable adapter is not yet measured. The open question is how little training still
+  leaves agents usefully distinct from each other.</td></tr>
 <tr><td>Small per-step bias is invisible early and fatal late</td>
   <td class="s"><span class="st st-todo">predicted</span></td>
   <td>Shown in the <a href="./juggling.html">juggling sketch</a>, which is our own construction and

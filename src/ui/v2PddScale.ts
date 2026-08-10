@@ -24,11 +24,13 @@ export const PLANNED_COMPUTE_USD = 41_330;
 /**
  * A receipt-anchored planning calculation.
  *
- * The Stage 0 receipt puts one Qwen2.5-7B adapter at about $50, or about
- * 25 80 GB GPU-hours at $2/hour. Larger-model factors are deliberately
- * exposed as planning assumptions. We do not infer wall-clock time from
- * trainable parameter count or nominal tokens/second: those omit the PDD
- * teacher, filtering, batching, rejected samples, and serving overhead.
+ * The Stage 0 timing puts one 2,000-step Qwen2.5-7B training attempt at
+ * about 3-4 80 GB GPU-hours, or roughly $6-$8 at $2/hour. Several attempts
+ * were needed before a useful adapter converged, but that count was not
+ * frozen as a benchmark. Larger-model factors and attempts per persona are
+ * therefore exposed as planning assumptions. We do not infer wall-clock
+ * time from trainable parameter count or nominal tokens/second: those omit
+ * the PDD teacher, filtering, batching, rejected samples, and serving overhead.
  */
 export function estimateAdapterPool(input: AdapterPoolInputs): AdapterPoolEstimate {
   const trainingRuns = input.personas * input.repetitions;
@@ -65,6 +67,10 @@ function number(value: number): string {
   return Math.round(value).toLocaleString("en-US");
 }
 
+function decimal(value: number): string {
+  return value.toLocaleString("en-US", { maximumFractionDigits: 1 });
+}
+
 export function mountPddScale(root: HTMLElement): () => void {
   const inputs = {
     personas: root.querySelector<HTMLInputElement>('[data-pdd-input="personas"]')!,
@@ -98,11 +104,11 @@ export function mountPddScale(root: HTMLElement): () => void {
 
     display("personas", number(values.personas));
     display("repetitions", number(values.repetitions));
-    display("hours", `${number(values.gpuHoursPerAdapter7B)} hr`);
+    display("hours", `${decimal(values.gpuHoursPerAdapter7B)} hr`);
     display("model", modelLabel);
     result("personas", number(values.personas));
     result("repetitions", number(values.repetitions));
-    result("hoursPerRun", number(estimate.gpuHoursPerRun));
+    result("hoursPerRun", decimal(estimate.gpuHoursPerRun));
     result("trainingRuns", number(estimate.trainingRuns));
     result("gpuHours", number(estimate.gpuHours));
     result("costPerRun", usd(estimate.costPerRunUsd));
@@ -118,7 +124,7 @@ export function mountPddScale(root: HTMLElement): () => void {
       const qualifier = estimate.computeCostUsd > PLANNED_COMPUTE_USD
         ? `This plan is ${usd(estimate.computeCostUsd - PLANNED_COMPUTE_USD)} over the compute line.`
         : `${usd(PLANNED_COMPUTE_USD - estimate.computeCostUsd)} remains for evaluation rollouts and other compute.`;
-      capacity.innerHTML = `<strong>${number(estimate.maxTrainingRuns)} adapter trainings</strong> is the theoretical maximum if the entire ${usd(PLANNED_COMPUTE_USD)} compute line were spent at this rate—equivalent to ${number(estimate.maxPersonasAtBudget)} personas at ${number(values.repetitions)} training${values.repetitions === 1 ? "" : "s"} each. ${qualifier}`;
+      capacity.innerHTML = `<strong>${number(estimate.maxTrainingRuns)} training attempts</strong> is the theoretical maximum if the entire ${usd(PLANNED_COMPUTE_USD)} compute line were spent at this rate—equivalent to ${number(estimate.maxPersonasAtBudget)} personas at ${number(values.repetitions)} attempt${values.repetitions === 1 ? "" : "s"} each. ${qualifier}`;
     }
   };
 

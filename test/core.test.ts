@@ -349,10 +349,9 @@ describe("seeding cost", () => {
   });
 
   it("lands in the right order of magnitude at the reference plan", () => {
-    // The essay's "about $50" was a receipt at the spot price we paid. The model
-    // now runs at Lambda's current on-demand rate, which is higher, and the
-    // per-agent figure moves with it — which is the point of exposing the price
-    // as a dial rather than quoting a constant.
+    // This legacy campaign model includes rollout and teacher overhead as well as
+    // training. It is not the observed 3-4 hour timing for one 2,000-step attempt;
+    // keeping those quantities separate is why the price remains an explicit dial.
     const c = seedingCost(REFERENCE_PLAN);
     expect(c.perAgent).toBeGreaterThan(40);
     expect(c.perAgent).toBeLessThan(90);

@@ -330,6 +330,8 @@ describe("Commons Game reviewer path", () => {
     // previous order contradicted by placing it above two live results.
     const at = (id: string) => html.indexOf(`id="${id}"`);
     expect(at("commons-training"))
+      .toBeLessThan(at("two-game-field-guide"));
+    expect(at("two-game-field-guide"))
       .toBeLessThan(at("shared-trained-playthrough"));
     expect(at("shared-trained-playthrough"))
       .toBeLessThan(at("shared-resource-transfer"));
@@ -347,6 +349,10 @@ describe("Commons Game reviewer path", () => {
     expect(html).toMatch(/bought \+137 rounds where it trained, then cost 2 turns here/i);
     expect(html).not.toContain('id="pdd-demo"');
     expect(html).toContain('href="./delivery.html#first-grant"');
+    expect(html).toContain('href="./index.html#population-demo"');
+    expect(html).toContain('id="two-game-field-guide"');
+    expect(html).toMatch(/Commons Game[\s\S]*Shared Resource/i);
+    expect(html).toMatch(/Selective scale check[\s\S]*at least one 70B\+ open-weight model/i);
     expect(html).not.toContain('href="../archive/boardwalk.html"');
     expect(read("program")).toContain('href="../archive/program-foundations.html"');
   });
@@ -514,34 +520,35 @@ describe("v2 page script", () => {
   it("makes the adapter-pool assumptions inspectable", () => {
     const estimate = estimateAdapterPool({
       personas: 30,
-      repetitions: 1,
-      gpuHoursPerAdapter7B: 25,
+      repetitions: 4,
+      gpuHoursPerAdapter7B: 3.5,
       modelMultiplier: 1,
       gpuPricePerHour: 2,
       computeBudgetUsd: 41_330,
     });
-    expect(estimate.trainingRuns).toBe(30);
-    expect(estimate.gpuHoursPerRun).toBe(25);
-    expect(estimate.gpuHours).toBe(750);
-    expect(estimate.costPerRunUsd).toBe(50);
-    expect(estimate.computeCostUsd).toBe(1_500);
-    expect(estimate.budgetShare).toBeCloseTo(0.036293, 5);
-    expect(estimate.maxTrainingRuns).toBe(826);
-    expect(estimate.maxPersonasAtBudget).toBe(826);
+    expect(estimate.trainingRuns).toBe(120);
+    expect(estimate.gpuHoursPerRun).toBe(3.5);
+    expect(estimate.gpuHours).toBe(420);
+    expect(estimate.costPerRunUsd).toBe(7);
+    expect(estimate.computeCostUsd).toBe(840);
+    expect(estimate.budgetShare).toBeCloseTo(0.020324, 5);
+    expect(estimate.maxTrainingRuns).toBe(5_904);
+    expect(estimate.maxPersonasAtBudget).toBe(1_476);
 
     const html = read("study");
     expect(html).toContain('id="pdd-scale-calculator"');
-    expect(html).toMatch(/one measured anchor is[\s\S]*a Stage 0 receipt/i);
+    expect(html).toMatch(/measured anchor is[\s\S]*one Stage 0 timing/i);
     expect(html).toContain('href="../archive/blog-pdd.html#adapter-cost"');
-    expect(html).toMatch(/one Qwen2\.5–7B adapter cost about \$50/i);
+    expect(html).toMatch(/2,000 steps[\s\S]*took about 3–4 hours/i);
+    expect(html).toMatch(/roughly \$6–\$8 for one attempt/i);
     expect(html).toMatch(/does not infer runtime from parameter counts or nominal token throughput/i);
-    expect(html).toMatch(/planning cost, not a training-time prediction/i);
-    expect(html).toMatch(/unknown floor[\s\S]*indistinguishable copies with different accents/i);
+    expect(html).toMatch(/does not claim a cost per converged adapter/i);
+    expect(html).toMatch(/unknown training floor[\s\S]*indistinguishable copies with different accents/i);
     expect(html).toMatch(/diffusion language model as an LLM-as-a-Judge/i);
     expect(html).toMatch(/round 170 instead of round 33/i);
     expect(html).toMatch(/gave every turn and all agents died by round 6/i);
     expect(html).not.toMatch(/hat size|pdd-persona|data-pdd-personas/i);
-    expect(html).toMatch(/Training time[\s\S]*25 hr/i);
+    expect(html).toMatch(/Training time[\s\S]*3\.5 hr/i);
     expect(html).not.toMatch(/Measured 7B time per adapter/i);
     expect(html).not.toContain('data-pdd-input="throughput"');
     expect(html).not.toContain('data-pdd-input="tokens"');
@@ -552,8 +559,8 @@ describe("v2 page script", () => {
     document.body.innerHTML = `
       <section id="pdd-scale-calculator">
         <input data-pdd-input="personas" value="30">
-        <input data-pdd-input="repetitions" value="1">
-        <input data-pdd-input="hours" value="25">
+        <input data-pdd-input="repetitions" value="4">
+        <input data-pdd-input="hours" value="3.5">
         <select data-pdd-input="model"><option value="1" selected>7B · measured · 1×</option><option value="2">14B · planning · 2×</option></select>
         <output data-pdd-output="personas"></output>
         <output data-pdd-output="repetitions"></output>
@@ -572,24 +579,25 @@ describe("v2 page script", () => {
       </section>`;
     const root = document.getElementById("pdd-scale-calculator")!;
     mountPddScale(root);
-    expect(root.querySelector('[data-pdd-result="trainingRuns"]')?.textContent).toBe("30");
-    expect(root.querySelector('[data-pdd-result="gpuHours"]')?.textContent).toBe("750");
-    expect(root.querySelector('[data-pdd-result="costPerRun"]')?.textContent).toBe("$50");
-    expect(root.querySelector('[data-pdd-result="computeCost"]')?.textContent).toBe("$1,500");
-    expect(root.querySelector("[data-pdd-capacity]")?.textContent).toContain("826 adapter trainings");
+    expect(root.querySelector('[data-pdd-result="trainingRuns"]')?.textContent).toBe("120");
+    expect(root.querySelector('[data-pdd-result="hoursPerRun"]')?.textContent).toBe("3.5");
+    expect(root.querySelector('[data-pdd-result="gpuHours"]')?.textContent).toBe("420");
+    expect(root.querySelector('[data-pdd-result="costPerRun"]')?.textContent).toBe("$7");
+    expect(root.querySelector('[data-pdd-result="computeCost"]')?.textContent).toBe("$840");
+    expect(root.querySelector("[data-pdd-capacity]")?.textContent).toContain("5,904 training attempts");
 
     const personas = root.querySelector<HTMLInputElement>('[data-pdd-input="personas"]')!;
     personas.value = "60";
     personas.dispatchEvent(new Event("input"));
-    expect(root.querySelector('[data-pdd-result="trainingRuns"]')?.textContent).toBe("60");
-    expect(root.querySelector('[data-pdd-result="computeCost"]')?.textContent).toBe("$3,000");
+    expect(root.querySelector('[data-pdd-result="trainingRuns"]')?.textContent).toBe("240");
+    expect(root.querySelector('[data-pdd-result="computeCost"]')?.textContent).toBe("$1,680");
 
     const model = root.querySelector<HTMLSelectElement>('[data-pdd-input="model"]')!;
     model.value = "2";
     model.dispatchEvent(new Event("input"));
-    expect(root.querySelector('[data-pdd-result="costPerRun"]')?.textContent).toBe("$100");
-    expect(root.querySelector('[data-pdd-result="computeCost"]')?.textContent).toBe("$6,000");
-    expect(root.querySelector("[data-pdd-capacity]")?.textContent).toContain("413 adapter trainings");
+    expect(root.querySelector('[data-pdd-result="costPerRun"]')?.textContent).toBe("$14");
+    expect(root.querySelector('[data-pdd-result="computeCost"]')?.textContent).toBe("$3,360");
+    expect(root.querySelector("[data-pdd-capacity]")?.textContent).toContain("2,952 training attempts");
   });
 
   /**

@@ -80,19 +80,22 @@ show that syntax and behavior survived.</p>
 
 <p><b>The teacher's edit is cached once.</b> Every training arm consumes the same immutable cache, so no arm can get a fresher sample after results are known. A cost measure that turned into a fairness guarantee: the comparison is fair because re-rolling is impossible, not because we promised.</p>
 
-<p id="adapter-cost">In our setup a distinct adapter cost about <b>fifty dollars of compute</b>. That is one receipt
-from one model and environment family, not a general benchmark. The claim under study is the
-direction: <b>can distinct agents become cheap enough that the campaign, rather than the
-population, is the expensive part?</b></p>
+<p id="adapter-cost">The longest Stage 0 run we tried—2,000 steps on Qwen2.5–7B—took
+<b>about 3–4 GPU-hours</b>. At the grant budget's planning rate of $2 per 80 GB GPU-hour,
+that is roughly $6–$8 for one training attempt. It took several attempts to reach useful
+convergence, so this is <b>not</b> a measured cost per finished adapter. The question under
+study is whether better recipes can make a usable, behaviorally distinct adapter cost
+considerably less than $50—and make the campaign, rather than the population, the expensive part.</p>
 
 <div id="fig-pipeline" style="margin:22px 0"></div>
 
 <h2 id="cheap">Why cheap is the point</h2>
 
-<p>The interesting quantity is not the price but the <em>ratio</em> between what a population
-costs and what a campaign against it costs. While an agent costs thousands, population size is a
-constraint you write into the limitations section. When it costs tens, thirty distinct policies
-cost less than one powered campaign, and population size becomes a dial you can sweep.</p>
+<p>The interesting quantity is not the price of one successful run but the <em>ratio</em>
+between what a population costs and what a campaign against it costs. One attempt has a measured
+timing; the number of attempts required for convergence is still a research variable. If that
+multiplier can be made small and reliable, population size becomes a dial and long evaluation
+rollouts can remain the expensive part.</p>
 
 <p>That is the thing I actually want to explore: <b>how far can the per-agent cost be pushed down
 before the agents stop being usefully distinct?</b> There is a floor somewhere. Below some amount

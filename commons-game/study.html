@@ -244,33 +244,33 @@
       <details class="pdd-scale-question">
         <summary><span>Open scaling question</span><h3>How cheaply can one base model become a heterogeneous flock?</h3></summary>
         <div class="pdd-scale-copy">
-          <p><strong>The one measured anchor is <a href="../archive/blog-pdd.html#adapter-cost">a Stage 0 receipt</a>:</strong> one Qwen2.5–7B adapter cost about $50. At $2 per hour for an 80 GB GPU, that is roughly 25 GPU-hours. The calculator asks how that measured unit scales with the number of personas and independent training repetitions. It does not infer runtime from parameter counts or nominal token throughput.</p>
+          <p><strong>The measured anchor is <a href="../archive/blog-pdd.html#adapter-cost">one Stage 0 timing</a>:</strong> the longest Qwen2.5–7B run tested—2,000 steps—took about 3–4 hours. At the budget's planning rate of $2 per 80 GB GPU-hour, that is roughly $6–$8 for one attempt. Several attempts were needed to reach convergence, so the calculator keeps <em>training time</em> separate from the unknown number of attempts needed for each usable persona. It does not infer runtime from parameter counts or nominal token throughput.</p>
           <div class="pdd-scale-calculator" id="pdd-scale-calculator" aria-label="Receipt-anchored estimate for training a pool of low-rank adapters">
-            <div class="pdd-receipt"><span class="label pilot">One Stage 0 receipt</span><strong>≈ $50</strong><span>one 7B adapter · ≈25 GPU-hours · ≈$2 per 80 GB GPU-hour</span></div>
+            <div class="pdd-receipt"><span class="label pilot">One observed Stage 0 timing</span><strong>≈ 3–4 hr</strong><span>one 2,000-step 7B attempt · ≈$6–$8 at $2 per 80 GB GPU-hour</span></div>
             <div class="pdd-scale-controls">
               <label><span>Distinct personas <output data-pdd-output="personas">30</output></span><input data-pdd-input="personas" type="range" min="1" max="100" step="1" value="30"></label>
-              <label><span>Independent trainings per persona <output data-pdd-output="repetitions">1</output></span><input data-pdd-input="repetitions" type="range" min="1" max="5" step="1" value="1"></label>
-              <label><span>Training time <output data-pdd-output="hours">25 hr</output></span><input data-pdd-input="hours" type="range" min="2" max="100" step="1" value="25"></label>
+              <label><span>Training attempts per persona <output data-pdd-output="repetitions">4</output></span><input data-pdd-input="repetitions" type="range" min="1" max="12" step="1" value="4"></label>
+              <label><span>Training time <output data-pdd-output="hours">3.5 hr</output></span><input data-pdd-input="hours" type="range" min="1" max="12" step="0.5" value="3.5"></label>
               <label><span>Model planning factor <output data-pdd-output="model">7B · measured · 1×</output></span><select data-pdd-input="model"><option value="1" selected>7B · measured · 1×</option><option value="2">14B · planning · 2×</option><option value="4.6">32B · planning · 4.6×</option><option value="10">70B · planning · 10×</option></select></label>
             </div>
             <div class="pdd-cost-equation" aria-label="Compute-cost equation">
               <span class="pdd-equation-term"><strong data-pdd-result="personas">30</strong><small>personas</small></span><span class="pdd-equation-sign">×</span>
-              <span class="pdd-equation-term"><strong data-pdd-result="repetitions">1</strong><small>training each</small></span><span class="pdd-equation-sign">×</span>
-              <span class="pdd-equation-term"><strong data-pdd-result="hoursPerRun">25</strong><small>GPU-hours / run</small></span><span class="pdd-equation-sign">×</span>
+              <span class="pdd-equation-term"><strong data-pdd-result="repetitions">4</strong><small>attempts each</small></span><span class="pdd-equation-sign">×</span>
+              <span class="pdd-equation-term"><strong data-pdd-result="hoursPerRun">3.5</strong><small>GPU-hours / attempt</small></span><span class="pdd-equation-sign">×</span>
               <span class="pdd-equation-term"><strong>$2</strong><small>/ GPU-hour</small></span><span class="pdd-equation-sign">=</span>
-              <span class="pdd-equation-term is-answer"><strong data-pdd-result="computeCost">$1,500</strong><small>adapter-training compute</small></span>
+              <span class="pdd-equation-term is-answer"><strong data-pdd-result="computeCost">$840</strong><small>adapter-training compute</small></span>
             </div>
             <div class="pdd-scale-results" aria-live="polite">
-              <div><span>adapter-training runs</span><strong data-pdd-result="trainingRuns">30</strong></div>
-              <div><span>cost / adapter run</span><strong data-pdd-result="costPerRun">$50</strong></div>
-              <div><span>80 GB GPU-hours</span><strong data-pdd-result="gpuHours">750</strong></div>
-              <div><span>planned compute share</span><strong data-pdd-result="budgetShare">3.6% of the planned compute line</strong></div>
+              <div><span>training attempts</span><strong data-pdd-result="trainingRuns">120</strong></div>
+              <div><span>cost / attempt</span><strong data-pdd-result="costPerRun">$7</strong></div>
+              <div><span>80 GB GPU-hours</span><strong data-pdd-result="gpuHours">420</strong></div>
+              <div><span>planned compute share</span><strong data-pdd-result="budgetShare">2.0% of the planned compute line</strong></div>
             </div>
-            <div class="pdd-budget-meter"><span>Planned compute</span><strong><span data-pdd-result="computeCost">$1,500</span> of $41,330</strong><progress data-pdd-budget max="41330" value="1500">$1,500 of $41,330</progress></div>
-            <p class="pdd-capacity-note" data-pdd-capacity><strong>826 adapter trainings</strong> is the theoretical maximum if the entire $41,330 compute line were spent at this rate—equivalent to 826 personas at one training each. $39,830 remains for evaluation rollouts and other compute.</p>
-            <p class="pdd-scale-caveat"><strong>What this includes:</strong> adapter-training compute only. Multi-agent evaluation rollouts, commercial APIs, storage, and labor are separate. Only the 7B receipt is measured; larger-model factors are rough planning assumptions. Lowering hours per adapter buys a larger flock, but below an unknown floor the “personas” may be indistinguishable copies with different accents. Measuring that diversity floor is the research question.</p>
+            <div class="pdd-budget-meter"><span>Planned compute</span><strong><span data-pdd-result="computeCost">$840</span> of $41,330</strong><progress data-pdd-budget max="41330" value="840">$840 of $41,330</progress></div>
+            <p class="pdd-capacity-note" data-pdd-capacity><strong>5,904 training attempts</strong> is the theoretical maximum if the entire $41,330 compute line were spent at this rate—equivalent to 1,476 personas at four attempts each. $40,490 remains for evaluation rollouts and other compute.</p>
+            <p class="pdd-scale-caveat"><strong>What this includes:</strong> adapter-training compute only. The 3–4-hour timing is observed; four attempts per persona is a visible planning assumption, not a measured convergence rate. The cost of a usable adapter is therefore attempts-to-convergence multiplied by cost per attempt. Multi-agent evaluation rollouts, commercial APIs, storage, and labor are separate—and long population rollouts are expected to dominate the compute campaign. Below an unknown training floor, the “personas” may also be indistinguishable copies with different accents. Measuring both frontiers is part of the research.</p>
           </div>
-          <p><strong>The calculator now computes a planning cost, not a training-time prediction.</strong> The proposed work measures which quantities—PDD steps, sequence construction, model size, and LoRA configuration—actually move the receipt, then tests whether cheaper adapters remain behaviorally distinct at population scale.</p>
+          <p><strong>The calculator turns an observed runtime into a planning range; it does not claim a cost per converged adapter.</strong> The proposed work measures which quantities—PDD steps, sequence construction, model size, LoRA configuration, and failed attempts—actually move that cost, then tests whether cheaper adapters remain behaviorally distinct at population scale.</p>
         </div>
       </details>
     </section>

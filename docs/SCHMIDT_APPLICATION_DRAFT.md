@@ -23,7 +23,7 @@ single diagnostic traces, not frozen effect estimates.
 
 ### Plain-language Summary (2–3 sentences)
 
-The stochastic parrots are escaping the cage. Flockbench studies how post-training changes the collective behavior of LLM-powered agents deployed by different actors into the same long-lived environment. We build open tools to train heterogeneous populations and begin by testing, in shared-resource games with known solutions, whether they preserve both the commons and themselves. Explore the project at https://foolzone.com/multiagent/commons-game/index.html.
+The stochastic parrots are escaping the cage. Flockbench studies how post-training changes the collective behavior of LLM-powered agents deployed by different actors into the same long-lived environment. We build open tools to train heterogeneous populations and begin by testing, in shared-resource games with known solutions, whether they preserve both the commons and themselves; explore the project at https://foolzone.com/multiagent/commons-game/index.html.
 
 
 ### Keywords
@@ -33,9 +33,9 @@ long-horizon coordination
 
 ## Problem and Impact (≤500 words)
 
-The stochastic parrots will not leave the data center as one obedient flock. Language agents are increasingly deployed by different people and organizations, with different models, memories, tools, and objectives. One actor may control many agents without controlling the population. Those agents will nevertheless meet in shared environments: markets, roads, networks, forums, collaborations, and in thier consumption of finite physical resources like metals, water, and energy.  
+The stochastic parrots will not leave the data center as one obedient flock. Language agents are increasingly deployed by different people and organizations, with different models, memories, tools, and objectives. One actor may control many agents without controlling the population. As such, agents with diverse moral frameworks and biases will nevertheless meet in shared environments: markets, roads, networks, forums, collaborations, and in their consumption of finite physical resources like metals, water, and energy.
 
-This creates a safety problem that single-agent alignment does not resolve. A policy can look helpful in isolation yet degrade a common resource when copied across a population.  Conversely, the Shared Resource pilot in this application shows that unanimous “cooperation” can also be fatal: trained agents restored the commons on every turn, bankrupted themselves, and died together. A healthy multi-agent system may require a dynamic equilibrium in which agents take different actions at different times rather than converge on one approved behavior that collectively leads to ruin (think lemmings running off a cliff).
+This creates a safety problem that single-agent alignment does not resolve. A policy can look helpful in isolation yet degrade a common resource when copied across a population.  Conversely, the shared resource pilot in this application shows that unanimous “cooperation” can also be fatal: trained agents restored the commons on every turn, bankrupted themselves, and died together. A healthy multi-agent system may require a dynamic equilibrium in which agents take different actions at different times rather than converge on one approved behavior that collectively leads to ruin (think lemmings running off a cliff).
 
 Long rollouts make this harder. Small per-turn biases compound; agents encounter states, partners, and institutional settings poorly represented in pre-training; and success may mean preserving a moving relationship rather than reaching a fixed point. We currently lack calibrated, open experiments that can separate four possibilities: the task was impossible, the intervention failed to change model behavior, behavior changed but did not improve collective welfare (e.g. training didn't offer the correct solution), or a viable strategy failed to transfer.
 
@@ -45,7 +45,7 @@ I recently completed a PhD in computer graphics and built the Stage 0 testbed as
 
 ## Approach (≤1,000 words)
 
-My approach, rooted deeply in my experience in developing high accuracy solvers for challenging problems geometry processing, involves mixing principled theoretical analysis with large scale emperical experiments, with an focus on ensuring correctness on unit tests which admit careful analysis.  To this end, the nacent software library, flockbench, serves as the orchestration layer for these experiments.  
+My approach, rooted in my experience developing high-accuracy solvers for challenging problems in geometry processing, combines principled theoretical analysis with large-scale empirical experiments and focuses on correctness in environments that admit careful analysis. The nascent software library Flockbench serves as the orchestration layer for these experiments.
 
 
 **Stage 0: two games, two different roles.** The Commons Game is a continuous-harvest
@@ -77,9 +77,12 @@ strategy pools: prompts, context or outcome-filtered distillation, ordinary LoRA
 prototype called Progressive Denoising Distillation (PDD). PDD uses a diffusion language
 model as a teacher to inpaint selected rationale spans around a fixed target action, then
 applies cross-entropy loss only to accepted replacement tokens. The action schema receives
-no direct gradient. In Stage 0, one 7B adapter cost approximately $50 of compute. That is
-one receipt, not a general benchmark; the grant will measure cost, schema validity, and
-behavioral distinctness rather than assume the method is superior.
+no direct gradient. In Stage 0, the longest Qwen2.5–7B run tested—2,000 steps—took about
+3–4 GPU-hours. At the budget's $2-per-hour planning rate, that is roughly $6–$8 for one
+attempt. Several attempts were needed for convergence, so the cost per usable adapter is
+not yet measured and should not be reported as $50. The grant will measure time per attempt,
+attempts to convergence, schema validity, and behavioral distinctness rather than assume
+the method is superior.
 
 **Funded study.** Work proceeds in four linked stages:
 
@@ -99,7 +102,9 @@ behavioral distinctness rather than assume the method is superior.
 4. **Test mechanism and transfer.** Manipulate the uncontrolled majority’s update rule,
    compare seeded agents with vocabulary-matched mimics, and repeat the informative range
    across games, direct versus transferred training, tools and memory, population sizes,
-   and model sources. Report action diversity and synchronized collapse alongside survival.
+   and model sources. After the recipe and gate are stable, repeat the most informative arm
+   on at least one 70B+ open-weight model rather than attempting a full large-model factorial.
+   Report action diversity and synchronized collapse alongside survival.
 
 The 18-month release will include the game server, vLLM-compatible adapter serving,
 campaign orchestration, versioned environments, permitted traces, analysis code,
@@ -161,8 +166,8 @@ A separate 30-cell Public Goods pilot exposed a defect in the original promotion
 under offline sign-flip resampling, it rejected a null clone with probability 1.000. That
 finding determined the first funded milestone—live A/A calibration—and shows that the
 project can turn an inconvenient result into a design correction. The main execution
-risks are now measurable: live gate error, paired variance, per-adapter cost, schema
-validity, and behavioral distinctness. Each is resolved before the dependent campaign
+risks are now measurable: live gate error, paired variance, training time, attempts to
+convergence, schema validity, and behavioral distinctness. Each is resolved before the dependent campaign
 scales.
 
 ## Team (≤300 words)
@@ -269,6 +274,28 @@ funds overlapping work, the scope and budget of this request will be revised bef
 acceptance. If this award is not made, [Lead PI] will maintain the open testbed and
 small-scale prototypes but will not begin the repeated live A/A calibration, multi-seed
 composition campaign, or N=20/N=50 replication at the proposed pace.
+
+## Additional Information
+
+Stage 0's most important result is not that training worked, but that it changed the
+failure mode without solving the game. In the Shared Resource pilot, two trained
+populations sounded cooperative, restored on every turn, and died together sooner than
+the noisier base population. That result shaped the proposal: every claimed improvement
+must survive an answer key, a mimic control, and replayable population-level accounting.
+
+I also want to be explicit about what this award buys. Flockbench already exists as a
+working prototype, built independently without salary and with approximately $200 in
+personal cloud credits. The grant does not fund a first demo. It funds the transition
+from one-seed diagnostics to calibrated, paired, multi-seed experiments; from research
+code to a documented open release; and from one researcher's sequential workflow to
+enough experiment throughput for other groups to inspect and reproduce the results.
+
+Success is deliberately broader than a positive finding. A calibrated null, a failed
+post-training method, an undefined threshold, or a documented transfer reversal would
+all be useful outcomes if they are measured cleanly and released with the infrastructure
+that found them. The ambition is long-term, but this grant is bounded: build an instrument
+that can reject bad coordination stories before larger, less structured agent societies
+make those stories impossible to audit.
 
 ## Scientific Milestones and Outcomes
 

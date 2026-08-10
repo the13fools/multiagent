@@ -51,7 +51,52 @@
         <p class="notice"><span class="label pilot">One seed per condition</span> No replication and no interval. Full seeding delays collapse to round 170; <strong>no arm sustains the commons, the artifacts are not frozen, and no effect is claimed.</strong></p>
         <p class="notice"><span class="label offline">Instrumentation defect</span> <span id="commons-defect"></span></p>
       </div>
+      <div class="actions source-game-actions"><a class="button secondary" href="./index.html#population-demo">Open the live Shared Resource model</a></div>
     </section>
+
+    <details class="game-field-guide" id="two-game-field-guide">
+      <summary><span>Two-game field guide</span><h3>What changes between the training source and the answer key?</h3></summary>
+      <div class="game-field-guide-body">
+        <p class="game-field-guide-intro">The games have different jobs. Commons asks whether training moves a difficult trajectory; Shared Resource asks whether it learned a viable principle or only a source-game habit.</p>
+
+        <figure class="game-field-guide-visual">
+          <img src="../commons-game-outcomes.jpg" width="1536" height="1024" loading="lazy" alt="Three Shared Resource outcomes: taking empties the pond, restoring forever preserves the pond but kills the agents, and alternating actions keeps both alive.">
+          <figcaption><strong>Shared Resource has an answer key.</strong> Taking kills the pool; restoring forever kills the agents. Out-of-phase alternation can preserve both.</figcaption>
+        </figure>
+
+        <div class="game-field-guide-grid">
+          <article class="game-field-card is-source">
+            <header><span>Source game</span><h3>Commons Game</h3></header>
+            <dl>
+              <div><dt>Agent action</dt><dd>Request a harvest from 0–10 each round while paying upkeep.</dd></div>
+              <div><dt>Resource</dt><dd>Shared stock with logistic regrowth: <code>g(S) = rS(1 − S/K)</code>.</dd></div>
+              <div><dt>What is known</dt><dd>Peak sustainable yield is <code>rK/4</code>; simultaneous bids leave no single optimal policy.</dd></div>
+              <div><dt>Stage 0 role</dt><dd>Training source. Full seeding moved collapse from round 33 to 170; every arm died.</dd></div>
+            </dl>
+          </article>
+
+          <article class="game-field-card is-target">
+            <header><span>Target / answer key</span><h3>Shared Resource</h3></header>
+            <dl>
+              <div><dt>Agent action</dt><dd><strong>Restore:</strong> pay 1, add 3 to the pool. <strong>Take:</strong> receive 3. Upkeep costs 1.</dd></div>
+              <div><dt>Resource</dt><dd>A finite pool without natural regrowth.</dd></div>
+              <div><dt>What is known</dt><dd>Restoration must occur on half of player-turns. Phase-shifted alternation is sustainable.</dd></div>
+              <div><dt>Stage 0 role</dt><dd>Direct-training and transfer test. Both trained flocks restored every turn and died together on turn 6.</dd></div>
+            </dl>
+          </article>
+        </div>
+
+        <div class="game-transfer-lesson">
+          <span>Why the second game matters</span>
+          <p><strong>Restraint is not coordination.</strong> “Take less” became rigid self-sacrifice where flourishing required give-and-take. The target game makes that distinction arithmetic.</p>
+        </div>
+
+        <div class="model-scale-note">
+          <span class="label proposed">Selective scale check</span>
+          <p><strong>Repeat the informative comparison on at least one 70B+ open-weight model.</strong> Stage 0 used Qwen2.5–7B to fit one GPU. After calibration, a focused replication can test whether lockstep over-restoration is a small-model limitation or survives scale. This is one validation arm, not a full 70B sweep.</p>
+        </div>
+      </div>
+    </details>
 
     <span class="sr-only" id="shared-trained-playthrough">Direct-training result</span>
     <section class="section demo transfer-failure" id="shared-resource-transfer" aria-labelledby="sp-title">
