@@ -1,13 +1,8 @@
-import { GRANT_FACTS, formatInteger, formatPercent, formatUsd } from "../core/grantFacts";
-import { interpolateFunding } from "../core/funding";
+import { GRANT_FACTS, formatInteger, formatPercent } from "../core/grantFacts";
 import { mountPopulationDemo } from "./v2Demo";
 
 const factText: Record<string, string> = {
-  tier: GRANT_FACTS.tier,
   duration: `${GRANT_FACTS.durationMonths} months`,
-  total: formatUsd(GRANT_FACTS.totalRequest),
-  direct: formatUsd(GRANT_FACTS.directCosts),
-  indirect: formatUsd(GRANT_FACTS.indirectCosts),
   aaCampaigns: formatInteger(GRANT_FACTS.aaCampaigns),
   pairsPerCampaign: formatInteger(GRANT_FACTS.pairsPerCampaign),
   aaStrata: formatInteger(GRANT_FACTS.aaStrata),
@@ -23,29 +18,6 @@ document.querySelectorAll<HTMLElement>("[data-grant-fact]").forEach((node) => {
   const key = node.dataset.grantFact;
   if (key && factText[key]) node.textContent = factText[key];
 });
-
-const slider = document.querySelector<HTMLInputElement>("#scope-slider");
-const budget = document.querySelector<HTMLElement>("#scope-budget");
-const duration = document.querySelector<HTMLElement>("#scope-duration");
-const scale = document.querySelector<HTMLElement>("#scope-scale");
-
-if (slider && budget && duration && scale) {
-  const render = () => {
-    const scenario = interpolateFunding(Number(slider.value));
-    budget.textContent = formatUsd(Math.round(scenario.budget));
-    const months = Math.max(1, Math.round(scenario.months));
-    duration.textContent = months === 1 ? "a few weeks" : `${months} months`;
-    scale.textContent = scenario.position < 50
-      ? "prototype"
-      : scenario.position === 50
-        ? "one-year programme"
-        : scenario.position === 100
-          ? "two-year small team"
-          : "growing team";
-  };
-  slider.addEventListener("input", render);
-  render();
-}
 
 const populationDemo = document.querySelector<HTMLElement>("#population-demo");
 if (populationDemo) mountPopulationDemo(populationDemo);

@@ -1,7 +1,7 @@
 import { describe, expect, it, beforeEach } from "vitest";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { GRANT_FACTS, formatInteger, formatPercent, formatUsd } from "../src/core/grantFacts";
+import { GRANT_FACTS, formatInteger, formatPercent } from "../src/core/grantFacts";
 import {
   DESCOPE_ORDER, REFERENCE_DESIGN, cells, descopeBudget, descopePlan, pairedCells,
   pairedComparisons,
@@ -454,7 +454,6 @@ describe("Commons Game reviewer path", () => {
   it("shows growth as an evidence-gated fork, not a funding slider", () => {
     const html = read("delivery");
     const program = read("program");
-    expect(html).toContain(formatUsd(GRANT_FACTS.totalRequest));
     expect(html).not.toMatch(/Explore general funding scopes/i);
     expect(html).not.toContain("$300,000");
     expect(program).toMatch(/A null result still advances the arc/i);
@@ -485,18 +484,14 @@ describe("Commons Game reviewer path", () => {
     expect(html).toMatch(/The middle layer is the funded work/i);
     expect(html).toMatch(/Answer-key games[\s\S]*Flockbench infrastructure[\s\S]*Less structured worlds|Less structured worlds[\s\S]*Flockbench infrastructure[\s\S]*Answer-key games/i);
     expect(html).toMatch(/up to two experiment-focused interns/i);
-    expect(html).toMatch(/80 GB GPU compute/i);
-    expect(html).toMatch(/Compute remains below \$50,000/i);
     expect(html).toMatch(/The flock is leaving the cage/i);
   });
 
-  it("pins the fallback copy to the canonical grant facts", () => {
-    const overview = read("index");
-    const delivery = read("delivery");
+  it("keeps budget figures off the Commons Game pages", () => {
+    for (const html of [...PAGES.map(read), readDemos()]) {
+      expect(html).not.toMatch(/\$\s*\d|Budget allocation|data-grant-fact="(?:total|direct|indirect)"/);
+    }
     const archivedDesign = readFileSync(resolve(ROOT, "archive/design.html"), "utf8");
-    expect(overview).toContain(`>${formatUsd(GRANT_FACTS.totalRequest)}<`);
-    expect(delivery).toContain(`>${formatUsd(GRANT_FACTS.directCosts)}<`);
-    expect(delivery).toContain(`>${formatUsd(GRANT_FACTS.indirectCosts)}<`);
     expect(archivedDesign).toContain(formatInteger(GRANT_FACTS.cells));
     expect(formatPercent(GRANT_FACTS.aaUpperBound)).toBe("9.5%");
   });
@@ -530,12 +525,9 @@ describe("v2 page script", () => {
 
   it("substitutes canonical facts into every page", async () => {
     document.body.innerHTML = `
-      <span data-grant-fact="total">fallback</span>
       <span data-grant-fact="cells">fallback</span>
       <span data-grant-fact="aaUpperBound">fallback</span>`;
     await import("../src/ui/v2");
-    expect(document.querySelector("[data-grant-fact='total']")?.textContent)
-      .toBe(formatUsd(GRANT_FACTS.totalRequest));
     expect(document.querySelector("[data-grant-fact='cells']")?.textContent)
       .toBe(formatInteger(GRANT_FACTS.cells));
     expect(document.querySelector("[data-grant-fact='aaUpperBound']")?.textContent)
@@ -603,26 +595,17 @@ describe("v2 page script", () => {
       repetitions: 4,
       gpuHoursPerAdapter7B: 3.5,
       modelMultiplier: 1,
-      gpuPricePerHour: 2,
-      computeBudgetUsd: 40_000,
     });
     expect(estimate.trainingRuns).toBe(120);
     expect(estimate.gpuHoursPerRun).toBe(3.5);
     expect(estimate.gpuHours).toBe(420);
-    expect(estimate.costPerRunUsd).toBe(7);
-    expect(estimate.computeCostUsd).toBe(840);
-    expect(estimate.budgetShare).toBeCloseTo(0.021, 5);
-    expect(estimate.maxTrainingRuns).toBe(5_714);
-    expect(estimate.maxPersonasAtBudget).toBe(1_428);
 
     const html = read("study");
     expect(html).toContain('id="pdd-scale-calculator"');
     expect(html).toMatch(/measured anchor is[\s\S]*one Stage 0 timing/i);
     expect(html).not.toContain('href="../archive/blog-pdd.html#adapter-cost"');
     expect(html).toMatch(/2,000 steps[\s\S]*took about 3–4 hours/i);
-    expect(html).toMatch(/roughly \$6–\$8 for one attempt/i);
     expect(html).toMatch(/does not infer runtime from parameter counts or nominal token throughput/i);
-    expect(html).toMatch(/does not claim a cost per converged adapter/i);
     expect(html).toMatch(/unknown training floor[\s\S]*indistinguishable copies with different accents/i);
     expect(html).toMatch(/diffusion language model as an LLM-as-a-Judge/i);
     expect(html).toMatch(/round 170 instead of round 33/i);
@@ -651,33 +634,24 @@ describe("v2 page script", () => {
         <strong data-pdd-result="hoursPerRun"></strong>
         <strong data-pdd-result="trainingRuns"></strong>
         <strong data-pdd-result="gpuHours"></strong>
-        <strong data-pdd-result="costPerRun"></strong>
-        <strong data-pdd-result="computeCost"></strong>
-        <strong data-pdd-result="budgetShare"></strong>
-        <progress data-pdd-budget max="40000"></progress>
-        <p data-pdd-capacity></p>
       </section>`;
     const root = document.getElementById("pdd-scale-calculator")!;
     mountPddScale(root);
     expect(root.querySelector('[data-pdd-result="trainingRuns"]')?.textContent).toBe("120");
     expect(root.querySelector('[data-pdd-result="hoursPerRun"]')?.textContent).toBe("3.5");
     expect(root.querySelector('[data-pdd-result="gpuHours"]')?.textContent).toBe("420");
-    expect(root.querySelector('[data-pdd-result="costPerRun"]')?.textContent).toBe("$7");
-    expect(root.querySelector('[data-pdd-result="computeCost"]')?.textContent).toBe("$840");
-    expect(root.querySelector("[data-pdd-capacity]")?.textContent).toContain("5,714 training attempts");
 
     const personas = root.querySelector<HTMLInputElement>('[data-pdd-input="personas"]')!;
     personas.value = "60";
     personas.dispatchEvent(new Event("input"));
     expect(root.querySelector('[data-pdd-result="trainingRuns"]')?.textContent).toBe("240");
-    expect(root.querySelector('[data-pdd-result="computeCost"]')?.textContent).toBe("$1,680");
+    expect(root.querySelector('[data-pdd-result="gpuHours"]')?.textContent).toBe("840");
 
     const model = root.querySelector<HTMLSelectElement>('[data-pdd-input="model"]')!;
     model.value = "2";
     model.dispatchEvent(new Event("input"));
-    expect(root.querySelector('[data-pdd-result="costPerRun"]')?.textContent).toBe("$14");
-    expect(root.querySelector('[data-pdd-result="computeCost"]')?.textContent).toBe("$3,360");
-    expect(root.querySelector("[data-pdd-capacity]")?.textContent).toContain("2,857 training attempts");
+    expect(root.querySelector('[data-pdd-result="hoursPerRun"]')?.textContent).toBe("7");
+    expect(root.querySelector('[data-pdd-result="gpuHours"]')?.textContent).toBe("1,680");
   });
 
   /**

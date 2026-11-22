@@ -25,7 +25,7 @@
 
   <main class="shell">
     <header class="page-intro">
-      <p class="eyebrow"><span data-grant-fact="total">$290,000</span> · <span data-grant-fact="duration">18 months</span> · five decision points</p>
+      <p class="eyebrow"><span data-grant-fact="duration">18 months</span> · five decision points</p>
       <h1>Build a laboratory for guiding flocks toward mutual flourishing.</h1>
       <p class="deck">The grant funds a rigorous programme for learning how fine-tuning and post-training shape long-horizon behaviour in multi-agent games, then turns that knowledge into a reusable evaluation and harness.</p>
     </header>
@@ -71,35 +71,15 @@
     </section>
 
     <section class="section">
-      <div class="section-head">
-        <p class="section-kicker">Budget</p>
-        <h2>The request is derived from people and runs, not fitted to the cap.</h2>
-      </div>
-      <div class="budget-total">
-        <div><strong data-grant-fact="total">$290,000</strong><span>total Tier 1 request over <span data-grant-fact="duration">18 months</span></span></div>
-        <div><span data-grant-fact="direct">$263,636</span> direct<br><span data-grant-fact="indirect">$26,364</span> indirect</div>
-      </div>
-      <div class="budget-lines" aria-label="Budget allocation">
-        <div class="budget-line"><span>Lead investigator · 1.0 FTE m1–12, 0.4 FTE m13–18</span><div class="budget-bar"><i style="width:51.9%"></i></div><b>$136,800</b></div>
-        <div class="budget-line"><span>Paid research assistants · up to two experiment-focused interns</span><div class="budget-bar"><i style="width:20.5%"></i></div><b>$54,000</b></div>
-        <div class="budget-line"><span>Targeted engineering support · approximately 107 hours</span><div class="budget-bar"><i style="width:4.9%"></i></div><b>$12,806</b></div>
-        <div class="budget-line"><span>80 GB GPU compute · 20,000 hours at about $2/hour</span><div class="budget-bar"><i style="width:15.2%"></i></div><b>$40,000</b></div>
-        <div class="budget-line"><span>Multi-vendor and frontier API</span><div class="budget-bar"><i style="width:4.2%"></i></div><b>$11,030</b></div>
-        <div class="budget-line"><span>Operations and dissemination</span><div class="budget-bar"><i style="width:3.4%"></i></div><b>$9,000</b></div>
-      </div>
-      <p class="notice"><strong>Compute remains below $50,000.</strong> One observed 2,000-step Qwen2.5–7B training attempt took about 3–4 GPU-hours, but several attempts were needed for convergence. The budget therefore covers repeated attempts and rollout-heavy population campaigns rather than assuming a $50 adapter. Actual spot availability and effective throughput remain execution risks. Experiments finish by month 12; analysis and writing follow at reduced effort. If runtime grows, the largest populations and low-information arms drop first; the six-month exploratory core and public release remain protected.</p>
-    </section>
-
-    <section class="section">
       <div class="split">
         <div class="section-head">
           <p class="section-kicker">Team and readiness</p>
           <h2>The programme starts from working infrastructure.</h2>
         </div>
         <div class="prose">
-          <p><strong>Lead investigator.</strong> 1.0 FTE months 1–12, then 0.4 FTE. Built the current testbed, server, decision path, training pipeline, and visualizations independently with about $200 in compute.</p>
-          <p><strong>Paid research assistants.</strong> The budget can support up to two experiment-focused interns or junior research assistants. Their work is to generate and catalogue persona pools, run declared sweeps, inspect traces, reproduce failures, and document the parts of the behavioral space the lead investigator cannot explore sequentially.</p>
-          <p><strong>Targeted engineering support.</strong> A smaller contract is reserved for the bounded work that genuinely benefits from specialist help: hardening vLLM serving, campaign orchestration, packaging, and release checks. The scientific bottleneck is experiment throughput, not adding an engineer by default.</p>
+          <p><strong>Lead investigator.</strong> Built the current testbed, server, decision path, training pipeline, and visualizations independently.</p>
+          <p><strong>Research assistants.</strong> The plan calls for up to two experiment-focused interns or junior research assistants to generate and catalogue persona pools, run declared sweeps, inspect traces, reproduce failures, and document the parts of the behavioral space the lead investigator cannot explore sequentially.</p>
+          <p><strong>Targeted engineering support.</strong> Specialist help would focus on hardening vLLM serving, running campaigns, packaging, and checking the release. The scientific bottleneck is experiment throughput, not adding an engineer by default.</p>
           <p><strong>External review.</strong> Game definitions, objective functions, and analysis plans are reviewed before claims are frozen.</p>
           <p><strong>Host.</strong> Eligible nonprofit sponsorship is pending; no current host commitment is implied.</p>
           <p class="notice"><span class="label built">Stage Zero</span> The grant pays for economics-game study, small-model training, open-ended flock experiments, objective-function comparisons, and a documented public release—not a first prototype.</p>
